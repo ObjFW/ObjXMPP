@@ -40,4 +40,5 @@
 
 - (void)connect;
 - (void)handleConnection;
+- (void)sendStanza: (OFXMLElement*)elem;
 @end

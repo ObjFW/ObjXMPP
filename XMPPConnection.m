@@ -79,6 +79,11 @@
 	}
 }
 
+- (void)sendStanza: (OFXMLElement*)elem
+{
+	[sock writeString: [elem stringValue]];
+}
+
 -    (void)parser: (OFXMLParser*)p
   didStartElement: (OFString*)name
        withPrefix: (OFString*)prefix
@@ -130,7 +135,7 @@
 	[authTag addChild: [OFXMLElement elementWithCharacters:
 	    [message stringByBase64Encoding]]];
 
-	[sock writeString: [authTag stringValue]];
+	[self sendStanza: authTag];
 }
 
 - (void)_sendResourceBind
@@ -139,7 +144,7 @@
 	[iq addChild: [OFXMLElement elementWithName: @"bind"
 					  namespace: NS_BIND]];
 
-	[sock writeString: [iq stringValue]];
+	[self sendStanza: iq];
 }
 
 - (void)_handleFeatures: (OFXMLElement*)elem
