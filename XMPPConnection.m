@@ -1,4 +1,5 @@
 #import "XMPPConnection.h"
+#import "XMPPStanza.h"
 
 #define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
 #define NS_CLIENT @"jabber:client"
@@ -135,8 +136,7 @@
 
 - (void)_sendResourceBind
 {
-	OFXMLElement *iq = [OFXMLElement elementWithName: @"iq"];
-	[iq addAttributeWithName: @"type" stringValue: @"set"];
+	XMPPIQ *iq = [XMPPIQ IQWithType: @"set" ID: @"bind0"];
 	[iq addChild: [OFXMLElement elementWithName: @"bind"
 					  namespace: NS_BIND]];
 
