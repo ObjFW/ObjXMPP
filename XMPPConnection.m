@@ -55,8 +55,7 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
-	[sock connectToService: [OFString stringWithFormat: @"%u", port]
-			onNode: server];
+	[sock connectToHost: server onPort: port];
 	[self _startStream];
 
 	[pool release];

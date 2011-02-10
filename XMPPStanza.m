@@ -204,9 +204,9 @@
 					  stringValue: status]];
 }
 
-- (void)addPriority: (char)priority
+- (void)addPriority: (int8_t)priority
 {
-	OFString* prio = [OFString stringWithFormat: @"%d", priority];
+	OFString* prio = [OFString stringWithFormat: @"%" @PRId8, priority];
 	[self addChild: [OFXMLElement elementWithName: @"priority"
 					  stringValue: prio]];
 }

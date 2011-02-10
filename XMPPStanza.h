@@ -53,5 +53,5 @@
 
 - (void)addShow: (OFString*)show;
 - (void)addStatus: (OFString*)status;
-- (void)addPriority: (char)priority;
+- (void)addPriority: (int8_t)priority;
 @end
