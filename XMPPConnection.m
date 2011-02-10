@@ -1,3 +1,5 @@
+#include <stringprep.h>
+#include <assert.h>
 #import "XMPPConnection.h"
 #import "XMPPStanza.h"
 
@@ -41,6 +43,27 @@
 	[elementBuilder release];
 
 	[super dealloc];
+}
+
+- (void)setUsername: (OFString*)username_
+{
+	OFString *old = username;
+	char *node;
+
+	Stringprep_rc rc;
+	if ((rc = stringprep_profile([username_ cString], &node, "Nodeprep", 0))
+			!= STRINGPREP_OK) {
+		of_log(@"Nodeprep failed: %s", stringprep_strerror(rc));
+		assert(0);
+	}
+
+	@try {
+		username = [[OFString alloc] initWithCString: node];
+	} @finally {
+		free(node);
+	}
+
+	[old release];
 }
 
 - (void)_startStream
