@@ -11,37 +11,79 @@
 	return [[[self alloc] initWithName: name] autorelease];
 }
 
++ stanzaWithName: (OFString*)name
+	    type: (OFString*)type_
+{
+	return [[[self alloc] initWithName: name
+				      type: type_] autorelease];
+}
+
++ stanzaWithName: (OFString*)name
+	      ID: (OFString*)ID_
+{
+	return [[[self alloc] initWithName: name
+					ID: ID_] autorelease];
+}
+
++ stanzaWithName: (OFString*)name
+	    type: (OFString*)type_
+	      ID: (OFString*)ID_
+{
+	return [[[self alloc] initWithName: name
+				      type: type_
+					ID: ID_] autorelease];
+}
+
 + stanzaWithElement: (OFXMLElement*)elem {
 	return [[[self alloc] initWithElement: elem] autorelease];
 }
 
 - initWithName: (OFString*)name_
 {
+	return [self initWithName: name_
+			     type: nil
+			       ID: nil];
+}
+
+- initWithName: (OFString*)name_
+	  type: (OFString*)type_
+{
+	return [self initWithName: name_
+			     type: type_
+			       ID: nil];
+}
+
+- initWithName: (OFString*)name_
+	    ID: (OFString*)ID_
+{
+	return [self initWithName: name_
+			     type: nil
+			       ID: ID_];
+}
+
+- initWithName: (OFString*)name_
+	  type: (OFString*)type_
+	    ID: (OFString*)ID_
+{
 	if (!([name_ isEqual: @"iq"] ||
 	      [name_ isEqual: @"message"] ||
 	      [name_ isEqual: @"presence"]))
 		of_log(@"Invalid stanza name!");
 
-	self = [super initWithName: name_];
+	id ret;
+	ret = [super initWithName: name_];
 	[self setDefaultNamespace: @"jabber:client"];
-
-	from = [[OFString alloc] init];
-	to = [[OFString alloc] init];
-	type = [[OFString alloc] init];
-	ID = [[OFString alloc] init];
-
-	return self;
+	if (type_)
+		[ret setType: type_];
+	if (ID_)
+		[ret setID: ID_];
+	return ret;
 }
 
 - initWithElement: (OFXMLElement*)elem
 {
 	self = [super initWithName: elem.name
 			 namespace: elem.namespace];
-
-	from = [[OFString alloc] init];
-	to = [[OFString alloc] init];
-	type = [[OFString alloc] init];
-	ID = [[OFString alloc] init];
 
 	OFXMLAttribute *attr;
 
@@ -107,7 +149,8 @@
 	OFString* old = ID;
 	ID = [ID_ copy];
 	[old release];
-	[self addAttributeWithName: @"id" stringValue: ID];
+	[self addAttributeWithName: @"id"
+		       stringValue: ID];
 }
 @end
 
@@ -115,46 +158,72 @@
 + IQWithType: (OFString*)type_
 	  ID: (OFString*)ID_
 {
+	return [[[self alloc] initWithType: type_
+					ID: ID_] autorelease];
+}
+
+- initWithType: (OFString*)type_
+	    ID: (OFString*)ID_
+{
 	if (!([type_ isEqual: @"get"] ||
 	      [type_ isEqual: @"set"] ||
 	      [type_ isEqual: @"result"] ||
 	      [type_ isEqual: @"error"]))
 		of_log(@"Invalid IQ type!");
 
-	id ret;
-	ret = [[[self alloc] initWithName: @"iq"] autorelease];
-	[ret setType: type_];
-	[ret setID: ID_];
-	return ret;
+	return [super initWithName: @"iq"
+			     type: type_
+			       ID: ID_];
 }
 @end
 
 @implementation XMPPMessage
 + message
 {
-	return [self messageWithType: nil ID: nil];
+	return [[[self alloc] init] autorelease];
 }
 
 + messageWithID: (OFString*)ID_
 {
-	return [self messageWithType: nil ID: ID_];
+	return [[[self alloc] initWithID: ID_] autorelease];
 }
 
 + messageWithType: (OFString*)type_
 {
-	return [self messageWithType: type_ ID: nil];
+	return [[[self alloc] initWithType: type_] autorelease];
 }
 
 + messageWithType: (OFString*)type_
 	       ID: (OFString*)ID_
 {
-	id ret;
-	ret = [[[self alloc] initWithName: @"message"] autorelease];
-	if (type_)
-		[ret setType: type_];
-	if (ID_)
-		[ret setID: ID_];
-	return ret;
+	return [[[self alloc] initWithType: type_
+					ID: ID_] autorelease];
+}
+
+- init
+{
+	return [self initWithType: nil
+			       ID: nil];
+}
+
+- initWithID: (OFString*)ID_
+{
+	return [self initWithType: nil
+			       ID: ID_];
+}
+
+- initWithType: (OFString*)type_
+{
+	return [self initWithType: type_
+			       ID: nil];
+}
+
+- initWithType: (OFString*)type_
+	    ID: (OFString*)ID_
+{
+	return [super initWithName: @"message"
+			      type: type_
+				ID: ID_];
 }
 
 - (void)addBody: (OFString*)body
@@ -167,29 +236,50 @@
 @implementation XMPPPresence
 + presence
 {
-	return [self presenceWithType: nil ID: nil];
+	return [[[self alloc] init] autorelease];
 }
 
 + presenceWithID: (OFString*)ID_
 {
-	return [self presenceWithType: nil ID: ID_];
+	return [[[self alloc] initWithID: ID_] autorelease];
 }
 
 + presenceWithType: (OFString*)type_
 {
-	return [self presenceWithType: type_ ID: nil];
+	return [[[self alloc] initWithType: type_] autorelease];
 }
 
 + presenceWithType: (OFString*)type_
 		ID: (OFString*)ID_
 {
-	id ret;
-	ret = [[[self alloc] initWithName: @"presence"] autorelease];
-	if (type_)
-		[ret setType: type_];
-	if (ID_)
-		[ret setID: ID_];
-	return ret;
+	return [[[self alloc] initWithType: type_
+					ID: ID_] autorelease];
+}
+
+- init
+{
+	return [self initWithType: nil
+			       ID: nil];
+}
+
+- initWithID: (OFString*)ID_
+{
+	return [self initWithType: nil
+			       ID: ID_];
+}
+
+- initWithType: (OFString*)type_
+{
+	return [self initWithType: type_
+			       ID: nil];
+}
+
+- initWithType: (OFString*)type_
+	    ID: (OFString*)ID_
+{
+	return [super initWithName: @"presence"
+			      type: type_
+				ID: ID_];
 }
 
 - (void)addShow: (OFString*)show
