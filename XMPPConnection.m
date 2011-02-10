@@ -188,6 +188,17 @@
 			of_log(@"Auth failed!");
 			// FIXME: Handle!
 	}
+
+	if ([elem.name isEqual: @"iq"] &&
+	    [elem.namespace isEqual: NS_CLIENT]) {
+		XMPPIQ *iq = [XMPPIQ stanzaWithElement: elem];
+		if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"]) {
+			OFXMLElement *bindElem = iq.children.firstObject;
+			OFXMLElement *jidElem = bindElem.children.firstObject;
+			of_log(@"Bound to JID: %@",
+				[jidElem.children.firstObject stringValue]);
+		}
+	}
 }
 
 - (void)elementBuilder: (OFXMLElementBuilder*)b
