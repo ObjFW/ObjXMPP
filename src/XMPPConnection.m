@@ -66,6 +66,48 @@
 	[old release];
 }
 
+- (void)setServer: (OFString*)server_
+{
+	OFString *old = server;
+	char *srv;
+
+	Stringprep_rc rc;
+	if ((rc = stringprep_profile([server_ cString], &srv, "Nameprep", 0))
+			!= STRINGPREP_OK) {
+		of_log(@"Nameprep failed: %s", stringprep_strerror(rc));
+		assert(0);
+	}
+
+	@try {
+		server = [[OFString alloc] initWithCString: srv];
+	} @finally {
+		free(srv);
+	}
+
+	[old release];
+}
+
+- (void)setPassword: (OFString*)password_
+{
+	OFString *old = password;
+	char *pass;
+
+	Stringprep_rc rc;
+	if ((rc = stringprep_profile([password_ cString], &pass, "SASLprep", 0))
+			!= STRINGPREP_OK) {
+		of_log(@"SASLprep failed: %s", stringprep_strerror(rc));
+		assert(0);
+	}
+
+	@try {
+		password = [[OFString alloc] initWithCString: pass];
+	} @finally {
+		free(pass);
+	}
+
+	[old release];
+}
+
 - (void)_startStream
 {
 	[sock writeFormat: @"<?xml version='1.0'?>\n"
