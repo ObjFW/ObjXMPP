@@ -1,4 +1,4 @@
-all: tests
+all: tests/tests
 
-tests: test.m XMPPConnection.m XMPPStanza.m
-	objfw-compile -o $@ $^ -lidn -Wall -Werror
+tests/tests: tests/test.m src/XMPPConnection.m src/XMPPStanza.m
+	objfw-compile -o $@ $^ -lidn -Wall -Werror -Isrc
