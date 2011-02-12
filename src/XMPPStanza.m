@@ -70,14 +70,13 @@
 	      [name_ isEqual: @"presence"]))
 		of_log(@"Invalid stanza name!");
 
-	id ret;
-	ret = [super initWithName: name_];
+	self = [super initWithName: name_];
 	[self setDefaultNamespace: @"jabber:client"];
 	if (type_)
-		[ret setType: type_];
+		[self setType: type_];
 	if (ID_)
-		[ret setID: ID_];
-	return ret;
+		[self setID: ID_];
+	return self;
 }
 
 - initWithElement: (OFXMLElement*)elem
