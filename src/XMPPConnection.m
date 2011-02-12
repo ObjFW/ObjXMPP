@@ -212,6 +212,17 @@
 	[self sendStanza: iq];
 }
 
+- (void)_handleResourceBind: (XMPPIQ*)iq
+{
+	OFXMLElement *bindElem = iq.children.firstObject;
+	if ([bindElem.name isEqual: @"bind"] &&
+	    [bindElem.namespace isEqual: NS_BIND]) {
+		OFXMLElement *jidElem = bindElem.children.firstObject;
+		of_log(@"Bound to JID: %@", [jidElem.children.firstObject
+				stringValue]);
+	}
+}
+
 - (void)_handleFeatures: (OFXMLElement*)elem
 {
 	for (OFXMLElement *child in elem.children) {
@@ -262,10 +273,7 @@
 	    [elem.namespace isEqual: NS_CLIENT]) {
 		XMPPIQ *iq = [XMPPIQ stanzaWithElement: elem];
 		if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"]) {
-			OFXMLElement *bindElem = iq.children.firstObject;
-			OFXMLElement *jidElem = bindElem.children.firstObject;
-			of_log(@"Bound to JID: %@",
-				[jidElem.children.firstObject stringValue]);
+			[self _handleResourceBind: iq];
 		}
 	}
 }
