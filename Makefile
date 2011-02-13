@@ -1,6 +1,6 @@
 all: tests/tests
 
-tests/tests: tests/test.m src/XMPPConnection.m src/XMPPStanza.m
+tests/tests: tests/test.m src/XMPPConnection.m src/XMPPStanza.m src/XMPPJID.m
 	objfw-compile -o $@ $^ -lidn -Wall -Werror -Isrc
 
 clean:

@@ -13,6 +13,7 @@
 @synthesize password;
 @synthesize server;
 @synthesize resource;
+@synthesize JID;
 @synthesize port;
 @synthesize useTLS;
 @synthesize delegate;
@@ -218,8 +219,9 @@
 	if ([bindElem.name isEqual: @"bind"] &&
 	    [bindElem.namespace isEqual: NS_BIND]) {
 		OFXMLElement *jidElem = bindElem.children.firstObject;
-		of_log(@"Bound to JID: %@", [jidElem.children.firstObject
-				stringValue]);
+		JID = [[XMPPJID alloc] initWithString:
+			[jidElem.children.firstObject stringValue]];
+		of_log(@"Bound to JID: %@", [JID fullJID]);
 	}
 }
 

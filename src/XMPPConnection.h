@@ -1,4 +1,5 @@
 #import <ObjFW/ObjFW.h>
+#import <XMPPJID.h>
 
 @class XMPPConnection;
 @class XMPPIQ;
@@ -25,7 +26,7 @@
 	OFXMLElementBuilder *elementBuilder;
 
 	/**
-	 * The username (local part of the JID) to connect with
+	 * The username to connect with
 	 */
 	OFString *username;
 
@@ -45,6 +46,11 @@
 	OFString *resource;
 
 	/**
+	 * The JID bound to this connection (this is determined by the server)
+	 */
+	XMPPJID *JID;
+
+	/**
 	 * The port to connect to
 	 */
 	short port;
@@ -61,6 +67,7 @@
 @property (copy) OFString *password;
 @property (copy) OFString *server;
 @property (copy) OFString *resource;
+@property (readonly) XMPPJID *JID;
 @property (assign) short port;
 @property (assign) BOOL useTLS;
 @property (retain) id <XMPPConnectionDelegate> delegate;
