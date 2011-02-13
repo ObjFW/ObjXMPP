@@ -207,8 +207,12 @@
 - (void)_sendResourceBind
 {
 	XMPPIQ *iq = [XMPPIQ IQWithType: @"set" ID: @"bind0"];
-	[iq addChild: [OFXMLElement elementWithName: @"bind"
-					  namespace: NS_BIND]];
+	OFXMLElement *bind = [OFXMLElement elementWithName: @"bind"
+						 namespace: NS_BIND];
+	if (resource)
+		[bind addChild: [OFXMLElement elementWithName: @"resource"
+						  stringValue: resource]];
+	[iq addChild: bind];
 
 	[self sendStanza: iq];
 }
