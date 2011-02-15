@@ -52,9 +52,9 @@
 	char *node;
 
 	Stringprep_rc rc;
-	if ((rc = stringprep_profile([username_ cString], &node, "Nodeprep", 0))
+	if ((rc = stringprep_profile([username_ cString], &node, "SASLprep", 0))
 			!= STRINGPREP_OK) {
-		of_log(@"Nodeprep failed: %s", stringprep_strerror(rc));
+		of_log(@"SASLprep failed: %s", stringprep_strerror(rc));
 		assert(0);
 	}
 
@@ -62,6 +62,27 @@
 		username = [[OFString alloc] initWithCString: node];
 	} @finally {
 		free(node);
+	}
+
+	[old release];
+}
+
+- (void)setResource: (OFString*)resource_
+{
+	OFString *old = resource;
+	char *res;
+
+	Stringprep_rc rc;
+	if ((rc = stringprep_profile([resource_ cString], &res, "Resourceprep", 0))
+			!= STRINGPREP_OK) {
+		of_log(@"Resourceprep failed: %s", stringprep_strerror(rc));
+		assert(0);
+	}
+
+	@try {
+		resource = [[OFString alloc] initWithCString: res];
+	} @finally {
+		free(res);
 	}
 
 	[old release];
