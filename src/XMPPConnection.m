@@ -1,7 +1,10 @@
-#include <stringprep.h>
 #include <assert.h>
+
+#include <stringprep.h>
+
 #import "XMPPConnection.h"
 #import "XMPPStanza.h"
+#import "XMPPIQ.h"
 
 #define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
 #define NS_CLIENT @"jabber:client"

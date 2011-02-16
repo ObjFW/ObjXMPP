@@ -1,5 +1,5 @@
 all:
-	objfw-compile --lib 0.0 -o objxmpp *.m \
+	objfw-compile -Wall --lib 0.0 -o objxmpp *.m \
 		`pkg-config --cflags --libs libidn`
 
 clean:
