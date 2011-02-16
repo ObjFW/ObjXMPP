@@ -131,6 +131,10 @@
 
 - (OFString*)fullJID
 {
+	/* If we don't have a resource, the full JID is equal to the bare JID */
+	if (resource == nil)
+		return [self bareJID];
+
 	if (node != nil)
 		return [OFString stringWithFormat: @"%@@%@/%@",
 		       node, domain, resource];
