@@ -70,9 +70,8 @@
 		return description;
 
 	pool = [[OFAutoreleasePool alloc] init];
-	description = [[OFString alloc]
-	    initWithFormat: @"An exception occurred in class %@!",
-			    [self className]];
+	description = [[OFString alloc] initWithFormat:
+	    @"An exception occurred in class %@!", [self className]];
 	[pool release];
 
 	return description;
@@ -127,5 +126,21 @@
 	[string release];
 
 	[super dealloc];
+}
+
+- (OFString*)description
+{
+	OFAutoreleasePool *pool;
+
+	if (description != nil)
+		return description;
+
+	pool = [[OFAutoreleasePool alloc] init];
+	description = [[OFString alloc] initWithFormat:
+	    @"Stringprep with profile %@ failed on string '%@'!",
+	    profile, string];
+	[pool release];
+
+	return description;
 }
 @end
