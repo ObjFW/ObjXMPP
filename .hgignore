@@ -1,0 +1,6 @@
+syntax: glob
+*.o
+*.so
+*.dylib
+*~
+tests/tests
