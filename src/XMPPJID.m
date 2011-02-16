@@ -21,11 +21,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <assert.h>
-
 #include <stringprep.h>
 
 #import "XMPPJID.h"
+#import "XMPPExceptions.h"
 
 @implementation XMPPJID
 @synthesize node;
@@ -82,10 +81,11 @@
 	}
 
 	if ((rc = stringprep_profile([node_ cString], &nodepart,
-	    "Nodeprep", 0)) != STRINGPREP_OK) {
-		of_log(@"Nodeprep failed: %s", stringprep_strerror(rc));
-		assert(0);
-	}
+	    "Nodeprep", 0)) != STRINGPREP_OK)
+		@throw [XMPPStringPrepFailedException newWithClass: isa
+							connection: nil
+							   profile: @"Nodeprep"
+							    string: node_];
 
 	@try {
 		node = [[OFString alloc] initWithCString: nodepart];
@@ -103,10 +103,11 @@
 	Stringprep_rc rc;
 
 	if ((rc = stringprep_profile([domain_ cString], &srv,
-	    "Nameprep", 0)) != STRINGPREP_OK) {
-		of_log(@"Nameprep failed: %s", stringprep_strerror(rc));
-		assert(0);
-	}
+	    "Nameprep", 0)) != STRINGPREP_OK)
+		@throw [XMPPStringPrepFailedException newWithClass: isa
+							connection: nil
+							   profile: @"Nameprep"
+							    string: domain_];
 
 	@try {
 		domain = [[OFString alloc] initWithCString: srv];
@@ -130,10 +131,12 @@
 	}
 
 	if ((rc = stringprep_profile([resource_ cString], &res,
-	    "Resourceprep", 0)) != STRINGPREP_OK) {
-		of_log(@"Resourceprep failed: %s", stringprep_strerror(rc));
-		assert(0);
-	}
+	    "Resourceprep", 0)) != STRINGPREP_OK)
+		@throw [XMPPStringPrepFailedException
+		    newWithClass: isa
+		      connection: nil
+			 profile: @"Resourceprep"
+			  string: resource_];
 
 	@try {
 		resource = [[OFString alloc] initWithCString: res];
