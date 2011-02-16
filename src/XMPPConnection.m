@@ -4,6 +4,7 @@
 
 #import "XMPPConnection.h"
 #import "XMPPStanza.h"
+#import "XMPPJID.h"
 #import "XMPPIQ.h"
 
 #define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
@@ -55,8 +56,8 @@
 	char *node;
 
 	Stringprep_rc rc;
-	if ((rc = stringprep_profile([username_ cString], &node, "SASLprep", 0))
-			!= STRINGPREP_OK) {
+	if ((rc = stringprep_profile([username_ cString], &node,
+	    "SASLprep", 0)) != STRINGPREP_OK) {
 		of_log(@"SASLprep failed: %s", stringprep_strerror(rc));
 		assert(0);
 	}
@@ -76,8 +77,8 @@
 	char *res;
 
 	Stringprep_rc rc;
-	if ((rc = stringprep_profile([resource_ cString], &res, "Resourceprep", 0))
-			!= STRINGPREP_OK) {
+	if ((rc = stringprep_profile([resource_ cString], &res,
+	    "Resourceprep", 0)) != STRINGPREP_OK) {
 		of_log(@"Resourceprep failed: %s", stringprep_strerror(rc));
 		assert(0);
 	}
@@ -97,8 +98,8 @@
 	char *srv;
 
 	Stringprep_rc rc;
-	if ((rc = stringprep_profile([server_ cString], &srv, "Nameprep", 0))
-			!= STRINGPREP_OK) {
+	if ((rc = stringprep_profile([server_ cString], &srv,
+	    "Nameprep", 0)) != STRINGPREP_OK) {
 		of_log(@"Nameprep failed: %s", stringprep_strerror(rc));
 		assert(0);
 	}
@@ -118,8 +119,8 @@
 	char *pass;
 
 	Stringprep_rc rc;
-	if ((rc = stringprep_profile([password_ cString], &pass, "SASLprep", 0))
-			!= STRINGPREP_OK) {
+	if ((rc = stringprep_profile([password_ cString], &pass,
+	    "SASLprep", 0)) != STRINGPREP_OK) {
 		of_log(@"SASLprep failed: %s", stringprep_strerror(rc));
 		assert(0);
 	}
@@ -145,7 +146,8 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
-	[sock connectToHost: server onPort: port];
+	[sock connectToHost: server
+		     onPort: port];
 	[self _startStream];
 
 	[pool release];
@@ -181,13 +183,18 @@
        attributes: (OFArray*)attrs
 {
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
-	    ![ns isEqual: NS_STREAM])
+	    ![ns isEqual: NS_STREAM]) {
 		of_log(@"Did not get expected stream start!");
+		assert(0);
+	}
 
-	for (OFXMLAttribute *attr in attrs)
+	for (OFXMLAttribute *attr in attrs) {
 		if ([attr.name isEqual: @"from"] &&
-		    ![attr.stringValue isEqual: server])
+		    ![attr.stringValue isEqual: server]) {
 			of_log(@"Got invalid from in stream start!");
+			assert(0);
+		}
+	}
 
 	parser.delegate = elementBuilder;
 }
@@ -244,11 +251,12 @@
 - (void)_handleResourceBind: (XMPPIQ*)iq
 {
 	OFXMLElement *bindElem = iq.children.firstObject;
+
 	if ([bindElem.name isEqual: @"bind"] &&
 	    [bindElem.namespace isEqual: NS_BIND]) {
 		OFXMLElement *jidElem = bindElem.children.firstObject;
 		JID = [[XMPPJID alloc] initWithString:
-			[jidElem.children.firstObject stringValue]];
+		    [jidElem.children.firstObject stringValue]];
 		of_log(@"Bound to JID: %@", [JID fullJID]);
 	}
 }
@@ -302,9 +310,10 @@
 	if ([elem.name isEqual: @"iq"] &&
 	    [elem.namespace isEqual: NS_CLIENT]) {
 		XMPPIQ *iq = [XMPPIQ stanzaWithElement: elem];
-		if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"]) {
+
+		// FIXME: More checking!
+		if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"])
 			[self _handleResourceBind: iq];
-		}
 	}
 }
 

@@ -65,17 +65,26 @@
 	  type: (OFString*)type_
 	    ID: (OFString*)ID_
 {
-	if (!([name_ isEqual: @"iq"] ||
-	      [name_ isEqual: @"message"] ||
-	      [name_ isEqual: @"presence"]))
+	if (![name_ isEqual: @"iq"] &&
+	    ![name_ isEqual: @"message"] &&
+	    ![name_ isEqual: @"presence"])
 		of_log(@"Invalid stanza name!");
 
 	self = [super initWithName: name_];
-	[self setDefaultNamespace: @"jabber:client"];
-	if (type_)
-		[self setType: type_];
-	if (ID_)
-		[self setID: ID_];
+
+	@try {
+		[self setDefaultNamespace: @"jabber:client"];
+
+		if (type_)
+			[self setType: type_];
+
+		if (ID_)
+			[self setID: ID_];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
 	return self;
 }
 
@@ -84,26 +93,28 @@
 	self = [super initWithName: elem.name
 			 namespace: elem.namespace];
 
-	OFXMLAttribute *attr;
+	@try {
+		OFXMLAttribute *attr;
+		OFXMLElement *el;
 
-	for (attr in elem.attributes) {
-		if ([attr.name isEqual: @"from"]) {
-			[self setFrom: [attr stringValue]];
-		} else if ([attr.name isEqual: @"to"]) {
-			[self setTo: [attr stringValue]];
-		} else if ([attr.name isEqual: @"type"]) {
-			[self setType: [attr stringValue]];
-		} else if ([attr.name isEqual: @"id"]) {
-			[self setID: [attr stringValue]];
-		} else {
-			[self addAttribute: attr];
+		for (attr in elem.attributes) {
+			if ([attr.name isEqual: @"from"])
+				[self setFrom: [attr stringValue]];
+			else if ([attr.name isEqual: @"to"])
+				[self setTo: [attr stringValue]];
+			else if ([attr.name isEqual: @"type"])
+				[self setType: [attr stringValue]];
+			else if ([attr.name isEqual: @"id"])
+				[self setID: [attr stringValue]];
+			else
+				[self addAttribute: attr];
 		}
-	}
 
-	OFXMLElement *el;
-
-	for (el in elem.children) {
-		[self addChild: el];
+		for (el in elem.children)
+			[self addChild: el];
+	} @catch (id e) {
+		[self release];
+		@throw e;
 	}
 
 	return self;
@@ -124,7 +135,10 @@
 	OFString* old = from;
 	from = [from_ copy];
 	[old release];
-	[self addAttributeWithName: @"from" stringValue: from_];
+
+	/* FIXME: Remove old attribute! */
+	[self addAttributeWithName: @"from"
+		       stringValue: from_];
 }
 
 - (void)setTo: (OFString*)to_
@@ -132,7 +146,10 @@
 	OFString* old = to;
 	to = [to_ copy];
 	[old release];
-	[self addAttributeWithName: @"to" stringValue: to];
+
+	/* FIXME: Remove old attribute! */
+	[self addAttributeWithName: @"to"
+		       stringValue: to];
 }
 
 - (void)setType: (OFString*)type_
@@ -140,7 +157,10 @@
 	OFString* old = type;
 	type = [type_ copy];
 	[old release];
-	[self addAttributeWithName: @"type" stringValue: type];
+
+	/* FIXME: Remove old attribute! */
+	[self addAttributeWithName: @"type"
+		       stringValue: type];
 }
 
 - (void)setID: (OFString*)ID_
@@ -148,6 +168,8 @@
 	OFString* old = ID;
 	ID = [ID_ copy];
 	[old release];
+
+	/* FIXME: Remove old attribute! */
 	[self addAttributeWithName: @"id"
 		       stringValue: ID];
 }

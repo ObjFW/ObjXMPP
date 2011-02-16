@@ -1,5 +1,7 @@
 #include <assert.h>
+
 #include <stringprep.h>
+
 #import "XMPPJID.h"
 
 @implementation XMPPJID
@@ -25,14 +27,14 @@
 	nodesep = [str indexOfFirstOccurrenceOfString: @"@"];
 	resourcesep = [str indexOfFirstOccurrenceOfString: @"/"];
 
-	if (nodesep == -1)
-		[self setNode: @""];
+	if (nodesep == SIZE_MAX)
+		[self setNode: nil];
 	else
 		[self setNode: [str substringFromIndex: 0
 					       toIndex: nodesep]];
 
-	if (resourcesep == -1) {
-		[self setResource: @""];
+	if (resourcesep == SIZE_MAX) {
+		[self setResource: nil];
 		resourcesep = [str length];
 	} else
 		[self setResource: [str substringFromIndex: resourcesep + 1
@@ -48,10 +50,16 @@
 {
 	OFString *old = node;
 	char *nodepart;
-
 	Stringprep_rc rc;
-	if ((rc = stringprep_profile([node_ cString], &nodepart, "Nodeprep", 0))
-			!= STRINGPREP_OK) {
+
+	if (node_ == nil) {
+		[old release];
+		node = nil;
+		return;
+	}
+
+	if ((rc = stringprep_profile([node_ cString], &nodepart,
+	    "Nodeprep", 0)) != STRINGPREP_OK) {
 		of_log(@"Nodeprep failed: %s", stringprep_strerror(rc));
 		assert(0);
 	}
@@ -69,10 +77,10 @@
 {
 	OFString *old = domain;
 	char *srv;
-
 	Stringprep_rc rc;
-	if ((rc = stringprep_profile([domain_ cString], &srv, "Nameprep", 0))
-			!= STRINGPREP_OK) {
+
+	if ((rc = stringprep_profile([domain_ cString], &srv,
+	    "Nameprep", 0)) != STRINGPREP_OK) {
 		of_log(@"Nameprep failed: %s", stringprep_strerror(rc));
 		assert(0);
 	}
@@ -90,10 +98,16 @@
 {
 	OFString *old = resource;
 	char *res;
-
 	Stringprep_rc rc;
+
+	if (resource_ == nil) {
+		[old release];
+		resource = nil;
+		return;
+	}
+
 	if ((rc = stringprep_profile([resource_ cString], &res,
-				"Resourceprep", 0)) != STRINGPREP_OK) {
+	    "Resourceprep", 0)) != STRINGPREP_OK) {
 		of_log(@"Resourceprep failed: %s", stringprep_strerror(rc));
 		assert(0);
 	}
@@ -109,7 +123,7 @@
 
 - (OFString*)bareJID
 {
-	if ([node length])
+	if (node != nil)
 		return [OFString stringWithFormat: @"%@@%@", node, domain];
 	else
 		return [OFString stringWithFormat: @"%@", domain];
@@ -117,7 +131,7 @@
 
 - (OFString*)fullJID
 {
-	if ([node length])
+	if (node != nil)
 		return [OFString stringWithFormat: @"%@@%@/%@",
 		       node, domain, resource];
 	else
