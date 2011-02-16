@@ -1,7 +1,7 @@
-all: tests/tests
-
-tests/tests: tests/test.m src/XMPPConnection.m src/XMPPStanza.m src/XMPPJID.m
-	objfw-compile -o $@ $^ -lidn -Wall -Werror -Isrc
+all:
+	cd src && ${MAKE} ${MFLAGS}
+	cd tests && ${MAKE} ${MFLAGS}
 
 clean:
-	rm -f src/*.o tests/*.o tests/tests
+	cd src && ${MAKE} ${MFLAGS} clean
+	cd tests && ${MAKE} ${MFLAGS} clean

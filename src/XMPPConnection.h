@@ -1,5 +1,6 @@
 #import <ObjFW/ObjFW.h>
-#import <XMPPJID.h>
+
+#import "XMPPJID.h"
 
 @class XMPPConnection;
 @class XMPPIQ;

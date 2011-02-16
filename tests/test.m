@@ -1,5 +1,7 @@
 #include <assert.h>
+
 #import <ObjFW/ObjFW.h>
+
 #import "XMPPConnection.h"
 #import "XMPPStanza.h"
 
