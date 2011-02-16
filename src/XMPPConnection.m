@@ -29,6 +29,7 @@
 #import "XMPPStanza.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
+#import "XMPPExceptions.h"
 
 #define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
 #define NS_CLIENT @"jabber:client"
@@ -36,14 +37,7 @@
 #define NS_STREAM @"http://etherx.jabber.org/streams"
 
 @implementation XMPPConnection
-@synthesize username;
-@synthesize password;
-@synthesize server;
-@synthesize resource;
-@synthesize JID;
-@synthesize port;
-@synthesize useTLS;
-@synthesize delegate;
+@synthesize username, password, server, resource, JID, port, useTLS, delegate;
 
 - init
 {
@@ -77,13 +71,14 @@
 {
 	OFString *old = username;
 	char *node;
-
 	Stringprep_rc rc;
+
 	if ((rc = stringprep_profile([username_ cString], &node,
-	    "SASLprep", 0)) != STRINGPREP_OK) {
-		of_log(@"SASLprep failed: %s", stringprep_strerror(rc));
-		assert(0);
-	}
+	    "SASLprep", 0)) != STRINGPREP_OK)
+		@throw [XMPPStringPrepFailedException newWithClass: isa
+							connection: self
+							   profile: @"SASLprep"
+							    string: username_];
 
 	@try {
 		username = [[OFString alloc] initWithCString: node];
@@ -98,13 +93,15 @@
 {
 	OFString *old = resource;
 	char *res;
-
 	Stringprep_rc rc;
+
 	if ((rc = stringprep_profile([resource_ cString], &res,
-	    "Resourceprep", 0)) != STRINGPREP_OK) {
-		of_log(@"Resourceprep failed: %s", stringprep_strerror(rc));
-		assert(0);
-	}
+	    "Resourceprep", 0)) != STRINGPREP_OK)
+		@throw [XMPPStringPrepFailedException
+		    newWithClass: isa
+		      connection: self
+			 profile: @"Resourceprep"
+			  string: resource_];
 
 	@try {
 		resource = [[OFString alloc] initWithCString: res];
@@ -119,13 +116,14 @@
 {
 	OFString *old = server;
 	char *srv;
-
 	Stringprep_rc rc;
+
 	if ((rc = stringprep_profile([server_ cString], &srv,
-	    "Nameprep", 0)) != STRINGPREP_OK) {
-		of_log(@"Nameprep failed: %s", stringprep_strerror(rc));
-		assert(0);
-	}
+	    "Nameprep", 0)) != STRINGPREP_OK)
+		@throw [XMPPStringPrepFailedException newWithClass: isa
+							connection: self
+							   profile: @"Nameprep"
+							    string: server_];
 
 	@try {
 		server = [[OFString alloc] initWithCString: srv];
@@ -140,13 +138,14 @@
 {
 	OFString *old = password;
 	char *pass;
-
 	Stringprep_rc rc;
+
 	if ((rc = stringprep_profile([password_ cString], &pass,
-	    "SASLprep", 0)) != STRINGPREP_OK) {
-		of_log(@"SASLprep failed: %s", stringprep_strerror(rc));
-		assert(0);
-	}
+	    "SASLprep", 0)) != STRINGPREP_OK)
+		@throw [XMPPStringPrepFailedException newWithClass: isa
+							connection: self
+							   profile: @"SASLprep"
+							    string: password_];
 
 	@try {
 		password = [[OFString alloc] initWithCString: pass];

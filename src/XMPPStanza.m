@@ -57,7 +57,8 @@
 					ID: ID_] autorelease];
 }
 
-+ stanzaWithElement: (OFXMLElement*)elem {
++ stanzaWithElement: (OFXMLElement*)elem
+{
 	return [[[self alloc] initWithElement: elem] autorelease];
 }
 
@@ -88,14 +89,14 @@
 	  type: (OFString*)type_
 	    ID: (OFString*)ID_
 {
-	if (![name_ isEqual: @"iq"] &&
-	    ![name_ isEqual: @"message"] &&
-	    ![name_ isEqual: @"presence"])
-		of_log(@"Invalid stanza name!");
-
 	self = [super initWithName: name_];
 
 	@try {
+		if (![name_ isEqual: @"iq"] && ![name_ isEqual: @"message"] &&
+		    ![name_ isEqual: @"presence"])
+			@throw [OFInvalidArgumentException newWithClass: isa
+							       selector: _cmd];
+
 		[self setDefaultNamespace: @"jabber:client"];
 
 		if (type_)

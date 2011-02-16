@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, Jonathan Schleifer <js@webkeks.org>
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
  *
  * https://webkeks.org/hg/objxmpp/
  *
@@ -21,33 +20,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "XMPPIQ.h"
+#import <ObjFW/ObjFW.h>
 
-@implementation XMPPIQ
-+ IQWithType: (OFString*)type_
-	  ID: (OFString*)ID_
+@class XMPPConnection;
+
+@interface XMPPException: OFException
 {
-	return [[[self alloc] initWithType: type_
-					ID: ID_] autorelease];
+	XMPPConnection *connection;
 }
 
-- initWithType: (OFString*)type_
-	    ID: (OFString*)ID_
+@property (readonly, nonatomic) XMPPConnection *connection;
+
++ newWithClass: (Class)class_
+    connection: (XMPPConnection*)conn;
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn;
+@end
+
+@interface XMPPStringPrepFailedException: XMPPException
 {
-	self = [super initWithName: @"iq"
-			      type: type_
-				ID: ID_];
-
-	@try {
-		if (![type_ isEqual: @"get"] && ![type_ isEqual: @"set"] &&
-		    ![type_ isEqual: @"result"] && ![type_ isEqual: @"error"])
-			@throw [OFInvalidArgumentException newWithClass: isa
-							       selector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	return self;
+	OFString *profile;
+	OFString *string;
 }
+
+@property (readonly, nonatomic) OFString *profile, *string;
+
++ newWithClass: (Class)class_
+    connection: (XMPPConnection*)conn
+       profile: (OFString*)profile
+	string: (OFString*)string;
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+	profile: (OFString*)profile
+	 string: (OFString*)string;
 @end
