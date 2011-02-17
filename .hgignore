@@ -3,4 +3,5 @@ syntax: glob
 *.so
 *.dylib
 *~
+docs
 tests/tests
