@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <stringprep.h>
+#include <idna.h>
 
 #import "XMPPConnection.h"
 #import "XMPPStanza.h"
@@ -116,14 +117,15 @@
 {
 	OFString *old = server;
 	char *srv;
-	Stringprep_rc rc;
+	Idna_rc rc;
 
-	if ((rc = stringprep_profile([server_ cString], &srv,
-	    "Nameprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException newWithClass: isa
-							connection: self
-							   profile: @"Nameprep"
-							    string: server_];
+	if ((rc = idna_to_ascii_8z([server_ cString],
+	    &srv, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
+		@throw [XMPPIDNATranslationFailedException
+		 newWithClass: isa
+		   connection: self
+		    operation: @"ToASCII"
+		       string: server_];
 
 	@try {
 		server = [[OFString alloc] initWithCString: srv];

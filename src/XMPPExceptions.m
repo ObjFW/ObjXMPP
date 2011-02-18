@@ -144,3 +144,70 @@
 	return description;
 }
 @end
+
+@implementation XMPPIDNATranslationFailedException
+@synthesize operation, string;
+
++ newWithClass: (Class)class_
+    connection: (XMPPConnection*)conn
+     operation: (OFString*)operation
+	string: (OFString*)string
+{
+	return [[self alloc] initWithClass: class_
+				connection: conn
+				 operation: operation
+				    string: string];
+}
+
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+{
+	Class c = isa;
+	[self release];
+	@throw [OFNotImplementedException newWithClass: c
+					      selector: _cmd];
+}
+
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+      operation: (OFString*)operation_
+	 string: (OFString*)string_
+{
+	self = [super initWithClass: class_
+			 connection: conn];
+
+	@try {
+		operation = [operation_ copy];
+		string = [string_ copy];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+	[operation release];
+	[string release];
+
+	[super dealloc];
+}
+
+- (OFString*)description
+{
+	OFAutoreleasePool *pool;
+
+	if (description != nil)
+		return description;
+
+	pool = [[OFAutoreleasePool alloc] init];
+	description = [[OFString alloc] initWithFormat:
+	    @"IDNA operation %@ failed on string '%@'!",
+	    operation, string];
+	[pool release];
+
+	return description;
+}
+@end

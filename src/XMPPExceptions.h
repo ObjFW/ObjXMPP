@@ -54,3 +54,21 @@
 	profile: (OFString*)profile
 	 string: (OFString*)string;
 @end
+
+@interface XMPPIDNATranslationFailedException: XMPPException
+{
+	OFString *operation;
+	OFString *string;
+}
+
+@property (readonly, nonatomic) OFString *operation, *string;
+
++ newWithClass: (Class)class_
+    connection: (XMPPConnection*)conn
+     operation: (OFString*)operation
+	string: (OFString*)string;
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+      operation: (OFString*)operation
+	 string: (OFString*)string;
+@end
