@@ -68,6 +68,22 @@
 	return self;
 }
 
+- copy
+{
+	XMPPJID *new = [[XMPPJID alloc] init];
+
+	@try {
+		new->node = [node copy];
+		new->domain = [domain copy];
+		new->resource = [resource copy];
+	} @catch (id e) {
+		[new release];
+		@throw e;
+	}
+
+	return new;
+}
+
 - (void)setNode: (OFString*)node_
 {
 	OFString *old = node;

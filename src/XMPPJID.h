@@ -26,7 +26,7 @@
 /**
  * \brief A class for easy handling of JIDs.
  */
-@interface XMPPJID: OFObject
+@interface XMPPJID: OFObject <OFCopying>
 {
 	/// The JID's localpart
 	OFString *node;
