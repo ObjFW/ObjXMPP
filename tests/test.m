@@ -79,8 +79,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[elem addAttributeWithName: @"id" stringValue: @"42"];
 	XMPPStanza *stanza = [XMPPStanza stanzaWithElement: elem];
 	assert([[elem stringValue] isEqual: [stanza stringValue]]);
-	assert(([[OFString stringWithFormat: @"%@, %@, %@, %@", stanza.from,
-	    stanza.to, stanza.type, stanza.ID]
+	assert(([[OFString stringWithFormat: @"%@, %@, %@, %@",
+	    stanza.from.fullJID, stanza.to.fullJID, stanza.type, stanza.ID]
 	    isEqual: @"bob@localhost, alice@localhost, get, 42"]));
 
 	conn = [[XMPPConnection alloc] init];
