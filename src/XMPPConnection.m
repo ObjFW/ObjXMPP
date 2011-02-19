@@ -223,13 +223,6 @@
 	parser.delegate = elementBuilder;
 }
 
-- (void)_addAuthMechanisms: (OFXMLElement*)mechanisms_
-{
-	for (OFXMLElement *mechanism in mechanisms_.children)
-		[mechanisms addObject:
-		    [mechanism.children.firstObject stringValue]];
-}
-
 - (void)_sendPLAINAuth
 {
 	OFXMLElement *authTag;
@@ -261,7 +254,8 @@
 
 - (void)_sendResourceBind
 {
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"set" ID: @"bind0"];
+	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
+				     ID: @"bind0"];
 	OFXMLElement *bind = [OFXMLElement elementWithName: @"bind"
 						 namespace: NS_BIND];
 	if (resource)
@@ -287,17 +281,19 @@
 
 - (void)_handleFeatures: (OFXMLElement*)elem
 {
-	for (OFXMLElement *child in elem.children) {
-		if ([[child name] isEqual: @"mechanisms"] &&
-		    [[child namespace] isEqual: NS_SASL])
-			[self _addAuthMechanisms: child];
-		else if ([[child name] isEqual: @"bind"] &&
-		    [[child namespace] isEqual: NS_BIND])
-			[self _sendResourceBind];
-	}
+	OFArray *mechs = [elem elementsForName: @"mechanisms"
+				     namespace: NS_SASL];
+	OFXMLElement *bind = [elem elementsForName: @"bind"
+					 namespace: NS_BIND].firstObject;
+
+	for (OFXMLElement *mech in mechs)
+		[mechanisms addObject: mech.name];
 
 	if ([mechanisms containsObject: @"PLAIN"])
 		[self _sendPLAINAuth];
+
+	if (bind != nil)
+		[self _sendResourceBind];
 }
 
 - (void)elementBuilder: (OFXMLElementBuilder*)b
