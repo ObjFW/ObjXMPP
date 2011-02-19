@@ -22,6 +22,7 @@
  */
 
 #import "XMPPStanza.h"
+#import "XMPPJID.h"
 
 @implementation XMPPStanza
 @synthesize from;
@@ -118,14 +119,13 @@
 			 namespace: elem.namespace];
 
 	@try {
-		OFXMLAttribute *attr;
-		OFXMLElement *el;
-
-		for (attr in elem.attributes) {
+		for (OFXMLAttribute *attr in elem.attributes) {
 			if ([attr.name isEqual: @"from"])
-				[self setFrom: [attr stringValue]];
+				[self setFrom: [XMPPJID JIDWithString:
+				    [attr stringValue]]];
 			else if ([attr.name isEqual: @"to"])
-				[self setTo: [attr stringValue]];
+				[self setTo: [XMPPJID JIDWithString:
+				    [attr stringValue]]];
 			else if ([attr.name isEqual: @"type"])
 				[self setType: [attr stringValue]];
 			else if ([attr.name isEqual: @"id"])
@@ -134,7 +134,7 @@
 				[self addAttribute: attr];
 		}
 
-		for (el in elem.children)
+		for (OFXMLElement *el in elem.children)
 			[self addChild: el];
 	} @catch (id e) {
 		[self release];
@@ -154,31 +154,31 @@
 	[super dealloc];
 }
 
-- (void)setFrom: (OFString*)from_
+- (void)setFrom: (XMPPJID*)from_
 {
-	OFString* old = from;
+	XMPPJID *old = from;
 	from = [from_ copy];
 	[old release];
 
 	[self removeAttributeForName: @"from"];
 	[self addAttributeWithName: @"from"
-		       stringValue: from_];
+		       stringValue: from_.fullJID];
 }
 
-- (void)setTo: (OFString*)to_
+- (void)setTo: (XMPPJID*)to_
 {
-	OFString* old = to;
+	XMPPJID *old = to;
 	to = [to_ copy];
 	[old release];
 
 	[self removeAttributeForName: @"to"];
 	[self addAttributeWithName: @"to"
-		       stringValue: to];
+		       stringValue: to_.fullJID];
 }
 
 - (void)setType: (OFString*)type_
 {
-	OFString* old = type;
+	OFString *old = type;
 	type = [type_ copy];
 	[old release];
 

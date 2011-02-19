@@ -23,23 +23,25 @@
 
 #import <ObjFW/ObjFW.h>
 
+@class XMPPJID;
+
 /**
  * \brief A class describing an XMPP Stanza.
  */
 @interface XMPPStanza: OFXMLElement
 {
 	/// The value of the stanza's from attribute
-	OFString *from;
+	XMPPJID *from;
 	/// The value of the stanza's to attribute
-	OFString *to;
+	XMPPJID *to;
 	/// The value of the stanza's type attribute
 	OFString *type;
 	/// The value of the stanza's id attribute
 	OFString *ID;
 }
 
-@property (copy) OFString *from;
-@property (copy) OFString *to;
+@property (copy) XMPPJID *from;
+@property (copy) XMPPJID *to;
 @property (copy) OFString *type;
 @property (copy) OFString *ID;
 

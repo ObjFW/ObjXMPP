@@ -26,6 +26,7 @@
 #import <ObjFW/ObjFW.h>
 
 #import "XMPPConnection.h"
+#import "XMPPJID.h"
 #import "XMPPStanza.h"
 #import "XMPPIQ.h"
 #import "XMPPMessage.h"
@@ -48,8 +49,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[pres addShow: @"chat"];
 	[pres addStatus: @"Bored"];
 	[pres addPriority: 20];
-	pres.to = @"alice@example.com";
-	pres.from = @"bob@example.org";
+	pres.to = [XMPPJID JIDWithString: @"alice@example.com"];
+	pres.from = [XMPPJID JIDWithString: @"bob@example.org"];
 	assert([[pres stringValue] isEqual: @"<presence to='alice@example.com' "
 	    @"from='bob@example.org'><show>chat</show>"
 	    @"<status>Bored</status><priority>20</priority>"
@@ -57,16 +58,16 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 
 	XMPPMessage *msg = [XMPPMessage messageWithType: @"chat"];
 	[msg addBody: @"Hello everyone"];
-	msg.to = @"jdev@conference.jabber.org";
-	msg.from = @"alice@example.com";
+	msg.to = [XMPPJID JIDWithString: @"jdev@conference.jabber.org"];
+	msg.from = [XMPPJID JIDWithString: @"alice@example.com"];
 	assert([[msg stringValue] isEqual: @"<message type='chat' "
 	    @"to='jdev@conference.jabber.org' "
 	    @"from='alice@example.com'><body>Hello everyone</body>"
 	    @"</message>"]);
 
 	XMPPIQ *iq = [XMPPIQ IQWithType: @"set" ID: @"128"];
-	iq.to = @"juliet@capulet.lit";
-	iq.from = @"romeo@montague.lit";
+	iq.to = [XMPPJID JIDWithString: @"juliet@capulet.lit"];
+	iq.from = [XMPPJID JIDWithString: @"romeo@montague.lit"];
 	assert([[iq stringValue] isEqual: @"<iq type='set' id='128' "
 	    @"to='juliet@capulet.lit' "
 	    @"from='romeo@montague.lit'/>"]);
