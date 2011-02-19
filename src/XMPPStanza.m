@@ -160,7 +160,7 @@
 	from = [from_ copy];
 	[old release];
 
-	/* FIXME: Remove old attribute! */
+	[self removeAttributeForName: @"from"];
 	[self addAttributeWithName: @"from"
 		       stringValue: from_];
 }
@@ -171,7 +171,7 @@
 	to = [to_ copy];
 	[old release];
 
-	/* FIXME: Remove old attribute! */
+	[self removeAttributeForName: @"to"];
 	[self addAttributeWithName: @"to"
 		       stringValue: to];
 }
@@ -182,7 +182,7 @@
 	type = [type_ copy];
 	[old release];
 
-	/* FIXME: Remove old attribute! */
+	[self removeAttributeForName: @"type"];
 	[self addAttributeWithName: @"type"
 		       stringValue: type];
 }
@@ -193,7 +193,7 @@
 	ID = [ID_ copy];
 	[old release];
 
-	/* FIXME: Remove old attribute! */
+	[self removeAttributeForName: @"id"];
 	[self addAttributeWithName: @"id"
 		       stringValue: ID];
 }
