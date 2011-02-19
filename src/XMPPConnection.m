@@ -286,8 +286,8 @@
 	OFXMLElement *bind = [elem elementsForName: @"bind"
 					 namespace: NS_BIND].firstObject;
 
-	for (OFXMLElement *mech in mechs)
-		[mechanisms addObject: mech.name];
+	for (OFXMLElement *mech in [mechs.firstObject children])
+		[mechanisms addObject: [mech.children.firstObject stringValue]];
 
 	if ([mechanisms containsObject: @"PLAIN"])
 		[self _sendPLAINAuth];
