@@ -27,6 +27,8 @@
 #include <idna.h>
 
 #import "XMPPConnection.h"
+#import "XMPPSCRAMAuth.h"
+#import "XMPPPLAINAuth.h"
 #import "XMPPStanza.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
@@ -64,6 +66,7 @@
 	[sock release];
 	[parser release];
 	[elementBuilder release];
+	[authModule release];
 
 	[super dealloc];
 }
@@ -223,31 +226,16 @@
 	parser.delegate = elementBuilder;
 }
 
-- (void)_sendPLAINAuth
+- (void)_sendAuth: (OFString*)name
 {
 	OFXMLElement *authTag;
-	OFDataArray *message;
-
-	message = [OFDataArray dataArrayWithItemSize: 1];
-	/* XXX: authzid would go here */
-	//[message addItem: authzid];
-	/* separator */
-	[message addItem: ""];
-	/* authcid */
-	[message addNItems: [username cStringLength]
-		fromCArray: [username cString]];
-	/* separator */
-	[message addItem: ""];
-	/* passwd */
-	[message addNItems: [password cStringLength]
-		fromCArray: [password cString]];
 
 	authTag = [OFXMLElement elementWithName: @"auth"
 				      namespace: NS_SASL];
 	[authTag addAttributeWithName: @"mechanism"
-			  stringValue: @"PLAIN"];
+			  stringValue: name];
 	[authTag addChild: [OFXMLElement elementWithCharacters:
-	    [message stringByBase64Encoding]]];
+	    [[authModule getClientFirstMessage] stringByBase64Encoding]]];
 
 	[self sendStanza: authTag];
 }
@@ -289,8 +277,18 @@
 	for (OFXMLElement *mech in [mechs.firstObject children])
 		[mechanisms addObject: [mech.children.firstObject stringValue]];
 
-	if ([mechanisms containsObject: @"PLAIN"])
-		[self _sendPLAINAuth];
+	if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
+		authModule = [[XMPPSCRAMAuth alloc]
+		    initWithAuthcid: username
+			   password: password
+			       hash: [OFSHA1Hash class]];
+		[self _sendAuth: @"SCRAM-SHA-1"];
+	} else if ([mechanisms containsObject: @"PLAIN"]) {
+		authModule = [[XMPPPLAINAuth alloc]
+		    initWithAuthcid: username
+			   password: password];
+		[self _sendAuth: @"PLAIN"];
+	}
 
 	if (bind != nil)
 		[self _sendResourceBind];
@@ -310,7 +308,25 @@
 	}
 
 	if ([elem.namespace isEqual: NS_SASL]) {
-		if ([elem.name isEqual: @"success"]) {
+		if ([elem.name isEqual: @"challenge"]) {
+			OFXMLElement *responseTag;
+			OFDataArray *challenge =
+			    [OFDataArray dataArrayWithBase64EncodedString:
+				[elem.children.firstObject stringValue]];
+			OFDataArray *response =
+			    [authModule getResponseWithChallenge: challenge];
+
+			responseTag = [OFXMLElement elementWithName: @"response"
+							  namespace: NS_SASL];
+			[responseTag
+			    addChild: [OFXMLElement elementWithCharacters:
+				[response stringByBase64Encoding]]];
+
+			[self sendStanza: responseTag];
+		} else if ([elem.name isEqual: @"success"]) {
+			[authModule parseServerFinalMessage:
+			    [OFDataArray dataArrayWithBase64EncodedString:
+				[elem.children.firstObject stringValue]]];
 			of_log(@"Auth successful");
 
 			/* Stream restart */
@@ -319,12 +335,14 @@
 			parser.delegate = self;
 
 			[self _startStream];
-			return;
-		}
-
-		if ([elem.name isEqual: @"failure"])
+		} else if ([elem.name isEqual: @"failure"]) {
 			of_log(@"Auth failed!");
-			// FIXME: Handle!
+			// FIXME: Do more parsing/handling
+			@throw [XMPPAuthFailedException
+			    newWithClass: isa
+			      connection: self
+				  reason: [elem stringValue]];
+		}
 	}
 
 	if ([elem.name isEqual: @"iq"] &&

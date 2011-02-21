@@ -211,3 +211,64 @@
 	return description;
 }
 @end
+
+@implementation XMPPAuthFailedException
+@synthesize reason;
+
++ newWithClass: (Class)class_
+    connection: (XMPPConnection*)conn
+	reason: (OFString*)reason_;
+{
+	return [[self alloc] initWithClass: class_
+				connection: conn
+				    reason: reason_];
+}
+
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+{
+	Class c = isa;
+	[self release];
+	@throw [OFNotImplementedException newWithClass: c
+					      selector: _cmd];
+}
+
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+	 reason: (OFString*)reason_
+{
+	self = [super initWithClass: class_
+			 connection: conn];
+
+	@try {
+		reason = [reason_ copy];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+	[reason release];
+
+	[super dealloc];
+}
+
+- (OFString*)description
+{
+	OFAutoreleasePool *pool;
+
+	if (description != nil)
+		return description;
+
+	pool = [[OFAutoreleasePool alloc] init];
+	description = [[OFString alloc] initWithFormat:
+	    @"Authentication failed. Reason: %@!", reason];
+	[pool release];
+
+	return description;
+}
+@end

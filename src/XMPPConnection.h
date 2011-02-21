@@ -28,6 +28,7 @@
 @class XMPPIQ;
 @class XMPPMessage;
 @class XMPPPresence;
+@class XMPPAuthenticator;
 
 @protocol XMPPConnectionDelegate
 - (void)connectionWasClosed: (XMPPConnection*)conn;
@@ -63,6 +64,7 @@
 	BOOL useTLS;
 	id <XMPPConnectionDelegate> delegate;
 	OFMutableArray *mechanisms;
+	XMPPAuthenticator *authModule;
 }
 
 @property (copy) OFString *username;

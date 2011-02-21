@@ -97,6 +97,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn setUseTLS: NO];
 
 	[conn connect];
-	[conn handleConnection];
+	@try {
+		[conn handleConnection];
+	} @catch (id e) {
+		of_log(@"%@", e);
+	}
 }
 @end

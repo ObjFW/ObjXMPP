@@ -23,6 +23,7 @@
 #import <ObjFW/ObjFW.h>
 
 @class XMPPConnection;
+@class XMPPAuthenticator;
 
 @interface XMPPException: OFException
 {
@@ -71,4 +72,19 @@
      connection: (XMPPConnection*)conn
       operation: (OFString*)operation
 	 string: (OFString*)string;
+@end
+
+@interface XMPPAuthFailedException: XMPPException
+{
+	OFString *reason;
+}
+
+@property (readonly, nonatomic) OFString *reason;
+
++ newWithClass: (Class)class_
+    connection: (XMPPConnection*)conn
+	reason: (OFString*)reason_;
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+	 reason: (OFString*)reason_;
 @end
