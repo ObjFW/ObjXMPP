@@ -57,13 +57,13 @@
 	[super dealloc];
 }
 
-- (OFDataArray*)getClientFirstMessage
+- (OFDataArray*)clientFirstMessage
 {
 	@throw [OFNotImplementedException newWithClass: isa
 					      selector: _cmd];
 }
 
-- (OFDataArray*)getResponseWithChallenge: (OFDataArray*)challenge
+- (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge
 {
 	@throw [OFNotImplementedException newWithClass: isa
 					      selector: _cmd];

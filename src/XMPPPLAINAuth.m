@@ -40,7 +40,7 @@
 				    password: password] autorelease];
 }
 
-- (OFDataArray*)getClientFirstMessage
+- (OFDataArray*)clientFirstMessage
 {
 	OFDataArray *message = [OFDataArray dataArrayWithItemSize: 1];
 	/* authzid */
@@ -60,7 +60,7 @@
 	return message;
 }
 
-- (OFDataArray*)getResponseWithChallenge: (OFDataArray*)challenge
+- (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge
 {
 	@throw [XMPPAuthFailedException
 	    newWithClass: isa

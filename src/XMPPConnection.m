@@ -235,7 +235,7 @@
 	[authTag addAttributeWithName: @"mechanism"
 			  stringValue: name];
 	[authTag addChild: [OFXMLElement elementWithCharacters:
-	    [[authModule getClientFirstMessage] stringByBase64Encoding]]];
+	    [[authModule clientFirstMessage] stringByBase64Encoding]]];
 
 	[self sendStanza: authTag];
 }
@@ -314,7 +314,8 @@
 			    [OFDataArray dataArrayWithBase64EncodedString:
 				[elem.children.firstObject stringValue]];
 			OFDataArray *response =
-			    [authModule getResponseWithChallenge: challenge];
+			    [authModule
+			        calculateResponseWithChallenge: challenge];
 
 			responseTag = [OFXMLElement elementWithName: @"response"
 							  namespace: NS_SASL];

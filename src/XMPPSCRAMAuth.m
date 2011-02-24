@@ -257,7 +257,7 @@
 	}
 }
 
-- (OFDataArray*)getClientFirstMessage
+- (OFDataArray*)clientFirstMessage
 {
 	OFDataArray *ret = [OFDataArray dataArrayWithItemSize: 1];
 	[GS2Header release];
@@ -282,7 +282,7 @@
 	return ret;
 }
 
-- (OFDataArray*)getResponseWithChallenge: (OFDataArray*)challenge
+- (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge
 {
 	size_t i;
 	uint8_t *clientKey, *serverKey, *clientSignature;

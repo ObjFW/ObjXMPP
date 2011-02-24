@@ -65,13 +65,13 @@
 /**
  * \return A OFDataAray containing the initial authentication message
  */
-- (OFDataArray*)getClientFirstMessage;
+- (OFDataArray*)clientFirstMessage;
 
 /**
  * \param challenge The challenge to generate a response for
  * \return The response to the given challenge
  */
-- (OFDataArray*)getResponseWithChallenge: (OFDataArray*)challenge;
+- (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge;
 
 /**
  * Checks whether the servers final message was valid
