@@ -88,6 +88,44 @@
 	[super dealloc];
 }
 
+- (void)setAuthzid: (OFString*)authzid_
+{
+	OFString *old = authzid;
+
+	if (authzid_) {
+		OFMutableString *new = [[OFMutableString alloc]
+		    initWithString: authzid_];
+		[new replaceOccurrencesOfString: @"="
+				     withString: @"=3D"];
+		[new replaceOccurrencesOfString: @","
+				     withString: @"=2C"];
+		authzid = [new copy];
+		[new release];
+	} else
+		authzid = nil;
+
+	[old release];
+}
+
+- (void)setAuthcid: (OFString*)authcid_
+{
+	OFString *old = authcid;
+
+	if (authcid_) {
+		OFMutableString *new = [[OFMutableString alloc]
+		    initWithString: authcid_];
+		[new replaceOccurrencesOfString: @"="
+				     withString: @"=3D"];
+		[new replaceOccurrencesOfString: @","
+				     withString: @"=2C"];
+		authcid = [new copy];
+		[new release];
+	} else
+		authcid = nil;
+
+	[old release];
+}
+
 - (OFString *)_genNonce
 {
 	OFMutableString *nonce = [OFMutableString string];
