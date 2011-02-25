@@ -28,7 +28,7 @@
 	      password: (OFString*)password
 {
 	return [[[self alloc] initWithAuthcid: authcid
-				    password: password] autorelease];
+				     password: password] autorelease];
 }
 
 + PLAINAuthWithAuthzid: (OFString*)authzid
@@ -36,23 +36,28 @@
 	      password: (OFString*)password
 {
 	return [[[self alloc] initWithAuthzid: authzid
-				     authcid: authcid
-				    password: password] autorelease];
+				      authcid: authcid
+				     password: password] autorelease];
 }
 
 - (OFDataArray*)clientFirstMessage
 {
 	OFDataArray *message = [OFDataArray dataArrayWithItemSize: 1];
+
 	/* authzid */
 	if (authzid)
 		[message addItem: authzid];
+
 	/* separator */
 	[message addItem: ""];
+
 	/* authcid */
 	[message addNItems: [authcid cStringLength]
 		fromCArray: [authcid cString]];
+
 	/* separator */
 	[message addItem: ""];
+
 	/* passwd */
 	[message addNItems: [password cStringLength]
 		fromCArray: [password cString]];
@@ -62,10 +67,10 @@
 
 - (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge
 {
-	@throw [XMPPAuthFailedException
-	    newWithClass: isa
-	      connection: nil
-		  reason: @"Received a challenge during PLAIN auth"];
+	@throw [XMPPAuthFailedException newWithClass: isa
+					  connection: nil
+					      reason: @"Received a challenge "
+						      @"during PLAIN auth"];
 }
 
 - (void)parseServerFinalMessage: (OFDataArray*)message

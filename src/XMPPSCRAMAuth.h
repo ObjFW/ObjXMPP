@@ -44,8 +44,8 @@
  * \return A new autoreleased XMPPSCRAMAuth
  */
 + SCRAMAuthWithAuthcid: (OFString*)authcid
-	  password: (OFString*)password
-	      hash: (Class)hash;
+	      password: (OFString*)password
+		  hash: (Class)hash;
 
 /**
  * Creates a new autoreleased XMPPSCRAMAuth with an authzid,
@@ -58,9 +58,9 @@
  * \return A new autoreleased XMPPSCRAMAuth
  */
 + SCRAMAuthWithAuthzid: (OFString*)authzid
-	   authcid: (OFString*)authcid
-	  password: (OFString*)password
-	      hash: (Class)hash;
+	       authcid: (OFString*)authcid
+	      password: (OFString*)password
+		  hash: (Class)hash;
 
 /**
  * Initializes an already allocated XMPPSCRAMAuth with an authcid and password.
@@ -72,7 +72,7 @@
  */
 - initWithAuthcid: (OFString*)authcid
 	 password: (OFString*)password
-	      hash: (Class)hash;
+	     hash: (Class)hash;
 
 /**
  * Initializes an already allocated XMPPSCRAMAuth with a authzid,
