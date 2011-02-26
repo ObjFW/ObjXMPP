@@ -64,15 +64,11 @@
 
 - (OFString*)description
 {
-	OFAutoreleasePool *pool;
-
 	if (description != nil)
 		return description;
 
-	pool = [[OFAutoreleasePool alloc] init];
 	description = [[OFString alloc] initWithFormat:
-	    @"An exception occurred in class %@!", [self className]];
-	[pool release];
+	    @"An exception occurred in class %@!", inClass];
 
 	return description;
 }
@@ -130,16 +126,12 @@
 
 - (OFString*)description
 {
-	OFAutoreleasePool *pool;
-
 	if (description != nil)
 		return description;
 
-	pool = [[OFAutoreleasePool alloc] init];
 	description = [[OFString alloc] initWithFormat:
 	    @"Stringprep with profile %@ failed on string '%@'!",
 	    profile, string];
-	[pool release];
 
 	return description;
 }
@@ -197,16 +189,11 @@
 
 - (OFString*)description
 {
-	OFAutoreleasePool *pool;
-
 	if (description != nil)
 		return description;
 
-	pool = [[OFAutoreleasePool alloc] init];
 	description = [[OFString alloc] initWithFormat:
-	    @"IDNA operation %@ failed on string '%@'!",
-	    operation, string];
-	[pool release];
+	    @"IDNA operation %@ failed on string '%@'!", operation, string];
 
 	return description;
 }
@@ -259,15 +246,11 @@
 
 - (OFString*)description
 {
-	OFAutoreleasePool *pool;
-
 	if (description != nil)
 		return description;
 
-	pool = [[OFAutoreleasePool alloc] init];
 	description = [[OFString alloc] initWithFormat:
 	    @"Authentication failed. Reason: %@!", reason];
-	[pool release];
 
 	return description;
 }
