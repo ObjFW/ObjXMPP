@@ -1,6 +1,6 @@
 all:
 	objfw-compile -Wall --lib 0.0 -o objxmpp *.m \
-		`pkg-config --cflags --libs libidn`
+		`pkg-config --cflags --libs libidn` -lobjgnutls
 
 clean:
 	rm -f *.o *.so *.dylib *.dll

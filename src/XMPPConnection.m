@@ -26,6 +26,8 @@
 #include <stringprep.h>
 #include <idna.h>
 
+#import <ObjGnuTLS/ObjGnuTLS.h>
+
 #import "XMPPConnection.h"
 #import "XMPPSCRAMAuth.h"
 #import "XMPPPLAINAuth.h"
@@ -37,6 +39,7 @@
 #define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
 #define NS_CLIENT @"jabber:client"
 #define NS_SASL @"urn:ietf:params:xml:ns:xmpp-sasl"
+#define NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
 #define NS_STREAM @"http://etherx.jabber.org/streams"
 
 @implementation XMPPConnection
@@ -271,6 +274,9 @@
 {
 	OFArray *mechs = [elem elementsForName: @"mechanisms"
 				     namespace: NS_SASL];
+	OFXMLElement *starttls = [elem
+	    elementsForName: @"starttls"
+		  namespace: NS_STARTTLS].firstObject;
 	OFXMLElement *bind = [elem elementsForName: @"bind"
 					 namespace: NS_BIND].firstObject;
 
@@ -292,6 +298,10 @@
 
 	if (bind != nil)
 		[self _sendResourceBind];
+
+	if (starttls != nil)
+		[self sendStanza: [OFXMLElement elementWithName: @"starttls"
+						      namespace: NS_STARTTLS]];
 }
 
 - (void)elementBuilder: (OFXMLElementBuilder*)b
@@ -305,6 +315,21 @@
 	    [elem.namespace isEqual: NS_STREAM]) {
 		[self _handleFeatures: elem];
 		return;
+	}
+
+	if ([elem.namespace isEqual: NS_STARTTLS]) {
+		if ([elem.name isEqual: @"proceed"]) {
+			/* FIXME: Catch errors here */
+			sock = [[GTLSSocket alloc] initWithSocket: sock];
+
+			/* Stream restart */
+			[mechanisms release];
+			mechanisms = [[OFMutableArray alloc] init];
+			parser.delegate = self;
+			[self _startStream];
+		} else if ([elem.name isEqual: @"failure"])
+			/* TODO: Find/create an exception to throw here */
+			@throw [OFException newWithClass: isa];
 	}
 
 	if ([elem.namespace isEqual: NS_SASL]) {
