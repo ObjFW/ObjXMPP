@@ -63,7 +63,6 @@
 	/// Whether to use TLS
 	BOOL useTLS;
 	id <XMPPConnectionDelegate> delegate;
-	OFMutableArray *mechanisms;
 	XMPPAuthenticator *authModule;
 }
 

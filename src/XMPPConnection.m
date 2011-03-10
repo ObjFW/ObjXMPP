@@ -56,8 +56,6 @@
 	port = 5222;
 	useTLS = YES;
 
-	mechanisms = [[OFMutableArray alloc] init];
-
 	parser.delegate = self;
 	elementBuilder.delegate = self;
 
@@ -272,36 +270,37 @@
 
 - (void)_handleFeatures: (OFXMLElement*)elem
 {
-	OFArray *mechs = [elem elementsForName: @"mechanisms"
-				     namespace: NS_SASL];
 	OFXMLElement *starttls = [elem
 	    elementsForName: @"starttls"
 		  namespace: NS_STARTTLS].firstObject;
 	OFXMLElement *bind = [elem elementsForName: @"bind"
 					 namespace: NS_BIND].firstObject;
-
-	for (OFXMLElement *mech in [mechs.firstObject children])
-		[mechanisms addObject: [mech.children.firstObject stringValue]];
-
-	if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
-		authModule = [[XMPPSCRAMAuth alloc]
-		    initWithAuthcid: username
-			   password: password
-			       hash: [OFSHA1Hash class]];
-		[self _sendAuth: @"SCRAM-SHA-1"];
-	} else if ([mechanisms containsObject: @"PLAIN"]) {
-		authModule = [[XMPPPLAINAuth alloc]
-		    initWithAuthcid: username
-			   password: password];
-		[self _sendAuth: @"PLAIN"];
-	}
-
-	if (bind != nil)
-		[self _sendResourceBind];
+	OFArray *mechs = [elem elementsForName: @"mechanisms"
+				     namespace: NS_SASL];
+	OFMutableArray *mechanisms = [OFMutableArray array];
 
 	if (starttls != nil)
 		[self sendStanza: [OFXMLElement elementWithName: @"starttls"
 						      namespace: NS_STARTTLS]];
+	else if ([mechs count]) {
+		for (OFXMLElement *mech in [mechs.firstObject children])
+			[mechanisms addObject:
+			    [mech.children.firstObject stringValue]];
+
+		if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
+			authModule = [[XMPPSCRAMAuth alloc]
+			    initWithAuthcid: username
+				   password: password
+				       hash: [OFSHA1Hash class]];
+			[self _sendAuth: @"SCRAM-SHA-1"];
+		} else if ([mechanisms containsObject: @"PLAIN"]) {
+			authModule = [[XMPPPLAINAuth alloc]
+			    initWithAuthcid: username
+				   password: password];
+			[self _sendAuth: @"PLAIN"];
+		}
+	} else if (bind != nil)
+		[self _sendResourceBind];
 }
 
 - (void)elementBuilder: (OFXMLElementBuilder*)b
@@ -323,8 +322,6 @@
 			sock = [[GTLSSocket alloc] initWithSocket: sock];
 
 			/* Stream restart */
-			[mechanisms release];
-			mechanisms = [[OFMutableArray alloc] init];
 			parser.delegate = self;
 			[self _startStream];
 		} else if ([elem.name isEqual: @"failure"])
@@ -356,10 +353,7 @@
 			of_log(@"Auth successful");
 
 			/* Stream restart */
-			[mechanisms release];
-			mechanisms = [[OFMutableArray alloc] init];
 			parser.delegate = self;
-
 			[self _startStream];
 		} else if ([elem.name isEqual: @"failure"]) {
 			of_log(@"Auth failed!");
