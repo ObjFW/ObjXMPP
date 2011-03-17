@@ -32,7 +32,7 @@
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
 
-@interface AppDelegate: OFObject
+@interface AppDelegate: OFObject <XMPPConnectionDelegate>
 {
 	XMPPConnection *conn;
 }
@@ -84,6 +84,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	    isEqual: @"bob@localhost, alice@localhost, get, 42"]));
 
 	conn = [[XMPPConnection alloc] init];
+	conn.delegate = self;
 
 	if (arguments.count != 3) {
 		of_log(@"Invalid count of command line arguments!");
@@ -102,5 +103,28 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	} @catch (id e) {
 		of_log(@"%@", e);
 	}
+}
+
+- (void)connectionWasClosed: (XMPPConnection*)conn
+{
+	of_log(@"Connection was closed!");
+}
+
+- (void)connection: (XMPPConnection*)conn
+      didReceiveIQ: (XMPPIQ*)iq
+{
+	of_log(@"IQ: %@", iq);
+}
+
+-  (void)connection: (XMPPConnection*)conn
+  didReceiveMessage: (XMPPMessage*)msg
+{
+	of_log(@"Message: %@", msg);
+}
+
+-   (void)connection: (XMPPConnection*)conn
+  didReceivePresence: (XMPPPresence*)pres
+{
+	of_log(@"Presence: %@", pres);
 }
 @end

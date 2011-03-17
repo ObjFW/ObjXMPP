@@ -34,6 +34,8 @@
 #import "XMPPStanza.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
+#import "XMPPMessage.h"
+#import "XMPPPresence.h"
 #import "XMPPExceptions.h"
 
 #define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
@@ -303,6 +305,30 @@
 		[self _sendResourceBind];
 }
 
+- (void)_handleIQ: (XMPPIQ*)iq
+{
+	// FIXME: More checking!
+	if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"]) {
+		[self _handleResourceBind: iq];
+		return;
+	}
+
+	[delegate connection: self
+		didReceiveIQ: iq];
+}
+
+- (void)_handleMessage: (XMPPMessage*)msg
+{
+	[delegate connection: self
+	   didReceiveMessage: msg];
+}
+
+- (void)_handlePresence: (XMPPPresence*)pres
+{
+	[delegate connection: self
+	  didReceivePresence: pres];
+}
+
 - (void)elementBuilder: (OFXMLElementBuilder*)b
        didBuildElement: (OFXMLElement*)elem
 {
@@ -310,10 +336,34 @@
 	[elem setPrefix: @"stream"
 	   forNamespace: NS_STREAM];
 
-	if ([elem.name isEqual: @"features"] &&
-	    [elem.namespace isEqual: NS_STREAM]) {
-		[self _handleFeatures: elem];
-		return;
+	if ([elem.namespace isEqual: NS_CLIENT]) {
+		if ([elem.name isEqual: @"iq"]) {
+			[self _handleIQ: [XMPPIQ stanzaWithElement: elem]];
+			return;
+		}
+
+		if ([elem.name isEqual: @"message"]) {
+			[self _handleMessage:
+			    [XMPPMessage stanzaWithElement: elem]];
+			return;
+		}
+
+		if ([elem.name isEqual: @"presence"]) {
+			[self _handlePresence:
+			    [XMPPPresence stanzaWithElement: elem]];
+			return;
+		}
+
+		assert(0);
+	}
+
+	if ([elem.namespace isEqual: NS_STREAM]) {
+		if ([elem.name isEqual: @"features"]) {
+			[self _handleFeatures: elem];
+			return;
+		}
+
+		assert(0);
 	}
 
 	if ([elem.namespace isEqual: NS_STARTTLS]) {
@@ -324,9 +374,14 @@
 			/* Stream restart */
 			parser.delegate = self;
 			[self _startStream];
-		} else if ([elem.name isEqual: @"failure"])
+			return;
+		}
+
+		if ([elem.name isEqual: @"failure"])
 			/* TODO: Find/create an exception to throw here */
 			@throw [OFException newWithClass: isa];
+
+		assert(0);
 	}
 
 	if ([elem.namespace isEqual: NS_SASL]) {
@@ -346,7 +401,10 @@
 				[response stringByBase64Encoding]]];
 
 			[self sendStanza: responseTag];
-		} else if ([elem.name isEqual: @"success"]) {
+			return;
+		}
+
+		if ([elem.name isEqual: @"success"]) {
 			[authModule parseServerFinalMessage:
 			    [OFDataArray dataArrayWithBase64EncodedString:
 				[elem.children.firstObject stringValue]]];
@@ -355,7 +413,10 @@
 			/* Stream restart */
 			parser.delegate = self;
 			[self _startStream];
-		} else if ([elem.name isEqual: @"failure"]) {
+			return;
+		}
+
+		if ([elem.name isEqual: @"failure"]) {
 			of_log(@"Auth failed!");
 			// FIXME: Do more parsing/handling
 			@throw [XMPPAuthFailedException
@@ -363,16 +424,11 @@
 			      connection: self
 				  reason: [elem stringValue]];
 		}
+
+		assert(0);
 	}
 
-	if ([elem.name isEqual: @"iq"] &&
-	    [elem.namespace isEqual: NS_CLIENT]) {
-		XMPPIQ *iq = [XMPPIQ stanzaWithElement: elem];
-
-		// FIXME: More checking!
-		if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"])
-			[self _handleResourceBind: iq];
-	}
+	assert(0);
 }
 
 - (void)elementBuilder: (OFXMLElementBuilder*)b
