@@ -48,14 +48,14 @@
 @interface XMPPConnection ()
 - (void)XMPP_startStream;
 - (void)XMPP_sendAuth: (OFString*)name;
-- (void)XMPP_sendResourceBind;
-- (void)XMPP_sendSession;
-- (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
-- (void)XMPP_handleSession;
 - (void)XMPP_handleFeatures: (OFXMLElement*)elem;
 - (void)XMPP_handleIQ: (XMPPIQ*)iq;
 - (void)XMPP_handleMessage: (XMPPMessage*)msg;
 - (void)XMPP_handlePresence: (XMPPPresence*)pres;
+- (void)XMPP_sendResourceBind;
+- (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
+- (void)XMPP_sendSession;
+- (void)XMPP_handleSession: (XMPPIQ*)iq;
 @end
 
 @implementation XMPPConnection
@@ -83,7 +83,15 @@
 	[sock release];
 	[parser release];
 	[elementBuilder release];
+	[username release];
+	[password release];
+	[server release];
+	[resource release];
+	[JID release];
+	[delegate release];
 	[authModule release];
+	[bindID release];
+	[sessionID release];
 
 	[super dealloc];
 }
@@ -232,6 +240,11 @@
 	[sock writeString: [elem stringValue]];
 }
 
+- (OFString*)generateStanzaID
+{
+	return [OFString stringWithFormat: @"objxmpp_%u", lastID++];
+}
+
 -    (void)parser: (OFXMLParser*)p
   didStartElement: (OFString*)name
        withPrefix: (OFString*)prefix
@@ -362,14 +375,6 @@
 	assert(0);
 }
 
-- (void)elementBuilder: (OFXMLElementBuilder*)b
-  didNotExpectCloseTag: (OFString*)name
-	    withPrefix: (OFString*)prefix
-	     namespace: (OFString*)ns
-{
-	// TODO
-}
-
 - (void)XMPP_startStream
 {
 	[sock writeFormat: @"<?xml version='1.0'?>\n"
@@ -380,14 +385,13 @@
 
 - (void)XMPP_handleIQ: (XMPPIQ*)iq
 {
-	// FIXME: More checking!
-	if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"]) {
+	if ([iq.ID isEqual: bindID] && [iq.type isEqual: @"result"]) {
 		[self XMPP_handleResourceBind: iq];
 		return;
 	}
 
-	if ([iq.ID isEqual: @"session0"] && [iq.type isEqual: @"result"]) {
-		[self XMPP_handleSession];
+	if ([iq.ID isEqual: sessionID] && [iq.type isEqual: @"result"]) {
+		[self XMPP_handleSession: iq];
 		return;
 	}
 
@@ -483,13 +487,20 @@
 
 - (void)XMPP_sendResourceBind
 {
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
-				     ID: @"bind0"];
-	OFXMLElement *bind = [OFXMLElement elementWithName: @"bind"
-						 namespace: NS_BIND];
-	if (resource)
+	XMPPIQ *iq;
+	OFXMLElement *bind;
+
+	bindID = [[self generateStanzaID] retain];
+	iq = [XMPPIQ IQWithType: @"set"
+			     ID: bindID];
+
+	bind = [OFXMLElement elementWithName: @"bind"
+				   namespace: NS_BIND];
+
+	if (resource != nil)
 		[bind addChild: [OFXMLElement elementWithName: @"resource"
 						  stringValue: resource]];
+
 	[iq addChild: bind];
 
 	[self sendStanza: iq];
@@ -508,6 +519,9 @@
 	JID = [[XMPPJID alloc] initWithString:
 	    [jidElem.children.firstObject stringValue]];
 
+	[bindID release];
+	bindID = nil;
+
 	if (needsSession) {
 		[self XMPP_sendSession];
 		return;
@@ -520,17 +534,26 @@
 
 - (void)XMPP_sendSession
 {
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
-				     ID: @"session0"];
+	XMPPIQ *iq;
+
+	sessionID = [[self generateStanzaID] retain];
+	iq = [XMPPIQ IQWithType: @"set"
+			     ID: sessionID];
 	[iq addChild: [OFXMLElement elementWithName: @"session"
 					  namespace: NS_SESSION]];
 	[self sendStanza: iq];
 }
 
-- (void)XMPP_handleSession
+- (void)XMPP_handleSession: (XMPPIQ*)iq
 {
+	if (![iq.type isEqual: @"result"])
+		assert(0);
+
 	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
 		[delegate connection: self
 		       wasBoundToJID: JID];
+
+	[sessionID release];
+	sessionID = nil;
 }
 @end

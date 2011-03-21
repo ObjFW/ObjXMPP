@@ -53,31 +53,21 @@
 	OFTCPSocket *sock;
 	OFXMLParser *parser;
 	OFXMLElementBuilder *elementBuilder;
-	/// The username to connect with
-	OFString *username;
-	/// The password to connect with
-	OFString *password;
-	/// The server to connect to
-	OFString *server;
-	/// The resource to connect with
-	OFString *resource;
-	/// The JID bound to this connection (this is determined by the server)
+	OFString *username, *password, *server, *resource;
 	XMPPJID *JID;
-	/// The port to connect to
-	short port;
+	uint16_t port;
 	/// Whether to use TLS
 	BOOL useTLS;
 	id <XMPPConnectionDelegate, OFObject> delegate;
 	XMPPAuthenticator *authModule;
 	BOOL needsSession;
+	unsigned int lastID;
+	OFString *bindID, *sessionID;
 }
 
-@property (copy) OFString *username;
-@property (copy) OFString *password;
-@property (copy) OFString *server;
-@property (copy) OFString *resource;
+@property (copy) OFString *username, *password, *server, *resource;
 @property (copy, readonly) XMPPJID *JID;
-@property (assign) short port;
+@property (assign) uint16_t port;
 @property (assign) BOOL useTLS;
 @property (retain) id <XMPPConnectionDelegate> delegate;
 
@@ -97,4 +87,11 @@
  * \param elem The element to send
  */
 - (void)sendStanza: (OFXMLElement*)elem;
+
+/**
+ * Generates a new, unique stanza ID.
+ *
+ * \return A new, generated, unique stanza ID.
+ */
+- (OFString*)generateStanzaID;
 @end
