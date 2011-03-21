@@ -43,6 +43,7 @@
 #define NS_ROSTER @"jabber:iq:roster"
 #define NS_SASL @"urn:ietf:params:xml:ns:xmpp-sasl"
 #define NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
+#define NS_STANZAS @"urn:ietf:params:xml:ns:xmpp-stanzas"
 #define NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
 #define NS_STREAM @"http://etherx.jabber.org/streams"
 
@@ -396,6 +397,8 @@
 
 - (void)XMPP_handleIQ: (XMPPIQ*)iq
 {
+	BOOL handled = NO;
+
 	if ([iq.ID isEqual: bindID]) {
 		[self XMPP_handleResourceBind: iq];
 		return;
@@ -412,8 +415,36 @@
 	}
 
 	if ([delegate respondsToSelector: @selector(connection:didReceiveIQ:)])
-		[delegate connection: self
-			didReceiveIQ: iq];
+		handled = [delegate connection: self
+				  didReceiveIQ: iq];
+
+	if (!handled) {
+		OFString *from = [iq attributeForName: @"from"].stringValue;
+		OFString *to = [iq attributeForName: @"to"].stringValue;
+		OFXMLElement *error;
+
+		[iq setType: @"error"];
+
+		[iq removeAttributeForName: @"from"];
+		[iq removeAttributeForName: @"to"];
+
+		if (from != nil)
+			[iq addAttributeWithName: @"to"
+				     stringValue: from];
+		if (to != nil)
+			[iq addAttributeWithName: @"from"
+				     stringValue: to];
+
+		error = [OFXMLElement elementWithName: @"error"];
+		[error addAttributeWithName: @"type"
+				stringValue: @"cancel"];
+		[error addChild:
+		    [OFXMLElement elementWithName: @"service-unavailable"
+					namespace: NS_STANZAS]];
+		[iq addChild: error];
+
+		[self sendStanza: iq];
+	}
 }
 
 - (void)XMPP_handleMessage: (XMPPMessage*)msg

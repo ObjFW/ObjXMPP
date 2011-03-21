@@ -129,10 +129,12 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn sendStanza: pres];
 }
 
-- (void)connection: (XMPPConnection*)conn
+- (BOOL)connection: (XMPPConnection*)conn
       didReceiveIQ: (XMPPIQ*)iq
 {
 	of_log(@"IQ: %@", iq);
+
+	return NO;
 }
 
 -  (void)connection: (XMPPConnection*)conn
