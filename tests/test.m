@@ -33,9 +33,6 @@
 #import "XMPPPresence.h"
 
 @interface AppDelegate: OFObject <OFApplicationDelegate, XMPPConnectionDelegate>
-{
-	XMPPConnection *conn;
-}
 @end
 
 OF_APPLICATION_DELEGATE(AppDelegate)
@@ -43,6 +40,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 @implementation AppDelegate
 - (void)applicationDidFinishLaunching
 {
+	XMPPConnection *conn;
 	OFArray *arguments = [OFApplication arguments];
 
 	XMPPPresence *pres = [XMPPPresence presence];
@@ -113,7 +111,15 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 - (void)connection: (XMPPConnection*)conn
      wasBoundToJID: (XMPPJID*)jid
 {
+	XMPPPresence *pres;
+
 	of_log(@"Bound to JID: %@", [jid fullJID]);
+
+	pres = [XMPPPresence presence];
+	[pres addPriority: 10];
+	[pres addStatus: @"ObjXMPP test is working!"];
+
+	[conn sendStanza: pres];
 }
 
 - (void)connection: (XMPPConnection*)conn

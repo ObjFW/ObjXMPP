@@ -42,6 +42,7 @@
 #define NS_CLIENT @"jabber:client"
 #define NS_SASL @"urn:ietf:params:xml:ns:xmpp-sasl"
 #define NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
+#define NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
 #define NS_STREAM @"http://etherx.jabber.org/streams"
 
 @implementation XMPPConnection
@@ -195,8 +196,6 @@
 		    @selector(connectionWasClosed:)])
 			[delegate connectionWasClosed: self];
 
-		[of_stdout writeNBytes: len
-			    fromBuffer: buf];
 		[parser parseBuffer: buf
 			   withSize: len];
 	}
@@ -204,6 +203,7 @@
 
 - (void)sendStanza: (OFXMLElement*)elem
 {
+	of_log(@"Out: %@", elem);
 	[sock writeString: [elem stringValue]];
 }
 
@@ -258,21 +258,43 @@
 	[self sendStanza: iq];
 }
 
+- (void)_sendSession
+{
+	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
+				     ID: @"session0"];
+	[iq addChild: [OFXMLElement elementWithName: @"session"
+					  namespace: NS_SESSION]];
+	[self sendStanza: iq];
+}
+
 - (void)_handleResourceBind: (XMPPIQ*)iq
 {
 	OFXMLElement *bindElem = iq.children.firstObject;
+	OFXMLElement *jidElem;
 
-	if ([bindElem.name isEqual: @"bind"] &&
-	    [bindElem.namespace isEqual: NS_BIND]) {
-		OFXMLElement *jidElem = bindElem.children.firstObject;
-		JID = [[XMPPJID alloc] initWithString:
-		    [jidElem.children.firstObject stringValue]];
+	if (![bindElem.name isEqual: @"bind"] ||
+	    ![bindElem.namespace isEqual: NS_BIND])
+		assert(0);
 
-		if ([delegate respondsToSelector:
-		    @selector(connection:wasBoundToJID:)])
-			[delegate connection: self
-			       wasBoundToJID: JID];
+	jidElem = bindElem.children.firstObject;
+	JID = [[XMPPJID alloc] initWithString:
+	    [jidElem.children.firstObject stringValue]];
+
+	if (needsSession) {
+		[self _sendSession];
+		return;
 	}
+
+	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
+		    [delegate connection: self
+			   wasBoundToJID: JID];
+}
+
+- (void)_handleSession
+{
+	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
+		    [delegate connection: self
+			   wasBoundToJID: JID];
 }
 
 - (void)_handleFeatures: (OFXMLElement*)elem
@@ -282,14 +304,19 @@
 		  namespace: NS_STARTTLS].firstObject;
 	OFXMLElement *bind = [elem elementsForName: @"bind"
 					 namespace: NS_BIND].firstObject;
+	OFXMLElement *session = [elem elementsForName: @"session"
+					    namespace: NS_SESSION].firstObject;
 	OFArray *mechs = [elem elementsForName: @"mechanisms"
 				     namespace: NS_SASL];
 	OFMutableArray *mechanisms = [OFMutableArray array];
 
-	if (starttls != nil)
+	if (starttls != nil) {
 		[self sendStanza: [OFXMLElement elementWithName: @"starttls"
 						      namespace: NS_STARTTLS]];
-	else if ([mechs count]) {
+		return;
+	}
+
+	if ([mechs count] > 0) {
 		for (OFXMLElement *mech in [mechs.firstObject children])
 			[mechanisms addObject:
 			    [mech.children.firstObject stringValue]];
@@ -300,14 +327,29 @@
 				   password: password
 				       hash: [OFSHA1Hash class]];
 			[self _sendAuth: @"SCRAM-SHA-1"];
-		} else if ([mechanisms containsObject: @"PLAIN"]) {
+			return;
+		}
+
+		if ([mechanisms containsObject: @"PLAIN"]) {
 			authModule = [[XMPPPLAINAuth alloc]
 			    initWithAuthcid: username
 				   password: password];
 			[self _sendAuth: @"PLAIN"];
+			return;
 		}
-	} else if (bind != nil)
+
+		assert(0);
+	}
+
+	if (session != nil)
+		needsSession = YES;
+
+	if (bind != nil) {
 		[self _sendResourceBind];
+		return;
+	}
+
+	assert(0);
 }
 
 - (void)_handleIQ: (XMPPIQ*)iq
@@ -315,6 +357,11 @@
 	// FIXME: More checking!
 	if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"]) {
 		[self _handleResourceBind: iq];
+		return;
+	}
+
+	if ([iq.ID isEqual: @"session0"] && [iq.type isEqual: @"result"]) {
+		[self _handleSession];
 		return;
 	}
 
@@ -345,6 +392,8 @@
 	elem.defaultNamespace = NS_CLIENT;
 	[elem setPrefix: @"stream"
 	   forNamespace: NS_STREAM];
+
+	of_log(@"In:  %@", elem);
 
 	if ([elem.namespace isEqual: NS_CLIENT]) {
 		if ([elem.name isEqual: @"iq"]) {

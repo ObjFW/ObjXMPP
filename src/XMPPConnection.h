@@ -69,6 +69,7 @@
 	BOOL useTLS;
 	id <XMPPConnectionDelegate, OFObject> delegate;
 	XMPPAuthenticator *authModule;
+	BOOL needsSession;
 }
 
 @property (copy) OFString *username;
