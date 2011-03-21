@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B1295EF1337BD5F00154B25 /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B1295EE1337BD5F00154B25 /* test.m */; };
+		4B1295F11337C37E00154B25 /* ObjXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559911337A65400E345C7 /* ObjXMPP.framework */; };
+		4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4B2FE41A1337B7B20092C736 /* ObjGnuTLS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FE4191337B7B20092C736 /* ObjGnuTLS.framework */; };
 		4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4BC559EB1337AC0900E345C7 /* arc4random_uniform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559D91337AC0900E345C7 /* arc4random_uniform.m */; };
@@ -32,7 +35,21 @@
 		4BC55A021337AC1800E345C7 /* XMPPStanza.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559FF1337AC1800E345C7 /* XMPPStanza.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4B1295DE1337BD2D00154B25 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		4B1295E01337BD2D00154B25 /* ObjXMPPTests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ObjXMPPTests; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B1295EE1337BD5F00154B25 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = test.m; path = tests/test.m; sourceTree = SOURCE_ROOT; };
 		4B2FE4191337B7B20092C736 /* ObjGnuTLS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjGnuTLS.framework; path = ../../../../Library/Frameworks/ObjGnuTLS.framework; sourceTree = "<group>"; };
 		4BC559911337A65400E345C7 /* ObjXMPP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjXMPP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC559D61337ABD300E345C7 /* ObjFW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjFW.framework; path = ../../../../Library/Frameworks/ObjFW.framework; sourceTree = "<group>"; };
@@ -61,6 +78,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4B1295DD1337BD2D00154B25 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B1295F11337C37E00154B25 /* ObjXMPP.framework in Frameworks */,
+				4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BC5598D1337A65400E345C7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -73,10 +99,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4B1295E41337BD2D00154B25 /* ObjXMPPTests */ = {
+			isa = PBXGroup;
+			children = (
+				4B1295EE1337BD5F00154B25 /* test.m */,
+			);
+			path = ObjXMPPTests;
+			sourceTree = "<group>";
+		};
 		4BC559851337A65400E345C7 = {
 			isa = PBXGroup;
 			children = (
 				4BC5599A1337A65400E345C7 /* ObjXMPP */,
+				4B1295E41337BD2D00154B25 /* ObjXMPPTests */,
 				4BC559931337A65400E345C7 /* Frameworks */,
 				4BC559921337A65400E345C7 /* Products */,
 			);
@@ -86,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				4BC559911337A65400E345C7 /* ObjXMPP.framework */,
+				4B1295E01337BD2D00154B25 /* ObjXMPPTests */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -159,6 +195,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4B1295DF1337BD2D00154B25 /* ObjXMPPTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B1295EC1337BD2D00154B25 /* Build configuration list for PBXNativeTarget "ObjXMPPTests" */;
+			buildPhases = (
+				4B1295DC1337BD2D00154B25 /* Sources */,
+				4B1295DD1337BD2D00154B25 /* Frameworks */,
+				4B1295DE1337BD2D00154B25 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ObjXMPPTests;
+			productName = ObjXMPPTests;
+			productReference = 4B1295E01337BD2D00154B25 /* ObjXMPPTests */;
+			productType = "com.apple.product-type.tool";
+		};
 		4BC559901337A65400E345C7 /* ObjXMPP */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BC559B81337A65500E345C7 /* Build configuration list for PBXNativeTarget "ObjXMPP" */;
@@ -195,6 +248,7 @@
 			projectRoot = "";
 			targets = (
 				4BC559901337A65400E345C7 /* ObjXMPP */,
+				4B1295DF1337BD2D00154B25 /* ObjXMPPTests */,
 			);
 		};
 /* End PBXProject section */
@@ -210,6 +264,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4B1295DC1337BD2D00154B25 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B1295EF1337BD5F00154B25 /* test.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BC5598C1337A65400E345C7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -231,6 +293,30 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		4B1295EA1337BD2D00154B25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4B1295EB1337BD2D00154B25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		4BC559B61337A65500E345C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -318,6 +404,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4B1295EC1337BD2D00154B25 /* Build configuration list for PBXNativeTarget "ObjXMPPTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B1295EA1337BD2D00154B25 /* Debug */,
+				4B1295EB1337BD2D00154B25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		4BC5598A1337A65400E345C7 /* Build configuration list for PBXProject "ObjXMPP" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

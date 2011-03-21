@@ -3,5 +3,10 @@ syntax: glob
 *.so
 *.dylib
 *~
+build
 docs
+ObjXMPP.xcodeproj/*.mode1v3
+ObjXMPP.xcodeproj/*.pbxuser
+ObjXMPP.xcodeproj/project.xcworkspace
+ObjXMPP.xcodeproj/xcuserdata
 tests/tests
