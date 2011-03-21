@@ -33,6 +33,15 @@
 extern uint32_t arc4random_uniform(uint32_t);
 #endif
 
+@interface XMPPSCRAMAuth ()
+- (OFString*)XMPP_genNonce;
+- (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
+			data: (OFDataArray*)data;
+- (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
+			   salt: (OFDataArray *)salt_
+		 iterationCount: (intmax_t)i;
+@end
+
 @implementation XMPPSCRAMAuth
 + SCRAMAuthWithAuthcid: (OFString*)authcid
 	      password: (OFString*)password
@@ -122,135 +131,6 @@ extern uint32_t arc4random_uniform(uint32_t);
 	[old release];
 }
 
-- (OFString*)_genNonce
-{
-	OFMutableString *nonce = [OFMutableString string];
-	uint32_t res, i;
-
-	for (i = 0; i < 64; i++) {
-		while ((res = arc4random_uniform('~' - '!' + 1) + '!') == ',');
-		[nonce appendFormat: @"%c", res];
-	}
-
-	return nonce;
-}
-
-- (uint8_t*)_HMACWithKey: (OFDataArray*)key
-		    data: (OFDataArray*)data
-{
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	OFDataArray *k = [OFDataArray dataArrayWithItemSize: 1];
-	size_t i, kSize, blockSize = [hashType blockSize];
-	uint8_t *kCArray, *kI = NULL, *kO = NULL;
-	OFHash *hash;
-
-	if (key.itemSize * key.count > blockSize) {
-		hash = [[[hashType alloc] init] autorelease];
-		[hash updateWithBuffer: [key cArray]
-				ofSize: key.itemSize * key.count];
-		[k addNItems: [hashType digestSize]
-		  fromCArray: [hash digest]];
-	} else
-		[k addNItems: key.itemSize * key.count
-		  fromCArray: [key cArray]];
-
-	@try {
-		kI = [self allocMemoryWithSize: blockSize * sizeof(uint8_t)];
-		memset(kI, HMAC_IPAD, blockSize * sizeof(uint8_t));
-
-		kO = [self allocMemoryWithSize: blockSize * sizeof(uint8_t)];
-		memset(kO, HMAC_OPAD, blockSize * sizeof(uint8_t));
-
-		kCArray = [k cArray];
-		kSize = k.count;
-		for (i = 0; i < kSize; i++) {
-			kI[i] ^= kCArray[i];
-			kO[i] ^= kCArray[i];
-		}
-
-		k = [OFDataArray dataArrayWithItemSize: 1];
-		[k addNItems: blockSize
-		  fromCArray: kI];
-		[k addNItems: data.itemSize * data.count
-		  fromCArray: [data cArray]];
-
-		hash = [[[hashType alloc] init] autorelease];
-		[hash updateWithBuffer: [k cArray]
-				ofSize: k.count];
-		k = [OFDataArray dataArrayWithItemSize: 1];
-		[k addNItems: blockSize
-		  fromCArray: kO];
-		[k addNItems: [hashType digestSize]
-		   fromCArray: [hash digest]];
-	} @finally {
-		[self freeMemory: kI];
-		[self freeMemory: kO];
-	}
-
-	hash = [[[hashType alloc] init] autorelease];
-	[hash updateWithBuffer: [k cArray]
-			ofSize: k.count];
-
-	[hash retain];
-	[pool release];
-
-	return [hash digest];
-}
-
-- (OFDataArray*)_hiWithData: (OFDataArray *)str
-		       salt: (OFDataArray *)salt_
-	     iterationCount: (intmax_t)i
-{
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	size_t digestSize = [hashType digestSize];
-	uint8_t *result = NULL, *u, *uOld;
-	intmax_t j, k;
-	OFDataArray *salty, *tmp, *ret;
-
-	result = [self allocMemoryWithSize: digestSize];
-
-	@try {
-		memset(result, 0, digestSize);
-
-		salty = [[salt_ copy] autorelease];
-		[salty addNItems: 4
-		      fromCArray: "\0\0\0\1"];
-
-		uOld = [self _HMACWithKey: str
-				     data: salty];
-
-		for (j = 0; j < digestSize; j++)
-			result[j] ^= uOld[j];
-
-		for (j = 0; j < i - 1; j++) {
-			tmp = [OFDataArray dataArrayWithItemSize: 1];
-			[tmp addNItems: digestSize
-			    fromCArray: uOld];
-
-			u = [self _HMACWithKey: str
-					  data: tmp];
-
-			for (k = 0; k < digestSize; k++)
-				result[k] ^= u[k];
-
-			uOld = u;
-
-			[pool releaseObjects];
-		}
-
-		ret = [OFDataArray dataArrayWithItemSize: 1];
-		[ret addNItems: digestSize
-		    fromCArray: result];
-	} @finally {
-		[self freeMemory: result];
-	}
-
-	[ret retain];
-	[pool release];
-
-	return [ret autorelease];
-}
-
 - (OFDataArray*)clientFirstMessage
 {
 	OFDataArray *ret = [OFDataArray dataArrayWithItemSize: 1];
@@ -259,19 +139,20 @@ extern uint32_t arc4random_uniform(uint32_t);
 	GS2Header = nil;
 
 	if (authzid)
-		GS2Header = [[OFString alloc]
-		    initWithFormat: @"n,a=%@,", authzid];
+		GS2Header = [[OFString alloc] initWithFormat: @"n,a=%@,",
+							      authzid];
 	else
 		GS2Header = @"n,,";
 
 	[cNonce release];
 	cNonce = nil;
-	cNonce = [[self _genNonce] retain];
+	cNonce = [[self XMPP_genNonce] retain];
 
 	[clientFirstMessageBare release];
 	clientFirstMessageBare = nil;
-	clientFirstMessageBare = [[OFString alloc]
-	    initWithFormat: @"n=%@,r=%@", authcid, cNonce];
+	clientFirstMessageBare = [[OFString alloc] initWithFormat: @"n=%@,r=%@",
+								   authcid,
+								   cNonce];
 
 	[ret addNItems: [GS2Header cStringLength]
 	    fromCArray: [GS2Header cString]];
@@ -345,9 +226,9 @@ extern uint32_t arc4random_uniform(uint32_t);
 	 * IETF RFC 5802:
 	 * SaltedPassword := Hi(Normalize(password), salt, i)
 	 */
-	saltedPassword = [self _hiWithData: tmpArray
-				      salt: salt
-			    iterationCount: iterCount];
+	saltedPassword = [self XMPP_hiWithData: tmpArray
+					  salt: salt
+				iterationCount: iterCount];
 
 	/*
 	 * IETF RFC 5802:
@@ -371,8 +252,8 @@ extern uint32_t arc4random_uniform(uint32_t);
 	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
 	[tmpArray addNItems: 10
 		 fromCArray: "Client Key"];
-	clientKey = [self _HMACWithKey: saltedPassword
-				  data: tmpArray];
+	clientKey = [self XMPP_HMACWithKey: saltedPassword
+				      data: tmpArray];
 
 	/*
 	 * IETF RFC 5802:
@@ -388,8 +269,8 @@ extern uint32_t arc4random_uniform(uint32_t);
 	 * IETF RFC 5802:
 	 * ClientSignature := HMAC(StoredKey, AuthMessage)
 	 */
-	clientSignature = [self _HMACWithKey: tmpArray
-					data: authMessage];
+	clientSignature = [self XMPP_HMACWithKey: tmpArray
+					    data: authMessage];
 
 	/*
 	 * IETF RFC 5802:
@@ -398,8 +279,8 @@ extern uint32_t arc4random_uniform(uint32_t);
 	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
 	[tmpArray addNItems: 10
 		 fromCArray: "Server Key"];
-	serverKey = [self _HMACWithKey: saltedPassword
-				  data: tmpArray];
+	serverKey = [self XMPP_HMACWithKey: saltedPassword
+				      data: tmpArray];
 
 	/*
 	 * IETF RFC 5802:
@@ -410,8 +291,8 @@ extern uint32_t arc4random_uniform(uint32_t);
 		 fromCArray: serverKey];
 	serverSignature = [[OFDataArray alloc] initWithItemSize: 1];
 	[serverSignature addNItems: [hashType digestSize]
-			fromCArray: [self _HMACWithKey: tmpArray
-						  data: authMessage]];
+			fromCArray: [self XMPP_HMACWithKey: tmpArray
+						      data: authMessage]];
 
 	/*
 	 * IETF RFC 5802:
@@ -458,5 +339,134 @@ extern uint32_t arc4random_uniform(uint32_t);
 						      reason: value];
 
 	[pool release];
+}
+
+- (OFString*)XMPP_genNonce
+{
+	OFMutableString *nonce = [OFMutableString string];
+	uint32_t res, i;
+
+	for (i = 0; i < 64; i++) {
+		while ((res = arc4random_uniform('~' - '!' + 1) + '!') == ',');
+		[nonce appendFormat: @"%c", res];
+	}
+
+	return nonce;
+}
+
+- (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
+			data: (OFDataArray*)data
+{
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	OFDataArray *k = [OFDataArray dataArrayWithItemSize: 1];
+	size_t i, kSize, blockSize = [hashType blockSize];
+	uint8_t *kCArray, *kI = NULL, *kO = NULL;
+	OFHash *hash;
+
+	if (key.itemSize * key.count > blockSize) {
+		hash = [[[hashType alloc] init] autorelease];
+		[hash updateWithBuffer: [key cArray]
+				ofSize: key.itemSize * key.count];
+		[k addNItems: [hashType digestSize]
+		  fromCArray: [hash digest]];
+	} else
+		[k addNItems: key.itemSize * key.count
+		  fromCArray: [key cArray]];
+
+	@try {
+		kI = [self allocMemoryWithSize: blockSize * sizeof(uint8_t)];
+		memset(kI, HMAC_IPAD, blockSize * sizeof(uint8_t));
+
+		kO = [self allocMemoryWithSize: blockSize * sizeof(uint8_t)];
+		memset(kO, HMAC_OPAD, blockSize * sizeof(uint8_t));
+
+		kCArray = [k cArray];
+		kSize = k.count;
+		for (i = 0; i < kSize; i++) {
+			kI[i] ^= kCArray[i];
+			kO[i] ^= kCArray[i];
+		}
+
+		k = [OFDataArray dataArrayWithItemSize: 1];
+		[k addNItems: blockSize
+		  fromCArray: kI];
+		[k addNItems: data.itemSize * data.count
+		  fromCArray: [data cArray]];
+
+		hash = [[[hashType alloc] init] autorelease];
+		[hash updateWithBuffer: [k cArray]
+				ofSize: k.count];
+		k = [OFDataArray dataArrayWithItemSize: 1];
+		[k addNItems: blockSize
+		  fromCArray: kO];
+		[k addNItems: [hashType digestSize]
+		   fromCArray: [hash digest]];
+	} @finally {
+		[self freeMemory: kI];
+		[self freeMemory: kO];
+	}
+
+	hash = [[[hashType alloc] init] autorelease];
+	[hash updateWithBuffer: [k cArray]
+			ofSize: k.count];
+
+	[hash retain];
+	[pool release];
+
+	return [hash digest];
+}
+
+- (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
+			   salt: (OFDataArray *)salt_
+		 iterationCount: (intmax_t)i
+{
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	size_t digestSize = [hashType digestSize];
+	uint8_t *result = NULL, *u, *uOld;
+	intmax_t j, k;
+	OFDataArray *salty, *tmp, *ret;
+
+	result = [self allocMemoryWithSize: digestSize];
+
+	@try {
+		memset(result, 0, digestSize);
+
+		salty = [[salt_ copy] autorelease];
+		[salty addNItems: 4
+		      fromCArray: "\0\0\0\1"];
+
+		uOld = [self XMPP_HMACWithKey: str
+					 data: salty];
+
+		for (j = 0; j < digestSize; j++)
+			result[j] ^= uOld[j];
+
+		for (j = 0; j < i - 1; j++) {
+			tmp = [OFDataArray dataArrayWithItemSize: 1];
+			[tmp addNItems: digestSize
+			    fromCArray: uOld];
+
+			u = [self XMPP_HMACWithKey: str
+					      data: tmp];
+
+			for (k = 0; k < digestSize; k++)
+				result[k] ^= u[k];
+
+			uOld = u;
+
+			[pool releaseObjects];
+		}
+
+		ret = [OFDataArray dataArrayWithItemSize: 1];
+		[ret addNItems: digestSize
+		    fromCArray: result];
+	} @finally {
+		[self freeMemory: result];
+	}
+
+	[ret retain];
+	[pool release];
+
+	return [ret autorelease];
 }
 @end

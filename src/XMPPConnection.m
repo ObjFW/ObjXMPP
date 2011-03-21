@@ -45,6 +45,19 @@
 #define NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
 #define NS_STREAM @"http://etherx.jabber.org/streams"
 
+@interface XMPPConnection ()
+- (void)XMPP_startStream;
+- (void)XMPP_sendAuth: (OFString*)name;
+- (void)XMPP_sendResourceBind;
+- (void)XMPP_sendSession;
+- (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
+- (void)XMPP_handleSession;
+- (void)XMPP_handleFeatures: (OFXMLElement*)elem;
+- (void)XMPP_handleIQ: (XMPPIQ*)iq;
+- (void)XMPP_handleMessage: (XMPPMessage*)msg;
+- (void)XMPP_handlePresence: (XMPPPresence*)pres;
+@end
+
 @implementation XMPPConnection
 @synthesize username, password, server, resource, JID, port, useTLS, delegate;
 
@@ -165,21 +178,13 @@
 	[old release];
 }
 
-- (void)_startStream
-{
-	[sock writeFormat: @"<?xml version='1.0'?>\n"
-			   @"<stream:stream to='%@' xmlns='" NS_CLIENT @"' "
-			   @"xmlns:stream='" NS_STREAM @"' "
-			   @"version='1.0'>", server];
-}
-
 - (void)connect
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
 	[sock connectToHost: server
 		     onPort: port];
-	[self _startStream];
+	[self XMPP_startStream];
 
 	[pool release];
 }
@@ -230,162 +235,6 @@
 	parser.delegate = elementBuilder;
 }
 
-- (void)_sendAuth: (OFString*)name
-{
-	OFXMLElement *authTag;
-
-	authTag = [OFXMLElement elementWithName: @"auth"
-				      namespace: NS_SASL];
-	[authTag addAttributeWithName: @"mechanism"
-			  stringValue: name];
-	[authTag addChild: [OFXMLElement elementWithCharacters:
-	    [[authModule clientFirstMessage] stringByBase64Encoding]]];
-
-	[self sendStanza: authTag];
-}
-
-- (void)_sendResourceBind
-{
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
-				     ID: @"bind0"];
-	OFXMLElement *bind = [OFXMLElement elementWithName: @"bind"
-						 namespace: NS_BIND];
-	if (resource)
-		[bind addChild: [OFXMLElement elementWithName: @"resource"
-						  stringValue: resource]];
-	[iq addChild: bind];
-
-	[self sendStanza: iq];
-}
-
-- (void)_sendSession
-{
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
-				     ID: @"session0"];
-	[iq addChild: [OFXMLElement elementWithName: @"session"
-					  namespace: NS_SESSION]];
-	[self sendStanza: iq];
-}
-
-- (void)_handleResourceBind: (XMPPIQ*)iq
-{
-	OFXMLElement *bindElem = iq.children.firstObject;
-	OFXMLElement *jidElem;
-
-	if (![bindElem.name isEqual: @"bind"] ||
-	    ![bindElem.namespace isEqual: NS_BIND])
-		assert(0);
-
-	jidElem = bindElem.children.firstObject;
-	JID = [[XMPPJID alloc] initWithString:
-	    [jidElem.children.firstObject stringValue]];
-
-	if (needsSession) {
-		[self _sendSession];
-		return;
-	}
-
-	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
-		    [delegate connection: self
-			   wasBoundToJID: JID];
-}
-
-- (void)_handleSession
-{
-	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
-		    [delegate connection: self
-			   wasBoundToJID: JID];
-}
-
-- (void)_handleFeatures: (OFXMLElement*)elem
-{
-	OFXMLElement *starttls = [elem
-	    elementsForName: @"starttls"
-		  namespace: NS_STARTTLS].firstObject;
-	OFXMLElement *bind = [elem elementsForName: @"bind"
-					 namespace: NS_BIND].firstObject;
-	OFXMLElement *session = [elem elementsForName: @"session"
-					    namespace: NS_SESSION].firstObject;
-	OFArray *mechs = [elem elementsForName: @"mechanisms"
-				     namespace: NS_SASL];
-	OFMutableArray *mechanisms = [OFMutableArray array];
-
-	if (starttls != nil) {
-		[self sendStanza: [OFXMLElement elementWithName: @"starttls"
-						      namespace: NS_STARTTLS]];
-		return;
-	}
-
-	if ([mechs count] > 0) {
-		for (OFXMLElement *mech in [mechs.firstObject children])
-			[mechanisms addObject:
-			    [mech.children.firstObject stringValue]];
-
-		if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
-			authModule = [[XMPPSCRAMAuth alloc]
-			    initWithAuthcid: username
-				   password: password
-				       hash: [OFSHA1Hash class]];
-			[self _sendAuth: @"SCRAM-SHA-1"];
-			return;
-		}
-
-		if ([mechanisms containsObject: @"PLAIN"]) {
-			authModule = [[XMPPPLAINAuth alloc]
-			    initWithAuthcid: username
-				   password: password];
-			[self _sendAuth: @"PLAIN"];
-			return;
-		}
-
-		assert(0);
-	}
-
-	if (session != nil)
-		needsSession = YES;
-
-	if (bind != nil) {
-		[self _sendResourceBind];
-		return;
-	}
-
-	assert(0);
-}
-
-- (void)_handleIQ: (XMPPIQ*)iq
-{
-	// FIXME: More checking!
-	if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"]) {
-		[self _handleResourceBind: iq];
-		return;
-	}
-
-	if ([iq.ID isEqual: @"session0"] && [iq.type isEqual: @"result"]) {
-		[self _handleSession];
-		return;
-	}
-
-	if ([delegate respondsToSelector: @selector(connection:didReceiveIQ:)])
-		    [delegate connection: self
-			    didReceiveIQ: iq];
-}
-
-- (void)_handleMessage: (XMPPMessage*)msg
-{
-	if ([delegate respondsToSelector:
-	    @selector(connection:didReceiveMessage:)])
-		[delegate connection: self
-		   didReceiveMessage: msg];
-}
-
-- (void)_handlePresence: (XMPPPresence*)pres
-{
-	if ([delegate respondsToSelector:
-	    @selector(connection:didReceivePresence:)])
-		[delegate connection: self
-		  didReceivePresence: pres];
-}
-
 - (void)elementBuilder: (OFXMLElementBuilder*)b
        didBuildElement: (OFXMLElement*)elem
 {
@@ -397,18 +246,18 @@
 
 	if ([elem.namespace isEqual: NS_CLIENT]) {
 		if ([elem.name isEqual: @"iq"]) {
-			[self _handleIQ: [XMPPIQ stanzaWithElement: elem]];
+			[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: elem]];
 			return;
 		}
 
 		if ([elem.name isEqual: @"message"]) {
-			[self _handleMessage:
+			[self XMPP_handleMessage:
 			    [XMPPMessage stanzaWithElement: elem]];
 			return;
 		}
 
 		if ([elem.name isEqual: @"presence"]) {
-			[self _handlePresence:
+			[self XMPP_handlePresence:
 			    [XMPPPresence stanzaWithElement: elem]];
 			return;
 		}
@@ -418,7 +267,7 @@
 
 	if ([elem.namespace isEqual: NS_STREAM]) {
 		if ([elem.name isEqual: @"features"]) {
-			[self _handleFeatures: elem];
+			[self XMPP_handleFeatures: elem];
 			return;
 		}
 
@@ -432,7 +281,7 @@
 
 			/* Stream restart */
 			parser.delegate = self;
-			[self _startStream];
+			[self XMPP_startStream];
 			return;
 		}
 
@@ -474,7 +323,7 @@
 
 			/* Stream restart */
 			parser.delegate = self;
-			[self _startStream];
+			[self XMPP_startStream];
 			return;
 		}
 
@@ -499,5 +348,169 @@
 	     namespace: (OFString*)ns
 {
 	// TODO
+}
+
+- (void)XMPP_startStream
+{
+	[sock writeFormat: @"<?xml version='1.0'?>\n"
+			   @"<stream:stream to='%@' xmlns='" NS_CLIENT @"' "
+			   @"xmlns:stream='" NS_STREAM @"' "
+			   @"version='1.0'>", server];
+}
+
+- (void)XMPP_handleIQ: (XMPPIQ*)iq
+{
+	// FIXME: More checking!
+	if ([iq.ID isEqual: @"bind0"] && [iq.type isEqual: @"result"]) {
+		[self XMPP_handleResourceBind: iq];
+		return;
+	}
+
+	if ([iq.ID isEqual: @"session0"] && [iq.type isEqual: @"result"]) {
+		[self XMPP_handleSession];
+		return;
+	}
+
+	if ([delegate respondsToSelector: @selector(connection:didReceiveIQ:)])
+		[delegate connection: self
+			didReceiveIQ: iq];
+}
+
+- (void)XMPP_handleMessage: (XMPPMessage*)msg
+{
+	if ([delegate respondsToSelector:
+	     @selector(connection:didReceiveMessage:)])
+		[delegate connection: self
+		   didReceiveMessage: msg];
+}
+
+- (void)XMPP_handlePresence: (XMPPPresence*)pres
+{
+	if ([delegate respondsToSelector:
+	     @selector(connection:didReceivePresence:)])
+		[delegate connection: self
+		  didReceivePresence: pres];
+}
+
+- (void)XMPP_handleFeatures: (OFXMLElement*)elem
+{
+	OFXMLElement *starttls =
+	    [elem elementsForName: @"starttls"
+			namespace: NS_STARTTLS].firstObject;
+	OFXMLElement *bind = [elem elementsForName: @"bind"
+					 namespace: NS_BIND].firstObject;
+	OFXMLElement *session = [elem elementsForName: @"session"
+					    namespace: NS_SESSION].firstObject;
+	OFArray *mechs = [elem elementsForName: @"mechanisms"
+				     namespace: NS_SASL];
+	OFMutableArray *mechanisms = [OFMutableArray array];
+
+	if (starttls != nil) {
+		[self sendStanza: [OFXMLElement elementWithName: @"starttls"
+						      namespace: NS_STARTTLS]];
+		return;
+	}
+
+	if ([mechs count] > 0) {
+		for (OFXMLElement *mech in [mechs.firstObject children])
+			[mechanisms addObject:
+			    [mech.children.firstObject stringValue]];
+
+		if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
+			authModule = [[XMPPSCRAMAuth alloc]
+			    initWithAuthcid: username
+				   password: password
+				       hash: [OFSHA1Hash class]];
+			[self XMPP_sendAuth: @"SCRAM-SHA-1"];
+			return;
+		}
+
+		if ([mechanisms containsObject: @"PLAIN"]) {
+			authModule = [[XMPPPLAINAuth alloc]
+			    initWithAuthcid: username
+				   password: password];
+			[self XMPP_sendAuth: @"PLAIN"];
+			return;
+		}
+
+		assert(0);
+	}
+
+	if (session != nil)
+		needsSession = YES;
+
+	if (bind != nil) {
+		[self XMPP_sendResourceBind];
+		return;
+	}
+
+	assert(0);
+}
+
+- (void)XMPP_sendAuth: (OFString*)name
+{
+	OFXMLElement *authTag;
+
+	authTag = [OFXMLElement elementWithName: @"auth"
+				      namespace: NS_SASL];
+	[authTag addAttributeWithName: @"mechanism"
+			  stringValue: name];
+	[authTag addChild: [OFXMLElement elementWithCharacters:
+	    [[authModule clientFirstMessage] stringByBase64Encoding]]];
+
+	[self sendStanza: authTag];
+}
+
+- (void)XMPP_sendResourceBind
+{
+	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
+				     ID: @"bind0"];
+	OFXMLElement *bind = [OFXMLElement elementWithName: @"bind"
+						 namespace: NS_BIND];
+	if (resource)
+		[bind addChild: [OFXMLElement elementWithName: @"resource"
+						  stringValue: resource]];
+	[iq addChild: bind];
+
+	[self sendStanza: iq];
+}
+
+- (void)XMPP_handleResourceBind: (XMPPIQ*)iq
+{
+	OFXMLElement *bindElem = iq.children.firstObject;
+	OFXMLElement *jidElem;
+
+	if (![bindElem.name isEqual: @"bind"] ||
+	    ![bindElem.namespace isEqual: NS_BIND])
+		assert(0);
+
+	jidElem = bindElem.children.firstObject;
+	JID = [[XMPPJID alloc] initWithString:
+	    [jidElem.children.firstObject stringValue]];
+
+	if (needsSession) {
+		[self XMPP_sendSession];
+		return;
+	}
+
+	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
+		[delegate connection: self
+		       wasBoundToJID: JID];
+}
+
+- (void)XMPP_sendSession
+{
+	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
+				     ID: @"session0"];
+	[iq addChild: [OFXMLElement elementWithName: @"session"
+					  namespace: NS_SESSION]];
+	[self sendStanza: iq];
+}
+
+- (void)XMPP_handleSession
+{
+	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
+		[delegate connection: self
+		       wasBoundToJID: JID];
 }
 @end

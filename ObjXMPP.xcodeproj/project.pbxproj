@@ -103,10 +103,6 @@
 			isa = PBXGroup;
 			children = (
 				4BC5599B1337A65400E345C7 /* Supporting Files */,
-				4BC559FD1337AC1800E345C7 /* XMPPSCRAMAuth.m */,
-				4BC559FE1337AC1800E345C7 /* XMPPStanza.h */,
-				4BC559FF1337AC1800E345C7 /* XMPPStanza.m */,
-				4BC559D91337AC0900E345C7 /* arc4random_uniform.m */,
 				4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */,
 				4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */,
 				4BC559DC1337AC0900E345C7 /* XMPPConnection.h */,
@@ -124,6 +120,10 @@
 				4BC559E81337AC0900E345C7 /* XMPPPresence.h */,
 				4BC559E91337AC0900E345C7 /* XMPPPresence.m */,
 				4BC559EA1337AC0900E345C7 /* XMPPSCRAMAuth.h */,
+				4BC559FD1337AC1800E345C7 /* XMPPSCRAMAuth.m */,
+				4BC559FE1337AC1800E345C7 /* XMPPStanza.h */,
+				4BC559FF1337AC1800E345C7 /* XMPPStanza.m */,
+				4BC559D91337AC0900E345C7 /* arc4random_uniform.m */,
 			);
 			path = ObjXMPP;
 			sourceTree = "<group>";
