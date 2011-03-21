@@ -31,6 +31,7 @@
 @class XMPPAuthenticator;
 
 @protocol XMPPConnectionDelegate
+@optional
 - (void)connectionWasClosed: (XMPPConnection*)conn;
 - (void)connection: (XMPPConnection*)conn
       didReceiveIQ: (XMPPIQ*)iq;
@@ -43,7 +44,8 @@
 /**
  * \brief A class which abstracts a connection to an XMPP service.
  */
-@interface XMPPConnection: OFObject <OFXMLElementBuilderDelegate>
+@interface XMPPConnection: OFObject <OFXMLParserDelegate,
+    OFXMLElementBuilderDelegate>
 {
 	OFTCPSocket *sock;
 	OFXMLParser *parser;

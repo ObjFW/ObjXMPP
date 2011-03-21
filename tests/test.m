@@ -32,7 +32,7 @@
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
 
-@interface AppDelegate: OFObject <XMPPConnectionDelegate>
+@interface AppDelegate: OFObject <OFApplicationDelegate, XMPPConnectionDelegate>
 {
 	XMPPConnection *conn;
 }
