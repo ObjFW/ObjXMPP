@@ -638,27 +638,41 @@
 		assert(0);
 
 	for (OFXMLElement *elem in rosterElem.children) {
-		OFString *group;
-		OFMutableArray *rosterGroup;
+		OFArray *groups;
 
 		if (![elem.name isEqual: @"item"] ||
 		    ![elem.ns isEqual: NS_ROSTER])
 			continue;
 
-		group =	[[elem
-		    elementsForName: @"group"
-			  namespace: NS_ROSTER].firstObject stringValue];
+		groups = [elem elementsForName: @"group"
+				     namespace: NS_ROSTER];
 
-		if (group == nil)
-			group = @"";
+		for (OFXMLElement *groupElem in groups) {
+			OFString *group = groupElem.stringValue;
+			OFMutableArray *rosterGroup =
+			    [roster objectForKey: group];
 
-		if ((rosterGroup = [roster objectForKey: group]) == nil) {
-			rosterGroup = [OFMutableArray array];
-			[roster setObject: rosterGroup
-				   forKey: group];
+			if (rosterGroup == nil) {
+				rosterGroup = [OFMutableArray array];
+				[roster setObject: rosterGroup
+					   forKey: group];
+			}
+
+			[rosterGroup addObject: elem];
 		}
 
-		[rosterGroup addObject: elem];
+		if (groups.count == 0) {
+			OFMutableArray *rosterGroup =
+			    [roster objectForKey: @""];
+
+			if (rosterGroup == nil) {
+				rosterGroup = [OFMutableArray array];
+				[roster setObject: rosterGroup
+					   forKey: @""];
+			}
+
+			[rosterGroup addObject: elem];
+		}
 	}
 
 	if ([delegate respondsToSelector:
