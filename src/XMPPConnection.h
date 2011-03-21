@@ -35,6 +35,7 @@
 - (void)connectionWasAuthenticated: (XMPPConnection*)conn;
 - (void)connection: (XMPPConnection*)conn
      wasBoundToJID: (XMPPJID*)jid;
+- (void)connectionDidReceiveRoster: (XMPPConnection*)conn;
 - (void)connection: (XMPPConnection*)conn
       didReceiveIQ: (XMPPIQ*)iq;
 -   (void)connection: (XMPPConnection*)conn
@@ -62,7 +63,8 @@
 	XMPPAuthenticator *authModule;
 	BOOL needsSession;
 	unsigned int lastID;
-	OFString *bindID, *sessionID;
+	OFString *bindID, *sessionID, *rosterID;
+	OFMutableDictionary *roster;
 }
 
 @property (copy) OFString *username, *password, *server, *resource;
@@ -70,6 +72,7 @@
 @property (assign) uint16_t port;
 @property (assign) BOOL useTLS;
 @property (retain) id <XMPPConnectionDelegate> delegate;
+@property (copy, readonly) OFDictionary *roster;
 
 /**
  * Connects to the XMPP service.
@@ -94,4 +97,9 @@
  * \return A new, generated, unique stanza ID.
  */
 - (OFString*)generateStanzaID;
+
+/**
+ * Requests the roster.
+ */
+- (void)requestRoster;
 @end

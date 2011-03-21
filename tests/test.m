@@ -111,9 +111,16 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 - (void)connection: (XMPPConnection*)conn
      wasBoundToJID: (XMPPJID*)jid
 {
+	of_log(@"Bound to JID: %@", [jid fullJID]);
+
+	[conn requestRoster];
+}
+
+- (void)connectionDidReceiveRoster :(XMPPConnection*)conn
+{
 	XMPPPresence *pres;
 
-	of_log(@"Bound to JID: %@", [jid fullJID]);
+	of_log(@"Got roster");
 
 	pres = [XMPPPresence presence];
 	[pres addPriority: 10];

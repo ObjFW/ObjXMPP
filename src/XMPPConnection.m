@@ -40,6 +40,7 @@
 
 #define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
 #define NS_CLIENT @"jabber:client"
+#define NS_ROSTER @"jabber:iq:roster"
 #define NS_SASL @"urn:ietf:params:xml:ns:xmpp-sasl"
 #define NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
 #define NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
@@ -56,24 +57,32 @@
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
 - (void)XMPP_sendSession;
 - (void)XMPP_handleSession: (XMPPIQ*)iq;
+- (void)XMPP_handleRoster: (XMPPIQ*)iq;
 @end
 
 @implementation XMPPConnection
-@synthesize JID, port, useTLS, delegate;
+@synthesize JID, port, useTLS, delegate, roster;
 
 - init
 {
 	self = [super init];
 
-	sock = [[OFTCPSocket alloc] init];
-	parser = [[OFXMLParser alloc] init];
-	elementBuilder = [[OFXMLElementBuilder alloc] init];
+	@try {
+		sock = [[OFTCPSocket alloc] init];
+		parser = [[OFXMLParser alloc] init];
+		elementBuilder = [[OFXMLElementBuilder alloc] init];
 
-	port = 5222;
-	useTLS = YES;
+		port = 5222;
+		useTLS = YES;
 
-	parser.delegate = self;
-	elementBuilder.delegate = self;
+		parser.delegate = self;
+		elementBuilder.delegate = self;
+
+		roster = [[OFMutableDictionary alloc] init];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
 
 	return self;
 }
@@ -92,6 +101,8 @@
 	[authModule release];
 	[bindID release];
 	[sessionID release];
+	[rosterID release];
+	[roster release];
 
 	[super dealloc];
 }
@@ -385,13 +396,18 @@
 
 - (void)XMPP_handleIQ: (XMPPIQ*)iq
 {
-	if ([iq.ID isEqual: bindID] && [iq.type isEqual: @"result"]) {
+	if ([iq.ID isEqual: bindID]) {
 		[self XMPP_handleResourceBind: iq];
 		return;
 	}
 
-	if ([iq.ID isEqual: sessionID] && [iq.type isEqual: @"result"]) {
+	if ([iq.ID isEqual: sessionID]) {
 		[self XMPP_handleSession: iq];
+		return;
+	}
+
+	if ([iq.ID isEqual: rosterID]) {
+		[self XMPP_handleRoster: iq];
 		return;
 	}
 
@@ -508,8 +524,13 @@
 
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq
 {
-	OFXMLElement *bindElem = iq.children.firstObject;
+	OFXMLElement *bindElem;
 	OFXMLElement *jidElem;
+
+	if (![iq.type isEqual: @"result"])
+		assert(0);
+
+	bindElem = iq.children.firstObject;
 
 	if (![bindElem.name isEqual: @"bind"] ||
 	    ![bindElem.namespace isEqual: NS_BIND])
@@ -555,5 +576,65 @@
 
 	[sessionID release];
 	sessionID = nil;
+}
+
+- (void)requestRoster
+{
+	XMPPIQ *iq;
+
+	if (rosterID != nil)
+		assert(0);
+
+	rosterID = [[self generateStanzaID] retain];
+	iq = [XMPPIQ IQWithType: @"get"
+			     ID: rosterID];
+	[iq addChild: [OFXMLElement elementWithName: @"query"
+					  namespace: NS_ROSTER]];
+	[self sendStanza: iq];
+}
+
+- (void)XMPP_handleRoster: (XMPPIQ*)iq
+{
+	OFXMLElement *rosterElem;
+
+	if (![iq.type isEqual: @"result"])
+		assert(0);
+
+	rosterElem = iq.children.firstObject;
+
+	if (![rosterElem.name isEqual: @"query"] ||
+	    ![rosterElem.namespace isEqual: NS_ROSTER])
+		assert(0);
+
+	for (OFXMLElement *elem in rosterElem.children) {
+		OFString *group;
+		OFMutableArray *rosterGroup;
+
+		if (![elem.name isEqual: @"item"] ||
+		    ![elem.ns isEqual: NS_ROSTER])
+			continue;
+
+		group =	[[elem
+		    elementsForName: @"group"
+			  namespace: NS_ROSTER].firstObject stringValue];
+
+		if (group == nil)
+			group = @"";
+
+		if ((rosterGroup = [roster objectForKey: group]) == nil) {
+			rosterGroup = [OFMutableArray array];
+			[roster setObject: rosterGroup
+				   forKey: group];
+		}
+
+		[rosterGroup addObject: elem];
+	}
+
+	if ([delegate respondsToSelector:
+	    @selector(connectionDidReceiveRoster:)])
+		[delegate connectionDidReceiveRoster: self];
+
+	[rosterID release];
+	rosterID = nil;
 }
 @end
