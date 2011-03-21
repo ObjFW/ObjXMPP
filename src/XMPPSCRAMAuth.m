@@ -199,12 +199,12 @@ extern uint32_t arc4random_uniform(uint32_t);
 
 - (OFDataArray*)_hiWithData: (OFDataArray *)str
 		       salt: (OFDataArray *)salt_
-	     iterationCount: (unsigned int)i
+	     iterationCount: (intmax_t)i
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	size_t digestSize = [hashType digestSize];
 	uint8_t *result = NULL, *u, *uOld;
-	unsigned int j, k;
+	intmax_t j, k;
 	OFDataArray *salty, *tmp, *ret;
 
 	result = [self allocMemoryWithSize: digestSize];
