@@ -59,7 +59,7 @@
 @end
 
 @implementation XMPPConnection
-@synthesize username, password, server, resource, JID, port, useTLS, delegate;
+@synthesize JID, port, useTLS, delegate;
 
 - init
 {
@@ -110,6 +110,11 @@
 	[old release];
 }
 
+- (OFString*)username
+{
+	return [[username copy] autorelease];
+}
+
 - (void)setResource: (OFString*)resource_
 {
 	OFString *old = resource;
@@ -131,6 +136,11 @@
 	}
 
 	[old release];
+}
+
+- (OFString*)resource
+{
+	return [[resource copy] autorelease];
 }
 
 - (void)setServer: (OFString*)server_
@@ -156,6 +166,11 @@
 	[old release];
 }
 
+- (OFString*)server
+{
+	return [[server copy] autorelease];
+}
+
 - (void)setPassword: (OFString*)password_
 {
 	OFString *old = password;
@@ -176,6 +191,11 @@
 	}
 
 	[old release];
+}
+
+- (OFString*)password
+{
+	return [[password copy] autorelease];
 }
 
 - (void)connect

@@ -172,6 +172,9 @@ extern uint32_t arc4random_uniform(uint32_t);
 	OFDataArray *ret, *authMessage, *tmpArray, *salt, *saltedPassword;
 	OFString *tmpString, *sNonce;
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	enum {
+		GOT_SNONCE, GOT_SALT, GOT_ITERCOUNT
+	} got = 0;
 
 	hash = [[[hashType alloc] init] autorelease];
 	ret = [OFDataArray dataArrayWithItemSize: 1];
@@ -193,12 +196,19 @@ extern uint32_t arc4random_uniform(uint32_t);
 					  reason: @"Received wrong nonce"];
 
 			sNonce = entry;
-		} else if ([comp hasPrefix: @"s="])
+			got |= GOT_SNONCE;
+		} else if ([comp hasPrefix: @"s="]) {
 			salt = [OFDataArray
 			    dataArrayWithBase64EncodedString: entry];
-		else if ([comp hasPrefix: @"i="])
+			got |= GOT_SALT;
+		} else if ([comp hasPrefix: @"i="]) {
 			iterCount = [entry decimalValue];
+			got |= GOT_ITERCOUNT;
+		}
 	}
+
+	if (got != (GOT_SNONCE | GOT_SALT | GOT_ITERCOUNT))
+		@throw [OFInvalidServerReplyException newWithClass: isa];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
 	// XXX: No channel binding for now
