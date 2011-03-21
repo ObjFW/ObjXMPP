@@ -191,7 +191,8 @@
 		size_t len = [sock readNBytes: 512
 				   intoBuffer: buf];
 
-		if (len < 1)
+		if (len < 1 && [delegate respondsToSelector:
+		    @selector(connectionWasClosed:)])
 			[delegate connectionWasClosed: self];
 
 		[of_stdout writeNBytes: len
@@ -266,7 +267,11 @@
 		OFXMLElement *jidElem = bindElem.children.firstObject;
 		JID = [[XMPPJID alloc] initWithString:
 		    [jidElem.children.firstObject stringValue]];
-		of_log(@"Bound to JID: %@", [JID fullJID]);
+
+		if ([delegate respondsToSelector:
+		    @selector(connection:wasBoundToJID:)])
+			[delegate connection: self
+			       wasBoundToJID: JID];
 	}
 }
 
@@ -313,20 +318,25 @@
 		return;
 	}
 
-	[delegate connection: self
-		didReceiveIQ: iq];
+	if ([delegate respondsToSelector: @selector(connection:didReceiveIQ:)])
+		    [delegate connection: self
+			    didReceiveIQ: iq];
 }
 
 - (void)_handleMessage: (XMPPMessage*)msg
 {
-	[delegate connection: self
-	   didReceiveMessage: msg];
+	if ([delegate respondsToSelector:
+	    @selector(connection:didReceiveMessage:)])
+		[delegate connection: self
+		   didReceiveMessage: msg];
 }
 
 - (void)_handlePresence: (XMPPPresence*)pres
 {
-	[delegate connection: self
-	  didReceivePresence: pres];
+	if ([delegate respondsToSelector:
+	    @selector(connection:didReceivePresence:)])
+		[delegate connection: self
+		  didReceivePresence: pres];
 }
 
 - (void)elementBuilder: (OFXMLElementBuilder*)b
@@ -408,7 +418,10 @@
 			[authModule parseServerFinalMessage:
 			    [OFDataArray dataArrayWithBase64EncodedString:
 				[elem.children.firstObject stringValue]]];
-			of_log(@"Auth successful");
+
+			if ([delegate respondsToSelector:
+			    @selector(connectionWasAuthenticated:)])
+				[delegate connectionWasAuthenticated: self];
 
 			/* Stream restart */
 			parser.delegate = self;

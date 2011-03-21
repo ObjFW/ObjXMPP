@@ -32,13 +32,16 @@
 
 @protocol XMPPConnectionDelegate
 @optional
-- (void)connectionWasClosed: (XMPPConnection*)conn;
+- (void)connectionWasAuthenticated: (XMPPConnection*)conn;
+- (void)connection: (XMPPConnection*)conn
+     wasBoundToJID: (XMPPJID*)jid;
 - (void)connection: (XMPPConnection*)conn
       didReceiveIQ: (XMPPIQ*)iq;
 -   (void)connection: (XMPPConnection*)conn
   didReceivePresence: (XMPPPresence*)pres;
 -  (void)connection: (XMPPConnection*)conn
   didReceiveMessage: (XMPPMessage*)msg;
+- (void)connectionWasClosed: (XMPPConnection*)conn;
 @end
 
 /**
@@ -64,7 +67,7 @@
 	short port;
 	/// Whether to use TLS
 	BOOL useTLS;
-	id <XMPPConnectionDelegate> delegate;
+	id <XMPPConnectionDelegate, OFObject> delegate;
 	XMPPAuthenticator *authModule;
 }
 

@@ -105,9 +105,15 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	}
 }
 
-- (void)connectionWasClosed: (XMPPConnection*)conn
+- (void)connectionWasAuthenticated: (XMPPConnection*)conn
 {
-	of_log(@"Connection was closed!");
+	of_log(@"Auth successful");
+}
+
+- (void)connection: (XMPPConnection*)conn
+     wasBoundToJID: (XMPPJID*)jid
+{
+	of_log(@"Bound to JID: %@", [jid fullJID]);
 }
 
 - (void)connection: (XMPPConnection*)conn
@@ -126,5 +132,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
   didReceivePresence: (XMPPPresence*)pres
 {
 	of_log(@"Presence: %@", pres);
+}
+
+- (void)connectionWasClosed: (XMPPConnection*)conn
+{
+	of_log(@"Connection was closed!");
 }
 @end
