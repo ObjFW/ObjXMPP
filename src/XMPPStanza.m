@@ -161,8 +161,10 @@
 	[old release];
 
 	[self removeAttributeForName: @"from"];
-	[self addAttributeWithName: @"from"
-		       stringValue: from_.fullJID];
+
+	if (from_ != nil)
+		[self addAttributeWithName: @"from"
+			       stringValue: from_.fullJID];
 }
 
 - (void)setTo: (XMPPJID*)to_
@@ -172,8 +174,10 @@
 	[old release];
 
 	[self removeAttributeForName: @"to"];
-	[self addAttributeWithName: @"to"
-		       stringValue: to_.fullJID];
+
+	if (to_ != nil)
+		[self addAttributeWithName: @"to"
+			       stringValue: to_.fullJID];
 }
 
 - (void)setType: (OFString*)type_
@@ -183,8 +187,10 @@
 	[old release];
 
 	[self removeAttributeForName: @"type"];
-	[self addAttributeWithName: @"type"
-		       stringValue: type];
+
+	if (type_ != nil)
+		[self addAttributeWithName: @"type"
+			       stringValue: type];
 }
 
 - (void)setID: (OFString*)ID_
@@ -194,7 +200,9 @@
 	[old release];
 
 	[self removeAttributeForName: @"id"];
-	[self addAttributeWithName: @"id"
-		       stringValue: ID];
+
+	if (ID_ != nil)
+		[self addAttributeWithName: @"id"
+			       stringValue: ID];
 }
 @end
