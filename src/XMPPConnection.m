@@ -419,21 +419,14 @@
 				  didReceiveIQ: iq];
 
 	if (!handled) {
-		OFString *from = [iq attributeForName: @"from"].stringValue;
-		OFString *to = [iq attributeForName: @"to"].stringValue;
+		XMPPJID *from = iq.from;
+		XMPPJID *to = iq.to;
 		OFXMLElement *error;
 
 		[iq setType: @"error"];
 
-		[iq removeAttributeForName: @"from"];
-		[iq removeAttributeForName: @"to"];
-
-		if (from != nil)
-			[iq addAttributeWithName: @"to"
-				     stringValue: from];
-		if (to != nil)
-			[iq addAttributeWithName: @"from"
-				     stringValue: to];
+		iq.to = from;
+		iq.from = to;
 
 		error = [OFXMLElement elementWithName: @"error"];
 		[error addAttributeWithName: @"type"
