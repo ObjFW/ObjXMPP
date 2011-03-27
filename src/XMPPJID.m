@@ -27,10 +27,6 @@
 #import "XMPPExceptions.h"
 
 @implementation XMPPJID
-@synthesize node;
-@synthesize domain;
-@synthesize resource;
-
 + JID
 {
 	return [[[self alloc] init] autorelease];
@@ -112,6 +108,11 @@
 	[old release];
 }
 
+- (OFString*)node
+{
+	return [[node copy] autorelease];
+}
+
 - (void)setDomain: (OFString*)domain_
 {
 	OFString *old = domain;
@@ -132,6 +133,11 @@
 	}
 
 	[old release];
+}
+
+- (OFString*)domain
+{
+	return [[node copy] autorelease];
 }
 
 - (void)setResource: (OFString*)resource_
@@ -161,6 +167,11 @@
 	}
 
 	[old release];
+}
+
+- (OFString*)resource
+{
+	return [[resource copy] autorelease];
 }
 
 - (OFString*)bareJID

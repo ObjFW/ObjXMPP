@@ -25,11 +25,6 @@
 #import "XMPPJID.h"
 
 @implementation XMPPStanza
-@synthesize from;
-@synthesize to;
-@synthesize type;
-@synthesize ID;
-
 + stanzaWithName: (OFString*)name
 {
 	return [[[self alloc] initWithName: name] autorelease];
@@ -167,6 +162,11 @@
 			       stringValue: from_.fullJID];
 }
 
+- (OFString*)from
+{
+	return [[from copy] autorelease];
+}
+
 - (void)setTo: (XMPPJID*)to_
 {
 	XMPPJID *old = to;
@@ -178,6 +178,11 @@
 	if (to_ != nil)
 		[self addAttributeWithName: @"to"
 			       stringValue: to_.fullJID];
+}
+
+- (OFString*)to
+{
+	return [[to copy] autorelease];
 }
 
 - (void)setType: (OFString*)type_
@@ -193,6 +198,11 @@
 			       stringValue: type];
 }
 
+- (OFString*)type
+{
+	return [[type copy] autorelease];
+}
+
 - (void)setID: (OFString*)ID_
 {
 	OFString* old = ID;
@@ -204,5 +214,10 @@
 	if (ID_ != nil)
 		[self addAttributeWithName: @"id"
 			       stringValue: ID];
+}
+
+- (OFString*)ID
+{
+	return [[ID copy] autorelease];
 }
 @end
