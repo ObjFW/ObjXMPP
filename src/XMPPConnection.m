@@ -50,11 +50,12 @@
 
 @interface XMPPConnection ()
 - (void)XMPP_startStream;
+- (void)XMPP_handleStanza: (OFXMLElement*)elem;
 - (void)XMPP_sendAuth: (OFString*)name;
-- (void)XMPP_handleFeatures: (OFXMLElement*)elem;
 - (void)XMPP_handleIQ: (XMPPIQ*)iq;
 - (void)XMPP_handleMessage: (XMPPMessage*)msg;
 - (void)XMPP_handlePresence: (XMPPPresence*)pres;
+- (void)XMPP_handleFeatures: (OFXMLElement*)elem;
 - (void)XMPP_sendResourceBind;
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
 - (void)XMPP_sendSession;
@@ -264,6 +265,8 @@
 	namespace: (OFString*)ns
        attributes: (OFArray*)attrs
 {
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
 	    ![ns isEqual: NS_STREAM]) {
 		of_log(@"Did not get expected stream start!");
@@ -279,17 +282,36 @@
 	}
 
 	parser.delegate = elementBuilder;
+
+	[pool release];
 }
 
 - (void)elementBuilder: (OFXMLElementBuilder*)b
        didBuildElement: (OFXMLElement*)elem
 {
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+
 	elem.defaultNamespace = NS_CLIENT;
 	[elem setPrefix: @"stream"
 	   forNamespace: NS_STREAM];
 
 	of_log(@"In:  %@", elem);
 
+	[self XMPP_handleStanza: elem];
+
+	[pool release];
+}
+
+- (void)XMPP_startStream
+{
+	[sock writeFormat: @"<?xml version='1.0'?>\n"
+			   @"<stream:stream to='%@' xmlns='" NS_CLIENT @"' "
+			   @"xmlns:stream='" NS_STREAM @"' "
+			   @"version='1.0'>", server];
+}
+
+- (void)XMPP_handleStanza: (OFXMLElement*)elem
+{
 	if ([elem.namespace isEqual: NS_CLIENT]) {
 		if ([elem.name isEqual: @"iq"]) {
 			[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: elem]];
@@ -343,16 +365,15 @@
 			OFXMLElement *responseTag;
 			OFDataArray *challenge =
 			    [OFDataArray dataArrayWithBase64EncodedString:
-				[elem.children.firstObject stringValue]];
-			OFDataArray *response =
-			    [authModule
-			        calculateResponseWithChallenge: challenge];
+			    [elem.children.firstObject stringValue]];
+			OFDataArray *response = [authModule
+			    calculateResponseWithChallenge: challenge];
 
 			responseTag = [OFXMLElement elementWithName: @"response"
 							  namespace: NS_SASL];
-			[responseTag
-			    addChild: [OFXMLElement elementWithCharacters:
-				[response stringByBase64Encoding]]];
+			[responseTag addChild:
+			    [OFXMLElement elementWithCharacters:
+			    [response stringByBase64Encoding]]];
 
 			[self sendStanza: responseTag];
 			return;
@@ -379,21 +400,13 @@
 			@throw [XMPPAuthFailedException
 			    newWithClass: isa
 			      connection: self
-				  reason: [elem stringValue]];
+				  reason: elem.stringValue];
 		}
 
 		assert(0);
 	}
 
 	assert(0);
-}
-
-- (void)XMPP_startStream
-{
-	[sock writeFormat: @"<?xml version='1.0'?>\n"
-			   @"<stream:stream to='%@' xmlns='" NS_CLIENT @"' "
-			   @"xmlns:stream='" NS_STREAM @"' "
-			   @"version='1.0'>", server];
 }
 
 - (void)XMPP_handleIQ: (XMPPIQ*)iq
