@@ -162,7 +162,7 @@
 			       stringValue: from_.fullJID];
 }
 
-- (OFString*)from
+- (XMPPJID*)from
 {
 	return [[from copy] autorelease];
 }
@@ -180,7 +180,7 @@
 			       stringValue: to_.fullJID];
 }
 
-- (OFString*)to
+- (XMPPJID*)to
 {
 	return [[to copy] autorelease];
 }

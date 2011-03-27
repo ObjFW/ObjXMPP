@@ -39,9 +39,15 @@
 
 - initWithString: (OFString*)str
 {
+	size_t nodesep, resourcesep;
+
 	self = [super init];
 
-	size_t nodesep, resourcesep;
+	if (str == nil) {
+		[self release];
+		return nil;
+	}
+
 	nodesep = [str indexOfFirstOccurrenceOfString: @"@"];
 	resourcesep = [str indexOfFirstOccurrenceOfString: @"/"];
 

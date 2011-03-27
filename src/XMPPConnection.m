@@ -36,6 +36,7 @@
 #import "XMPPIQ.h"
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
+#import "XMPPRosterItem.h"
 #import "XMPPExceptions.h"
 
 #define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
@@ -631,28 +632,37 @@
 		assert(0);
 
 	for (OFXMLElement *elem in rosterElem.children) {
-		OFArray *groups;
+		XMPPRosterItem *rosterItem;
+		OFMutableArray *groups = [OFMutableArray array];
 
 		if (![elem.name isEqual: @"item"] ||
 		    ![elem.ns isEqual: NS_ROSTER])
 			continue;
 
-		groups = [elem elementsForName: @"group"
-				     namespace: NS_ROSTER];
+		rosterItem = [XMPPRosterItem rosterItem];
+		rosterItem.JID = [XMPPJID JIDWithString:
+		    [rosterElem attributeForName: @"jid"].stringValue];
+		rosterItem.name =
+		    [rosterElem attributeForName: @"name"].stringValue;
+		rosterItem.subscription =
+		    [rosterElem attributeForName: @"subscription"].stringValue;
 
-		for (OFXMLElement *groupElem in groups) {
-			OFString *group = groupElem.stringValue;
+		for (OFXMLElement *groupElem in
+		     [elem elementsForName: @"group"
+				 namespace: NS_ROSTER]) {
 			OFMutableArray *rosterGroup =
-			    [roster objectForKey: group];
+			     [roster objectForKey: rosterElem.stringValue];
 
 			if (rosterGroup == nil) {
 				rosterGroup = [OFMutableArray array];
 				[roster setObject: rosterGroup
-					   forKey: group];
+					   forKey: rosterElem.stringValue];
 			}
 
-			[rosterGroup addObject: elem];
+			[rosterGroup addObject: rosterItem];
 		}
+
+		rosterItem.groups = groups;
 
 		if (groups.count == 0) {
 			OFMutableArray *rosterGroup =
@@ -664,7 +674,7 @@
 					   forKey: @""];
 			}
 
-			[rosterGroup addObject: elem];
+			[rosterGroup addObject: rosterItem];
 		}
 	}
 

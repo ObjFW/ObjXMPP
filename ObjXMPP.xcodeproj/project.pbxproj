@@ -33,6 +33,8 @@
 		4BC55A001337AC1800E345C7 /* XMPPSCRAMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559FD1337AC1800E345C7 /* XMPPSCRAMAuth.m */; };
 		4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559FE1337AC1800E345C7 /* XMPPStanza.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC55A021337AC1800E345C7 /* XMPPStanza.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559FF1337AC1800E345C7 /* XMPPStanza.m */; };
+		4BD9BF59134003F700DAB43A /* XMPPRosterItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD9BF57134003F700DAB43A /* XMPPRosterItem.h */; };
+		4BD9BF5A134003F700DAB43A /* XMPPRosterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,6 +77,8 @@
 		4BC559FE1337AC1800E345C7 /* XMPPStanza.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPStanza.h; path = src/XMPPStanza.h; sourceTree = SOURCE_ROOT; };
 		4BC559FF1337AC1800E345C7 /* XMPPStanza.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPStanza.m; path = src/XMPPStanza.m; sourceTree = SOURCE_ROOT; };
 		4BC55A051337ADA800E345C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		4BD9BF57134003F700DAB43A /* XMPPRosterItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPRosterItem.h; path = src/XMPPRosterItem.h; sourceTree = SOURCE_ROOT; };
+		4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPRosterItem.m; path = src/XMPPRosterItem.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +159,8 @@
 				4BC559E71337AC0900E345C7 /* XMPPPLAINAuth.m */,
 				4BC559E81337AC0900E345C7 /* XMPPPresence.h */,
 				4BC559E91337AC0900E345C7 /* XMPPPresence.m */,
+				4BD9BF57134003F700DAB43A /* XMPPRosterItem.h */,
+				4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */,
 				4BC559EA1337AC0900E345C7 /* XMPPSCRAMAuth.h */,
 				4BC559FD1337AC1800E345C7 /* XMPPSCRAMAuth.m */,
 				4BC559FE1337AC1800E345C7 /* XMPPStanza.h */,
@@ -189,6 +195,7 @@
 				4BC559FA1337AC0900E345C7 /* XMPPPresence.h in Headers */,
 				4BC559FC1337AC0900E345C7 /* XMPPSCRAMAuth.h in Headers */,
 				4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */,
+				4BD9BF59134003F700DAB43A /* XMPPRosterItem.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +294,7 @@
 				4BC559FB1337AC0900E345C7 /* XMPPPresence.m in Sources */,
 				4BC55A001337AC1800E345C7 /* XMPPSCRAMAuth.m in Sources */,
 				4BC55A021337AC1800E345C7 /* XMPPStanza.m in Sources */,
+				4BD9BF5A134003F700DAB43A /* XMPPRosterItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
