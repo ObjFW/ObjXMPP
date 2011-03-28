@@ -29,6 +29,7 @@
 @class XMPPMessage;
 @class XMPPPresence;
 @class XMPPAuthenticator;
+@class XMPPRoster;
 
 @protocol XMPPConnectionDelegate
 @optional
@@ -64,7 +65,7 @@
 	BOOL needsSession;
 	unsigned int lastID;
 	OFString *bindID, *sessionID, *rosterID;
-	OFMutableDictionary *roster;
+	XMPPRoster *roster;
 }
 
 @property (copy) OFString *username, *password, *server, *resource;
@@ -72,7 +73,7 @@
 @property (assign) uint16_t port;
 @property (assign) BOOL useTLS;
 @property (retain) id <XMPPConnectionDelegate> delegate;
-@property (copy, readonly) OFDictionary *roster;
+@property (readonly, retain) XMPPRoster *roster;
 
 /**
  * Connects to the XMPP service.

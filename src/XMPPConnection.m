@@ -36,6 +36,7 @@
 #import "XMPPIQ.h"
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
+#import "XMPPRoster.h"
 #import "XMPPRosterItem.h"
 #import "XMPPExceptions.h"
 
@@ -81,7 +82,7 @@
 		parser.delegate = self;
 		elementBuilder.delegate = self;
 
-		roster = [[OFMutableDictionary alloc] init];
+		roster = [[XMPPRoster alloc] initWithConnection: self];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -489,7 +490,7 @@
 		return;
 	}
 
-	if ([mechs count] > 0) {
+	if (mechs.count > 0) {
 		for (OFXMLElement *mech in [mechs.firstObject children])
 			[mechanisms addObject:
 			    [mech.children.firstObject stringValue]];
@@ -654,41 +655,21 @@
 
 		rosterItem = [XMPPRosterItem rosterItem];
 		rosterItem.JID = [XMPPJID JIDWithString:
-		    [rosterElem attributeForName: @"jid"].stringValue];
-		rosterItem.name =
-		    [rosterElem attributeForName: @"name"].stringValue;
+		    [elem attributeForName: @"jid"].stringValue];
+		rosterItem.name = [elem attributeForName: @"name"].stringValue;
 		rosterItem.subscription =
-		    [rosterElem attributeForName: @"subscription"].stringValue;
+		    [elem attributeForName: @"subscription"].stringValue;
 
 		for (OFXMLElement *groupElem in
 		     [elem elementsForName: @"group"
-				 namespace: NS_ROSTER]) {
-			OFMutableArray *rosterGroup =
-			     [roster objectForKey: rosterElem.stringValue];
+				 namespace: NS_ROSTER])
+			[groups addObject:
+			    [groupElem.children.firstObject stringValue]];
 
-			if (rosterGroup == nil) {
-				rosterGroup = [OFMutableArray array];
-				[roster setObject: rosterGroup
-					   forKey: rosterElem.stringValue];
-			}
+		if (groups.count > 0)
+			rosterItem.groups = groups;
 
-			[rosterGroup addObject: rosterItem];
-		}
-
-		rosterItem.groups = groups;
-
-		if (groups.count == 0) {
-			OFMutableArray *rosterGroup =
-			    [roster objectForKey: @""];
-
-			if (rosterGroup == nil) {
-				rosterGroup = [OFMutableArray array];
-				[roster setObject: rosterGroup
-					   forKey: @""];
-			}
-
-			[rosterGroup addObject: rosterItem];
-		}
+		[roster XMPP_addRosterItem: rosterItem];
 	}
 
 	if ([delegate respondsToSelector:

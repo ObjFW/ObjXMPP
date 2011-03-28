@@ -31,6 +31,7 @@
 #import "XMPPIQ.h"
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
+#import "XMPPRoster.h"
 
 @interface AppDelegate: OFObject <OFApplicationDelegate, XMPPConnectionDelegate>
 @end
@@ -120,7 +121,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 {
 	XMPPPresence *pres;
 
-	of_log(@"Got roster");
+	of_log(@"Got roster! Groups: %@", conn.roster.groups);
+	for (OFString *group in conn.roster.groups)
+		of_log(@"Group %@: %@", group,
+		    [conn.roster rosterItemsInGroup: group]);
 
 	pres = [XMPPPresence presence];
 	[pres addPriority: 10];

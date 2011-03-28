@@ -201,4 +201,9 @@
 		return [OFString stringWithFormat: @"%@/%@",
 		       domain, resource];
 }
+
+- (OFString*)description
+{
+	return [self fullJID];
+}
 @end
