@@ -31,6 +31,15 @@
 @class XMPPAuthenticator;
 @class XMPPRoster;
 
+#define XMPP_NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
+#define XMPP_NS_CLIENT @"jabber:client"
+#define XMPP_NS_ROSTER @"jabber:iq:roster"
+#define XMPP_NS_SASL @"urn:ietf:params:xml:ns:xmpp-sasl"
+#define XMPP_NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
+#define XMPP_NS_STANZAS @"urn:ietf:params:xml:ns:xmpp-stanzas"
+#define XMPP_NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
+#define XMPP_NS_STREAM @"http://etherx.jabber.org/streams"
+
 @protocol XMPPConnectionDelegate
 @optional
 - (void)connectionWasAuthenticated: (XMPPConnection*)conn;

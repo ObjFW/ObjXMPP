@@ -21,7 +21,11 @@
  */
 
 #import "XMPPRoster.h"
+#import "XMPPRoster_private.h"
 #import "XMPPRosterItem.h"
+#import "XMPPConnection.h"
+#import "XMPPIQ.h"
+#import "XMPPJID.h"
 
 @implementation XMPPRoster
 - initWithConnection: (XMPPConnection*)conn
@@ -91,5 +95,31 @@
 		group = @"";
 
 	return [[[groups objectForKey: group] copy] autorelease];
+}
+
+- (void)addRosterItem: (XMPPRosterItem*)rosterItem
+{
+	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
+				     ID: [connection generateStanzaID]];
+	OFXMLElement *query = [OFXMLElement elementWithName: @"query"
+						  namespace: XMPP_NS_ROSTER];
+	OFXMLElement *item = [OFXMLElement elementWithName: @"item"
+						 namespace: XMPP_NS_ROSTER];
+
+	[item addAttributeWithName: @"jid"
+		       stringValue: rosterItem.JID.bareJID];
+	if (rosterItem.name != nil)
+		[item addAttributeWithName: @"name"
+			       stringValue: rosterItem.name];
+
+	for (OFString *group in rosterItem.groups)
+		[item addChild: [OFXMLElement elementWithName: @"group"
+						    namespace: XMPP_NS_ROSTER
+						  stringValue: group]];
+
+	[query addChild: item];
+	[iq addChild: query];
+
+	[connection sendStanza: iq];
 }
 @end

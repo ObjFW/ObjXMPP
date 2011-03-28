@@ -20,19 +20,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <ObjFW/ObjFW.h>
+#import "XMPPRoster.h"
 
-@class XMPPConnection;
-@class XMPPRosterItem;
-
-@interface XMPPRoster: OFObject
-{
-	XMPPConnection *connection;
-	OFMutableDictionary *groups;
-}
-
-- initWithConnection: (XMPPConnection*)conn;
-- (OFArray*)groups;
-- (OFArray*)rosterItemsInGroup: (OFString*)group;
-- (void)addRosterItem: (XMPPRosterItem*)rosterItem;
+@interface XMPPRoster ()
+- (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;
 @end

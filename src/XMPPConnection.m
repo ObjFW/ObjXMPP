@@ -37,17 +37,9 @@
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
 #import "XMPPRoster.h"
+#import "XMPPRoster_private.h"
 #import "XMPPRosterItem.h"
 #import "XMPPExceptions.h"
-
-#define NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
-#define NS_CLIENT @"jabber:client"
-#define NS_ROSTER @"jabber:iq:roster"
-#define NS_SASL @"urn:ietf:params:xml:ns:xmpp-sasl"
-#define NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
-#define NS_STANZAS @"urn:ietf:params:xml:ns:xmpp-stanzas"
-#define NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
-#define NS_STREAM @"http://etherx.jabber.org/streams"
 
 @interface XMPPConnection ()
 - (void)XMPP_startStream;
@@ -269,7 +261,7 @@
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
-	    ![ns isEqual: NS_STREAM]) {
+	    ![ns isEqual: XMPP_NS_STREAM]) {
 		of_log(@"Did not get expected stream start!");
 		assert(0);
 	}
@@ -292,9 +284,9 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
-	elem.defaultNamespace = NS_CLIENT;
+	elem.defaultNamespace = XMPP_NS_CLIENT;
 	[elem setPrefix: @"stream"
-	   forNamespace: NS_STREAM];
+	   forNamespace: XMPP_NS_STREAM];
 
 	of_log(@"In:  %@", elem);
 
@@ -306,14 +298,15 @@
 - (void)XMPP_startStream
 {
 	[sock writeFormat: @"<?xml version='1.0'?>\n"
-			   @"<stream:stream to='%@' xmlns='" NS_CLIENT @"' "
-			   @"xmlns:stream='" NS_STREAM @"' "
+			   @"<stream:stream to='%@' "
+			   @"xmlns='" XMPP_NS_CLIENT @"' "
+			   @"xmlns:stream='" XMPP_NS_STREAM @"' "
 			   @"version='1.0'>", server];
 }
 
 - (void)XMPP_handleStanza: (OFXMLElement*)elem
 {
-	if ([elem.namespace isEqual: NS_CLIENT]) {
+	if ([elem.namespace isEqual: XMPP_NS_CLIENT]) {
 		if ([elem.name isEqual: @"iq"]) {
 			[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: elem]];
 			return;
@@ -334,7 +327,7 @@
 		assert(0);
 	}
 
-	if ([elem.namespace isEqual: NS_STREAM]) {
+	if ([elem.namespace isEqual: XMPP_NS_STREAM]) {
 		if ([elem.name isEqual: @"features"]) {
 			[self XMPP_handleFeatures: elem];
 			return;
@@ -343,7 +336,7 @@
 		assert(0);
 	}
 
-	if ([elem.namespace isEqual: NS_STARTTLS]) {
+	if ([elem.namespace isEqual: XMPP_NS_STARTTLS]) {
 		if ([elem.name isEqual: @"proceed"]) {
 			/* FIXME: Catch errors here */
 			sock = [[GTLSSocket alloc] initWithSocket: sock];
@@ -361,7 +354,7 @@
 		assert(0);
 	}
 
-	if ([elem.namespace isEqual: NS_SASL]) {
+	if ([elem.namespace isEqual: XMPP_NS_SASL]) {
 		if ([elem.name isEqual: @"challenge"]) {
 			OFXMLElement *responseTag;
 			OFDataArray *challenge =
@@ -370,8 +363,9 @@
 			OFDataArray *response = [authModule
 			    calculateResponseWithChallenge: challenge];
 
-			responseTag = [OFXMLElement elementWithName: @"response"
-							  namespace: NS_SASL];
+			responseTag = [OFXMLElement
+			    elementWithName: @"response"
+				  namespace: XMPP_NS_SASL];
 			[responseTag addChild:
 			    [OFXMLElement elementWithCharacters:
 			    [response stringByBase64Encoding]]];
@@ -448,7 +442,7 @@
 				stringValue: @"cancel"];
 		[error addChild:
 		    [OFXMLElement elementWithName: @"service-unavailable"
-					namespace: NS_STANZAS]];
+					namespace: XMPP_NS_STANZAS]];
 		[iq addChild: error];
 
 		[self sendStanza: iq];
@@ -475,18 +469,20 @@
 {
 	OFXMLElement *starttls =
 	    [elem elementsForName: @"starttls"
-			namespace: NS_STARTTLS].firstObject;
+			namespace: XMPP_NS_STARTTLS].firstObject;
 	OFXMLElement *bind = [elem elementsForName: @"bind"
-					 namespace: NS_BIND].firstObject;
-	OFXMLElement *session = [elem elementsForName: @"session"
-					    namespace: NS_SESSION].firstObject;
+					 namespace: XMPP_NS_BIND].firstObject;
+	OFXMLElement *session =
+	    [elem elementsForName: @"session"
+			namespace: XMPP_NS_SESSION].firstObject;
 	OFArray *mechs = [elem elementsForName: @"mechanisms"
-				     namespace: NS_SASL];
+				     namespace: XMPP_NS_SASL];
 	OFMutableArray *mechanisms = [OFMutableArray array];
 
 	if (starttls != nil) {
-		[self sendStanza: [OFXMLElement elementWithName: @"starttls"
-						      namespace: NS_STARTTLS]];
+		[self sendStanza:
+		    [OFXMLElement elementWithName: @"starttls"
+					namespace: XMPP_NS_STARTTLS]];
 		return;
 	}
 
@@ -531,7 +527,7 @@
 	OFXMLElement *authTag;
 
 	authTag = [OFXMLElement elementWithName: @"auth"
-				      namespace: NS_SASL];
+				      namespace: XMPP_NS_SASL];
 	[authTag addAttributeWithName: @"mechanism"
 			  stringValue: name];
 	[authTag addChild: [OFXMLElement elementWithCharacters:
@@ -550,7 +546,7 @@
 			     ID: bindID];
 
 	bind = [OFXMLElement elementWithName: @"bind"
-				   namespace: NS_BIND];
+				   namespace: XMPP_NS_BIND];
 
 	if (resource != nil)
 		[bind addChild: [OFXMLElement elementWithName: @"resource"
@@ -572,7 +568,7 @@
 	bindElem = iq.children.firstObject;
 
 	if (![bindElem.name isEqual: @"bind"] ||
-	    ![bindElem.namespace isEqual: NS_BIND])
+	    ![bindElem.namespace isEqual: XMPP_NS_BIND])
 		assert(0);
 
 	jidElem = bindElem.children.firstObject;
@@ -600,7 +596,7 @@
 	iq = [XMPPIQ IQWithType: @"set"
 			     ID: sessionID];
 	[iq addChild: [OFXMLElement elementWithName: @"session"
-					  namespace: NS_SESSION]];
+					  namespace: XMPP_NS_SESSION]];
 	[self sendStanza: iq];
 }
 
@@ -628,7 +624,7 @@
 	iq = [XMPPIQ IQWithType: @"get"
 			     ID: rosterID];
 	[iq addChild: [OFXMLElement elementWithName: @"query"
-					  namespace: NS_ROSTER]];
+					  namespace: XMPP_NS_ROSTER]];
 	[self sendStanza: iq];
 }
 
@@ -642,7 +638,7 @@
 	rosterElem = iq.children.firstObject;
 
 	if (![rosterElem.name isEqual: @"query"] ||
-	    ![rosterElem.namespace isEqual: NS_ROSTER])
+	    ![rosterElem.namespace isEqual: XMPP_NS_ROSTER])
 		assert(0);
 
 	for (OFXMLElement *elem in rosterElem.children) {
@@ -650,7 +646,7 @@
 		OFMutableArray *groups = [OFMutableArray array];
 
 		if (![elem.name isEqual: @"item"] ||
-		    ![elem.ns isEqual: NS_ROSTER])
+		    ![elem.ns isEqual: XMPP_NS_ROSTER])
 			continue;
 
 		rosterItem = [XMPPRosterItem rosterItem];
@@ -662,7 +658,7 @@
 
 		for (OFXMLElement *groupElem in
 		     [elem elementsForName: @"group"
-				 namespace: NS_ROSTER])
+				 namespace: XMPP_NS_ROSTER])
 			[groups addObject:
 			    [groupElem.children.firstObject stringValue]];
 
