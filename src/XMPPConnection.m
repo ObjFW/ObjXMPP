@@ -26,7 +26,7 @@
 #include <stringprep.h>
 #include <idna.h>
 
-#import <ObjGnuTLS/ObjGnuTLS.h>
+#import <ObjOpenSSL/SSLSocket.h>
 
 #import "XMPPConnection.h"
 #import "XMPPSCRAMAuth.h"
@@ -339,7 +339,7 @@
 	if ([elem.namespace isEqual: XMPP_NS_STARTTLS]) {
 		if ([elem.name isEqual: @"proceed"]) {
 			/* FIXME: Catch errors here */
-			sock = [[GTLSSocket alloc] initWithSocket: sock];
+			sock = [[SSLSocket alloc] initWithSocket: sock];
 
 			/* Stream restart */
 			parser.delegate = self;

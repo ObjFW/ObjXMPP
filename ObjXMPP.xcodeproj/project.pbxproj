@@ -10,7 +10,6 @@
 		4B1295EF1337BD5F00154B25 /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B1295EE1337BD5F00154B25 /* test.m */; };
 		4B1295F11337C37E00154B25 /* ObjXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559911337A65400E345C7 /* ObjXMPP.framework */; };
 		4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
-		4B2FE41A1337B7B20092C736 /* ObjGnuTLS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FE4191337B7B20092C736 /* ObjGnuTLS.framework */; };
 		4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4BC559EB1337AC0900E345C7 /* arc4random_uniform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559D91337AC0900E345C7 /* arc4random_uniform.m */; };
 		4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,6 +32,7 @@
 		4BC55A001337AC1800E345C7 /* XMPPSCRAMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559FD1337AC1800E345C7 /* XMPPSCRAMAuth.m */; };
 		4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559FE1337AC1800E345C7 /* XMPPStanza.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC55A021337AC1800E345C7 /* XMPPStanza.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559FF1337AC1800E345C7 /* XMPPStanza.m */; };
+		4BD0AB16134129B900445289 /* ObjOpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD0AB15134129B900445289 /* ObjOpenSSL.framework */; };
 		4BD9BF59134003F700DAB43A /* XMPPRosterItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD9BF57134003F700DAB43A /* XMPPRosterItem.h */; };
 		4BD9BF5A134003F700DAB43A /* XMPPRosterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */; };
 		4BDEF8071340B240000156D1 /* XMPPRoster.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDEF8051340B240000156D1 /* XMPPRoster.h */; };
@@ -55,7 +55,6 @@
 /* Begin PBXFileReference section */
 		4B1295E01337BD2D00154B25 /* ObjXMPPTests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ObjXMPPTests; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B1295EE1337BD5F00154B25 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = test.m; path = tests/test.m; sourceTree = SOURCE_ROOT; };
-		4B2FE4191337B7B20092C736 /* ObjGnuTLS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjGnuTLS.framework; path = ../../../../Library/Frameworks/ObjGnuTLS.framework; sourceTree = "<group>"; };
 		4BC559911337A65400E345C7 /* ObjXMPP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjXMPP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC559D61337ABD300E345C7 /* ObjFW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjFW.framework; path = ../../../../Library/Frameworks/ObjFW.framework; sourceTree = "<group>"; };
 		4BC559D91337AC0900E345C7 /* arc4random_uniform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = arc4random_uniform.m; path = src/arc4random_uniform.m; sourceTree = SOURCE_ROOT; };
@@ -80,6 +79,7 @@
 		4BC559FE1337AC1800E345C7 /* XMPPStanza.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPStanza.h; path = src/XMPPStanza.h; sourceTree = SOURCE_ROOT; };
 		4BC559FF1337AC1800E345C7 /* XMPPStanza.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPStanza.m; path = src/XMPPStanza.m; sourceTree = SOURCE_ROOT; };
 		4BC55A051337ADA800E345C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		4BD0AB15134129B900445289 /* ObjOpenSSL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjOpenSSL.framework; path = ../ObjOpenSSL/build/Debug/ObjOpenSSL.framework; sourceTree = "<group>"; };
 		4BD9BF57134003F700DAB43A /* XMPPRosterItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPRosterItem.h; path = src/XMPPRosterItem.h; sourceTree = SOURCE_ROOT; };
 		4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPRosterItem.m; path = src/XMPPRosterItem.m; sourceTree = SOURCE_ROOT; };
 		4BDEF8051340B240000156D1 /* XMPPRoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPRoster.h; path = src/XMPPRoster.h; sourceTree = SOURCE_ROOT; };
@@ -101,8 +101,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BD0AB16134129B900445289 /* ObjOpenSSL.framework in Frameworks */,
 				4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */,
-				4B2FE41A1337B7B20092C736 /* ObjGnuTLS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,7 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				4BC559D61337ABD300E345C7 /* ObjFW.framework */,
-				4B2FE4191337B7B20092C736 /* ObjGnuTLS.framework */,
+				4BD0AB15134129B900445289 /* ObjOpenSSL.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
