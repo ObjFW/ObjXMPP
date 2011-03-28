@@ -25,6 +25,13 @@
 @class XMPPJID;
 
 @interface XMPPRosterItem: OFObject
+{
+	XMPPJID *JID;
+	OFString *name;
+	OFString *subscription;
+	OFArray *groups;
+}
+
 @property (copy) XMPPJID *JID;
 @property (copy) OFString *name;
 @property (copy) OFString *subscription;
