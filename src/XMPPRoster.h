@@ -35,4 +35,6 @@
 - (OFArray*)groups;
 - (OFArray*)rosterItemsInGroup: (OFString*)group;
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)updateRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)deleteRosterItem: (XMPPRosterItem*)rosterItem;
 @end

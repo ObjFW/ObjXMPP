@@ -99,6 +99,11 @@
 
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem
 {
+	[self updateRosterItem: rosterItem];
+}
+
+- (void)updateRosterItem: (XMPPRosterItem*)rosterItem
+{
 	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
 				     ID: [connection generateStanzaID]];
 	OFXMLElement *query = [OFXMLElement elementWithName: @"query"
@@ -116,6 +121,26 @@
 		[item addChild: [OFXMLElement elementWithName: @"group"
 						    namespace: XMPP_NS_ROSTER
 						  stringValue: group]];
+
+	[query addChild: item];
+	[iq addChild: query];
+
+	[connection sendStanza: iq];
+}
+
+- (void)deleteRosterItem: (XMPPRosterItem*)rosterItem
+{
+	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
+				     ID: [connection generateStanzaID]];
+	OFXMLElement *query = [OFXMLElement elementWithName: @"query"
+						  namespace: XMPP_NS_ROSTER];
+	OFXMLElement *item = [OFXMLElement elementWithName: @"item"
+						 namespace: XMPP_NS_ROSTER];
+
+	[item addAttributeWithName: @"jid"
+		       stringValue: rosterItem.JID.bareJID];
+	[item addAttributeWithName: @"subscription"
+		       stringValue: @"remove"];
 
 	[query addChild: item];
 	[iq addChild: query];

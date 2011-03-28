@@ -30,6 +30,23 @@
 	return [[[self alloc] init] autorelease];
 }
 
+- copy
+{
+	XMPPRosterItem *new = [[XMPPRosterItem alloc] init];
+
+	@try {
+		new->JID = [JID copy];
+		new->name = [name copy];
+		new->subscription = [subscription copy];
+		new->groups = [groups copy];
+	} @catch (id e) {
+		[new release];
+		@throw e;
+	}
+
+	return new;
+}
+
 - (OFString*)description
 {
 	return [OFString stringWithFormat: @"<XMPPRosterItem, JID=%@, name=%@, "
