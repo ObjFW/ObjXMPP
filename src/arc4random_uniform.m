@@ -27,7 +27,12 @@
  * RC4 is a registered trademark of RSA Laboratories.
  */
 
-#include <stdlib.h>
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || \
+    defined(__APPLE__)
+# include <stdlib.h>
+#else
+# include <bsd/stdlib.h>
+#endif
 #include <stdint.h>
 
 /*
