@@ -57,7 +57,7 @@
 @end
 
 @implementation XMPPConnection
-@synthesize JID, port, useTLS, delegate, roster;
+@synthesize JID, port, delegate, roster;
 
 - init
 {
@@ -69,7 +69,6 @@
 		elementBuilder = [[OFXMLElementBuilder alloc] init];
 
 		port = 5222;
-		useTLS = YES;
 
 		parser.delegate = self;
 		elementBuilder.delegate = self;

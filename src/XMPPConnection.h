@@ -67,8 +67,6 @@
 	OFString *username, *password, *server, *resource;
 	XMPPJID *JID;
 	uint16_t port;
-	/// Whether to use TLS
-	BOOL useTLS;
 	id <XMPPConnectionDelegate, OFObject> delegate;
 	XMPPAuthenticator *authModule;
 	BOOL needsSession;
@@ -80,7 +78,6 @@
 @property (copy) OFString *username, *password, *server, *resource;
 @property (copy, readonly) XMPPJID *JID;
 @property (assign) uint16_t port;
-@property (assign) BOOL useTLS;
 @property (retain) id <XMPPConnectionDelegate> delegate;
 @property (readonly, retain) XMPPRoster *roster;
 
