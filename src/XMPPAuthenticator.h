@@ -27,16 +27,19 @@
  */
 @interface XMPPAuthenticator: OFObject
 {
-	/// The authzid to get authorization for
 	OFString *authzid;
-	/// The authcid to authenticate with
 	OFString *authcid;
-	/// The password to authenticate with
 	OFString *password;
 }
+
+#ifdef OF_HAVE_PROPERTIES
+/// The authzid to get authorization for
 @property (copy) OFString *authzid;
+/// The authcid to authenticate with
 @property (copy) OFString *authcid;
+/// The password to authenticate with
 @property (copy) OFString *password;
+#endif
 
 /**
  * Initializes an already allocated XMPPAuthenticator with an authcid
@@ -79,4 +82,11 @@
  * \param  message The servers final message
  */
 - (void)parseServerFinalMessage: (OFDataArray*)message;
+
+- (void)setAuthzid: (OFString*)authzid;
+- (OFString*)authzid;
+- (void)setAuthcid: (OFString*)authcid;
+- (OFString*)authcid;
+- (void)setPassword: (OFString*)password;
+- (OFString*)password;
 @end

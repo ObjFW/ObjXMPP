@@ -30,12 +30,15 @@
 	XMPPConnection *connection;
 }
 
+#ifdef OF_HAVE_PROPERTIES
 @property (readonly, nonatomic) XMPPConnection *connection;
+#endif
 
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn;
 - initWithClass: (Class)class_
      connection: (XMPPConnection*)conn;
+- (XMPPConnection*)connection;
 @end
 
 @interface XMPPStringPrepFailedException: XMPPException
@@ -44,7 +47,9 @@
 	OFString *string;
 }
 
+#ifdef OF_HAVE_PROPERTIES
 @property (readonly, nonatomic) OFString *profile, *string;
+#endif
 
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn
@@ -54,6 +59,8 @@
      connection: (XMPPConnection*)conn
 	profile: (OFString*)profile
 	 string: (OFString*)string;
+- (OFString*)profile;
+- (OFString*)string;
 @end
 
 @interface XMPPIDNATranslationFailedException: XMPPException
@@ -62,7 +69,9 @@
 	OFString *string;
 }
 
+#ifdef OF_HAVE_PROPERTIES
 @property (readonly, nonatomic) OFString *operation, *string;
+#endif
 
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn
@@ -72,6 +81,8 @@
      connection: (XMPPConnection*)conn
       operation: (OFString*)operation
 	 string: (OFString*)string;
+- (OFString*)operation;
+- (OFString*)string;
 @end
 
 @interface XMPPAuthFailedException: XMPPException
@@ -79,7 +90,9 @@
 	OFString *reason;
 }
 
+#ifdef OF_HAVE_PROPERTIES
 @property (readonly, nonatomic) OFString *reason;
+#endif
 
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn
@@ -87,4 +100,5 @@
 - initWithClass: (Class)class_
      connection: (XMPPConnection*)conn
 	 reason: (OFString*)reason_;
+- (OFString*)reason;
 @end

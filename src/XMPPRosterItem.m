@@ -23,11 +23,19 @@
 #import "XMPPRosterItem.h"
 
 @implementation XMPPRosterItem
-@synthesize JID, name, subscription, groups;
-
 + rosterItem
 {
 	return [[[self alloc] init] autorelease];
+}
+
+- (void)dealloc
+{
+	[JID release];
+	[name release];
+	[subscription release];
+	[groups release];
+
+	[super dealloc];
 }
 
 - copy
@@ -52,5 +60,53 @@
 	return [OFString stringWithFormat: @"<XMPPRosterItem, JID=%@, name=%@, "
 					   @"subscription=%@, groups=%@>",
 					   JID, name, subscription, groups];
+}
+
+- (void)setJID: (XMPPJID*)JID_
+{
+	XMPPJID *old = JID;
+	JID = [JID_ copy];
+	[old release];
+}
+
+- (XMPPJID*)JID
+{
+	return [[JID copy] autorelease];
+}
+
+- (void)setName: (OFString*)name_
+{
+	OFString *old = name;
+	name = [name_ copy];
+	[old release];
+}
+
+- (OFString*)name
+{
+	return [[name copy] autorelease];
+}
+
+- (void)setSubscription: (OFString*)subscription_
+{
+	OFString *old = subscription;
+	subscription = [subscription_ copy];
+	[old release];
+}
+
+- (OFString*)subscription
+{
+	return [[subscription copy] autorelease];
+}
+
+- (void)setGroups: (OFArray*)groups_
+{
+	OFArray *old = groups;
+	groups = [groups_ copy];
+	[old release];
+}
+
+- (OFArray*)groups
+{
+	return [[groups copy] autorelease];
 }
 @end

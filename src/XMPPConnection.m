@@ -21,6 +21,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#define XMPP_CONNECTION_M
+
 #include <assert.h>
 
 #include <stringprep.h>
@@ -37,28 +39,10 @@
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
 #import "XMPPRoster.h"
-#import "XMPPRoster_private.h"
 #import "XMPPRosterItem.h"
 #import "XMPPExceptions.h"
 
-@interface XMPPConnection ()
-- (void)XMPP_startStream;
-- (void)XMPP_handleStanza: (OFXMLElement*)elem;
-- (void)XMPP_sendAuth: (OFString*)name;
-- (void)XMPP_handleIQ: (XMPPIQ*)iq;
-- (void)XMPP_handleMessage: (XMPPMessage*)msg;
-- (void)XMPP_handlePresence: (XMPPPresence*)pres;
-- (void)XMPP_handleFeatures: (OFXMLElement*)elem;
-- (void)XMPP_sendResourceBind;
-- (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
-- (void)XMPP_sendSession;
-- (void)XMPP_handleSession: (XMPPIQ*)iq;
-- (void)XMPP_handleRoster: (XMPPIQ*)iq;
-@end
-
 @implementation XMPPConnection
-@synthesize JID, port, delegate, roster;
-
 - init
 {
 	self = [super init];
@@ -70,8 +54,8 @@
 
 		port = 5222;
 
-		parser.delegate = self;
-		elementBuilder.delegate = self;
+		[parser setDelegate: self];
+		[elementBuilder setDelegate: self];
 
 		roster = [[XMPPRoster alloc] initWithConnection: self];
 	} @catch (id e) {
@@ -166,10 +150,10 @@
 	if ((rc = idna_to_ascii_8z([server_ cString],
 	    &srv, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
 		@throw [XMPPIDNATranslationFailedException
-		 newWithClass: isa
-		   connection: self
-		    operation: @"ToASCII"
-		       string: server_];
+		    newWithClass: isa
+		      connection: self
+		       operation: @"ToASCII"
+			  string: server_];
 
 	@try {
 		server = [[OFString alloc] initWithCString: srv];
@@ -258,6 +242,8 @@
        attributes: (OFArray*)attrs
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	OFEnumerator *enumerator;
+	OFXMLAttribute *attr;
 
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
 	    ![ns isEqual: XMPP_NS_STREAM]) {
@@ -265,15 +251,16 @@
 		assert(0);
 	}
 
-	for (OFXMLAttribute *attr in attrs) {
-		if ([attr.name isEqual: @"from"] &&
-		    ![attr.stringValue isEqual: server]) {
+	enumerator = [attrs objectEnumerator];
+	while ((attr = [enumerator nextObject]) != nil) {
+		if ([[attr name] isEqual: @"from"] &&
+		    ![[attr stringValue] isEqual: server]) {
 			of_log(@"Got invalid from in stream start!");
 			assert(0);
 		}
 	}
 
-	parser.delegate = elementBuilder;
+	[parser setDelegate: elementBuilder];
 
 	[pool release];
 }
@@ -283,7 +270,7 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
-	elem.defaultNamespace = XMPP_NS_CLIENT;
+	[elem setDefaultNamespace: XMPP_NS_CLIENT];
 	[elem setPrefix: @"stream"
 	   forNamespace: XMPP_NS_STREAM];
 
@@ -305,19 +292,19 @@
 
 - (void)XMPP_handleStanza: (OFXMLElement*)elem
 {
-	if ([elem.namespace isEqual: XMPP_NS_CLIENT]) {
-		if ([elem.name isEqual: @"iq"]) {
+	if ([[elem namespace] isEqual: XMPP_NS_CLIENT]) {
+		if ([[elem name] isEqual: @"iq"]) {
 			[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: elem]];
 			return;
 		}
 
-		if ([elem.name isEqual: @"message"]) {
+		if ([[elem name] isEqual: @"message"]) {
 			[self XMPP_handleMessage:
 			    [XMPPMessage stanzaWithElement: elem]];
 			return;
 		}
 
-		if ([elem.name isEqual: @"presence"]) {
+		if ([[elem name] isEqual: @"presence"]) {
 			[self XMPP_handlePresence:
 			    [XMPPPresence stanzaWithElement: elem]];
 			return;
@@ -326,8 +313,8 @@
 		assert(0);
 	}
 
-	if ([elem.namespace isEqual: XMPP_NS_STREAM]) {
-		if ([elem.name isEqual: @"features"]) {
+	if ([[elem namespace] isEqual: XMPP_NS_STREAM]) {
+		if ([[elem name] isEqual: @"features"]) {
 			[self XMPP_handleFeatures: elem];
 			return;
 		}
@@ -335,30 +322,30 @@
 		assert(0);
 	}
 
-	if ([elem.namespace isEqual: XMPP_NS_STARTTLS]) {
-		if ([elem.name isEqual: @"proceed"]) {
+	if ([[elem namespace] isEqual: XMPP_NS_STARTTLS]) {
+		if ([[elem name] isEqual: @"proceed"]) {
 			/* FIXME: Catch errors here */
 			sock = [[SSLSocket alloc] initWithSocket: sock];
 
 			/* Stream restart */
-			parser.delegate = self;
+			[parser setDelegate: self];
 			[self XMPP_startStream];
 			return;
 		}
 
-		if ([elem.name isEqual: @"failure"])
+		if ([[elem name] isEqual: @"failure"])
 			/* TODO: Find/create an exception to throw here */
 			@throw [OFException newWithClass: isa];
 
 		assert(0);
 	}
 
-	if ([elem.namespace isEqual: XMPP_NS_SASL]) {
-		if ([elem.name isEqual: @"challenge"]) {
+	if ([[elem namespace] isEqual: XMPP_NS_SASL]) {
+		if ([[elem name] isEqual: @"challenge"]) {
 			OFXMLElement *responseTag;
 			OFDataArray *challenge =
 			    [OFDataArray dataArrayWithBase64EncodedString:
-			    [elem.children.firstObject stringValue]];
+			    [[[elem children] firstObject] stringValue]];
 			OFDataArray *response = [authModule
 			    calculateResponseWithChallenge: challenge];
 
@@ -373,28 +360,28 @@
 			return;
 		}
 
-		if ([elem.name isEqual: @"success"]) {
+		if ([[elem name] isEqual: @"success"]) {
 			[authModule parseServerFinalMessage:
 			    [OFDataArray dataArrayWithBase64EncodedString:
-				[elem.children.firstObject stringValue]]];
+				[[[elem children] firstObject] stringValue]]];
 
 			if ([delegate respondsToSelector:
 			    @selector(connectionWasAuthenticated:)])
 				[delegate connectionWasAuthenticated: self];
 
 			/* Stream restart */
-			parser.delegate = self;
+			[parser setDelegate: self];
 			[self XMPP_startStream];
 			return;
 		}
 
-		if ([elem.name isEqual: @"failure"]) {
+		if ([[elem name] isEqual: @"failure"]) {
 			of_log(@"Auth failed!");
 			// FIXME: Do more parsing/handling
 			@throw [XMPPAuthFailedException
 			    newWithClass: isa
 			      connection: self
-				  reason: elem.stringValue];
+				  reason: [elem stringValue]];
 		}
 
 		assert(0);
@@ -407,17 +394,17 @@
 {
 	BOOL handled = NO;
 
-	if ([iq.ID isEqual: bindID]) {
+	if ([[iq ID] isEqual: bindID]) {
 		[self XMPP_handleResourceBind: iq];
 		return;
 	}
 
-	if ([iq.ID isEqual: sessionID]) {
+	if ([[iq ID] isEqual: sessionID]) {
 		[self XMPP_handleSession: iq];
 		return;
 	}
 
-	if ([iq.ID isEqual: rosterID]) {
+	if ([[iq ID] isEqual: rosterID]) {
 		[self XMPP_handleRoster: iq];
 		return;
 	}
@@ -427,14 +414,13 @@
 				  didReceiveIQ: iq];
 
 	if (!handled) {
-		XMPPJID *from = iq.from;
-		XMPPJID *to = iq.to;
+		XMPPJID *from = [iq from];
+		XMPPJID *to = [iq to];
 		OFXMLElement *error;
 
 		[iq setType: @"error"];
-
-		iq.to = from;
-		iq.from = to;
+		[iq setTo: from];
+		[iq setFrom: to];
 
 		error = [OFXMLElement elementWithName: @"error"];
 		[error addAttributeWithName: @"type"
@@ -467,13 +453,13 @@
 - (void)XMPP_handleFeatures: (OFXMLElement*)elem
 {
 	OFXMLElement *starttls =
-	    [elem elementsForName: @"starttls"
-			namespace: XMPP_NS_STARTTLS].firstObject;
-	OFXMLElement *bind = [elem elementsForName: @"bind"
-					 namespace: XMPP_NS_BIND].firstObject;
+	    [[elem elementsForName: @"starttls"
+			 namespace: XMPP_NS_STARTTLS] firstObject];
+	OFXMLElement *bind = [[elem elementsForName: @"bind"
+					  namespace: XMPP_NS_BIND] firstObject];
 	OFXMLElement *session =
-	    [elem elementsForName: @"session"
-			namespace: XMPP_NS_SESSION].firstObject;
+	    [[elem elementsForName: @"session"
+			 namespace: XMPP_NS_SESSION] firstObject];
 	OFArray *mechs = [elem elementsForName: @"mechanisms"
 				     namespace: XMPP_NS_SASL];
 	OFMutableArray *mechanisms = [OFMutableArray array];
@@ -485,10 +471,14 @@
 		return;
 	}
 
-	if (mechs.count > 0) {
-		for (OFXMLElement *mech in [mechs.firstObject children])
+	if ([mechs count] > 0) {
+		OFEnumerator *enumerator;
+		OFXMLElement *mech;
+
+		enumerator = [[[mechs firstObject] children] objectEnumerator];
+		while ((mech = [enumerator nextObject]) != nil)
 			[mechanisms addObject:
-			    [mech.children.firstObject stringValue]];
+			    [[[mech children] firstObject] stringValue]];
 
 		if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
 			authModule = [[XMPPSCRAMAuth alloc]
@@ -561,18 +551,18 @@
 	OFXMLElement *bindElem;
 	OFXMLElement *jidElem;
 
-	if (![iq.type isEqual: @"result"])
+	if (![[iq type] isEqual: @"result"])
 		assert(0);
 
-	bindElem = iq.children.firstObject;
+	bindElem = [[iq children] firstObject];
 
-	if (![bindElem.name isEqual: @"bind"] ||
-	    ![bindElem.namespace isEqual: XMPP_NS_BIND])
+	if (![[bindElem name] isEqual: @"bind"] ||
+	    ![[bindElem namespace] isEqual: XMPP_NS_BIND])
 		assert(0);
 
-	jidElem = bindElem.children.firstObject;
+	jidElem = [[bindElem children] firstObject];
 	JID = [[XMPPJID alloc] initWithString:
-	    [jidElem.children.firstObject stringValue]];
+	    [[[jidElem children] firstObject] stringValue]];
 
 	[bindID release];
 	bindID = nil;
@@ -601,7 +591,7 @@
 
 - (void)XMPP_handleSession: (XMPPIQ*)iq
 {
-	if (![iq.type isEqual: @"result"])
+	if (![[iq type] isEqual: @"result"])
 		assert(0);
 
 	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
@@ -630,39 +620,46 @@
 - (void)XMPP_handleRoster: (XMPPIQ*)iq
 {
 	OFXMLElement *rosterElem;
+	OFEnumerator *enumerator;
+	OFXMLElement *elem;
 
-	if (![iq.type isEqual: @"result"])
+	if (![[iq type] isEqual: @"result"])
 		assert(0);
 
-	rosterElem = iq.children.firstObject;
+	rosterElem = [[iq children] firstObject];
 
-	if (![rosterElem.name isEqual: @"query"] ||
-	    ![rosterElem.namespace isEqual: XMPP_NS_ROSTER])
+	if (![[rosterElem name] isEqual: @"query"] ||
+	    ![[rosterElem namespace] isEqual: XMPP_NS_ROSTER])
 		assert(0);
 
-	for (OFXMLElement *elem in rosterElem.children) {
+	enumerator = [[rosterElem children] objectEnumerator];
+	while ((elem = [enumerator nextObject]) != nil) {
 		XMPPRosterItem *rosterItem;
 		OFMutableArray *groups = [OFMutableArray array];
+		OFEnumerator *groupEnumerator;
+		OFXMLElement *groupElem;
 
-		if (![elem.name isEqual: @"item"] ||
-		    ![elem.ns isEqual: XMPP_NS_ROSTER])
+		if (![[elem name] isEqual: @"item"] ||
+		    ![[elem namespace] isEqual: XMPP_NS_ROSTER])
 			continue;
 
 		rosterItem = [XMPPRosterItem rosterItem];
-		rosterItem.JID = [XMPPJID JIDWithString:
-		    [elem attributeForName: @"jid"].stringValue];
-		rosterItem.name = [elem attributeForName: @"name"].stringValue;
-		rosterItem.subscription =
-		    [elem attributeForName: @"subscription"].stringValue;
+		[rosterItem setJID: [XMPPJID JIDWithString:
+		    [[elem attributeForName: @"jid"] stringValue]]];
+		[rosterItem setName:
+		    [[elem attributeForName: @"name"] stringValue]];
+		[rosterItem setSubscription:
+		    [[elem attributeForName: @"subscription"] stringValue]];
 
-		for (OFXMLElement *groupElem in
-		     [elem elementsForName: @"group"
-				 namespace: XMPP_NS_ROSTER])
+		groupEnumerator =
+		    [[elem elementsForName: @"group"
+				 namespace: XMPP_NS_ROSTER] objectEnumerator];
+		while ((groupElem = [groupEnumerator nextObject]) != nil)
 			[groups addObject:
-			    [groupElem.children.firstObject stringValue]];
+			    [[[groupElem children] firstObject] stringValue]];
 
-		if (groups.count > 0)
-			rosterItem.groups = groups;
+		if ([groups count] > 0)
+			[rosterItem setGroups: groups];
 
 		[roster XMPP_addRosterItem: rosterItem];
 	}
@@ -673,5 +670,72 @@
 
 	[rosterID release];
 	rosterID = nil;
+}
+
+- (XMPPJID*)JID
+{
+	return [[JID copy] autorelease];
+}
+
+- (void)setPort: (uint16_t)port_
+{
+	port = port_;
+}
+
+- (uint16_t)port
+{
+	return port;
+}
+
+- (void)setDelegate: (id <XMPPConnectionDelegate>)delegate_
+{
+	id old = delegate;
+	delegate = [(id)delegate_ retain];
+	[old release];
+}
+
+- (id <XMPPConnectionDelegate>)delegate
+{
+	return [[delegate retain] autorelease];
+}
+
+- (XMPPRoster*)roster
+{
+	return [[roster retain] autorelease];
+}
+@end
+
+@implementation OFObject (XMPPConnectionDelegate)
+- (void)connectionWasAuthenticated: (XMPPConnection*)conn
+{
+}
+
+- (void)connection: (XMPPConnection*)conn
+     wasBoundToJID: (XMPPJID*)jid
+{
+}
+
+- (void)connectionDidReceiveRoster: (XMPPConnection*)conn
+{
+}
+
+- (BOOL)connection: (XMPPConnection*)conn
+      didReceiveIQ: (XMPPIQ*)iq
+{
+	return NO;
+}
+
+-   (void)connection: (XMPPConnection*)conn
+  didReceivePresence: (XMPPPresence*)pres
+{
+}
+
+-  (void)connection: (XMPPConnection*)conn
+  didReceiveMessage: (XMPPMessage*)msg
+{
+}
+
+- (void)connectionWasClosed: (XMPPConnection*)conn
+{
 }
 @end

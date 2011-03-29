@@ -21,7 +21,6 @@
  */
 
 #import "XMPPRoster.h"
-#import "XMPPRoster_private.h"
 #import "XMPPRosterItem.h"
 #import "XMPPConnection.h"
 #import "XMPPIQ.h"
@@ -52,8 +51,12 @@
 
 - (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem
 {
-	if (rosterItem.groups.count > 0) {
-		for (OFString *group in rosterItem.groups) {
+	if ([[rosterItem groups] count] > 0) {
+		OFEnumerator *enumerator;
+		OFString *group;
+
+		enumerator = [[rosterItem groups] objectEnumerator];
+		while ((group = [enumerator nextObject]) != nil) {
 			OFMutableArray *rosterGroup =
 			    [groups objectForKey: group];
 
@@ -81,8 +84,11 @@
 - (OFArray*)groups
 {
 	OFMutableArray *ret = [OFMutableArray array];
+	OFEnumerator *enumerator;
+	OFString *group;
 
-	for (OFString *group in groups)
+	enumerator = [groups keyEnumerator];
+	while ((group = [enumerator nextObject]) != nil)
 		[ret addObject: group];
 
 	ret->isa = [OFArray class];
@@ -110,14 +116,17 @@
 						  namespace: XMPP_NS_ROSTER];
 	OFXMLElement *item = [OFXMLElement elementWithName: @"item"
 						 namespace: XMPP_NS_ROSTER];
+	OFEnumerator *enumerator;
+	OFString *group;
 
 	[item addAttributeWithName: @"jid"
-		       stringValue: rosterItem.JID.bareJID];
-	if (rosterItem.name != nil)
+		       stringValue: [[rosterItem JID] bareJID]];
+	if ([rosterItem name] != nil)
 		[item addAttributeWithName: @"name"
-			       stringValue: rosterItem.name];
+			       stringValue: [rosterItem name]];
 
-	for (OFString *group in rosterItem.groups)
+	enumerator = [[rosterItem groups] objectEnumerator];
+	while ((group = [enumerator nextObject]) != nil)
 		[item addChild: [OFXMLElement elementWithName: @"group"
 						    namespace: XMPP_NS_ROSTER
 						  stringValue: group]];
@@ -138,7 +147,7 @@
 						 namespace: XMPP_NS_ROSTER];
 
 	[item addAttributeWithName: @"jid"
-		       stringValue: rosterItem.JID.bareJID];
+		       stringValue: [[rosterItem JID] bareJID]];
 	[item addAttributeWithName: @"subscription"
 		       stringValue: @"remove"];
 

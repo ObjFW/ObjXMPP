@@ -28,17 +28,19 @@
  */
 @interface XMPPJID: OFObject <OFCopying>
 {
-	/// The JID's localpart
 	OFString *node;
-	/// The JID's domainpart
 	OFString *domain;
-	/// The JID's resourcepart
 	OFString *resource;
 }
 
+#ifdef OF_HAVE_PROPERTIES
+/// The JID's localpart
 @property (copy) OFString *node;
+/// The JID's domainpart
 @property (copy) OFString *domain;
+/// The JID's resourcepart
 @property (copy) OFString *resource;
+#endif
 
 /**
  * Creates a new autoreleased XMPPJID.
@@ -72,4 +74,11 @@
  * \return An OFString containing the full JID
  */
 - (OFString*)fullJID;
+
+- (void)setNode: (OFString*)node;
+- (OFString*)node;
+- (void)setDomain: (OFString*)domain;
+- (OFString*)domain;
+- (void)setResource: (OFString*)resource;
+- (OFString*)resource;
 @end

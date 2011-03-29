@@ -37,7 +37,6 @@
 		4BD9BF5A134003F700DAB43A /* XMPPRosterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */; };
 		4BDEF8071340B240000156D1 /* XMPPRoster.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDEF8051340B240000156D1 /* XMPPRoster.h */; };
 		4BDEF8081340B240000156D1 /* XMPPRoster.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDEF8061340B240000156D1 /* XMPPRoster.m */; };
-		4BF459B91340DE3600701BCC /* XMPPRoster_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BF459B81340DE3600701BCC /* XMPPRoster_private.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -84,7 +83,6 @@
 		4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPRosterItem.m; path = src/XMPPRosterItem.m; sourceTree = SOURCE_ROOT; };
 		4BDEF8051340B240000156D1 /* XMPPRoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPRoster.h; path = src/XMPPRoster.h; sourceTree = SOURCE_ROOT; };
 		4BDEF8061340B240000156D1 /* XMPPRoster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPRoster.m; path = src/XMPPRoster.m; sourceTree = SOURCE_ROOT; };
-		4BF459B81340DE3600701BCC /* XMPPRoster_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPRoster_private.h; path = src/XMPPRoster_private.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,7 +164,6 @@
 				4BC559E81337AC0900E345C7 /* XMPPPresence.h */,
 				4BC559E91337AC0900E345C7 /* XMPPPresence.m */,
 				4BDEF8051340B240000156D1 /* XMPPRoster.h */,
-				4BF459B81340DE3600701BCC /* XMPPRoster_private.h */,
 				4BDEF8061340B240000156D1 /* XMPPRoster.m */,
 				4BD9BF57134003F700DAB43A /* XMPPRosterItem.h */,
 				4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */,
@@ -206,7 +203,6 @@
 				4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */,
 				4BD9BF59134003F700DAB43A /* XMPPRosterItem.h in Headers */,
 				4BDEF8071340B240000156D1 /* XMPPRoster.h in Headers */,
-				4BF459B91340DE3600701BCC /* XMPPRoster_private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

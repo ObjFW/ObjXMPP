@@ -32,10 +32,20 @@
 	OFArray *groups;
 }
 
+#ifdef OF_HAVE_PROPERTIES
 @property (copy) XMPPJID *JID;
 @property (copy) OFString *name;
 @property (copy) OFString *subscription;
 @property (copy) OFArray *groups;
+#endif
 
 + rosterItem;
+- (void)setJID: (XMPPJID*)JID;
+- (XMPPJID*)JID;
+- (void)setName: (OFString*)name;
+- (OFString*)name;
+- (void)setSubscription: (OFString*)subscription;
+- (OFString*)subscription;
+- (void)setGroups: (OFArray*)groups;
+- (OFArray*)groups;
 @end

@@ -33,7 +33,10 @@
 #import "XMPPPresence.h"
 #import "XMPPRoster.h"
 
-@interface AppDelegate: OFObject <OFApplicationDelegate, XMPPConnectionDelegate>
+@interface AppDelegate: OFObject
+#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
+    <OFApplicationDelegate, XMPPConnectionDelegate>
+#endif
 @end
 
 OF_APPLICATION_DELEGATE(AppDelegate)
@@ -48,8 +51,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[pres addShow: @"chat"];
 	[pres addStatus: @"Bored"];
 	[pres addPriority: 20];
-	pres.to = [XMPPJID JIDWithString: @"alice@example.com"];
-	pres.from = [XMPPJID JIDWithString: @"bob@example.org"];
+	[pres setTo: [XMPPJID JIDWithString: @"alice@example.com"]];
+	[pres setFrom: [XMPPJID JIDWithString: @"bob@example.org"]];
 	assert([[pres stringValue] isEqual: @"<presence to='alice@example.com' "
 	    @"from='bob@example.org'><show>chat</show>"
 	    @"<status>Bored</status><priority>20</priority>"
@@ -57,35 +60,39 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 
 	XMPPMessage *msg = [XMPPMessage messageWithType: @"chat"];
 	[msg addBody: @"Hello everyone"];
-	msg.to = [XMPPJID JIDWithString: @"jdev@conference.jabber.org"];
-	msg.from = [XMPPJID JIDWithString: @"alice@example.com"];
+	[msg setTo: [XMPPJID JIDWithString: @"jdev@conference.jabber.org"]];
+	[msg setFrom: [XMPPJID JIDWithString: @"alice@example.com"]];
 	assert([[msg stringValue] isEqual: @"<message type='chat' "
 	    @"to='jdev@conference.jabber.org' "
 	    @"from='alice@example.com'><body>Hello everyone</body>"
 	    @"</message>"]);
 
 	XMPPIQ *iq = [XMPPIQ IQWithType: @"set" ID: @"128"];
-	iq.to = [XMPPJID JIDWithString: @"juliet@capulet.lit"];
-	iq.from = [XMPPJID JIDWithString: @"romeo@montague.lit"];
+	[iq setTo: [XMPPJID JIDWithString: @"juliet@capulet.lit"]];
+	[iq setFrom: [XMPPJID JIDWithString: @"romeo@montague.lit"]];
 	assert([[iq stringValue] isEqual: @"<iq type='set' id='128' "
 	    @"to='juliet@capulet.lit' "
 	    @"from='romeo@montague.lit'/>"]);
 
 	OFXMLElement *elem = [OFXMLElement elementWithName: @"iq"];
-	[elem addAttributeWithName: @"from" stringValue: @"bob@localhost"];
-	[elem addAttributeWithName: @"to" stringValue: @"alice@localhost"];
-	[elem addAttributeWithName: @"type" stringValue: @"get"];
-	[elem addAttributeWithName: @"id" stringValue: @"42"];
+	[elem addAttributeWithName: @"from"
+		       stringValue: @"bob@localhost"];
+	[elem addAttributeWithName: @"to"
+		       stringValue: @"alice@localhost"];
+	[elem addAttributeWithName: @"type"
+		       stringValue: @"get"];
+	[elem addAttributeWithName: @"id"
+		       stringValue: @"42"];
 	XMPPStanza *stanza = [XMPPStanza stanzaWithElement: elem];
 	assert([[elem stringValue] isEqual: [stanza stringValue]]);
 	assert(([[OFString stringWithFormat: @"%@, %@, %@, %@",
-	    stanza.from.fullJID, stanza.to.fullJID, stanza.type, stanza.ID]
-	    isEqual: @"bob@localhost, alice@localhost, get, 42"]));
+	    [[stanza from] fullJID], [[stanza to] fullJID], [stanza type],
+	    [stanza ID]] isEqual: @"bob@localhost, alice@localhost, get, 42"]));
 
 	conn = [[XMPPConnection alloc] init];
-	conn.delegate = self;
+	[conn setDelegate: self];
 
-	if (arguments.count != 3) {
+	if ([arguments count] != 3) {
 		of_log(@"Invalid count of command line arguments!");
 		[OFApplication terminateWithStatus: 1];
 	}
@@ -94,7 +101,6 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn setUsername: [arguments objectAtIndex: 1]];
 	[conn setPassword: [arguments objectAtIndex: 2]];
 	[conn setResource: @"ObjXMPP"];
-	[conn setUseTLS: NO];
 
 	[conn connect];
 	@try {
@@ -120,11 +126,14 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 - (void)connectionDidReceiveRoster :(XMPPConnection*)conn
 {
 	XMPPPresence *pres;
+	OFEnumerator *enumerator;
+	OFString *group;
 
-	of_log(@"Got roster! Groups: %@", conn.roster.groups);
-	for (OFString *group in conn.roster.groups)
+	of_log(@"Got roster! Groups: %@", [[conn roster] groups]);
+	enumerator = [[[conn roster] groups] objectEnumerator];
+	while ((group = [enumerator nextObject]) != nil)
 		of_log(@"Group %@: %@", group,
-		    [conn.roster rosterItemsInGroup: group]);
+		    [[conn roster] rosterItemsInGroup: group]);
 
 	pres = [XMPPPresence presence];
 	[pres addPriority: 10];

@@ -88,4 +88,11 @@
 	  authcid: (OFString*)authcid
 	 password: (OFString*)password
 	     hash: (Class)hash;
+
+- (OFString*)XMPP_genNonce;
+- (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
+			data: (OFDataArray*)data;
+- (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
+			   salt: (OFDataArray *)salt_
+		 iterationCount: (intmax_t)i;
 @end

@@ -30,20 +30,22 @@
  */
 @interface XMPPStanza: OFXMLElement
 {
-	/// The value of the stanza's from attribute
 	XMPPJID *from;
-	/// The value of the stanza's to attribute
 	XMPPJID *to;
-	/// The value of the stanza's type attribute
 	OFString *type;
-	/// The value of the stanza's id attribute
 	OFString *ID;
 }
 
+#ifdef OF_HAVE_PROPERTIES
+/// The value of the stanza's from attribute
 @property (copy) XMPPJID *from;
+/// The value of the stanza's to attribute
 @property (copy) XMPPJID *to;
+/// The value of the stanza's type attribute
 @property (copy) OFString *type;
+/// The value of the stanza's id attribute
 @property (copy) OFString *ID;
+#endif
 
 /**
  * Creates a new autoreleased XMPPStanza with the specified name.
@@ -141,4 +143,13 @@
  * \return A initialized XMPPStanza
  */
 - initWithElement: (OFXMLElement*)elem;
+
+- (void)setFrom: (XMPPJID*)from;
+- (XMPPJID*)from;
+- (void)setTo: (XMPPJID*)to;
+- (XMPPJID*)to;
+- (void)setType: (OFString*)type;
+- (OFString*)type;
+- (void)setID: (OFString*)ID;
+- (OFString*)ID;
 @end

@@ -1,5 +1,5 @@
 all:
-	objfw-compile -Wall -g --lib 0.0 -o objxmpp *.m \
+	objfw-compile -Wall -Werror -g --lib 0.0 -o objxmpp *.m \
 		`pkg-config --cflags --libs libidn` -lobjopenssl
 
 clean:

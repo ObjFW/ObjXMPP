@@ -95,10 +95,10 @@
 
 		[self setDefaultNamespace: @"jabber:client"];
 
-		if (type_)
+		if (type_ != nil)
 			[self setType: type_];
 
-		if (ID_)
+		if (ID_ != nil)
 			[self setID: ID_];
 	} @catch (id e) {
 		[self release];
@@ -110,26 +110,32 @@
 
 - initWithElement: (OFXMLElement*)elem
 {
-	self = [super initWithName: elem.name
-			 namespace: elem.namespace];
+	self = [super initWithName: [elem name]
+			 namespace: [elem namespace]];
 
 	@try {
-		for (OFXMLAttribute *attr in elem.attributes) {
-			if ([attr.name isEqual: @"from"])
+		OFEnumerator *enumerator;
+		OFXMLAttribute *attr;
+		OFXMLElement *el;
+
+		enumerator = [[elem attributes] objectEnumerator];
+		while ((attr = [enumerator nextObject]) != nil) {
+			if ([[attr name] isEqual: @"from"])
 				[self setFrom: [XMPPJID JIDWithString:
 				    [attr stringValue]]];
-			else if ([attr.name isEqual: @"to"])
+			else if ([[attr name] isEqual: @"to"])
 				[self setTo: [XMPPJID JIDWithString:
 				    [attr stringValue]]];
-			else if ([attr.name isEqual: @"type"])
+			else if ([[attr name] isEqual: @"type"])
 				[self setType: [attr stringValue]];
-			else if ([attr.name isEqual: @"id"])
+			else if ([[attr name] isEqual: @"id"])
 				[self setID: [attr stringValue]];
 			else
 				[self addAttribute: attr];
 		}
 
-		for (OFXMLElement *el in elem.children)
+		enumerator = [[elem children] objectEnumerator];
+		while ((el = [enumerator nextObject]) != nil)
 			[self addChild: el];
 	} @catch (id e) {
 		[self release];
@@ -159,7 +165,7 @@
 
 	if (from_ != nil)
 		[self addAttributeWithName: @"from"
-			       stringValue: from_.fullJID];
+			       stringValue: [from_ fullJID]];
 }
 
 - (XMPPJID*)from
@@ -177,7 +183,7 @@
 
 	if (to_ != nil)
 		[self addAttributeWithName: @"to"
-			       stringValue: to_.fullJID];
+			       stringValue: [to_ fullJID]];
 }
 
 - (XMPPJID*)to

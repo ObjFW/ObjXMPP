@@ -23,10 +23,6 @@
 #import "XMPPAuthenticator.h"
 
 @implementation XMPPAuthenticator
-@synthesize authzid;
-@synthesize authcid;
-@synthesize password;
-
 - initWithAuthcid: (OFString*)authcid_
 	 password: (OFString*)password_
 {
@@ -55,6 +51,42 @@
 	[password release];
 
 	[super dealloc];
+}
+
+- (void)setAuthzid: (OFString*)authzid_
+{
+	OFString *old = authzid;
+	authzid = [authzid_ copy];
+	[old release];
+}
+
+- (OFString*)authzid
+{
+	return [[authzid copy] autorelease];
+}
+
+- (void)setAuthcid: (OFString*)authcid_
+{
+	OFString *old = authcid;
+	authcid = [authcid_ copy];
+	[old release];
+}
+
+- (OFString*)authcid
+{
+	return [[authcid copy] autorelease];
+}
+
+- (void)setPassword: (OFString*)password_
+{
+	OFString *old = password;
+	password = [password_ copy];
+	[old release];
+}
+
+- (OFString*)password
+{
+	return [[password copy] autorelease];
 }
 
 - (OFDataArray*)clientFirstMessage

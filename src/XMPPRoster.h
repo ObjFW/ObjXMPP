@@ -32,6 +32,7 @@
 }
 
 - initWithConnection: (XMPPConnection*)conn;
+- (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;
 - (OFArray*)groups;
 - (OFArray*)rosterItemsInGroup: (OFString*)group;
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem;

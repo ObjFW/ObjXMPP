@@ -41,7 +41,12 @@
 #define XMPP_NS_STREAM @"http://etherx.jabber.org/streams"
 
 @protocol XMPPConnectionDelegate
+#ifndef XMPP_CONNECTION_M
+    <OFObject>
+#endif
+#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
 @optional
+#endif
 - (void)connectionWasAuthenticated: (XMPPConnection*)conn;
 - (void)connection: (XMPPConnection*)conn
      wasBoundToJID: (XMPPJID*)jid;
@@ -58,8 +63,10 @@
 /**
  * \brief A class which abstracts a connection to an XMPP service.
  */
-@interface XMPPConnection: OFObject <OFXMLParserDelegate,
-    OFXMLElementBuilderDelegate>
+@interface XMPPConnection: OFObject
+#ifdef OF_HAVE_OPTONAL_PROTOCOLS
+    <OFXMLParserDelegate, OFXMLElementBuilderDelegate>
+#endif
 {
 	OFTCPSocket *sock;
 	OFXMLParser *parser;
@@ -75,11 +82,13 @@
 	XMPPRoster *roster;
 }
 
+#ifdef OF_HAVE_PROPERTIES
 @property (copy) OFString *username, *password, *server, *resource;
 @property (copy, readonly) XMPPJID *JID;
 @property (assign) uint16_t port;
 @property (retain) id <XMPPConnectionDelegate> delegate;
 @property (readonly, retain) XMPPRoster *roster;
+#endif
 
 /**
  * Connects to the XMPP service.
@@ -109,4 +118,35 @@
  * Requests the roster.
  */
 - (void)requestRoster;
+
+- (void)setUsername: (OFString*)username;
+- (OFString*)username;
+- (void)setPassword: (OFString*)password;
+- (OFString*)password;
+- (void)setServer: (OFString*)server;
+- (OFString*)server;
+- (void)setResource: (OFString*)resource;
+- (OFString*)resource;
+- (XMPPJID*)JID;
+- (void)setPort: (uint16_t)port;
+- (uint16_t)port;
+- (void)setDelegate: (id <XMPPConnectionDelegate>)delegate;
+- (id <XMPPConnectionDelegate>)delegate;
+- (XMPPRoster*)roster;
+
+- (void)XMPP_startStream;
+- (void)XMPP_handleStanza: (OFXMLElement*)elem;
+- (void)XMPP_sendAuth: (OFString*)name;
+- (void)XMPP_handleIQ: (XMPPIQ*)iq;
+- (void)XMPP_handleMessage: (XMPPMessage*)msg;
+- (void)XMPP_handlePresence: (XMPPPresence*)pres;
+- (void)XMPP_handleFeatures: (OFXMLElement*)elem;
+- (void)XMPP_sendResourceBind;
+- (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
+- (void)XMPP_sendSession;
+- (void)XMPP_handleSession: (XMPPIQ*)iq;
+- (void)XMPP_handleRoster: (XMPPIQ*)iq;
+@end
+
+@interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>
 @end

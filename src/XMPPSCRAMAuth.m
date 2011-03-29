@@ -33,15 +33,6 @@
 extern uint32_t arc4random_uniform(uint32_t);
 #endif
 
-@interface XMPPSCRAMAuth ()
-- (OFString*)XMPP_genNonce;
-- (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
-			data: (OFDataArray*)data;
-- (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
-			   salt: (OFDataArray *)salt_
-		 iterationCount: (intmax_t)i;
-@end
-
 @implementation XMPPSCRAMAuth
 + SCRAMAuthWithAuthcid: (OFString*)authcid
 	      password: (OFString*)password
@@ -172,6 +163,8 @@ extern uint32_t arc4random_uniform(uint32_t);
 	OFDataArray *ret, *authMessage, *tmpArray, *salt, *saltedPassword;
 	OFString *tmpString, *sNonce;
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	OFEnumerator *enumerator;
+	OFString *comp;
 	enum {
 		GOT_SNONCE, GOT_SALT, GOT_ITERCOUNT
 	} got = 0;
@@ -184,7 +177,9 @@ extern uint32_t arc4random_uniform(uint32_t);
 					      length: [challenge count] *
 						      [challenge itemSize]];
 
-	for (OFString *comp in [chal componentsSeparatedByString: @","]) {
+	enumerator =
+	    [[chal componentsSeparatedByString: @","] objectEnumerator];
+	while ((comp = [enumerator nextObject]) != nil) {
 		OFString *entry = [comp substringFromIndex: 2
 						   toIndex: [comp length]];
 
@@ -373,14 +368,14 @@ extern uint32_t arc4random_uniform(uint32_t);
 	uint8_t *kCArray, *kI = NULL, *kO = NULL;
 	OFHash *hash;
 
-	if (key.itemSize * key.count > blockSize) {
+	if ([key itemSize] * [key count] > blockSize) {
 		hash = [[[hashType alloc] init] autorelease];
 		[hash updateWithBuffer: [key cArray]
-				ofSize: key.itemSize * key.count];
+				ofSize: [key itemSize] * [key count]];
 		[k addNItems: [hashType digestSize]
 		  fromCArray: [hash digest]];
 	} else
-		[k addNItems: key.itemSize * key.count
+		[k addNItems: [key itemSize] * [key count]
 		  fromCArray: [key cArray]];
 
 	@try {
@@ -391,7 +386,7 @@ extern uint32_t arc4random_uniform(uint32_t);
 		memset(kO, HMAC_OPAD, blockSize * sizeof(uint8_t));
 
 		kCArray = [k cArray];
-		kSize = k.count;
+		kSize = [k count];
 		for (i = 0; i < kSize; i++) {
 			kI[i] ^= kCArray[i];
 			kO[i] ^= kCArray[i];
@@ -400,12 +395,12 @@ extern uint32_t arc4random_uniform(uint32_t);
 		k = [OFDataArray dataArrayWithItemSize: 1];
 		[k addNItems: blockSize
 		  fromCArray: kI];
-		[k addNItems: data.itemSize * data.count
+		[k addNItems: [data itemSize] * [data count]
 		  fromCArray: [data cArray]];
 
 		hash = [[[hashType alloc] init] autorelease];
 		[hash updateWithBuffer: [k cArray]
-				ofSize: k.count];
+				ofSize: [k count]];
 		k = [OFDataArray dataArrayWithItemSize: 1];
 		[k addNItems: blockSize
 		  fromCArray: kO];
@@ -418,7 +413,7 @@ extern uint32_t arc4random_uniform(uint32_t);
 
 	hash = [[[hashType alloc] init] autorelease];
 	[hash updateWithBuffer: [k cArray]
-			ofSize: k.count];
+			ofSize: [k count]];
 
 	[hash retain];
 	[pool release];

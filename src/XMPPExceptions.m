@@ -23,8 +23,6 @@
 #import "XMPPExceptions.h"
 
 @implementation XMPPException
-@synthesize connection;
-
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn
 {
@@ -72,11 +70,14 @@
 
 	return description;
 }
+
+- (XMPPConnection*)connection
+{
+	return connection;
+}
 @end
 
 @implementation XMPPStringPrepFailedException
-@synthesize profile, string;
-
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn
        profile: (OFString*)profile
@@ -135,11 +136,19 @@
 
 	return description;
 }
+
+- (OFString*)profile
+{
+	return profile;
+}
+
+- (OFString*)string
+{
+	return string;
+}
 @end
 
 @implementation XMPPIDNATranslationFailedException
-@synthesize operation, string;
-
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn
      operation: (OFString*)operation
@@ -197,11 +206,19 @@
 
 	return description;
 }
+
+- (OFString*)operation
+{
+	return operation;
+}
+
+- (OFString*)string
+{
+	return string;
+}
 @end
 
 @implementation XMPPAuthFailedException
-@synthesize reason;
-
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn
 	reason: (OFString*)reason_;
@@ -253,5 +270,10 @@
 	    @"Authentication failed. Reason: %@!", reason];
 
 	return description;
+}
+
+- (OFString*)reason
+{
+	return reason;
 }
 @end
