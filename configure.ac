@@ -2,7 +2,7 @@ AC_INIT(ObjXMPP, 0.1, js@webkeks.org)
 AC_CONFIG_SRCDIR(src)
 
 AC_PATH_TOOL(OBJFW_CONFIG, objfw-config)
-OBJC="$($OBJFW_CONFIG --objc)"
+test x"$OBJC" = x"" && OBJC="$($OBJFW_CONFIG --objc)"
 
 AC_LANG([Objective C])
 AC_PROG_OBJC
