@@ -11,7 +11,6 @@
 		4B1295F11337C37E00154B25 /* ObjXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559911337A65400E345C7 /* ObjXMPP.framework */; };
 		4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
-		4BC559EB1337AC0900E345C7 /* arc4random_uniform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559D91337AC0900E345C7 /* arc4random_uniform.m */; };
 		4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC559ED1337AC0900E345C7 /* XMPPAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */; };
 		4BC559EE1337AC0900E345C7 /* XMPPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559DC1337AC0900E345C7 /* XMPPConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -56,7 +55,6 @@
 		4B1295EE1337BD5F00154B25 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = test.m; path = tests/test.m; sourceTree = SOURCE_ROOT; };
 		4BC559911337A65400E345C7 /* ObjXMPP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjXMPP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC559D61337ABD300E345C7 /* ObjFW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjFW.framework; path = ../../../../Library/Frameworks/ObjFW.framework; sourceTree = "<group>"; };
-		4BC559D91337AC0900E345C7 /* arc4random_uniform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = arc4random_uniform.m; path = src/arc4random_uniform.m; sourceTree = SOURCE_ROOT; };
 		4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPAuthenticator.h; path = src/XMPPAuthenticator.h; sourceTree = SOURCE_ROOT; };
 		4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPAuthenticator.m; path = src/XMPPAuthenticator.m; sourceTree = SOURCE_ROOT; };
 		4BC559DC1337AC0900E345C7 /* XMPPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPConnection.h; path = src/XMPPConnection.h; sourceTree = SOURCE_ROOT; };
@@ -171,7 +169,6 @@
 				4BC559FD1337AC1800E345C7 /* XMPPSCRAMAuth.m */,
 				4BC559FE1337AC1800E345C7 /* XMPPStanza.h */,
 				4BC559FF1337AC1800E345C7 /* XMPPStanza.m */,
-				4BC559D91337AC0900E345C7 /* arc4random_uniform.m */,
 			);
 			path = ObjXMPP;
 			sourceTree = "<group>";
@@ -290,7 +287,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BC559EB1337AC0900E345C7 /* arc4random_uniform.m in Sources */,
 				4BC559ED1337AC0900E345C7 /* XMPPAuthenticator.m in Sources */,
 				4BC559EF1337AC0900E345C7 /* XMPPConnection.m in Sources */,
 				4BC559F11337AC0900E345C7 /* XMPPExceptions.m in Sources */,
@@ -396,6 +392,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_VERSION = 4.2;
 				INFOPLIST_FILE = Info.plist;
+				OTHER_LDFLAGS = (
+					"-lcrypto",
+					"-L/opt/local/lib",
+					"-lidn",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -414,6 +415,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_VERSION = 4.2;
 				INFOPLIST_FILE = Info.plist;
+				OTHER_LDFLAGS = (
+					"-lcrypto",
+					"-L/opt/local/lib",
+					"-lidn",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};

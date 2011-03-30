@@ -18,9 +18,7 @@ SRCS = XMPPAuthenticator.m	\
        XMPPSCRAMAuth.m		\
        XMPPStanza.m
 
-INCLUDES := ${SRCS:.m=.h}
-
-SRCS += arc4random_uniform.m
+INCLUDES = ${SRCS:.m=.h}
 
 include ../buildsys.mk
 

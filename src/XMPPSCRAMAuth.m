@@ -23,15 +23,15 @@
 
 #include <string.h>
 
+#include <assert.h>
+
+#include <openssl/rand.h>
+
 #import "XMPPSCRAMAuth.h"
 #import "XMPPExceptions.h"
 
 #define HMAC_IPAD 0x36
 #define HMAC_OPAD 0x5c
-
-#ifndef HAVE_ARC4RANDOM_UNIFORM
-extern uint32_t arc4random_uniform(uint32_t);
-#endif
 
 @implementation XMPPSCRAMAuth
 + SCRAMAuthWithAuthcid: (OFString*)authcid
@@ -348,15 +348,22 @@ extern uint32_t arc4random_uniform(uint32_t);
 
 - (OFString*)XMPP_genNonce
 {
-	OFMutableString *nonce = [OFMutableString string];
-	uint32_t res, i;
+	uint8_t buf[64];
+	size_t i;
+
+	assert(RAND_pseudo_bytes(buf, 64) >= 0);
 
 	for (i = 0; i < 64; i++) {
-		while ((res = arc4random_uniform('~' - '!' + 1) + '!') == ',');
-		[nonce appendFormat: @"%c", res];
+		uint8_t tmp = (buf[i] % ('~' - '!')) + '!';
+
+		while (tmp == ',')
+			tmp = ((buf[i] >> 1) % ('~' - '!')) + '!';
+
+		buf[i] = tmp;
 	}
 
-	return nonce;
+	return [OFString stringWithCString: (char*)buf
+				    length: 64];
 }
 
 - (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key

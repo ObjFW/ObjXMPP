@@ -34,7 +34,7 @@ AS_IF([test x"$enable_static" = x"yes" -o x"$enable_shared" = x"no"], [
 ])
 
 AC_CHECK_LIB(objopenssl, main, [
-	LIBS="$LIBS -lobjopenssl"
+	LIBS="$LIBS -lobjopenssl -lcrypto"
 ], [
 	AC_MSG_ERROR(You need ObjOpenSSL installed!)
 ])
