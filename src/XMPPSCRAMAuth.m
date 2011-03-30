@@ -158,10 +158,10 @@ extern uint32_t arc4random_uniform(uint32_t);
 {
 	size_t i;
 	uint8_t *clientKey, *serverKey, *clientSignature;
-	intmax_t iterCount;
+	intmax_t iterCount = 0;
 	OFHash *hash;
-	OFDataArray *ret, *authMessage, *tmpArray, *salt, *saltedPassword;
-	OFString *tmpString, *sNonce;
+	OFDataArray *ret, *authMessage, *tmpArray, *salt = nil, *saltedPassword;
+	OFString *tmpString, *sNonce = nil;
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFEnumerator *enumerator;
 	OFString *comp;
