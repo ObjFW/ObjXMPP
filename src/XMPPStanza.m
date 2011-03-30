@@ -21,6 +21,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import "XMPPConnection.h"
 #import "XMPPStanza.h"
 #import "XMPPJID.h"
 
@@ -93,7 +94,9 @@
 			@throw [OFInvalidArgumentException newWithClass: isa
 							       selector: _cmd];
 
-		[self setDefaultNamespace: @"jabber:client"];
+		[self setDefaultNamespace: XMPP_NS_CLIENT];
+		[self setPrefix: @"stream"
+		   forNamespace: XMPP_NS_STREAM];
 
 		if (type_ != nil)
 			[self setType: type_];
@@ -137,6 +140,10 @@
 		enumerator = [[elem children] objectEnumerator];
 		while ((el = [enumerator nextObject]) != nil)
 			[self addChild: el];
+
+		[self setDefaultNamespace: XMPP_NS_CLIENT];
+		[self setPrefix: @"stream"
+		   forNamespace: XMPP_NS_STREAM];
 	} @catch (id e) {
 		[self release];
 		@throw e;
