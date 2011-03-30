@@ -3,8 +3,16 @@ syntax: glob
 *.so
 *.dylib
 *~
+.deps
+aclocal.m4
+autom4te.cache
 build
+buildsys.mk
+config.log
+config.status
+configure
 docs
+extra.mk
 ObjXMPP.xcodeproj/*.mode1v3
 ObjXMPP.xcodeproj/*.pbxuser
 ObjXMPP.xcodeproj/project.xcworkspace

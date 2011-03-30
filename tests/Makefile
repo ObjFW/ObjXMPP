@@ -1,5 +1,8 @@
-all:
-	objfw-compile -Wall -g -o tests *.m -I../src -L../src -lobjxmpp
+PROG_NOINST = tests${PROG_SUFFIX}
+SRCS = test.m
 
-clean:
-	rm -f tests *.o
+include ../buildsys.mk
+
+CPPFLAGS += -I../src
+LIBS := -L../src -lobjxmpp ${LIBS}
+LD = ${OBJC}
