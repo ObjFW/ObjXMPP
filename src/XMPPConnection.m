@@ -227,7 +227,7 @@
 - (void)sendStanza: (OFXMLElement*)elem
 {
 	of_log(@"Out: %@", elem);
-	[sock writeString: [elem stringValue]];
+	[sock writeString: [elem XMLString]];
 }
 
 - (OFString*)generateStanzaID
@@ -345,7 +345,7 @@
 			OFXMLElement *responseTag;
 			OFDataArray *challenge =
 			    [OFDataArray dataArrayWithBase64EncodedString:
-			    [[[elem children] firstObject] stringValue]];
+			    [elem stringValue]];
 			OFDataArray *response = [authModule
 			    calculateResponseWithChallenge: challenge];
 
@@ -363,7 +363,7 @@
 		if ([[elem name] isEqual: @"success"]) {
 			[authModule parseServerFinalMessage:
 			    [OFDataArray dataArrayWithBase64EncodedString:
-				[[[elem children] firstObject] stringValue]]];
+				[elem stringValue]]];
 
 			if ([delegate respondsToSelector:
 			    @selector(connectionWasAuthenticated:)])
@@ -381,7 +381,7 @@
 			@throw [XMPPAuthFailedException
 			    newWithClass: isa
 			      connection: self
-				  reason: [elem stringValue]];
+				  reason: [elem XMLString]];
 		}
 
 		assert(0);
@@ -452,16 +452,14 @@
 
 - (void)XMPP_handleFeatures: (OFXMLElement*)elem
 {
-	OFXMLElement *starttls =
-	    [[elem elementsForName: @"starttls"
-			 namespace: XMPP_NS_STARTTLS] firstObject];
-	OFXMLElement *bind = [[elem elementsForName: @"bind"
-					  namespace: XMPP_NS_BIND] firstObject];
-	OFXMLElement *session =
-	    [[elem elementsForName: @"session"
-			 namespace: XMPP_NS_SESSION] firstObject];
-	OFArray *mechs = [elem elementsForName: @"mechanisms"
-				     namespace: XMPP_NS_SASL];
+	OFXMLElement *starttls = [elem elementForName: @"starttls"
+					    namespace: XMPP_NS_STARTTLS];
+	OFXMLElement *bind = [elem elementForName: @"bind"
+					namespace: XMPP_NS_BIND];
+	OFXMLElement *session = [elem elementForName: @"session"
+					   namespace: XMPP_NS_SESSION];
+	OFXMLElement *mechs = [elem elementForName: @"mechanisms"
+					 namespace: XMPP_NS_SASL];
 	OFMutableArray *mechanisms = [OFMutableArray array];
 
 	if (starttls != nil) {
@@ -471,14 +469,13 @@
 		return;
 	}
 
-	if ([mechs count] > 0) {
+	if (mechs != nil) {
 		OFEnumerator *enumerator;
 		OFXMLElement *mech;
 
-		enumerator = [[[mechs firstObject] children] objectEnumerator];
+		enumerator = [[mechs children] objectEnumerator];
 		while ((mech = [enumerator nextObject]) != nil)
-			[mechanisms addObject:
-			    [[[mech children] firstObject] stringValue]];
+			[mechanisms addObject: [mech stringValue]];
 
 		if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
 			authModule = [[XMPPSCRAMAuth alloc]
@@ -551,18 +548,16 @@
 	OFXMLElement *bindElem;
 	OFXMLElement *jidElem;
 
-	if (![[iq type] isEqual: @"result"])
-		assert(0);
+	assert([[iq type] isEqual: @"result"]);
 
-	bindElem = [[iq children] firstObject];
+	bindElem = [iq elementForName: @"bind"
+			    namespace: XMPP_NS_BIND];
 
-	if (![[bindElem name] isEqual: @"bind"] ||
-	    ![[bindElem namespace] isEqual: XMPP_NS_BIND])
-		assert(0);
+	assert(bindElem != nil);
 
-	jidElem = [[bindElem children] firstObject];
-	JID = [[XMPPJID alloc] initWithString:
-	    [[[jidElem children] firstObject] stringValue]];
+	jidElem = [bindElem elementForName: @"jid"
+				 namespace: XMPP_NS_BIND];
+	JID = [[XMPPJID alloc] initWithString: [jidElem stringValue]];
 
 	[bindID release];
 	bindID = nil;
@@ -623,14 +618,12 @@
 	OFEnumerator *enumerator;
 	OFXMLElement *elem;
 
-	if (![[iq type] isEqual: @"result"])
-		assert(0);
+	assert([[iq type] isEqual: @"result"]);
 
-	rosterElem = [[iq children] firstObject];
+	rosterElem = [iq elementForName: @"query"
+			      namespace: XMPP_NS_ROSTER];
 
-	if (![[rosterElem name] isEqual: @"query"] ||
-	    ![[rosterElem namespace] isEqual: XMPP_NS_ROSTER])
-		assert(0);
+	assert(rosterElem != nil);
 
 	enumerator = [[rosterElem children] objectEnumerator];
 	while ((elem = [enumerator nextObject]) != nil) {
@@ -655,8 +648,7 @@
 		    [[elem elementsForName: @"group"
 				 namespace: XMPP_NS_ROSTER] objectEnumerator];
 		while ((groupElem = [groupEnumerator nextObject]) != nil)
-			[groups addObject:
-			    [[[groupElem children] firstObject] stringValue]];
+			[groups addObject: [groupElem stringValue]];
 
 		if ([groups count] > 0)
 			[rosterItem setGroups: groups];

@@ -53,7 +53,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[pres addPriority: 20];
 	[pres setTo: [XMPPJID JIDWithString: @"alice@example.com"]];
 	[pres setFrom: [XMPPJID JIDWithString: @"bob@example.org"]];
-	assert([[pres stringValue] isEqual: @"<presence to='alice@example.com' "
+	assert([[pres XMLString] isEqual: @"<presence to='alice@example.com' "
 	    @"from='bob@example.org'><show>chat</show>"
 	    @"<status>Bored</status><priority>20</priority>"
 	    @"</presence>"]);
@@ -62,7 +62,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[msg addBody: @"Hello everyone"];
 	[msg setTo: [XMPPJID JIDWithString: @"jdev@conference.jabber.org"]];
 	[msg setFrom: [XMPPJID JIDWithString: @"alice@example.com"]];
-	assert([[msg stringValue] isEqual: @"<message type='chat' "
+	assert([[msg XMLString] isEqual: @"<message type='chat' "
 	    @"to='jdev@conference.jabber.org' "
 	    @"from='alice@example.com'><body>Hello everyone</body>"
 	    @"</message>"]);
@@ -70,7 +70,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	XMPPIQ *iq = [XMPPIQ IQWithType: @"set" ID: @"128"];
 	[iq setTo: [XMPPJID JIDWithString: @"juliet@capulet.lit"]];
 	[iq setFrom: [XMPPJID JIDWithString: @"romeo@montague.lit"]];
-	assert([[iq stringValue] isEqual: @"<iq type='set' id='128' "
+	assert([[iq XMLString] isEqual: @"<iq type='set' id='128' "
 	    @"to='juliet@capulet.lit' "
 	    @"from='romeo@montague.lit'/>"]);
 
@@ -84,7 +84,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[elem addAttributeWithName: @"id"
 		       stringValue: @"42"];
 	XMPPStanza *stanza = [XMPPStanza stanzaWithElement: elem];
-	assert([[elem stringValue] isEqual: [stanza stringValue]]);
+	assert([[elem XMLString] isEqual: [stanza XMLString]]);
 	assert(([[OFString stringWithFormat: @"%@, %@, %@, %@",
 	    [[stanza from] fullJID], [[stanza to] fullJID], [stanza type],
 	    [stanza ID]] isEqual: @"bob@localhost, alice@localhost, get, 42"]));
