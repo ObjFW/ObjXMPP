@@ -90,6 +90,9 @@
 @property (readonly, retain) XMPPRoster *roster;
 #endif
 
+/**
+ * \return A new autoreleased XMPPConnection
+ */
 + connection;
 
 /**
@@ -101,6 +104,18 @@
  * Starts a loop handling incomming data.
  */
 - (void)handleConnection;
+
+/**
+ * Parses the specified buffer.
+ *
+ * This is useful for handling multiple connections at once.
+ *
+ * \param buf The buffer to parse
+ * \param size The size of the buffer. If size is 0, it is assumed that the
+ *	       connection was closed.
+ */
+- (void)parseBuffer: (const char*)buf
+	   withSize: (size_t)size;
 
 /**
  * Sends an OFXMLElement, usually an XMPPStanza.

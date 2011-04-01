@@ -229,6 +229,17 @@
 	}
 }
 
+- (void)parseBuffer: (const char*)buf
+	   withSize: (size_t)size
+{
+	if (size < 1 && [delegate respondsToSelector:
+	    @selector(connectionWasClosed:)])
+		[delegate connectionWasClosed: self];
+
+	[parser parseBuffer: buf
+		   withSize: size];
+}
+
 - (void)sendStanza: (OFXMLElement*)elem
 {
 	of_log(@"Out: %@", elem);
