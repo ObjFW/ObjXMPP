@@ -33,7 +33,7 @@
 
 	@try {
 		connection = [conn retain];
-		groups = [[OFMutableDictionary alloc] init];
+		rosterItems = [[OFMutableDictionary alloc] init];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -51,56 +51,23 @@
 
 - (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem
 {
-	if ([[rosterItem groups] count] > 0) {
-		OFEnumerator *enumerator;
-		OFString *group;
-
-		enumerator = [[rosterItem groups] objectEnumerator];
-		while ((group = [enumerator nextObject]) != nil) {
-			OFMutableArray *rosterGroup =
-			    [groups objectForKey: group];
-
-			if (rosterGroup == nil) {
-				rosterGroup = [OFMutableArray array];
-				[groups setObject: rosterGroup
-					   forKey: group];
-			}
-
-			[rosterGroup addObject: rosterItem];
-		}
-	} else {
-		OFMutableArray *rosterGroup = [groups objectForKey: @""];
-
-		if (rosterGroup == nil) {
-			rosterGroup = [OFMutableArray array];
-			[groups setObject: rosterGroup
-				   forKey: @""];
-		}
-
-		[rosterGroup addObject: rosterItem];
-	}
+	return [self XMPP_updateRosterItem: rosterItem];
 }
 
-- (OFArray*)groups
+- (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem
 {
-	OFMutableArray *ret = [OFMutableArray array];
-	OFEnumerator *enumerator;
-	OFString *group;
-
-	enumerator = [groups keyEnumerator];
-	while ((group = [enumerator nextObject]) != nil)
-		[ret addObject: group];
-
-	ret->isa = [OFArray class];
-	return ret;
+	[rosterItems setObject: rosterItem
+			forKey: [[rosterItem JID] bareJID]];
 }
 
-- (OFArray*)rosterItemsInGroup: (OFString*)group
+- (void)XMPP_deleteRosterItem: (XMPPRosterItem*)rosterItem
 {
-	if (group == nil)
-		group = @"";
+	[rosterItems removeObjectForKey: [[rosterItem JID] bareJID]];
+}
 
-	return [[[groups objectForKey: group] copy] autorelease];
+- (OFDictionary*)rosterItems
+{
+	return [[rosterItems copy] autorelease];
 }
 
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem

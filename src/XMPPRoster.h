@@ -28,13 +28,14 @@
 @interface XMPPRoster: OFObject
 {
 	XMPPConnection *connection;
-	OFMutableDictionary *groups;
+	OFMutableDictionary *rosterItems;
 }
 
 - initWithConnection: (XMPPConnection*)conn;
 - (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;
-- (OFArray*)groups;
-- (OFArray*)rosterItemsInGroup: (OFString*)group;
+- (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)XMPP_deleteRosterItem: (XMPPRosterItem*)rosterItem;
+- (OFDictionary*)rosterItems;
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)deleteRosterItem: (XMPPRosterItem*)rosterItem;

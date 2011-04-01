@@ -59,6 +59,6 @@ dnl and add OBJCPPA.FLAGS to CPPFLAGS, thus we need to AC_SUBST these ourself
 AC_SUBST(CPP)
 AC_SUBST(CPPFLAGS)
 
-AC_SUBST(PACKAGE, ObjFW)
+AC_SUBST(PACKAGE, ObjXMPP)
 AC_CONFIG_FILES([buildsys.mk extra.mk])
 AC_OUTPUT

@@ -126,14 +126,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 - (void)connectionDidReceiveRoster :(XMPPConnection*)conn
 {
 	XMPPPresence *pres;
-	OFEnumerator *enumerator;
-	OFString *group;
 
-	of_log(@"Got roster! Groups: %@", [[conn roster] groups]);
-	enumerator = [[[conn roster] groups] objectEnumerator];
-	while ((group = [enumerator nextObject]) != nil)
-		of_log(@"Group %@: %@", group,
-		    [[conn roster] rosterItemsInGroup: group]);
+	of_log(@"Got roster: %@", [[conn roster] rosterItems]);
 
 	pres = [XMPPPresence presence];
 	[pres addPriority: 10];
