@@ -90,6 +90,8 @@
 @property (readonly, retain) XMPPRoster *roster;
 #endif
 
++ connection;
+
 /**
  * Connects to the XMPP service.
  */

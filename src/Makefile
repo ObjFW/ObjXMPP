@@ -18,7 +18,8 @@ SRCS = XMPPAuthenticator.m	\
        XMPPSCRAMAuth.m		\
        XMPPStanza.m
 
-INCLUDES = ${SRCS:.m=.h}
+INCLUDES = ${SRCS:.m=.h}	\
+	   ObjXMPP.h
 
 include ../buildsys.mk
 

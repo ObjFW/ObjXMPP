@@ -43,6 +43,11 @@
 #import "XMPPExceptions.h"
 
 @implementation XMPPConnection
++ connection
+{
+	return [[[self alloc] init] autorelease];
+}
+
 - init
 {
 	self = [super init];
