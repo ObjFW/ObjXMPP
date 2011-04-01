@@ -88,6 +88,7 @@
 @property (assign) uint16_t port;
 @property (retain) id <XMPPConnectionDelegate> delegate;
 @property (readonly, retain) XMPPRoster *roster;
+@property (readonly, retain, getter=socket) OFTCPSocket *sock;
 #endif
 
 /**
@@ -116,6 +117,11 @@
  */
 - (void)parseBuffer: (const char*)buf
 	   withSize: (size_t)size;
+
+/**
+ * \return The socket used by the XMPPConnection
+ */
+- (OFTCPSocket*)socket;
 
 /**
  * Sends an OFXMLElement, usually an XMPPStanza.

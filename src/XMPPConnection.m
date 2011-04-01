@@ -240,6 +240,11 @@
 		   withSize: size];
 }
 
+- (OFTCPSocket*)socket
+{
+	return [[sock retain] autorelease];
+}
+
 - (void)sendStanza: (OFXMLElement*)elem
 {
 	of_log(@"Out: %@", elem);
