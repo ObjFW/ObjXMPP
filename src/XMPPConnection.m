@@ -346,7 +346,10 @@
 	if ([[elem namespace] isEqual: XMPP_NS_STARTTLS]) {
 		if ([[elem name] isEqual: @"proceed"]) {
 			/* FIXME: Catch errors here */
-			sock = [[SSLSocket alloc] initWithSocket: sock];
+			SSLSocket *newSock = [[SSLSocket alloc]
+			    initWithSocket: sock];
+			[sock release];
+			sock = newSock;
 
 			/* Stream restart */
 			[parser setDelegate: self];
