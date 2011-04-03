@@ -346,10 +346,19 @@
 	if ([[elem namespace] isEqual: XMPP_NS_STARTTLS]) {
 		if ([[elem name] isEqual: @"proceed"]) {
 			/* FIXME: Catch errors here */
-			SSLSocket *newSock = [[SSLSocket alloc]
-			    initWithSocket: sock];
+			SSLSocket *newSock;
+
+			if ([delegate respondsToSelector:
+			    @selector(connectionWillUpgradeToTLS:)])
+				[delegate connectionWillUpgradeToTLS: self];
+
+			newSock = [[SSLSocket alloc] initWithSocket: sock];
 			[sock release];
 			sock = newSock;
+
+			if ([delegate respondsToSelector:
+			    @selector(connectionDidUpgradeToTLS:)])
+				[delegate connectionDidUpgradeToTLS: self];
 
 			/* Stream restart */
 			[parser setDelegate: self];
@@ -752,6 +761,14 @@
 }
 
 - (void)connectionWasClosed: (XMPPConnection*)conn
+{
+}
+
+- (void)connectionWillUpgradeToTLS: (XMPPConnection*)conn
+{
+}
+
+- (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn
 {
 }
 @end

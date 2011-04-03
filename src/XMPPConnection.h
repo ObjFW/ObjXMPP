@@ -58,6 +58,8 @@
 -  (void)connection: (XMPPConnection*)conn
   didReceiveMessage: (XMPPMessage*)msg;
 - (void)connectionWasClosed: (XMPPConnection*)conn;
+- (void)connectionWillUpgradeToTLS: (XMPPConnection*)conn;
+- (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn;
 @end
 
 /**
