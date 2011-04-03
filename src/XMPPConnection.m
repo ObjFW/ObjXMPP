@@ -437,7 +437,8 @@
 		return;
 	}
 
-	if ([[iq ID] isEqual: rosterID]) {
+	if ([iq elementForName: @"query"
+		     namespace: XMPP_NS_ROSTER]) {
 		[self XMPP_handleRoster: iq];
 		return;
 	}
@@ -648,34 +649,86 @@
 - (void)XMPP_handleRoster: (XMPPIQ*)iq
 {
 	OFXMLElement *rosterElem;
-	OFEnumerator *enumerator;
 	OFXMLElement *elem;
-
-	assert([[iq type] isEqual: @"result"]);
+	OFString *subscription;
 
 	rosterElem = [iq elementForName: @"query"
 			      namespace: XMPP_NS_ROSTER];
 
-	assert(rosterElem != nil);
+	if ([[iq ID] isEqual: rosterID]) {
+		OFEnumerator *enumerator;
 
-	enumerator = [[rosterElem children] objectEnumerator];
-	while ((elem = [enumerator nextObject]) != nil) {
+		assert([[iq type] isEqual: @"result"]);
+
+		enumerator = [[rosterElem children] objectEnumerator];
+		while ((elem = [enumerator nextObject]) != nil) {
+			XMPPRosterItem *rosterItem;
+			OFMutableArray *groups = [OFMutableArray array];
+			OFEnumerator *groupEnumerator;
+			OFXMLElement *groupElem;
+
+			if (![[elem name] isEqual: @"item"] ||
+			    ![[elem namespace] isEqual: XMPP_NS_ROSTER])
+				continue;
+
+			rosterItem = [XMPPRosterItem rosterItem];
+			[rosterItem setJID: [XMPPJID JIDWithString:
+			    [[elem attributeForName: @"jid"] stringValue]]];
+			[rosterItem setName:
+			    [[elem attributeForName: @"name"] stringValue]];
+
+			subscription = [[elem attributeForName:
+				@"subscription"] stringValue];
+			if ([subscription isEqual: @"none"] ||
+			    [subscription isEqual: @"to"] ||
+			    [subscription isEqual: @"from"] ||
+			    [subscription isEqual: @"both"])
+				[rosterItem setSubscription: subscription];
+
+			groupEnumerator =
+			    [[elem elementsForName: @"group"
+					 namespace: XMPP_NS_ROSTER]
+				objectEnumerator];
+			while ((groupElem = [groupEnumerator nextObject])
+					!= nil)
+				[groups addObject: [groupElem stringValue]];
+
+			if ([groups count] > 0)
+				[rosterItem setGroups: groups];
+
+			[roster XMPP_addRosterItem: rosterItem];
+		}
+
+		if ([delegate respondsToSelector:
+		    @selector(connectionDidReceiveRoster:)])
+			[delegate connectionDidReceiveRoster: self];
+
+		[rosterID release];
+		rosterID = nil;
+	} else {
 		XMPPRosterItem *rosterItem;
 		OFMutableArray *groups = [OFMutableArray array];
 		OFEnumerator *groupEnumerator;
 		OFXMLElement *groupElem;
+		XMPPIQ *response;
 
-		if (![[elem name] isEqual: @"item"] ||
-		    ![[elem namespace] isEqual: XMPP_NS_ROSTER])
-			continue;
+		assert([[iq type] isEqual: @"set"]);
 
+		elem = [[rosterElem children] firstObject];
 		rosterItem = [XMPPRosterItem rosterItem];
 		[rosterItem setJID: [XMPPJID JIDWithString:
 		    [[elem attributeForName: @"jid"] stringValue]]];
 		[rosterItem setName:
 		    [[elem attributeForName: @"name"] stringValue]];
-		[rosterItem setSubscription:
-		    [[elem attributeForName: @"subscription"] stringValue]];
+
+		subscription = [[elem attributeForName:
+			@"subscription"] stringValue];
+		if ([subscription isEqual: @"none"] ||
+		    [subscription isEqual: @"to"] ||
+		    [subscription isEqual: @"from"] ||
+		    [subscription isEqual: @"both"] ||
+		    [subscription isEqual: @"remove"])
+			[rosterItem setSubscription: subscription];
 
 		groupEnumerator =
 		    [[elem elementsForName: @"group"
@@ -686,15 +739,18 @@
 		if ([groups count] > 0)
 			[rosterItem setGroups: groups];
 
-		[roster XMPP_addRosterItem: rosterItem];
+		[roster XMPP_updateRosterItem: rosterItem];
+
+		response = [XMPPIQ IQWithType: @"result"
+					   ID: [iq ID]];
+		[response setTo: [iq from]];
+		[self sendStanza: response];
+
+		if ([delegate respondsToSelector:
+		    @selector(connection:didReceiveRosterItem:)])
+			[delegate connection:self
+			didReceiveRosterItem: rosterItem];
 	}
-
-	if ([delegate respondsToSelector:
-	    @selector(connectionDidReceiveRoster:)])
-		[delegate connectionDidReceiveRoster: self];
-
-	[rosterID release];
-	rosterID = nil;
 }
 
 - (XMPPJID*)JID

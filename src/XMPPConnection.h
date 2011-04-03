@@ -30,6 +30,7 @@
 @class XMPPPresence;
 @class XMPPAuthenticator;
 @class XMPPRoster;
+@class XMPPRosterItem;
 
 #define XMPP_NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
 #define XMPP_NS_CLIENT @"jabber:client"
@@ -51,6 +52,8 @@
 - (void)connection: (XMPPConnection*)conn
      wasBoundToJID: (XMPPJID*)jid;
 - (void)connectionDidReceiveRoster: (XMPPConnection*)conn;
+-     (void)connection: (XMPPConnection*)conn
+  didReceiveRosterItem: (XMPPRosterItem*)rosterItem;
 - (BOOL)connection: (XMPPConnection*)conn
       didReceiveIQ: (XMPPIQ*)iq;
 -   (void)connection: (XMPPConnection*)conn

@@ -136,6 +136,12 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn sendStanza: pres];
 }
 
+-     (void)connection: (XMPPConnection*)conn
+  didReceiveRosterItem: (XMPPRosterItem*)rosterItem
+{
+	of_log(@"Got roster push: %@", rosterItem);
+}
+
 - (BOOL)connection: (XMPPConnection*)conn
       didReceiveIQ: (XMPPIQ*)iq
 {
