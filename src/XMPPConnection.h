@@ -52,14 +52,14 @@
 - (void)connection: (XMPPConnection*)conn
      wasBoundToJID: (XMPPJID*)jid;
 - (void)connectionDidReceiveRoster: (XMPPConnection*)conn;
--     (void)connection: (XMPPConnection*)conn
-  didReceiveRosterItem: (XMPPRosterItem*)rosterItem;
 - (BOOL)connection: (XMPPConnection*)conn
       didReceiveIQ: (XMPPIQ*)iq;
 -   (void)connection: (XMPPConnection*)conn
   didReceivePresence: (XMPPPresence*)pres;
 -  (void)connection: (XMPPConnection*)conn
   didReceiveMessage: (XMPPMessage*)msg;
+-     (void)connection: (XMPPConnection*)conn
+  didReceiveRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)connectionWasClosed: (XMPPConnection*)conn;
 - (void)connectionWillUpgradeToTLS: (XMPPConnection*)conn;
 - (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn;

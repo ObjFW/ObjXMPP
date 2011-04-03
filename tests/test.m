@@ -123,7 +123,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn requestRoster];
 }
 
-- (void)connectionDidReceiveRoster :(XMPPConnection*)conn
+- (void)connectionDidReceiveRoster: (XMPPConnection*)conn
 {
 	XMPPPresence *pres;
 
