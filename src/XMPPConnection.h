@@ -163,6 +163,9 @@
 - (XMPPRoster*)roster;
 
 - (void)XMPP_startStream;
+- (void)XMPP_handleStream: (OFXMLElement*)elem;
+- (void)XMPP_handleTLS: (OFXMLElement*)elem;
+- (void)XMPP_handleSASL: (OFXMLElement*)elem;
 - (void)XMPP_handleStanza: (OFXMLElement*)elem;
 - (void)XMPP_sendAuth: (OFString*)name;
 - (void)XMPP_handleIQ: (XMPPIQ*)iq;

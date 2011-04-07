@@ -297,7 +297,17 @@
 
 	of_log(@"In:  %@", elem);
 
-	[self XMPP_handleStanza: elem];
+	if ([[elem namespace] isEqual: XMPP_NS_CLIENT])
+		[self XMPP_handleStanza: elem];
+
+	if ([[elem namespace] isEqual: XMPP_NS_STREAM])
+		[self XMPP_handleStream: elem];
+
+	if ([[elem namespace] isEqual: XMPP_NS_STARTTLS])
+		[self XMPP_handleTLS: elem];
+
+	if ([[elem namespace] isEqual: XMPP_NS_SASL])
+		[self XMPP_handleSASL: elem];
 
 	[pool release];
 }
@@ -313,111 +323,111 @@
 
 - (void)XMPP_handleStanza: (OFXMLElement*)elem
 {
-	if ([[elem namespace] isEqual: XMPP_NS_CLIENT]) {
-		if ([[elem name] isEqual: @"iq"]) {
-			[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: elem]];
-			return;
-		}
-
-		if ([[elem name] isEqual: @"message"]) {
-			[self XMPP_handleMessage:
-			    [XMPPMessage stanzaWithElement: elem]];
-			return;
-		}
-
-		if ([[elem name] isEqual: @"presence"]) {
-			[self XMPP_handlePresence:
-			    [XMPPPresence stanzaWithElement: elem]];
-			return;
-		}
-
-		assert(0);
+	if ([[elem name] isEqual: @"iq"]) {
+		[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: elem]];
+		return;
 	}
 
-	if ([[elem namespace] isEqual: XMPP_NS_STREAM]) {
-		if ([[elem name] isEqual: @"features"]) {
-			[self XMPP_handleFeatures: elem];
-			return;
-		}
-
-		assert(0);
+	if ([[elem name] isEqual: @"message"]) {
+		[self XMPP_handleMessage:
+		    [XMPPMessage stanzaWithElement: elem]];
+		return;
 	}
 
-	if ([[elem namespace] isEqual: XMPP_NS_STARTTLS]) {
-		if ([[elem name] isEqual: @"proceed"]) {
-			/* FIXME: Catch errors here */
-			SSLSocket *newSock;
-
-			if ([delegate respondsToSelector:
-			    @selector(connectionWillUpgradeToTLS:)])
-				[delegate connectionWillUpgradeToTLS: self];
-
-			newSock = [[SSLSocket alloc] initWithSocket: sock];
-			[sock release];
-			sock = newSock;
-
-			if ([delegate respondsToSelector:
-			    @selector(connectionDidUpgradeToTLS:)])
-				[delegate connectionDidUpgradeToTLS: self];
-
-			/* Stream restart */
-			[parser setDelegate: self];
-			[self XMPP_startStream];
-			return;
-		}
-
-		if ([[elem name] isEqual: @"failure"])
-			/* TODO: Find/create an exception to throw here */
-			@throw [OFException newWithClass: isa];
-
-		assert(0);
+	if ([[elem name] isEqual: @"presence"]) {
+		[self XMPP_handlePresence:
+		    [XMPPPresence stanzaWithElement: elem]];
+		return;
 	}
 
-	if ([[elem namespace] isEqual: XMPP_NS_SASL]) {
-		if ([[elem name] isEqual: @"challenge"]) {
-			OFXMLElement *responseTag;
-			OFDataArray *challenge =
-			    [OFDataArray dataArrayWithBase64EncodedString:
-			    [elem stringValue]];
-			OFDataArray *response = [authModule
-			    calculateResponseWithChallenge: challenge];
+	assert(0);
+}
 
-			responseTag = [OFXMLElement
-			    elementWithName: @"response"
-				  namespace: XMPP_NS_SASL];
-			[responseTag addChild:
-			    [OFXMLElement elementWithCharacters:
-			    [response stringByBase64Encoding]]];
 
-			[self sendStanza: responseTag];
-			return;
-		}
+- (void)XMPP_handleStream: (OFXMLElement*)elem
+{
+	if ([[elem name] isEqual: @"features"]) {
+		[self XMPP_handleFeatures: elem];
+		return;
+	}
 
-		if ([[elem name] isEqual: @"success"]) {
-			[authModule parseServerFinalMessage:
-			    [OFDataArray dataArrayWithBase64EncodedString:
-				[elem stringValue]]];
+	assert(0);
+}
 
-			if ([delegate respondsToSelector:
-			    @selector(connectionWasAuthenticated:)])
-				[delegate connectionWasAuthenticated: self];
+- (void)XMPP_handleTLS: (OFXMLElement*)elem
+{
+	if ([[elem name] isEqual: @"proceed"]) {
+		/* FIXME: Catch errors here */
+		SSLSocket *newSock;
 
-			/* Stream restart */
-			[parser setDelegate: self];
-			[self XMPP_startStream];
-			return;
-		}
+		if ([delegate respondsToSelector:
+		    @selector(connectionWillUpgradeToTLS:)])
+			[delegate connectionWillUpgradeToTLS: self];
 
-		if ([[elem name] isEqual: @"failure"]) {
-			of_log(@"Auth failed!");
-			// FIXME: Do more parsing/handling
-			@throw [XMPPAuthFailedException
-			    newWithClass: isa
-			      connection: self
-				  reason: [elem XMLString]];
-		}
+		newSock = [[SSLSocket alloc] initWithSocket: sock];
+		[sock release];
+		sock = newSock;
 
-		assert(0);
+		if ([delegate respondsToSelector:
+		    @selector(connectionDidUpgradeToTLS:)])
+			[delegate connectionDidUpgradeToTLS: self];
+
+		/* Stream restart */
+		[parser setDelegate: self];
+		[self XMPP_startStream];
+		return;
+	}
+
+	if ([[elem name] isEqual: @"failure"])
+		/* TODO: Find/create an exception to throw here */
+		@throw [OFException newWithClass: isa];
+
+	assert(0);
+}
+
+- (void)XMPP_handleSASL: (OFXMLElement*)elem
+{
+	if ([[elem name] isEqual: @"challenge"]) {
+		OFXMLElement *responseTag;
+		OFDataArray *challenge =
+		    [OFDataArray dataArrayWithBase64EncodedString:
+		    [elem stringValue]];
+		OFDataArray *response = [authModule
+		    calculateResponseWithChallenge: challenge];
+
+		responseTag = [OFXMLElement
+		    elementWithName: @"response"
+			  namespace: XMPP_NS_SASL];
+		[responseTag addChild:
+		    [OFXMLElement elementWithCharacters:
+		    [response stringByBase64Encoding]]];
+
+		[self sendStanza: responseTag];
+		return;
+	}
+
+	if ([[elem name] isEqual: @"success"]) {
+		[authModule parseServerFinalMessage:
+		    [OFDataArray dataArrayWithBase64EncodedString:
+			[elem stringValue]]];
+
+		if ([delegate respondsToSelector:
+		    @selector(connectionWasAuthenticated:)])
+			[delegate connectionWasAuthenticated: self];
+
+		/* Stream restart */
+		[parser setDelegate: self];
+		[self XMPP_startStream];
+		return;
+	}
+
+	if ([[elem name] isEqual: @"failure"]) {
+		of_log(@"Auth failed!");
+		// FIXME: Do more parsing/handling
+		@throw [XMPPAuthFailedException
+		    newWithClass: isa
+		      connection: self
+			  reason: [elem XMLString]];
 	}
 
 	assert(0);
