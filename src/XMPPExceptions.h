@@ -41,6 +41,29 @@
 - (XMPPConnection*)connection;
 @end
 
+@interface XMPPStreamErrorException: XMPPException
+{
+	OFString *condition;
+	OFString *reason;
+}
+
+#ifdef OF_HAVE_PROPERTIES
+@property (readonly, nonatomic) OFString *condition;
+@property (readonly, nonatomic) OFString *reason;
+#endif
+
++ newWithClass: (Class)class_
+    connection: (XMPPConnection*)conn
+     condition: (OFString*)condition_
+	reason: (OFString*)reason_;
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+      condition: (OFString*)condition_
+	 reason: (OFString*)reason_;
+- (OFString*)condition;
+- (OFString*)reason;
+@end
+
 @interface XMPPStringPrepFailedException: XMPPException
 {
 	OFString *profile;

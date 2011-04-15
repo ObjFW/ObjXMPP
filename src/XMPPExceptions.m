@@ -77,6 +77,76 @@
 }
 @end
 
+@implementation XMPPStreamErrorException
++ newWithClass: (Class)class_
+    connection: (XMPPConnection*)conn
+     condition: (OFString*)condition_
+	reason: (OFString*)reason_;
+{
+	return [[self alloc] initWithClass: class_
+				connection: conn
+				 condition: condition_
+				    reason: reason_];
+}
+
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+{
+	Class c = isa;
+	[self release];
+	@throw [OFNotImplementedException newWithClass: c
+					      selector: _cmd];
+}
+
+- initWithClass: (Class)class_
+     connection: (XMPPConnection*)conn
+      condition: (OFString*)condition_
+	 reason: (OFString*)reason_
+{
+	self = [super initWithClass: class_
+			 connection: conn];
+
+	@try {
+		condition = [condition_ copy];
+		reason = [reason_ copy];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+	[condition release];
+	[reason release];
+
+	[super dealloc];
+}
+
+- (OFString*)description
+{
+	if (description != nil)
+		return description;
+
+	description = [[OFString alloc] initWithFormat:
+		@"Got stream error: %@. Reason: %@!", condition, reason];
+
+	return description;
+}
+
+- (OFString*)condition
+{
+	return condition;
+}
+
+- (OFString*)reason
+{
+	return reason;
+}
+@end
+
 @implementation XMPPStringPrepFailedException
 + newWithClass: (Class)class_
     connection: (XMPPConnection*)conn

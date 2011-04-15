@@ -39,6 +39,7 @@
 #define XMPP_NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
 #define XMPP_NS_STANZAS @"urn:ietf:params:xml:ns:xmpp-stanzas"
 #define XMPP_NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
+#define XMPP_NS_XMPP_STREAM @"urn:ietf:params:xml:ns:xmpp-streams"
 #define XMPP_NS_STREAM @"http://etherx.jabber.org/streams"
 
 @protocol XMPPConnectionDelegate

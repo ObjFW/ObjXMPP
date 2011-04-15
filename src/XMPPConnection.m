@@ -286,6 +286,19 @@
 	[pool release];
 }
 
+-    (void)parser: (OFXMLParser*)p
+    didEndElement: (OFString*)name
+       withPrefix: (OFString*)prefix
+	namespace: (OFString*)ns
+       attributes: (OFArray*)attrs
+{
+	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
+	    ![ns isEqual: XMPP_NS_STREAM]) {
+		of_log(@"Did not get expected stream end!");
+		assert(0);
+	}
+}
+
 - (void)elementBuilder: (OFXMLElementBuilder*)b
        didBuildElement: (OFXMLElement*)elem
 {
@@ -348,6 +361,101 @@
 {
 	if ([[elem name] isEqual: @"features"]) {
 		[self XMPP_handleFeatures: elem];
+		return;
+	}
+
+	if ([[elem name] isEqual: @"error"]) {
+		OFString *condition, *reason;
+		[parser setDelegate: self];
+		[sock writeString: @"</stream:stream>"];
+		[sock close];
+
+		if ([elem elementForName: @"bad-format"
+			       namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"bad-format";
+		else if ([elem elementForName: @"bad-namespace-prefix"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"bad-namespace-prefix";
+		else if ([elem elementForName: @"conflict"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"conflict";
+		else if ([elem elementForName: @"connection-timeout"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"connection-timeout";
+		else if ([elem elementForName: @"host-gone"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"host-gone";
+		else if ([elem elementForName: @"host-unknown"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"host-unknown";
+		else if ([elem elementForName: @"improper-addressing"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"improper-addressing";
+		else if ([elem elementForName: @"internal-server-error"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"internal-server-error";
+		else if ([elem elementForName: @"invalid-from"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"invalid-from";
+		else if ([elem elementForName: @"invalid-namespace"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"invalid-namespace";
+		else if ([elem elementForName: @"invalid-xml"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"invalid-xml";
+		else if ([elem elementForName: @"not-authorized"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"not-authorized";
+		else if ([elem elementForName: @"not-well-formed"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"not-well-formed";
+		else if ([elem elementForName: @"policy-violation"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"policy-violation";
+		else if ([elem elementForName: @"remote-connection-failed"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"remote-connection-failed";
+		else if ([elem elementForName: @"reset"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"reset";
+		else if ([elem elementForName: @"resource-constraint"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"resource-constraint";
+		else if ([elem elementForName: @"restricted-xml"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"restricted-xml";
+		else if ([elem elementForName: @"see-other-host"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"see-other-host";
+		else if ([elem elementForName: @"system-shutdown"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"system-shutdown";
+		else if ([elem elementForName: @"undefined-condition"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"undefined-condition";
+		else if ([elem elementForName: @"unsupported-encoding"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"unsupported-encoding";
+		else if ([elem elementForName: @"unsupported-feature"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"unsupported-feature";
+		else if ([elem elementForName: @"unsupported-stanza-type"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"unsupported-stanza-type";
+		else if ([elem elementForName: @"unsupported-version"
+				    namespace: XMPP_NS_XMPP_STREAM])
+			condition = @"unsupported-version";
+		else
+			condition = @"undefined";
+
+		reason = [[elem elementForName: @"text"
+				     namespace: XMPP_NS_XMPP_STREAM]
+				stringValue];
+
+		@throw [XMPPStreamErrorException newWithClass: isa
+						   connection: self
+						    condition: condition
+						       reason: reason];
 		return;
 	}
 
