@@ -565,7 +565,8 @@
 		handled = [delegate connection: self
 				  didReceiveIQ: iq];
 
-	if (!handled) {
+	if (!handled && ![[iq type] isEqual: @"error"]
+		     && ![[iq type] isEqual: @"result"]) {
 		XMPPJID *from = [iq from];
 		XMPPJID *to = [iq to];
 		OFXMLElement *error;
