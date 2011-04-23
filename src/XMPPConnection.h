@@ -75,8 +75,8 @@
 #endif
 {
 	OFTCPSocket *sock;
-	OFXMLParser *parser;
-	OFXMLElementBuilder *elementBuilder;
+	OFXMLParser *parser, *oldParser;
+	OFXMLElementBuilder *elementBuilder, *oldElementBuilder;
 	OFString *username, *password, *server, *resource;
 	XMPPJID *JID;
 	uint16_t port;

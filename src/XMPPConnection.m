@@ -54,15 +54,7 @@
 
 	@try {
 		sock = [[OFTCPSocket alloc] init];
-		parser = [[OFXMLParser alloc] init];
-		elementBuilder = [[OFXMLElementBuilder alloc] init];
-
 		port = 5222;
-
-		[parser setDelegate: self];
-		[elementBuilder setDelegate: self];
-
-		roster = [[XMPPRoster alloc] initWithConnection: self];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -238,6 +230,16 @@
 
 	[parser parseBuffer: buffer
 		 withLength: length];
+
+	if (oldParser != nil) {
+		[oldParser release];
+		oldParser = nil;
+	}
+
+	if (oldElementBuilder != nil) {
+		[oldElementBuilder release];
+		oldElementBuilder = nil;
+	}
 }
 
 - (OFTCPSocket*)socket
@@ -260,11 +262,10 @@
   didStartElement: (OFString*)name
        withPrefix: (OFString*)prefix
 	namespace: (OFString*)ns
-       attributes: (OFArray*)attrs
+       attributes: (OFArray*)attributes
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFEnumerator *enumerator;
-	OFXMLAttribute *attr;
+	OFXMLAttribute *attribute;
 
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
 	    ![ns isEqual: XMPP_NS_STREAM]) {
@@ -272,18 +273,16 @@
 		assert(0);
 	}
 
-	enumerator = [attrs objectEnumerator];
-	while ((attr = [enumerator nextObject]) != nil) {
-		if ([[attr name] isEqual: @"from"] &&
-		    ![[attr stringValue] isEqual: server]) {
+	enumerator = [attributes objectEnumerator];
+	while ((attribute = [enumerator nextObject]) != nil) {
+		if ([[attribute name] isEqual: @"from"] &&
+		    ![[attribute stringValue] isEqual: server]) {
 			of_log(@"Got invalid from in stream start!");
 			assert(0);
 		}
 	}
 
 	[parser setDelegate: elementBuilder];
-
-	[pool release];
 }
 
 -    (void)parser: (OFXMLParser*)p
@@ -302,8 +301,6 @@
 - (void)elementBuilder: (OFXMLElementBuilder*)builder
        didBuildElement: (OFXMLElement*)element
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-
 	[element setDefaultNamespace: XMPP_NS_CLIENT];
 	[element setPrefix: @"stream"
 	      forNamespace: XMPP_NS_STREAM];
@@ -321,12 +318,31 @@
 
 	if ([[element namespace] isEqual: XMPP_NS_SASL])
 		[self XMPP_handleSASL: element];
-
-	[pool release];
 }
 
 - (void)XMPP_startStream
 {
+	/* Make sure we don't get any old events */
+	[parser setDelegate: nil];
+	[elementBuilder setDelegate: nil];
+
+	/*
+	 * We can't release them now, as we are currently inside them. Release
+	 * them the next time the parser returns.
+	 */
+	oldParser = parser;
+	oldElementBuilder = elementBuilder;
+
+	[roster release];
+
+	parser = [[OFXMLParser alloc] init];
+	[parser setDelegate: self];
+
+	elementBuilder = [[OFXMLElementBuilder alloc] init];
+	[elementBuilder setDelegate: self];
+
+	roster = [[XMPPRoster alloc] initWithConnection: self];
+
 	[sock writeFormat: @"<?xml version='1.0'?>\n"
 			   @"<stream:stream to='%@' "
 			   @"xmlns='" XMPP_NS_CLIENT @"' "
@@ -481,8 +497,8 @@
 			[delegate connectionDidUpgradeToTLS: self];
 
 		/* Stream restart */
-		[parser setDelegate: self];
 		[self XMPP_startStream];
+
 		return;
 	}
 
@@ -520,8 +536,8 @@
 			[delegate connectionWasAuthenticated: self];
 
 		/* Stream restart */
-		[parser setDelegate: self];
 		[self XMPP_startStream];
+
 		return;
 	}
 
