@@ -214,30 +214,30 @@
 
 - (void)handleConnection
 {
-	char buf[512];
+	char buffer[512];
 
 	for (;;) {
-		size_t len = [sock readNBytes: 512
-				   intoBuffer: buf];
+		size_t length = [sock readNBytes: 512
+				      intoBuffer: buffer];
 
-		if (len < 1 && [delegate respondsToSelector:
+		if (length < 1 && [delegate respondsToSelector:
 		    @selector(connectionWasClosed:)])
 			[delegate connectionWasClosed: self];
 
-		[parser parseBuffer: buf
-			   withSize: len];
+		[parser parseBuffer: buffer
+			 withLength: length];
 	}
 }
 
-- (void)parseBuffer: (const char*)buf
-	   withSize: (size_t)size
+- (void)parseBuffer: (const char*)buffer
+	 withLength: (size_t)length
 {
-	if (size < 1 && [delegate respondsToSelector:
+	if (length < 1 && [delegate respondsToSelector:
 	    @selector(connectionWasClosed:)])
 		[delegate connectionWasClosed: self];
 
-	[parser parseBuffer: buf
-		   withSize: size];
+	[parser parseBuffer: buffer
+		 withLength: length];
 }
 
 - (OFTCPSocket*)socket
@@ -245,10 +245,10 @@
 	return [[sock retain] autorelease];
 }
 
-- (void)sendStanza: (OFXMLElement*)elem
+- (void)sendStanza: (OFXMLElement*)element
 {
-	of_log(@"Out: %@", elem);
-	[sock writeString: [elem XMLString]];
+	of_log(@"Out: %@", element);
+	[sock writeString: [element XMLString]];
 }
 
 - (OFString*)generateStanzaID
@@ -299,28 +299,28 @@
 	}
 }
 
-- (void)elementBuilder: (OFXMLElementBuilder*)b
-       didBuildElement: (OFXMLElement*)elem
+- (void)elementBuilder: (OFXMLElementBuilder*)builder
+       didBuildElement: (OFXMLElement*)element
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
-	[elem setDefaultNamespace: XMPP_NS_CLIENT];
-	[elem setPrefix: @"stream"
-	   forNamespace: XMPP_NS_STREAM];
+	[element setDefaultNamespace: XMPP_NS_CLIENT];
+	[element setPrefix: @"stream"
+	      forNamespace: XMPP_NS_STREAM];
 
-	of_log(@"In:  %@", elem);
+	of_log(@"In:  %@", element);
 
-	if ([[elem namespace] isEqual: XMPP_NS_CLIENT])
-		[self XMPP_handleStanza: elem];
+	if ([[element namespace] isEqual: XMPP_NS_CLIENT])
+		[self XMPP_handleStanza: element];
 
-	if ([[elem namespace] isEqual: XMPP_NS_STREAM])
-		[self XMPP_handleStream: elem];
+	if ([[element namespace] isEqual: XMPP_NS_STREAM])
+		[self XMPP_handleStream: element];
 
-	if ([[elem namespace] isEqual: XMPP_NS_STARTTLS])
-		[self XMPP_handleTLS: elem];
+	if ([[element namespace] isEqual: XMPP_NS_STARTTLS])
+		[self XMPP_handleTLS: element];
 
-	if ([[elem namespace] isEqual: XMPP_NS_SASL])
-		[self XMPP_handleSASL: elem];
+	if ([[element namespace] isEqual: XMPP_NS_SASL])
+		[self XMPP_handleSASL: element];
 
 	[pool release];
 }
@@ -334,22 +334,22 @@
 			   @"version='1.0'>", server];
 }
 
-- (void)XMPP_handleStanza: (OFXMLElement*)elem
+- (void)XMPP_handleStanza: (OFXMLElement*)element
 {
-	if ([[elem name] isEqual: @"iq"]) {
-		[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: elem]];
+	if ([[element name] isEqual: @"iq"]) {
+		[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: element]];
 		return;
 	}
 
-	if ([[elem name] isEqual: @"message"]) {
+	if ([[element name] isEqual: @"message"]) {
 		[self XMPP_handleMessage:
-		    [XMPPMessage stanzaWithElement: elem]];
+		    [XMPPMessage stanzaWithElement: element]];
 		return;
 	}
 
-	if ([[elem name] isEqual: @"presence"]) {
+	if ([[element name] isEqual: @"presence"]) {
 		[self XMPP_handlePresence:
-		    [XMPPPresence stanzaWithElement: elem]];
+		    [XMPPPresence stanzaWithElement: element]];
 		return;
 	}
 
@@ -357,100 +357,100 @@
 }
 
 
-- (void)XMPP_handleStream: (OFXMLElement*)elem
+- (void)XMPP_handleStream: (OFXMLElement*)element
 {
-	if ([[elem name] isEqual: @"features"]) {
-		[self XMPP_handleFeatures: elem];
+	if ([[element name] isEqual: @"features"]) {
+		[self XMPP_handleFeatures: element];
 		return;
 	}
 
-	if ([[elem name] isEqual: @"error"]) {
+	if ([[element name] isEqual: @"error"]) {
 		OFString *condition, *reason;
 		[parser setDelegate: self];
 		[sock writeString: @"</stream:stream>"];
 		[sock close];
 
-		if ([elem elementForName: @"bad-format"
-			       namespace: XMPP_NS_XMPP_STREAM])
+		if ([element elementForName: @"bad-format"
+				  namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"bad-format";
-		else if ([elem elementForName: @"bad-namespace-prefix"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"bad-namespace-prefix"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"bad-namespace-prefix";
-		else if ([elem elementForName: @"conflict"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"conflict"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"conflict";
-		else if ([elem elementForName: @"connection-timeout"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"connection-timeout"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"connection-timeout";
-		else if ([elem elementForName: @"host-gone"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"host-gone"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"host-gone";
-		else if ([elem elementForName: @"host-unknown"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"host-unknown"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"host-unknown";
-		else if ([elem elementForName: @"improper-addressing"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"improper-addressing"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"improper-addressing";
-		else if ([elem elementForName: @"internal-server-error"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"internal-server-error"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"internal-server-error";
-		else if ([elem elementForName: @"invalid-from"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"invalid-from"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"invalid-from";
-		else if ([elem elementForName: @"invalid-namespace"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"invalid-namespace"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"invalid-namespace";
-		else if ([elem elementForName: @"invalid-xml"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"invalid-xml"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"invalid-xml";
-		else if ([elem elementForName: @"not-authorized"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"not-authorized"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"not-authorized";
-		else if ([elem elementForName: @"not-well-formed"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"not-well-formed"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"not-well-formed";
-		else if ([elem elementForName: @"policy-violation"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"policy-violation"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"policy-violation";
-		else if ([elem elementForName: @"remote-connection-failed"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"remote-connection-failed"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"remote-connection-failed";
-		else if ([elem elementForName: @"reset"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"reset"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"reset";
-		else if ([elem elementForName: @"resource-constraint"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"resource-constraint"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"resource-constraint";
-		else if ([elem elementForName: @"restricted-xml"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"restricted-xml"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"restricted-xml";
-		else if ([elem elementForName: @"see-other-host"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"see-other-host"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"see-other-host";
-		else if ([elem elementForName: @"system-shutdown"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"system-shutdown"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"system-shutdown";
-		else if ([elem elementForName: @"undefined-condition"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"undefined-condition"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"undefined-condition";
-		else if ([elem elementForName: @"unsupported-encoding"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"unsupported-encoding"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"unsupported-encoding";
-		else if ([elem elementForName: @"unsupported-feature"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"unsupported-feature"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"unsupported-feature";
-		else if ([elem elementForName: @"unsupported-stanza-type"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"unsupported-stanza-type"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"unsupported-stanza-type";
-		else if ([elem elementForName: @"unsupported-version"
-				    namespace: XMPP_NS_XMPP_STREAM])
+		else if ([element elementForName: @"unsupported-version"
+				       namespace: XMPP_NS_XMPP_STREAM])
 			condition = @"unsupported-version";
 		else
 			condition = @"undefined";
 
-		reason = [[elem elementForName: @"text"
-				     namespace: XMPP_NS_XMPP_STREAM]
-				stringValue];
+		reason = [[element
+		    elementForName: @"text"
+			 namespace: XMPP_NS_XMPP_STREAM] stringValue];
 
 		@throw [XMPPStreamErrorException newWithClass: isa
 						   connection: self
@@ -462,9 +462,9 @@
 	assert(0);
 }
 
-- (void)XMPP_handleTLS: (OFXMLElement*)elem
+- (void)XMPP_handleTLS: (OFXMLElement*)element
 {
-	if ([[elem name] isEqual: @"proceed"]) {
+	if ([[element name] isEqual: @"proceed"]) {
 		/* FIXME: Catch errors here */
 		SSLSocket *newSock;
 
@@ -486,38 +486,34 @@
 		return;
 	}
 
-	if ([[elem name] isEqual: @"failure"])
+	if ([[element name] isEqual: @"failure"])
 		/* TODO: Find/create an exception to throw here */
 		@throw [OFException newWithClass: isa];
 
 	assert(0);
 }
 
-- (void)XMPP_handleSASL: (OFXMLElement*)elem
+- (void)XMPP_handleSASL: (OFXMLElement*)element
 {
-	if ([[elem name] isEqual: @"challenge"]) {
+	if ([[element name] isEqual: @"challenge"]) {
 		OFXMLElement *responseTag;
-		OFDataArray *challenge =
-		    [OFDataArray dataArrayWithBase64EncodedString:
-		    [elem stringValue]];
+		OFDataArray *challenge = [OFDataArray
+		    dataArrayWithBase64EncodedString: [element stringValue]];
 		OFDataArray *response = [authModule
 		    calculateResponseWithChallenge: challenge];
 
-		responseTag = [OFXMLElement
-		    elementWithName: @"response"
-			  namespace: XMPP_NS_SASL];
-		[responseTag addChild:
-		    [OFXMLElement elementWithCharacters:
+		responseTag = [OFXMLElement  elementWithName: @"response"
+						   namespace: XMPP_NS_SASL];
+		[responseTag addChild: [OFXMLElement elementWithCharacters:
 		    [response stringByBase64Encoding]]];
 
 		[self sendStanza: responseTag];
 		return;
 	}
 
-	if ([[elem name] isEqual: @"success"]) {
-		[authModule parseServerFinalMessage:
-		    [OFDataArray dataArrayWithBase64EncodedString:
-			[elem stringValue]]];
+	if ([[element name] isEqual: @"success"]) {
+		[authModule parseServerFinalMessage: [OFDataArray
+		    dataArrayWithBase64EncodedString: [element stringValue]]];
 
 		if ([delegate respondsToSelector:
 		    @selector(connectionWasAuthenticated:)])
@@ -529,13 +525,13 @@
 		return;
 	}
 
-	if ([[elem name] isEqual: @"failure"]) {
+	if ([[element name] isEqual: @"failure"]) {
 		of_log(@"Auth failed!");
 		// FIXME: Do more parsing/handling
 		@throw [XMPPAuthFailedException
 		    newWithClass: isa
 		      connection: self
-			  reason: [elem XMLString]];
+			  reason: [element XMLString]];
 	}
 
 	assert(0);
@@ -587,32 +583,32 @@
 	}
 }
 
-- (void)XMPP_handleMessage: (XMPPMessage*)msg
+- (void)XMPP_handleMessage: (XMPPMessage*)message
 {
 	if ([delegate respondsToSelector:
 	     @selector(connection:didReceiveMessage:)])
 		[delegate connection: self
-		   didReceiveMessage: msg];
+		   didReceiveMessage: message];
 }
 
-- (void)XMPP_handlePresence: (XMPPPresence*)pres
+- (void)XMPP_handlePresence: (XMPPPresence*)presence
 {
 	if ([delegate respondsToSelector:
 	     @selector(connection:didReceivePresence:)])
 		[delegate connection: self
-		  didReceivePresence: pres];
+		  didReceivePresence: presence];
 }
 
-- (void)XMPP_handleFeatures: (OFXMLElement*)elem
+- (void)XMPP_handleFeatures: (OFXMLElement*)element
 {
-	OFXMLElement *starttls = [elem elementForName: @"starttls"
-					    namespace: XMPP_NS_STARTTLS];
-	OFXMLElement *bind = [elem elementForName: @"bind"
-					namespace: XMPP_NS_BIND];
-	OFXMLElement *session = [elem elementForName: @"session"
-					   namespace: XMPP_NS_SESSION];
-	OFXMLElement *mechs = [elem elementForName: @"mechanisms"
-					 namespace: XMPP_NS_SASL];
+	OFXMLElement *starttls = [element elementForName: @"starttls"
+					       namespace: XMPP_NS_STARTTLS];
+	OFXMLElement *bind = [element elementForName: @"bind"
+					   namespace: XMPP_NS_BIND];
+	OFXMLElement *session = [element elementForName: @"session"
+					      namespace: XMPP_NS_SESSION];
+	OFXMLElement *mechs = [element elementForName: @"mechanisms"
+					    namespace: XMPP_NS_SASL];
 	OFMutableArray *mechanisms = [OFMutableArray array];
 
 	if (starttls != nil) {
@@ -661,14 +657,14 @@
 	assert(0);
 }
 
-- (void)XMPP_sendAuth: (OFString*)name
+- (void)XMPP_sendAuth: (OFString*)authName
 {
 	OFXMLElement *authTag;
 
 	authTag = [OFXMLElement elementWithName: @"auth"
 				      namespace: XMPP_NS_SASL];
 	[authTag addAttributeWithName: @"mechanism"
-			  stringValue: name];
+			  stringValue: authName];
 	[authTag addChild: [OFXMLElement elementWithCharacters:
 	    [[authModule clientFirstMessage] stringByBase64Encoding]]];
 
@@ -698,19 +694,19 @@
 
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq
 {
-	OFXMLElement *bindElem;
-	OFXMLElement *jidElem;
+	OFXMLElement *bindElement;
+	OFXMLElement *jidElement;
 
 	assert([[iq type] isEqual: @"result"]);
 
-	bindElem = [iq elementForName: @"bind"
-			    namespace: XMPP_NS_BIND];
+	bindElement = [iq elementForName: @"bind"
+			       namespace: XMPP_NS_BIND];
 
-	assert(bindElem != nil);
+	assert(bindElement != nil);
 
-	jidElem = [bindElem elementForName: @"jid"
-				 namespace: XMPP_NS_BIND];
-	JID = [[XMPPJID alloc] initWithString: [jidElem stringValue]];
+	jidElement = [bindElement elementForName: @"jid"
+				       namespace: XMPP_NS_BIND];
+	JID = [[XMPPJID alloc] initWithString: [jidElement stringValue]];
 
 	[bindID release];
 	bindID = nil;
@@ -767,54 +763,54 @@
 
 - (void)XMPP_handleRoster: (XMPPIQ*)iq
 {
-	OFXMLElement *rosterElem;
-	OFXMLElement *elem;
+	OFXMLElement *rosterElement;
+	OFXMLElement *element;
 	XMPPRosterItem *rosterItem = nil;
 	OFString *subscription;
 	OFEnumerator *enumerator;
 	BOOL isPush = ![[iq ID] isEqual: rosterID];
 
-	rosterElem = [iq elementForName: @"query"
-			      namespace: XMPP_NS_ROSTER];
+	rosterElement = [iq elementForName: @"query"
+				 namespace: XMPP_NS_ROSTER];
 
 	if (isPush)
 		assert([[iq type] isEqual: @"set"]);
 	else
 		assert([[iq type] isEqual: @"result"]);
 
-	enumerator = [[rosterElem children] objectEnumerator];
-	while ((elem = [enumerator nextObject]) != nil) {
+	enumerator = [[rosterElement children] objectEnumerator];
+	while ((element = [enumerator nextObject]) != nil) {
 		OFMutableArray *groups = [OFMutableArray array];
 		OFEnumerator *groupEnumerator;
-		OFXMLElement *groupElem;
+		OFXMLElement *groupElement;
 
-		if (![[elem name] isEqual: @"item"] ||
-		    ![[elem namespace] isEqual: XMPP_NS_ROSTER])
+		if (![[element name] isEqual: @"item"] ||
+		    ![[element namespace] isEqual: XMPP_NS_ROSTER])
 			continue;
 
 		rosterItem = [XMPPRosterItem rosterItem];
 		[rosterItem setJID: [XMPPJID JIDWithString:
-		    [[elem attributeForName: @"jid"] stringValue]]];
+		    [[element attributeForName: @"jid"] stringValue]]];
 		[rosterItem setName:
-		    [[elem attributeForName: @"name"] stringValue]];
+		    [[element attributeForName: @"name"] stringValue]];
 
-		subscription = [[elem attributeForName:
-			@"subscription"] stringValue];
+		subscription = [[element attributeForName:
+		    @"subscription"] stringValue];
+
 		if (![subscription isEqual: @"none"] &&
 		    ![subscription isEqual: @"to"] &&
 		    ![subscription isEqual: @"from"] &&
 		    ![subscription isEqual: @"both"] &&
 		    (![subscription isEqual: @"remove"] || !isPush))
 			subscription = @"none";
+
 		[rosterItem setSubscription: subscription];
 
-		groupEnumerator =
-		    [[elem elementsForName: @"group"
-				 namespace: XMPP_NS_ROSTER]
-			objectEnumerator];
-		while ((groupElem = [groupEnumerator nextObject])
-				!= nil)
-			[groups addObject: [groupElem stringValue]];
+		groupEnumerator = [[element
+		    elementsForName: @"group"
+			  namespace: XMPP_NS_ROSTER] objectEnumerator];
+		while ((groupElement = [groupEnumerator nextObject]) != nil)
+			[groups addObject: [groupElement stringValue]];
 
 		if ([groups count] > 0)
 			[rosterItem setGroups: groups];
@@ -879,49 +875,49 @@
 @end
 
 @implementation OFObject (XMPPConnectionDelegate)
-- (void)connectionWasAuthenticated: (XMPPConnection*)conn
+- (void)connectionWasAuthenticated: (XMPPConnection*)connection
 {
 }
 
-- (void)connection: (XMPPConnection*)conn
-     wasBoundToJID: (XMPPJID*)jid
+- (void)connection: (XMPPConnection*)connection
+     wasBoundToJID: (XMPPJID*)JID
 {
 }
 
-- (void)connectionDidReceiveRoster: (XMPPConnection*)conn
+- (void)connectionDidReceiveRoster: (XMPPConnection*)connection
 {
 }
 
-- (BOOL)connection: (XMPPConnection*)conn
+- (BOOL)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)iq
 {
 	return NO;
 }
 
--   (void)connection: (XMPPConnection*)conn
-  didReceivePresence: (XMPPPresence*)pres
+-   (void)connection: (XMPPConnection*)connection
+  didReceivePresence: (XMPPPresence*)presence
 {
 }
 
--  (void)connection: (XMPPConnection*)conn
-  didReceiveMessage: (XMPPMessage*)msg
+-  (void)connection: (XMPPConnection*)connection
+  didReceiveMessage: (XMPPMessage*)message
 {
 }
 
--     (void)connection: (XMPPConnection*)conn
+-     (void)connection: (XMPPConnection*)connection
   didReceiveRosterItem: (XMPPRosterItem*)rosterItem
 {
 }
 
-- (void)connectionWasClosed: (XMPPConnection*)conn
+- (void)connectionWasClosed: (XMPPConnection*)connection
 {
 }
 
-- (void)connectionWillUpgradeToTLS: (XMPPConnection*)conn
+- (void)connectionWillUpgradeToTLS: (XMPPConnection*)connection
 {
 }
 
-- (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn
+- (void)connectionDidUpgradeToTLS: (XMPPConnection*)connection
 {
 }
 @end

@@ -49,21 +49,21 @@
 #ifdef OF_HAVE_OPTIONAL_PROTOCOLS
 @optional
 #endif
-- (void)connectionWasAuthenticated: (XMPPConnection*)conn;
-- (void)connection: (XMPPConnection*)conn
-     wasBoundToJID: (XMPPJID*)jid;
-- (void)connectionDidReceiveRoster: (XMPPConnection*)conn;
-- (BOOL)connection: (XMPPConnection*)conn
+- (void)connectionWasAuthenticated: (XMPPConnection*)connection;
+- (void)connection: (XMPPConnection*)connection
+     wasBoundToJID: (XMPPJID*)JID;
+- (void)connectionDidReceiveRoster: (XMPPConnection*)connection;
+- (BOOL)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)iq;
--   (void)connection: (XMPPConnection*)conn
-  didReceivePresence: (XMPPPresence*)pres;
--  (void)connection: (XMPPConnection*)conn
-  didReceiveMessage: (XMPPMessage*)msg;
--     (void)connection: (XMPPConnection*)conn
+-   (void)connection: (XMPPConnection*)connection
+  didReceivePresence: (XMPPPresence*)presence;
+-  (void)connection: (XMPPConnection*)connection
+  didReceiveMessage: (XMPPMessage*)message;
+-     (void)connection: (XMPPConnection*)connection
   didReceiveRosterItem: (XMPPRosterItem*)rosterItem;
-- (void)connectionWasClosed: (XMPPConnection*)conn;
-- (void)connectionWillUpgradeToTLS: (XMPPConnection*)conn;
-- (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn;
+- (void)connectionWasClosed: (XMPPConnection*)connection;
+- (void)connectionWillUpgradeToTLS: (XMPPConnection*)connection;
+- (void)connectionDidUpgradeToTLS: (XMPPConnection*)connection;
 @end
 
 /**
@@ -117,12 +117,12 @@
  *
  * This is useful for handling multiple connections at once.
  *
- * \param buf The buffer to parse
- * \param size The size of the buffer. If size is 0, it is assumed that the
- *	       connection was closed.
+ * \param buffer The buffer to parse
+ * \param length The length of the buffer. If length is 0, it is assumed that
+ *		 the connection was closed.
  */
-- (void)parseBuffer: (const char*)buf
-	   withSize: (size_t)size;
+- (void)parseBuffer: (const char*)buffer
+	 withLength: (size_t)length;
 
 /**
  * \return The socket used by the XMPPConnection
@@ -132,9 +132,9 @@
 /**
  * Sends an OFXMLElement, usually an XMPPStanza.
  *
- * \param elem The element to send
+ * \param element The element to send
  */
-- (void)sendStanza: (OFXMLElement*)elem;
+- (void)sendStanza: (OFXMLElement*)element;
 
 /**
  * Generates a new, unique stanza ID.
@@ -164,15 +164,15 @@
 - (XMPPRoster*)roster;
 
 - (void)XMPP_startStream;
-- (void)XMPP_handleStream: (OFXMLElement*)elem;
-- (void)XMPP_handleTLS: (OFXMLElement*)elem;
-- (void)XMPP_handleSASL: (OFXMLElement*)elem;
-- (void)XMPP_handleStanza: (OFXMLElement*)elem;
-- (void)XMPP_sendAuth: (OFString*)name;
+- (void)XMPP_handleStream: (OFXMLElement*)element;
+- (void)XMPP_handleTLS: (OFXMLElement*)element;
+- (void)XMPP_handleSASL: (OFXMLElement*)element;
+- (void)XMPP_handleStanza: (OFXMLElement*)element;
+- (void)XMPP_sendAuth: (OFString*)authName;
 - (void)XMPP_handleIQ: (XMPPIQ*)iq;
-- (void)XMPP_handleMessage: (XMPPMessage*)msg;
-- (void)XMPP_handlePresence: (XMPPPresence*)pres;
-- (void)XMPP_handleFeatures: (OFXMLElement*)elem;
+- (void)XMPP_handleMessage: (XMPPMessage*)message;
+- (void)XMPP_handlePresence: (XMPPPresence*)presence;
+- (void)XMPP_handleFeatures: (OFXMLElement*)element;
 - (void)XMPP_sendResourceBind;
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
 - (void)XMPP_sendSession;

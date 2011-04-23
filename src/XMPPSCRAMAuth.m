@@ -265,7 +265,7 @@
 	 * StoredKey := H(ClientKey)
 	 */
 	[hash updateWithBuffer: (void*) clientKey
-			ofSize: [hashType digestSize]];
+			length: [hashType digestSize]];
 	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
 	[tmpArray addNItems: [hashType digestSize]
 		 fromCArray: [hash digest]];
@@ -378,7 +378,7 @@
 	if ([key itemSize] * [key count] > blockSize) {
 		hash = [[[hashType alloc] init] autorelease];
 		[hash updateWithBuffer: [key cArray]
-				ofSize: [key itemSize] * [key count]];
+				length: [key itemSize] * [key count]];
 		[k addNItems: [hashType digestSize]
 		  fromCArray: [hash digest]];
 	} else
@@ -407,7 +407,7 @@
 
 		hash = [[[hashType alloc] init] autorelease];
 		[hash updateWithBuffer: [k cArray]
-				ofSize: [k count]];
+				length: [k count]];
 		k = [OFDataArray dataArrayWithItemSize: 1];
 		[k addNItems: blockSize
 		  fromCArray: kO];
@@ -420,7 +420,7 @@
 
 	hash = [[[hashType alloc] init] autorelease];
 	[hash updateWithBuffer: [k cArray]
-			ofSize: [k count]];
+			length: [k count]];
 
 	[hash retain];
 	[pool release];
