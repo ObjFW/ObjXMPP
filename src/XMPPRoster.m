@@ -20,6 +20,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <assert.h>
+
 #import "XMPPRoster.h"
 #import "XMPPRosterItem.h"
 #import "XMPPConnection.h"
@@ -45,6 +47,8 @@
 - (void)dealloc
 {
 	[connection release];
+	[rosterItems release];
+	[rosterID release];
 
 	[super dealloc];
 }
@@ -68,6 +72,110 @@
 - (OFDictionary*)rosterItems
 {
 	return [[rosterItems copy] autorelease];
+}
+
+- (void)requestRoster
+{
+	XMPPIQ *iq;
+
+	if (rosterID != nil)
+		assert(0);
+
+	rosterID = [[connection generateStanzaID] retain];
+	iq = [XMPPIQ IQWithType: @"get"
+			     ID: rosterID];
+	[iq addChild: [OFXMLElement elementWithName: @"query"
+					  namespace: XMPP_NS_ROSTER]];
+	[connection sendStanza: iq];
+}
+
+- (BOOL)handleIQ: (XMPPIQ*)iq
+{
+	OFXMLElement *rosterElement;
+	OFXMLElement *element;
+	XMPPRosterItem *rosterItem = nil;
+	OFString *subscription;
+	OFEnumerator *enumerator;
+	BOOL isPush = ![[iq ID] isEqual: rosterID];
+
+	rosterElement = [iq elementForName: @"query"
+				 namespace: XMPP_NS_ROSTER];
+
+	if (rosterElement == nil)
+		return NO;
+
+	if (isPush) {
+		if (![[iq type] isEqual: @"set"])
+			return NO;
+	} else {
+		if (![[iq type] isEqual: @"result"])
+			return NO;
+	}
+
+	enumerator = [[rosterElement children] objectEnumerator];
+	while ((element = [enumerator nextObject]) != nil) {
+		OFMutableArray *groups = [OFMutableArray array];
+		OFEnumerator *groupEnumerator;
+		OFXMLElement *groupElement;
+
+		if (![[element name] isEqual: @"item"] ||
+		    ![[element namespace] isEqual: XMPP_NS_ROSTER])
+			continue;
+
+		rosterItem = [XMPPRosterItem rosterItem];
+		[rosterItem setJID: [XMPPJID JIDWithString:
+		    [[element attributeForName: @"jid"] stringValue]]];
+		[rosterItem setName:
+		    [[element attributeForName: @"name"] stringValue]];
+
+		subscription = [[element attributeForName:
+		    @"subscription"] stringValue];
+
+		if (![subscription isEqual: @"none"] &&
+		    ![subscription isEqual: @"to"] &&
+		    ![subscription isEqual: @"from"] &&
+		    ![subscription isEqual: @"both"] &&
+		    (![subscription isEqual: @"remove"] || !isPush))
+			subscription = @"none";
+
+		[rosterItem setSubscription: subscription];
+
+		groupEnumerator = [[element
+		    elementsForName: @"group"
+			  namespace: XMPP_NS_ROSTER] objectEnumerator];
+		while ((groupElement = [groupEnumerator nextObject]) != nil)
+			[groups addObject: [groupElement stringValue]];
+
+		if ([groups count] > 0)
+			[rosterItem setGroups: groups];
+
+		if ([subscription isEqual: @"remove"])
+			[self XMPP_deleteRosterItem: rosterItem];
+		else
+			[self XMPP_addRosterItem: rosterItem];
+
+		if (isPush && [[connection delegate] respondsToSelector:
+		    @selector(connection:didReceiveRosterItem:)])
+			[[connection delegate] connection: connection
+				     didReceiveRosterItem: rosterItem];
+	}
+
+	if (isPush) {
+		XMPPIQ *response = [XMPPIQ IQWithType: @"result"
+						   ID: [iq ID]];
+		[response setTo: [iq from]];
+		[connection sendStanza: response];
+	} else {
+		if ([[connection delegate] respondsToSelector:
+		     @selector(connectionDidReceiveRoster:)])
+			[[connection delegate]
+			    connectionDidReceiveRoster: connection];
+
+		[rosterID release];
+		rosterID = nil;
+	}
+
+	return YES;
 }
 
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem

@@ -24,11 +24,13 @@
 
 @class XMPPConnection;
 @class XMPPRosterItem;
+@class XMPPIQ;
 
 @interface XMPPRoster: OFObject
 {
 	XMPPConnection *connection;
 	OFMutableDictionary *rosterItems;
+	OFString *rosterID;
 }
 
 - initWithConnection: (XMPPConnection*)conn;
@@ -36,6 +38,8 @@
 - (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_deleteRosterItem: (XMPPRosterItem*)rosterItem;
 - (OFDictionary*)rosterItems;
+- (BOOL)handleIQ: (XMPPIQ*)iq;
+- (void)requestRoster;
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)deleteRosterItem: (XMPPRosterItem*)rosterItem;

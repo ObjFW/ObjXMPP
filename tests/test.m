@@ -120,7 +120,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 {
 	of_log(@"Bound to JID: %@", [jid fullJID]);
 
-	[conn requestRoster];
+	[[conn roster] requestRoster];
 }
 
 - (void)connectionDidReceiveRoster: (XMPPConnection*)conn

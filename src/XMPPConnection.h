@@ -84,7 +84,7 @@
 	XMPPAuthenticator *authModule;
 	BOOL needsSession;
 	unsigned int lastID;
-	OFString *bindID, *sessionID, *rosterID;
+	OFString *bindID, *sessionID;
 	XMPPRoster *roster;
 }
 
@@ -143,11 +143,6 @@
  */
 - (OFString*)generateStanzaID;
 
-/**
- * Requests the roster.
- */
-- (void)requestRoster;
-
 - (void)setUsername: (OFString*)username;
 - (OFString*)username;
 - (void)setPassword: (OFString*)password;
@@ -177,7 +172,6 @@
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
 - (void)XMPP_sendSession;
 - (void)XMPP_handleSession: (XMPPIQ*)iq;
-- (void)XMPP_handleRoster: (XMPPIQ*)iq;
 @end
 
 @interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>
