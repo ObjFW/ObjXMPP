@@ -90,10 +90,10 @@
 /**
  * Creates a new autoreleased XMPPStanza from an OFXMLElement.
  *
- * \param elem The element to base the XMPPStanza on
+ * \param element The element to base the XMPPStanza on
  * \return A new autoreleased XMPPStanza
  */
-+ stanzaWithElement: (OFXMLElement*)elem;
++ stanzaWithElement: (OFXMLElement*)element;
 
 /**
  * Initializes an already allocated XMPPStanza with the specified name.
@@ -139,10 +139,10 @@
 /**
  * Initializes an already allocated XMPPStanza based on a OFXMLElement
  *
- * \param elem The element to base the XMPPStanza on
+ * \param element The element to base the XMPPStanza on
  * \return A initialized XMPPStanza
  */
-- initWithElement: (OFXMLElement*)elem;
+- initWithElement: (OFXMLElement*)element;
 
 - (void)setFrom: (XMPPJID*)from;
 - (XMPPJID*)from;

@@ -54,9 +54,9 @@
 					ID: ID_] autorelease];
 }
 
-+ stanzaWithElement: (OFXMLElement*)elem
++ stanzaWithElement: (OFXMLElement*)element
 {
-	return [[[self alloc] initWithElement: elem] autorelease];
+	return [[[self alloc] initWithElement: element] autorelease];
 }
 
 - initWithName: (OFString*)name_
@@ -111,39 +111,26 @@
 	return self;
 }
 
-- initWithElement: (OFXMLElement*)elem
+- initWithElement: (OFXMLElement*)element
 {
-	self = [super initWithName: [elem name]
-			 namespace: [elem namespace]];
+	self = [super initWithElement: element];
 
 	@try {
-		OFEnumerator *enumerator;
-		OFXMLAttribute *attr;
-		OFXMLElement *el;
+		OFXMLAttribute *attribute;
 
-		enumerator = [[elem attributes] objectEnumerator];
-		while ((attr = [enumerator nextObject]) != nil) {
-			if ([[attr name] isEqual: @"from"])
-				[self setFrom: [XMPPJID JIDWithString:
-				    [attr stringValue]]];
-			else if ([[attr name] isEqual: @"to"])
-				[self setTo: [XMPPJID JIDWithString:
-				    [attr stringValue]]];
-			else if ([[attr name] isEqual: @"type"])
-				[self setType: [attr stringValue]];
-			else if ([[attr name] isEqual: @"id"])
-				[self setID: [attr stringValue]];
-			else
-				[self addAttribute: attr];
-		}
+		if ((attribute = [element attributeForName: @"from"]))
+			[self setFrom:
+			    [XMPPJID JIDWithString: [attribute stringValue]]];
 
-		enumerator = [[elem children] objectEnumerator];
-		while ((el = [enumerator nextObject]) != nil)
-			[self addChild: el];
+		if ((attribute = [element attributeForName: @"to"]))
+			[self setTo:
+			    [XMPPJID JIDWithString: [attribute stringValue]]];
 
-		[self setDefaultNamespace: XMPP_NS_CLIENT];
-		[self setPrefix: @"stream"
-		   forNamespace: XMPP_NS_STREAM];
+		if ((attribute = [element attributeForName: @"type"]))
+			[self setType: [attribute stringValue]];
+
+		if ((attribute = [element attributeForName: @"id"]))
+			[self setID: [attribute stringValue]];
 	} @catch (id e) {
 		[self release];
 		@throw e;
