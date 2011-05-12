@@ -19,6 +19,7 @@ SRCS = XMPPAuthenticator.m	\
        XMPPStanza.m
 
 INCLUDES = ${SRCS:.m=.h}	\
+	   namespaces.h		\
 	   ObjXMPP.h
 
 include ../buildsys.mk

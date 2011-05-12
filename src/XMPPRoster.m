@@ -27,6 +27,7 @@
 #import "XMPPConnection.h"
 #import "XMPPIQ.h"
 #import "XMPPJID.h"
+#import "namespaces.h"
 
 @implementation XMPPRoster
 - initWithConnection: (XMPPConnection*)conn

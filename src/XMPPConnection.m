@@ -41,6 +41,7 @@
 #import "XMPPRoster.h"
 #import "XMPPRosterItem.h"
 #import "XMPPExceptions.h"
+#import "namespaces.h"
 
 @implementation XMPPConnection
 + connection

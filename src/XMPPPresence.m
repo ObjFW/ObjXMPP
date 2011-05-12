@@ -22,7 +22,7 @@
  */
 
 #import "XMPPPresence.h"
-#import "XMPPConnection.h"
+#import "namespaces.h"
 
 @implementation XMPPPresence
 + presence

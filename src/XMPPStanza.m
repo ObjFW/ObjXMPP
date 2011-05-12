@@ -21,9 +21,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "XMPPConnection.h"
 #import "XMPPStanza.h"
 #import "XMPPJID.h"
+#import "namespaces.h"
 
 @implementation XMPPStanza
 + stanzaWithName: (OFString*)name

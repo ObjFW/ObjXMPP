@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/hg/objxmpp/
  *
@@ -21,62 +20,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "XMPPMessage.h"
-#import "namespaces.h"
-
-@implementation XMPPMessage
-+ message
-{
-	return [[[self alloc] init] autorelease];
-}
-
-+ messageWithID: (OFString*)ID_
-{
-	return [[[self alloc] initWithID: ID_] autorelease];
-}
-
-+ messageWithType: (OFString*)type_
-{
-	return [[[self alloc] initWithType: type_] autorelease];
-}
-
-+ messageWithType: (OFString*)type_
-	       ID: (OFString*)ID_
-{
-	return [[[self alloc] initWithType: type_
-					ID: ID_] autorelease];
-}
-
-- init
-{
-	return [self initWithType: nil
-			       ID: nil];
-}
-
-- initWithID: (OFString*)ID_
-{
-	return [self initWithType: nil
-			       ID: ID_];
-}
-
-- initWithType: (OFString*)type_
-{
-	return [self initWithType: type_
-			       ID: nil];
-}
-
-- initWithType: (OFString*)type_
-	    ID: (OFString*)ID_
-{
-	return [super initWithName: @"message"
-			      type: type_
-				ID: ID_];
-}
-
-- (void)addBody: (OFString*)body
-{
-	[self addChild: [OFXMLElement elementWithName: @"body"
-					    namespace: XMPP_NS_CLIENT
-					  stringValue: body]];
-}
-@end
+#define XMPP_NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
+#define XMPP_NS_CLIENT @"jabber:client"
+#define XMPP_NS_ROSTER @"jabber:iq:roster"
+#define XMPP_NS_SASL @"urn:ietf:params:xml:ns:xmpp-sasl"
+#define XMPP_NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
+#define XMPP_NS_STANZAS @"urn:ietf:params:xml:ns:xmpp-stanzas"
+#define XMPP_NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
+#define XMPP_NS_XMPP_STREAM @"urn:ietf:params:xml:ns:xmpp-streams"
+#define XMPP_NS_STREAM @"http://etherx.jabber.org/streams"

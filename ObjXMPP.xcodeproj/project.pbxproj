@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B01D020137C7E7D005624EA /* namespaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B01D01F137C7E7D005624EA /* namespaces.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B1295EF1337BD5F00154B25 /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B1295EE1337BD5F00154B25 /* test.m */; };
 		4B1295F11337C37E00154B25 /* ObjXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559911337A65400E345C7 /* ObjXMPP.framework */; };
 		4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
@@ -32,9 +33,9 @@
 		4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559FE1337AC1800E345C7 /* XMPPStanza.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC55A021337AC1800E345C7 /* XMPPStanza.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559FF1337AC1800E345C7 /* XMPPStanza.m */; };
 		4BD0AB16134129B900445289 /* ObjOpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD0AB15134129B900445289 /* ObjOpenSSL.framework */; };
-		4BD9BF59134003F700DAB43A /* XMPPRosterItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD9BF57134003F700DAB43A /* XMPPRosterItem.h */; };
+		4BD9BF59134003F700DAB43A /* XMPPRosterItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD9BF57134003F700DAB43A /* XMPPRosterItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD9BF5A134003F700DAB43A /* XMPPRosterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD9BF58134003F700DAB43A /* XMPPRosterItem.m */; };
-		4BDEF8071340B240000156D1 /* XMPPRoster.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDEF8051340B240000156D1 /* XMPPRoster.h */; };
+		4BDEF8071340B240000156D1 /* XMPPRoster.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDEF8051340B240000156D1 /* XMPPRoster.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BDEF8081340B240000156D1 /* XMPPRoster.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDEF8061340B240000156D1 /* XMPPRoster.m */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4B01D01C137C7D6E005624EA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = src/Makefile; sourceTree = SOURCE_ROOT; };
+		4B01D01F137C7E7D005624EA /* namespaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = namespaces.h; path = src/namespaces.h; sourceTree = SOURCE_ROOT; };
 		4B1295E01337BD2D00154B25 /* ObjXMPPTests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ObjXMPPTests; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B1295EE1337BD5F00154B25 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = test.m; path = tests/test.m; sourceTree = SOURCE_ROOT; };
 		4BC559911337A65400E345C7 /* ObjXMPP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjXMPP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +172,7 @@
 				4BC559FD1337AC1800E345C7 /* XMPPSCRAMAuth.m */,
 				4BC559FE1337AC1800E345C7 /* XMPPStanza.h */,
 				4BC559FF1337AC1800E345C7 /* XMPPStanza.m */,
+				4B01D01F137C7E7D005624EA /* namespaces.h */,
 			);
 			path = ObjXMPP;
 			sourceTree = "<group>";
@@ -177,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				4BC55A051337ADA800E345C7 /* Info.plist */,
+				4B01D01C137C7D6E005624EA /* Makefile */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -196,10 +201,11 @@
 				4BC559F61337AC0900E345C7 /* XMPPMessage.h in Headers */,
 				4BC559F81337AC0900E345C7 /* XMPPPLAINAuth.h in Headers */,
 				4BC559FA1337AC0900E345C7 /* XMPPPresence.h in Headers */,
+				4BDEF8071340B240000156D1 /* XMPPRoster.h in Headers */,
+				4BD9BF59134003F700DAB43A /* XMPPRosterItem.h in Headers */,
 				4BC559FC1337AC0900E345C7 /* XMPPSCRAMAuth.h in Headers */,
 				4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */,
-				4BD9BF59134003F700DAB43A /* XMPPRosterItem.h in Headers */,
-				4BDEF8071340B240000156D1 /* XMPPRoster.h in Headers */,
+				4B01D020137C7E7D005624EA /* namespaces.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
