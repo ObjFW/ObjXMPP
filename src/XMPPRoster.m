@@ -162,10 +162,7 @@
 	}
 
 	if (isPush) {
-		XMPPIQ *response = [XMPPIQ IQWithType: @"result"
-						   ID: [iq ID]];
-		[response setTo: [iq from]];
-		[connection sendStanza: response];
+		[connection sendStanza: [iq resultIQ]];
 	} else {
 		if ([[connection delegate] respondsToSelector:
 		     @selector(connectionDidReceiveRoster:)])

@@ -46,4 +46,33 @@
  */
 - initWithType: (OFString*)type
 	    ID: (OFString*)ID;
+
+/**
+ * Generates a result IQ for the receiving object
+ *
+ * \return A new autoreleased XMPPIQ
+ */
+- (XMPPIQ*)resultIQ;
+
+/**
+ * Generates a error IQ for the receiving object
+ *
+ * \param type A error type as defined by RFC 6120
+ * \param condition A error condition as defined by RFC 6120
+ * \param text A descriptive text
+ * \return A new autoreleased XMPPIQ
+ */
+- (XMPPIQ*)errorIQWithType: (OFString*)type
+		 condition: (OFString*)condition
+		      text: (OFString*)text;
+
+/**
+ * Generates a error IQ for the receiving object
+ *
+ * \param type A error type as defined by RFC 6120
+ * \param condition A defined conditions from RFC 6120
+ * \return A new autoreleased XMPPIQ
+ */
+- (XMPPIQ*)errorIQWithType: (OFString*)type
+		 condition: (OFString*)condition;
 @end

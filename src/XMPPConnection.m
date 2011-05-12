@@ -574,23 +574,8 @@
 
 	if (!handled && ![[iq type] isEqual: @"error"]
 		     && ![[iq type] isEqual: @"result"]) {
-		XMPPJID *from = [iq from];
-		XMPPJID *to = [iq to];
-		OFXMLElement *error;
-
-		[iq setType: @"error"];
-		[iq setTo: from];
-		[iq setFrom: to];
-
-		error = [OFXMLElement elementWithName: @"error"];
-		[error addAttributeWithName: @"type"
-				stringValue: @"cancel"];
-		[error addChild:
-		    [OFXMLElement elementWithName: @"service-unavailable"
-					namespace: XMPP_NS_STANZAS]];
-		[iq addChild: error];
-
-		[self sendStanza: iq];
+		[self sendStanza: [iq errorIQWithType: @"cancel"
+					    condition: @"service-unavailable"]];
 	}
 }
 

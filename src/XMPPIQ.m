@@ -21,6 +21,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import "namespaces.h"
 #import "XMPPIQ.h"
 
 @implementation XMPPIQ
@@ -49,5 +50,49 @@
 	}
 
 	return self;
+}
+
+- (XMPPIQ*)resultIQ
+{
+	XMPPIQ *ret = [XMPPIQ IQWithType: @"result"
+				      ID: [self ID]];
+	[ret setTo: [self from]];
+	[ret setFrom: nil];
+	return ret;
+}
+
+- (XMPPIQ*)errorIQWithType: (OFString*)type_
+		 condition: (OFString*)condition
+		      text: (OFString*)text
+{
+	XMPPIQ *ret = [XMPPIQ IQWithType: @"error"
+				      ID: [self ID]];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	OFXMLElement *error = [OFXMLElement elementWithName: @"error"
+						  namespace: XMPP_NS_CLIENT];
+
+	[error addAttributeWithName: @"type"
+			stringValue: type_];
+	[error addChild: [OFXMLElement elementWithName: condition
+					     namespace: XMPP_NS_STANZAS]];
+	if (text)
+		[error addChild: [OFXMLElement elementWithName: @"text"
+						     namespace: XMPP_NS_STANZAS
+						   stringValue: text]];
+	[ret addChild: error];
+	[ret setTo: [self from]];
+	[ret setFrom: nil];
+
+	[pool release];
+
+	return ret;
+}
+
+- (XMPPIQ*)errorIQWithType: (OFString*)type_
+		 condition: (OFString*)condition
+{
+	return [self errorIQWithType: type_
+			   condition: condition
+				text: nil];
 }
 @end
