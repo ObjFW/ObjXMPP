@@ -695,6 +695,7 @@
 
 	if (resource != nil)
 		[bind addChild: [OFXMLElement elementWithName: @"resource"
+						    namespace: XMPP_NS_BIND
 						  stringValue: resource]];
 
 	[iq addChild: bind];

@@ -22,6 +22,7 @@
  */
 
 #import "XMPPMessage.h"
+#import "XMPPConnection.h"
 
 @implementation XMPPMessage
 + message
@@ -75,6 +76,7 @@
 - (void)addBody: (OFString*)body
 {
 	[self addChild: [OFXMLElement elementWithName: @"body"
+					    namespace: XMPP_NS_CLIENT
 					  stringValue: body]];
 }
 @end

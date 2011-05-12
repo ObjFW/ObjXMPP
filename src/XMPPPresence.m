@@ -22,6 +22,7 @@
  */
 
 #import "XMPPPresence.h"
+#import "XMPPConnection.h"
 
 @implementation XMPPPresence
 + presence
@@ -75,12 +76,14 @@
 - (void)addShow: (OFString*)show
 {
 	[self addChild: [OFXMLElement elementWithName: @"show"
+					    namespace: XMPP_NS_CLIENT
 					  stringValue: show]];
 }
 
 - (void)addStatus: (OFString*)status
 {
 	[self addChild: [OFXMLElement elementWithName: @"status"
+					    namespace: XMPP_NS_CLIENT
 					  stringValue: status]];
 }
 
@@ -88,6 +91,7 @@
 {
 	OFString* prio = [OFString stringWithFormat: @"%" @PRId8, priority];
 	[self addChild: [OFXMLElement elementWithName: @"priority"
+					    namespace: XMPP_NS_CLIENT
 					  stringValue: prio]];
 }
 @end

@@ -86,7 +86,8 @@
 	  type: (OFString*)type_
 	    ID: (OFString*)ID_
 {
-	self = [super initWithName: name_];
+	self = [super initWithName: name_
+			 namespace: XMPP_NS_CLIENT];
 
 	@try {
 		if (![name_ isEqual: @"iq"] && ![name_ isEqual: @"message"] &&
