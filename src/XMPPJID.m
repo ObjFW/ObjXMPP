@@ -70,6 +70,15 @@
 	return self;
 }
 
+- (void)dealloc
+{
+	[node release];
+	[domain release];
+	[resource release];
+
+	[super dealloc];
+}
+
 - copy
 {
 	XMPPJID *new = [[XMPPJID alloc] init];
