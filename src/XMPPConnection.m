@@ -198,26 +198,25 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	XMPPSRVEnumerator *SRVEnumerator =
-		[XMPPSRVEnumerator enumeratorWithDomain: server];
+	    [XMPPSRVEnumerator enumeratorWithDomain: server];
 	XMPPSRVEntry *candidate;
 
-	while ((candidate = [SRVEnumerator nextObject])) {
+	while ((candidate = [SRVEnumerator nextObject]) != nil) {
 		@try {
 			[sock connectToHost: [candidate target]
 				     onPort: [candidate port]];
 			break;
-		} @catch (id e) {
-			if (([e class] == [OFAddressTranslationFailedException
-					class]) || ([e class] ==
-					[OFConnectionFailedException class]))
-				continue;
-			else
-				@throw e;
+		} @catch (OFAddressTranslationFailedException *e) {
+			[e release];
+		} @catch (OFConnectionFailedException *e) {
+			[e release];
 		}
 	}
+
 	if (!candidate)
 		[sock connectToHost: server
 			     onPort: port];
+
 	[self XMPP_startStream];
 
 	[pool release];
