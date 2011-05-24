@@ -13,6 +13,7 @@
 		4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4B4844F5138BBC7500EB48A5 /* XMPPSRVEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4844F3138BBC7400EB48A5 /* XMPPSRVEnumerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B4844F6138BBC7500EB48A5 /* XMPPSRVEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4844F4138BBC7500EB48A5 /* XMPPSRVEnumerator.m */; };
+		4B484501138BBEEB00EB48A5 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B484500138BBEEB00EB48A5 /* libresolv.dylib */; };
 		4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC559ED1337AC0900E345C7 /* XMPPAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */; };
@@ -60,6 +61,7 @@
 		4B1295EE1337BD5F00154B25 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = test.m; path = tests/test.m; sourceTree = SOURCE_ROOT; };
 		4B4844F3138BBC7400EB48A5 /* XMPPSRVEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPSRVEnumerator.h; path = src/XMPPSRVEnumerator.h; sourceTree = SOURCE_ROOT; };
 		4B4844F4138BBC7500EB48A5 /* XMPPSRVEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPSRVEnumerator.m; path = src/XMPPSRVEnumerator.m; sourceTree = SOURCE_ROOT; };
+		4B484500138BBEEB00EB48A5 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		4BC559911337A65400E345C7 /* ObjXMPP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjXMPP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC559D61337ABD300E345C7 /* ObjFW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjFW.framework; path = ../../../../Library/Frameworks/ObjFW.framework; sourceTree = "<group>"; };
 		4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPAuthenticator.h; path = src/XMPPAuthenticator.h; sourceTree = SOURCE_ROOT; };
@@ -106,6 +108,7 @@
 			files = (
 				4BD0AB16134129B900445289 /* ObjOpenSSL.framework in Frameworks */,
 				4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */,
+				4B484501138BBEEB00EB48A5 /* libresolv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +126,7 @@
 		4BC559851337A65400E345C7 = {
 			isa = PBXGroup;
 			children = (
+				4B484500138BBEEB00EB48A5 /* libresolv.dylib */,
 				4BC5599A1337A65400E345C7 /* ObjXMPP */,
 				4B1295E41337BD2D00154B25 /* ObjXMPPTests */,
 				4BC559931337A65400E345C7 /* Frameworks */,
