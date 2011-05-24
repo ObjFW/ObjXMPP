@@ -16,6 +16,7 @@ SRCS = XMPPAuthenticator.m	\
        XMPPRoster.m		\
        XMPPRosterItem.m		\
        XMPPSCRAMAuth.m		\
+       XMPPSRVEnumerator.m	\
        XMPPStanza.m
 
 INCLUDES = ${SRCS:.m=.h}	\

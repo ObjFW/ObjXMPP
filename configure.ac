@@ -33,6 +33,37 @@ AS_IF([test x"$enable_static" = x"yes" -o x"$enable_shared" = x"no"], [
 	AC_SUBST(OBJXMPP_STATIC_LIB, "libobjxmpp.a")
 ])
 
+# This is an adapted version of what glib does for res_query
+# It should recognize the correct library on (at least) Linux,
+# NetBSD, FreeBSD, Mac OS X and Haiku
+AC_MSG_CHECKING([for res_nsearch])
+AC_TRY_LINK([#include <sys/types.h>
+	     #include <netinet/in.h>
+	     #include <arpa/nameser.h>
+	     #include <resolv.h>],
+	     [res_nsearch(&_res, "test", 0, 0, (void *)0, 0);],
+	     [AC_MSG_RESULT([yes])],
+	     [save_libs="$LIBS"
+	      LIBS="$LIBS -lresolv"
+	      AC_TRY_LINK([#include <sys/types.h>
+			   #include <netinet/in.h>
+			   #include <arpa/nameser.h>
+			   #include <resolv.h>],
+			   [res_nsearch(&_res, "test", 0, 0, (void *)0, 0);],
+			   [AC_MSG_RESULT([in -lresolv])],
+			   [LIBS="$save_libs -lnetwork"
+			    AC_TRY_LINK([#include <sys/types.h>
+					 #include <netinet/in.h>
+					 #include <arpa/nameser.h>
+					 #include <resolv.h>],
+					[res_nsearch(&_res, "test", 0, 0, (void *)0, 0);],
+					[AC_MSG_RESULT([in -lnetwork])],
+					[LIBS="$save_libs -lbind"
+					 AC_TRY_LINK([#include <resolv.h>],
+						     [res_nsearch(&_res, "test", 0, 0, (void *)0, 0);],
+						     [AC_MSG_RESULT([in -lbind])],
+						     [AC_MSG_ERROR(not found)])])])])
+
 AC_CHECK_LIB(objopenssl, main, [
 	LIBS="$LIBS -lobjopenssl -lcrypto"
 ], [

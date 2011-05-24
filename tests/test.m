@@ -102,8 +102,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn setPassword: [arguments objectAtIndex: 2]];
 	[conn setResource: @"ObjXMPP"];
 
-	[conn connect];
 	@try {
+		[conn connect];
 		[conn handleConnection];
 	} @catch (id e) {
 		of_log(@"%@", e);

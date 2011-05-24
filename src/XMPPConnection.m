@@ -31,6 +31,7 @@
 #import <ObjOpenSSL/SSLSocket.h>
 
 #import "XMPPConnection.h"
+#import "XMPPSRVEnumerator.h"
 #import "XMPPSCRAMAuth.h"
 #import "XMPPPLAINAuth.h"
 #import "XMPPStanza.h"
@@ -196,9 +197,27 @@
 - (void)connect
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	XMPPSRVEnumerator *SRVEnumerator =
+		[XMPPSRVEnumerator enumeratorWithDomain: server];
+	XMPPSRVEntry *candidate;
 
-	[sock connectToHost: server
-		     onPort: port];
+	while ((candidate = [SRVEnumerator nextObject])) {
+		@try {
+			[sock connectToHost: [candidate target]
+				     onPort: [candidate port]];
+			break;
+		} @catch (id e) {
+			if (([e class] == [OFAddressTranslationFailedException
+					class]) || ([e class] ==
+					[OFConnectionFailedException class]))
+				continue;
+			else
+				@throw e;
+		}
+	}
+	if (!candidate)
+		[sock connectToHost: server
+			     onPort: port];
 	[self XMPP_startStream];
 
 	[pool release];
