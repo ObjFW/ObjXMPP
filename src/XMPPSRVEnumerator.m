@@ -321,7 +321,6 @@
 	XMPPSRVEntry *ret;
 	of_list_object_t *iter;
 	uint32_t totalWeight = 0;
-	BOOL loop = YES;
 
 	if (done)
 		return nil;
@@ -341,10 +340,7 @@
 		[iter->object setAccumulatedWeight: totalWeight];
 	}
 
-	if ([subListCopy count] == 0)
-		loop = NO;
-
-	while (loop) {
+	if ([subListCopy count] > 0)  {
 		uint32_t randomWeight;
 
 		RAND_pseudo_bytes((uint8_t*)&randomWeight, sizeof(uint32_t));
@@ -357,7 +353,6 @@
 
 				[subListCopy removeListObject: iter];
 
-				loop = NO;
 				break;
 			}
 		}
