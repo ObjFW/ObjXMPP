@@ -123,13 +123,21 @@
 			path = ObjXMPPTests;
 			sourceTree = "<group>";
 		};
-		4BC559851337A65400E345C7 = {
+		4B484502138BD3A400EB48A5 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
 				4B484500138BBEEB00EB48A5 /* libresolv.dylib */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		4BC559851337A65400E345C7 = {
+			isa = PBXGroup;
+			children = (
 				4BC5599A1337A65400E345C7 /* ObjXMPP */,
 				4B1295E41337BD2D00154B25 /* ObjXMPPTests */,
 				4BC559931337A65400E345C7 /* Frameworks */,
+				4B484502138BD3A400EB48A5 /* Libraries */,
 				4BC559921337A65400E345C7 /* Products */,
 			);
 			sourceTree = "<group>";

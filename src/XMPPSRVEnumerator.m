@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/hg/objxmpp/
@@ -19,17 +20,93 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <assert.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <resolv.h>
 #include <sys/types.h>
 #include <openssl/rand.h>
-#include <assert.h>
 
 #import "XMPPSRVEnumerator.h"
 
 @implementation XMPPSRVEntry
++ entryWithPriority: (uint16_t)priority
+	     weight: (uint16_t)weight
+	       port: (uint16_t)port
+	     target: (OFString*)target
+{
+	return [[[self alloc] initWithPriority: priority
+					weight: weight
+					  port: port
+					target: target] autorelease];
+}
+
++ entryWithResourceRecord: (ns_rr)resourceRecord
+		   handle: (ns_msg)handle
+{
+	return [[[self alloc] initWithResourceRecord: resourceRecord
+					      handle: handle] autorelease];
+}
+
+- init
+{
+	Class c = isa;
+	[self release];
+	@throw [OFNotImplementedException newWithClass: c
+					      selector: _cmd];
+}
+
+- initWithPriority: (uint16_t)priority_
+	    weight: (uint16_t)weight_
+	      port: (uint16_t)port_
+	    target: (OFString*)target_
+{
+	self = [super init];
+
+	@try {
+		priority = priority_;
+		weight = weight_;
+		port = port_;
+		target = [target_ copy];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
+}
+
+- initWithResourceRecord: (ns_rr)resourceRecord
+		  handle: (ns_msg)handle
+{
+	self = [super init];
+
+	@try {
+		const uint16_t *rdata;
+		char buffer[NS_MAXDNAME];
+
+		rdata = (const uint16_t*)(void*)ns_rr_rdata(resourceRecord);
+		priority = ntohs(rdata[0]);
+		weight = ntohs(rdata[1]);
+		port = ntohs(rdata[2]);
+
+		if (dn_expand(ns_msg_base(handle), ns_msg_end(handle),
+		    (uint8_t*)&rdata[3], buffer, NS_MAXDNAME) < 1)
+			@throw [OFInitializationFailedException
+			    newWithClass: isa];
+
+		target = [[OFString alloc] initWithCString: buffer];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
+}
+
 - (void)dealloc
 {
 	[target release];
@@ -39,15 +116,10 @@
 
 - (OFString*)description
 {
-	return [OFString stringWithFormat: @"priority: %" PRIu16
-				@" weight: %" PRIu16
-				@" target: %@:%" PRIu16, priority, weight,
-				target, port];
-}
-
-- (void)setPriority: (uint16_t)priority_
-{
-	priority = priority_;
+	return [OFString stringWithFormat: @"<%@ priority: %" PRIu16
+					   @", weight: %" PRIu16
+					   @", target: %@:%" PRIu16 @">",
+					   isa, priority, weight, target, port];
 }
 
 - (uint16_t)priority
@@ -55,19 +127,19 @@
 	return priority;
 }
 
-- (void)setWeight: (uint16_t)weight_
-{
-	weight = weight_;
-}
-
 - (uint16_t)weight
 {
 	return weight;
 }
 
-- (void)setPort: (uint16_t)port_
+- (void)setAccumulatedWeight: (uint16_t)accumulatedWeight_
 {
-	port = port_;
+	accumulatedWeight = accumulatedWeight_;
+}
+
+- (uint16_t)accumulatedWeight
+{
+	return accumulatedWeight;
 }
 
 - (uint16_t)port
@@ -75,16 +147,9 @@
 	return port;
 }
 
-- (void)setTarget: (OFString*)target_
-{
-	OFString *old = target;
-	target = [target_ copy];
-	[old release];
-}
-
 - (OFString*)target
 {
-	return [[target copy] autorelease];
+	OF_GETTER(target, YES)
 }
 @end
 
@@ -97,164 +162,223 @@
 - initWithDomain: (OFString*)domain_
 {
 	self = [super init];
-	priorityList = [[OFList alloc] init];
-	[self setDomain: domain_];
+
+	@try {
+		list = [[OFList alloc] init];
+		domain = [domain_ copy];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
 
 	return self;
 }
 
 - (void)dealloc
 {
-	[priorityList release];
+	[list release];
 	[domain release];
+	[subListCopy release];
 
 	[super dealloc];
 }
 
-- (void)setDomain: (OFString*)domain_
-{
-	OFString *old = domain;
-	domain = [domain_ copy];
-	[old release];
-	[self reset];
-}
-
 - (OFString*)domain;
 {
-	return [[domain copy] autorelease];
+	OF_GETTER(domain, YES)
 }
 
-- (void)XMPP_parseSRVRRWithHandle: (const ns_msg)handle
-			       RR: (const ns_rr)rr
-			   result: (XMPPSRVEntry*)result
+- (void)lookUpEntries
 {
-	const uint16_t *rdata = (uint16_t*) ns_rr_rdata(rr);
-	char target[NS_MAXDNAME];
-	[result setPriority: ntohs(rdata[0])];
-	[result setWeight: ntohs(rdata[1])];
-	[result setPort: ntohs(rdata[2])];
-	dn_expand(ns_msg_base(handle), ns_msg_end(handle),
-			(uint8_t*) &rdata[3], target, NS_MAXDNAME);
-	[result setTarget: [OFString stringWithCString: target]];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	unsigned char *answer = NULL;
+	OFString *request;
+
+	request = [OFString stringWithFormat: @"_xmpp-client._tcp.%@", domain];
+
+	@try {
+		int answerLen, resourceRecordCount, i;
+		ns_rr resourceRecord;
+		ns_msg handle;
+
+		if (res_ninit(&resState))
+			@throw [OFAddressTranslationFailedException
+			    newWithClass: isa
+				  socket: nil
+				    host: domain];
+
+		answer = [self allocMemoryWithSize: of_pagesize];
+		answerLen = res_nsearch(&resState, [request cString], ns_c_in,
+		    ns_t_srv, answer, (int)of_pagesize);
+
+		if (answerLen < 1 || answerLen > of_pagesize)
+			@throw [OFAddressTranslationFailedException
+			    newWithClass: isa
+				  socket: nil
+				    host: domain];
+
+		if (ns_initparse(answer, answerLen, &handle))
+			@throw [OFAddressTranslationFailedException
+			    newWithClass: isa
+				  socket: nil
+				    host: domain];
+
+		resourceRecordCount = ns_msg_count(handle, ns_s_an);
+		for (i = 0; i < resourceRecordCount; i++) {
+			if (ns_parserr(&handle, ns_s_an, i, &resourceRecord))
+				continue;
+
+			if (ns_rr_type(resourceRecord) != ns_t_srv ||
+			    ns_rr_class(resourceRecord) != ns_c_in)
+				continue;
+
+			[self XMPP_addEntry: [XMPPSRVEntry
+			    entryWithResourceRecord: resourceRecord
+					     handle: handle]];
+		}
+	} @finally {
+		[self freeMemory: answer];
+		res_ndestroy(&resState);
+	}
+
+	[pool release];
+}
+
+- (void)XMPP_addEntry: (XMPPSRVEntry*)entry
+{
+	OFAutoreleasePool *pool;
+	OFList *subList;
+	of_list_object_t *iter;
+
+	/* Look if there already is a list with the priority */
+	for (iter = [list firstListObject]; iter != NULL; iter = iter->next) {
+		if ([[iter->object firstObject] priority] == [entry priority]) {
+			/*
+			 * RFC 2782 says those with weight 0 should be at the
+			 * beginning of the list.
+			 */
+			if ([entry weight] > 0)
+				[iter->object appendObject: entry];
+			else
+				[iter->object prependObject: entry];
+
+			return;
+		}
+
+		/* We can't have one if the priority is already bigger */
+		if ([[iter->object firstObject] priority] > [entry priority])
+			break;
+	}
+
+	/* No list with the priority -> create one at the correct place */
+	for (iter = [list firstListObject]; iter != NULL; iter = iter->next) {
+		if ([[iter->object firstObject] priority] > [entry priority]) {
+			OFAutoreleasePool *pool;
+
+			pool = [[OFAutoreleasePool alloc] init];
+
+			subList = [OFList list];
+
+			/*
+			 * RFC 2782 says those with weight 0 should be at the
+			 * beginning of the list.
+			 */
+			if ([entry weight] > 0)
+				[subList appendObject: entry];
+			else
+				[subList prependObject: entry];
+
+			[list insertObject: subList
+			  beforeListObject: iter];
+
+			[pool release];
+
+			return;
+		}
+	}
+
+	/* There is no list with a bigger priority -> append */
+	pool = [[OFAutoreleasePool alloc] init];
+
+	subList = [OFList list];
+
+	/*
+	 * RFC 2782 says those with weight 0 should be at the beginning of the
+	 * list.
+	 */
+	if ([entry weight] > 0)
+		[subList appendObject: entry];
+	else
+		[subList prependObject: entry];
+
+	[list appendObject: subList];
+
+	[pool release];
 }
 
 - (id)nextObject
 {
-	if ([priorityList firstListObject]) {
-		uint16_t weight = 0;
-		of_list_object_t *iter;
-		XMPPSRVEntry *ret;
-		OFList *weightList = [priorityList firstObject];
-		uint16_t maximumWeight = [[weightList lastObject] weight];
+	XMPPSRVEntry *ret;
+	of_list_object_t *iter;
+	uint32_t totalWeight = 0;
+	BOOL found = NO;
 
-		if (maximumWeight) {
-			RAND_pseudo_bytes((unsigned char *)&weight, 2);
-			weight %= maximumWeight;
-		}
+	if (done)
+		return nil;
 
-		iter = [weightList firstListObject];
-		while (iter) {
-			if (weight <= [iter->object weight]) {
-				ret = [iter->object retain];
-				[weightList removeListObject: iter];
-				if (![weightList firstListObject])
-					[priorityList removeListObject:
-						[priorityList firstListObject]];
-				return [ret autorelease];
+	if (listIter == NULL)
+		listIter = [list lastListObject];
+
+	if (listIter == NULL)
+		return nil;
+
+	if (subListCopy == nil)
+		subListCopy = [listIter->object copy];
+
+	/* FIXME: Handle empty subListCopy */
+	for (iter = [subListCopy firstListObject]; iter != NULL;
+	     iter = iter->next) {
+		totalWeight += [iter->object weight];
+		[iter->object setAccumulatedWeight: totalWeight];
+	}
+
+	while (!found) {
+		uint32_t randomWeight;
+
+		RAND_pseudo_bytes((uint8_t*)&randomWeight, sizeof(uint32_t));
+		randomWeight %= (totalWeight + 1);
+
+		for (iter = [subListCopy firstListObject]; iter != NULL;
+		     iter = iter->next) {
+			if ([iter->object accumulatedWeight] >= randomWeight) {
+				ret = [[iter->object retain] autorelease];
+
+				[subListCopy removeListObject: iter];
+
+				found = YES;
+				break;
 			}
-			iter = iter->next;
 		}
-		assert(0);
 	}
 
-	return nil;
-}
+	if ([subListCopy count] == 0) {
+		[subListCopy release];
+		subListCopy = nil;
 
-- (int)countByEnumeratingWithState: (of_fast_enumeration_state_t*)state
-			   objects: (id*)objects
-			     count: (int)count
-{
-	int len = 0;
-	XMPPSRVEntry *entry = [self nextObject];
-	state->itemsPtr = objects;
-	while ((len < count) && entry) {
-		state->mutationsPtr = (unsigned long *)self;
-		objects[len++] = entry;
-		entry = [self nextObject];
+		listIter = listIter->previous;
+
+		if (listIter == NULL)
+			done = YES;
 	}
-	return len;
+
+	return ret;
 }
 
 - (void)reset
 {
-	int i, rrCount;
-	unsigned char *answer;
-	OFString *request;
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-
-	request = [OFString stringWithFormat: @"_xmpp-client._tcp.%@", domain];
-	answer = [self allocMemoryWithSize: NS_MAXMSG];
-
-	res_ninit(&_res);
-	if (!(res_nsearch(&_res, [request cString], ns_c_in, ns_t_srv, answer,
-				NS_MAXMSG) < 0)) {
-		ns_rr rr;
-		ns_msg handle;
-
-		ns_initparse(answer, NS_MAXMSG, &handle);
-		rrCount = ns_msg_count(handle, ns_s_an);
-		for (i = 0; i < rrCount ; i++) {
-			XMPPSRVEntry *result = [[XMPPSRVEntry alloc] init];
-			ns_parserr(&handle, ns_s_an, i, &rr);
-			if ((ns_rr_type(rr) != ns_t_srv)
-					|| ns_rr_class(rr) != ns_c_in)
-				@throw [OFInvalidServerReplyException
-					newWithClass: isa];
-
-			[self XMPP_parseSRVRRWithHandle: handle
-						     RR: rr
-						 result: result];
-
-			[self XMPP_addSRVEntry: result
-			  toSortedPriorityList: priorityList];
-		}
-	}
-	[self freeMemory: answer];
-	[pool release];
-
-
-}
-
-- (void)XMPP_addSRVEntry: (XMPPSRVEntry*)item
-    toSortedPriorityList: (OFList*)list
-{
-	of_list_object_t *priorityIter =
-		[list firstListObject];
-	while (1) {
-		if (priorityIter == NULL ||
-				[[priorityIter->object firstObject]
-					priority] > [item priority]) {
-			OFList *newList = [OFList list];
-			[newList appendObject: item];
-			if (priorityIter)
-				[list insertObject: newList
-				  beforeListObject: priorityIter];
-			else
-				[list appendObject: newList];
-			break;
-		}
-		if ([[priorityIter->object firstObject] priority]
-				== [item priority]) {
-			if ([item weight] == 0)
-				[priorityIter->object prependObject: item];
-			else {
-				[item setWeight: [item weight] +
-				    [[priorityIter->object lastObject] weight]];
-				[priorityIter->object appendObject: item];
-			}
-			break;
-		}
-		priorityIter = priorityIter->next;
-	}
+	listIter = NULL;
+	[subListCopy release];
+	subListCopy = nil;
+	done = NO;
 }
 @end

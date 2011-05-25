@@ -201,6 +201,8 @@
 	    [XMPPSRVEnumerator enumeratorWithDomain: server];
 	XMPPSRVEntry *candidate;
 
+	[SRVEnumerator lookUpEntries];
+
 	while ((candidate = [SRVEnumerator nextObject]) != nil) {
 		@try {
 			[sock connectToHost: [candidate target]

@@ -21,49 +21,61 @@
  */
 
 #include <arpa/nameser.h>
+#include <resolv.h>
+
 #import <ObjFW/ObjFW.h>
 
 @interface XMPPSRVEntry: OFObject
 {
 	uint16_t priority;
-	uint16_t weight;
+	uint16_t weight, accumulatedWeight;
 	uint16_t port;
 	OFString *target;
 }
+
 #ifdef OF_HAVE_PROPERTIES
-@property uint16_t priority;
-@property uint16_t weight;
-@property uint16_t port;
-@property (copy) OFString *target;
+@property (readonly, assign) uint16_t priority;
+@property (readonly, assign) uint16_t weight;
+@property (assign) uint16_t accumulatedWeight;
+@property (readonly, assign) uint16_t port;
+@property (readonly, copy) OFString *target;
 #endif
 
-- (void) setPriority: (uint16_t)priority_;
-- (uint16_t) priority;
-- (void) setWeight: (uint16_t)weight_;
-- (uint16_t) weight;
-- (void) setPort: (uint16_t)port_;
-- (uint16_t) port;
-- (void) setTarget: (OFString*)target_;
-- (OFString*) target;
++ entryWithPriority: (uint16_t)priority
+	     weight: (uint16_t)weight
+	       port: (uint16_t)port
+	     target: (OFString*)target;
++ entryWithResourceRecord: (ns_rr)resourceRecord
+		   handle: (ns_msg)handle;
+- initWithPriority: (uint16_t)priority
+	    weight: (uint16_t)weight
+	      port: (uint16_t)port
+	    target: (OFString*)target;
+- initWithResourceRecord: (ns_rr)resourceRecord
+		  handle: (ns_msg)handle;
+- (uint16_t)priority;
+- (uint16_t)weight;
+- (uint16_t)port;
+- (OFString*)target;
 @end
 
-@interface XMPPSRVEnumerator: OFEnumerator <OFFastEnumeration>
+@interface XMPPSRVEnumerator: OFEnumerator
 {
 	OFString *domain;
-	OFList *priorityList;
+	struct __res_state resState;
+	OFList *list;
+	of_list_object_t *listIter;
+	OFList *subListCopy;
+	BOOL done;
 }
+
 #ifdef OF_HAVE_PROPERTIES
-@property (copy) OFString *domain;
+@property (readonly, copy) OFString *domain;
 #endif
 
 + enumeratorWithDomain: (OFString*)domain;
-
 - initWithDomain: (OFString*)domain;
-- (void) setDomain: (OFString*)domain;
-- (OFString*) domain;
-- (void)XMPP_parseSRVRRWithHandle: (const ns_msg)handle
-			       RR: (const ns_rr)rr
-			   result: (XMPPSRVEntry*)result;
-- (void)XMPP_addSRVEntry: (XMPPSRVEntry*)item
-    toSortedPriorityList: (OFList*)list;
+- (OFString*)domain;
+- (void)lookUpEntries;
+- (void)XMPP_addEntry: (XMPPSRVEntry*)item;
 @end
