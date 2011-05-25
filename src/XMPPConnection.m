@@ -315,6 +315,10 @@
 - (void)elementBuilder: (OFXMLElementBuilder*)builder
        didBuildElement: (OFXMLElement*)element
 {
+	/* Ignore whitespace elements */
+	if ([element name] == nil)
+		return;
+
 	[element setDefaultNamespace: XMPP_NS_CLIENT];
 	[element setPrefix: @"stream"
 	      forNamespace: XMPP_NS_STREAM];
@@ -590,8 +594,8 @@
 		handled = [delegate connection: self
 				  didReceiveIQ: iq];
 
-	if (!handled && ![[iq type] isEqual: @"error"]
-		     && ![[iq type] isEqual: @"result"]) {
+	if (!handled && ![[iq type] isEqual: @"error"] &&
+	    ![[iq type] isEqual: @"result"]) {
 		[self sendStanza: [iq errorIQWithType: @"cancel"
 					    condition: @"service-unavailable"]];
 	}
