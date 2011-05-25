@@ -321,7 +321,7 @@
 	XMPPSRVEntry *ret;
 	of_list_object_t *iter;
 	uint32_t totalWeight = 0;
-	BOOL found = NO;
+	BOOL loop = YES;
 
 	if (done)
 		return nil;
@@ -335,14 +335,16 @@
 	if (subListCopy == nil)
 		subListCopy = [listIter->object copy];
 
-	/* FIXME: Handle empty subListCopy */
 	for (iter = [subListCopy firstListObject]; iter != NULL;
 	     iter = iter->next) {
 		totalWeight += [iter->object weight];
 		[iter->object setAccumulatedWeight: totalWeight];
 	}
 
-	while (!found) {
+	if ([subListCopy count] == 0)
+		loop = NO;
+
+	while (loop) {
 		uint32_t randomWeight;
 
 		RAND_pseudo_bytes((uint8_t*)&randomWeight, sizeof(uint32_t));
@@ -355,7 +357,7 @@
 
 				[subListCopy removeListObject: iter];
 
-				found = YES;
+				loop = NO;
 				break;
 			}
 		}
