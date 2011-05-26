@@ -308,7 +308,7 @@
 
 - (id)nextObject
 {
-	XMPPSRVEntry *ret;
+	XMPPSRVEntry *ret = nil;
 	of_list_object_t *iter;
 	uint32_t totalWeight = 0;
 
