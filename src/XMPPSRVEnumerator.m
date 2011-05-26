@@ -132,12 +132,12 @@
 	return weight;
 }
 
-- (void)setAccumulatedWeight: (uint16_t)accumulatedWeight_
+- (void)setAccumulatedWeight: (uint32_t)accumulatedWeight_
 {
 	accumulatedWeight = accumulatedWeight_;
 }
 
-- (uint16_t)accumulatedWeight
+- (uint32_t)accumulatedWeight
 {
 	return accumulatedWeight;
 }
@@ -326,7 +326,7 @@
 		return nil;
 
 	if (listIter == NULL)
-		listIter = [list lastListObject];
+		listIter = [list firstListObject];
 
 	if (listIter == NULL)
 		return nil;
@@ -362,7 +362,7 @@
 		[subListCopy release];
 		subListCopy = nil;
 
-		listIter = listIter->previous;
+		listIter = listIter->next;
 
 		if (listIter == NULL)
 			done = YES;

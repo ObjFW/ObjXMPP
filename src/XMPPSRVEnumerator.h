@@ -28,7 +28,8 @@
 @interface XMPPSRVEntry: OFObject
 {
 	uint16_t priority;
-	uint16_t weight, accumulatedWeight;
+	uint16_t weight;
+	uint32_t accumulatedWeight;
 	uint16_t port;
 	OFString *target;
 }
@@ -36,7 +37,7 @@
 #ifdef OF_HAVE_PROPERTIES
 @property (readonly, assign) uint16_t priority;
 @property (readonly, assign) uint16_t weight;
-@property (assign) uint16_t accumulatedWeight;
+@property (assign) uint32_t accumulatedWeight;
 @property (readonly, assign) uint16_t port;
 @property (readonly, copy) OFString *target;
 #endif
@@ -55,6 +56,8 @@
 		  handle: (ns_msg)handle;
 - (uint16_t)priority;
 - (uint16_t)weight;
+- (uint32_t)accumulatedWeight;
+- (void)setAccumulatedWeight: (uint32_t)accumulatedWeight;
 - (uint16_t)port;
 - (OFString*)target;
 @end
