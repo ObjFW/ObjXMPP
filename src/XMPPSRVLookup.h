@@ -62,23 +62,30 @@
 - (OFString*)target;
 @end
 
-@interface XMPPSRVEnumerator: OFEnumerator
+@interface XMPPSRVLookup: OFObject <OFEnumerating>
 {
 	OFString *domain;
 	struct __res_state resState;
 	OFList *list;
-	of_list_object_t *listIter;
-	OFList *subListCopy;
-	BOOL done;
 }
 
 #ifdef OF_HAVE_PROPERTIES
 @property (readonly, copy) OFString *domain;
 #endif
 
-+ enumeratorWithDomain: (OFString*)domain;
++ lookupWithDomain: (OFString*)domain;
 - initWithDomain: (OFString*)domain;
-- (OFString*)domain;
-- (void)lookUpEntries;
+- (void)XMPP_lookup;
 - (void)XMPP_addEntry: (XMPPSRVEntry*)item;
+@end
+
+@interface XMPPSRVEnumerator: OFEnumerator
+{
+	OFList *list;
+	of_list_object_t *listIter;
+	OFList *subListCopy;
+	BOOL done;
+}
+
+- initWithList: (OFList*)list;
 @end

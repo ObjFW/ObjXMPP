@@ -30,7 +30,7 @@
 #include <sys/types.h>
 #include <openssl/rand.h>
 
-#import "XMPPSRVEnumerator.h"
+#import "XMPPSRVLookup.h"
 
 @implementation XMPPSRVEntry
 + entryWithPriority: (uint16_t)priority
@@ -153,10 +153,10 @@
 }
 @end
 
-@implementation XMPPSRVEnumerator
-+ enumeratorWithDomain: (OFString*)domain_
+@implementation XMPPSRVLookup
++ lookupWithDomain: (OFString*)domain
 {
-	return [[[self alloc] initWithDomain: domain_] autorelease];
+	return [[[self alloc] initWithDomain: domain] autorelease];
 }
 
 - initWithDomain: (OFString*)domain_
@@ -166,6 +166,8 @@
 	@try {
 		list = [[OFList alloc] init];
 		domain = [domain_ copy];
+
+		[self XMPP_lookup];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -178,7 +180,6 @@
 {
 	[list release];
 	[domain release];
-	[subListCopy release];
 
 	[super dealloc];
 }
@@ -188,7 +189,7 @@
 	OF_GETTER(domain, YES)
 }
 
-- (void)lookUpEntries
+- (void)XMPP_lookup
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	unsigned char *answer = NULL;
@@ -282,6 +283,27 @@
 		[list appendObject: subList];
 
 	[pool release];
+}
+
+- (OFEnumerator*)objectEnumerator
+{
+	return [[[XMPPSRVEnumerator alloc] initWithList: list] autorelease];
+}
+@end
+
+@implementation XMPPSRVEnumerator
+- initWithList: (OFList*)list_
+{
+	self = [super init];
+
+	@try {
+		list = [list_ copy];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
 }
 
 - (id)nextObject

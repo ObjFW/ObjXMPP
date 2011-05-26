@@ -31,7 +31,7 @@
 #import <ObjOpenSSL/SSLSocket.h>
 
 #import "XMPPConnection.h"
-#import "XMPPSRVEnumerator.h"
+#import "XMPPSRVLookup.h"
 #import "XMPPSCRAMAuth.h"
 #import "XMPPPLAINAuth.h"
 #import "XMPPStanza.h"
@@ -197,13 +197,11 @@
 - (void)connect
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	XMPPSRVEnumerator *SRVEnumerator =
-	    [XMPPSRVEnumerator enumeratorWithDomain: server];
+	XMPPSRVLookup *SRVLookup = [XMPPSRVLookup lookupWithDomain: server];
+	OFEnumerator *enumerator = [SRVLookup objectEnumerator];
 	XMPPSRVEntry *candidate;
 
-	[SRVEnumerator lookUpEntries];
-
-	while ((candidate = [SRVEnumerator nextObject]) != nil) {
+	while ((candidate = [enumerator nextObject]) != nil) {
 		@try {
 			[sock connectToHost: [candidate target]
 				     onPort: [candidate port]];
