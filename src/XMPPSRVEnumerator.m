@@ -270,48 +270,16 @@
 			break;
 	}
 
-	/* No list with the priority -> create one at the correct place */
-	for (iter = [list firstListObject]; iter != NULL; iter = iter->next) {
-		if ([[iter->object firstObject] priority] > [entry priority]) {
-			OFAutoreleasePool *pool;
-
-			pool = [[OFAutoreleasePool alloc] init];
-
-			subList = [OFList list];
-
-			/*
-			 * RFC 2782 says those with weight 0 should be at the
-			 * beginning of the list.
-			 */
-			if ([entry weight] > 0)
-				[subList appendObject: entry];
-			else
-				[subList prependObject: entry];
-
-			[list insertObject: subList
-			  beforeListObject: iter];
-
-			[pool release];
-
-			return;
-		}
-	}
-
-	/* There is no list with a bigger priority -> append */
 	pool = [[OFAutoreleasePool alloc] init];
 
 	subList = [OFList list];
+	[subList appendObject: entry];
 
-	/*
-	 * RFC 2782 says those with weight 0 should be at the beginning of the
-	 * list.
-	 */
-	if ([entry weight] > 0)
-		[subList appendObject: entry];
+	if (iter != NULL)
+		[list insertObject: subList
+		  beforeListObject: iter];
 	else
-		[subList prependObject: entry];
-
-	[list appendObject: subList];
+		[list appendObject: subList];
 
 	[pool release];
 }
