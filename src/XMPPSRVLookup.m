@@ -21,6 +21,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <assert.h>
 
 #include <netinet/in.h>
@@ -239,7 +243,9 @@
 		}
 	} @finally {
 		[self freeMemory: answer];
+#ifdef HAVE_RES_NDESTROY
 		res_ndestroy(&resState);
+#endif
 	}
 
 	[pool release];

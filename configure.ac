@@ -64,6 +64,18 @@ AC_TRY_LINK([#include <sys/types.h>
 						     [AC_MSG_RESULT([in -lbind])],
 						     [AC_MSG_ERROR(not found)])])])])
 
+AC_MSG_CHECKING([for res_ndestroy])
+AC_TRY_LINK([
+	#include <resolv.h>
+], [
+	res_ndestroy(&_res)
+], [
+	AC_MSG_RESULT(yes)
+	AC_DEFINE(HAVE_RES_NDESTROY, 1, [Whether we have res_ndestroy])
+], [
+	AC_MSG_RESULT(no)
+])
+
 AC_CHECK_LIB(objopenssl, main, [
 	LIBS="$LIBS -lobjopenssl -lcrypto"
 ], [
@@ -92,4 +104,5 @@ AC_SUBST(CPPFLAGS)
 
 AC_SUBST(PACKAGE, ObjXMPP)
 AC_CONFIG_FILES([buildsys.mk extra.mk])
+AC_CONFIG_HEADERS(config.h)
 AC_OUTPUT

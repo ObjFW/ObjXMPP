@@ -21,6 +21,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #import "XMPPMessage.h"
 #import "namespaces.h"
 

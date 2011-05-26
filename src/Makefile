@@ -25,4 +25,5 @@ INCLUDES = ${SRCS:.m=.h}	\
 
 include ../buildsys.mk
 
+CPPFLAGS += -I.. -DHAVE_CONFIG_H
 LD = ${OBJC}
