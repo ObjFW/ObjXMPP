@@ -216,11 +216,15 @@
 		answerLen = res_nsearch(&resState, [request cString], ns_c_in,
 		    ns_t_srv, answer, (int)of_pagesize);
 
-		if (answerLen < 1 || answerLen > of_pagesize)
+		if ((answerLen == -1) && (h_errno == HOST_NOT_FOUND))
+			return;
+
+		if (answerLen < 1 || answerLen > of_pagesize) {
 			@throw [OFAddressTranslationFailedException
 			    newWithClass: isa
 				  socket: nil
 				    host: domain];
+		}
 
 		if (ns_initparse(answer, answerLen, &handle))
 			@throw [OFAddressTranslationFailedException
