@@ -77,6 +77,7 @@
 	[username release];
 	[password release];
 	[server release];
+	[domain release];
 	[resource release];
 	[JID release];
 	[delegate release];
@@ -171,6 +172,33 @@
 	return [[server copy] autorelease];
 }
 
+- (void)setDomain: (OFString*)domain_
+{
+	OFString *old = domain;
+	char *srv;
+	Stringprep_rc rc;
+
+	if ((rc = stringprep_profile([domain_ cString], &srv,
+	    "Nameprep", 0)) != STRINGPREP_OK)
+		@throw [XMPPStringPrepFailedException newWithClass: isa
+							connection: self
+							   profile: @"Nameprep"
+							    string: domain_];
+
+	@try {
+		domain = [[OFString alloc] initWithCString: srv];
+	} @finally {
+		free(srv);
+	}
+
+	[old release];
+}
+
+- (OFString*)domain
+{
+	return [[domain copy] autorelease];
+}
+
 - (void)setPassword: (OFString*)password_
 {
 	OFString *old = password;
@@ -201,25 +229,57 @@
 - (void)connect
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	XMPPSRVLookup *SRVLookup = [XMPPSRVLookup lookupWithDomain: server];
-	OFEnumerator *enumerator = [SRVLookup objectEnumerator];
-	XMPPSRVEntry *candidate;
+	XMPPSRVEntry *candidate = nil;
+	XMPPSRVLookup *SRVLookup;
+	OFEnumerator *enumerator;
+	OFString *domainToASCII;
+	char *cDomainToASCII;
+	Idna_rc rc;
 
-	while ((candidate = [enumerator nextObject]) != nil) {
-		@try {
-			[sock connectToHost: [candidate target]
-				     onPort: [candidate port]];
-			break;
-		} @catch (OFAddressTranslationFailedException *e) {
-			[e release];
-		} @catch (OFConnectionFailedException *e) {
-			[e release];
-		}
-	}
-
-	if (!candidate)
+	if (server)
 		[sock connectToHost: server
 			     onPort: port];
+	else {
+		if ((rc = idna_to_ascii_8z([domain cString], &cDomainToASCII,
+		    IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
+			@throw [XMPPIDNATranslationFailedException
+				newWithClass: isa
+				  connection: self
+				   operation: @"ToASCII"
+				      string: domain];
+
+		@try {
+			domainToASCII = [OFString
+			    stringWithCString: cDomainToASCII];
+		} @finally {
+			free(cDomainToASCII);
+		}
+
+		@try {
+			SRVLookup = [XMPPSRVLookup
+			    lookupWithDomain: domainToASCII];
+			enumerator = [SRVLookup objectEnumerator];
+
+			while ((candidate = [enumerator nextObject]) != nil) {
+				@try {
+					[sock connectToHost: [candidate target]
+						     onPort: [candidate port]];
+					break;
+				} @catch (OFAddressTranslationFailedException
+				    *e) {
+					[e release];
+				} @catch (OFConnectionFailedException *e) {
+					[e release];
+				}
+			}
+		} @catch (OFAddressTranslationFailedException *e) {
+			[e release];
+		}
+
+		if (!candidate)
+			[sock connectToHost: domainToASCII
+				     onPort: port];
+	}
 
 	[self XMPP_startStream];
 
@@ -294,7 +354,7 @@
 	enumerator = [attributes objectEnumerator];
 	while ((attribute = [enumerator nextObject]) != nil) {
 		if ([[attribute name] isEqual: @"from"] &&
-		    ![[attribute stringValue] isEqual: server]) {
+		    ![[attribute stringValue] isEqual: domain]) {
 			of_log(@"Got invalid from in stream start!");
 			assert(0);
 		}
@@ -369,7 +429,7 @@
 			   @"<stream:stream to='%@' "
 			   @"xmlns='" XMPP_NS_CLIENT @"' "
 			   @"xmlns:stream='" XMPP_NS_STREAM @"' "
-			   @"version='1.0'>", server];
+			   @"version='1.0'>", domain];
 }
 
 - (void)XMPP_handleStanza: (OFXMLElement*)element

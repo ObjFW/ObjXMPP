@@ -67,7 +67,7 @@
 	OFTCPSocket *sock;
 	OFXMLParser *parser, *oldParser;
 	OFXMLElementBuilder *elementBuilder, *oldElementBuilder;
-	OFString *username, *password, *server, *resource;
+	OFString *username, *password, *server, *domain, *resource;
 	XMPPJID *JID;
 	uint16_t port;
 	id <XMPPConnectionDelegate, OFObject> delegate;
@@ -79,7 +79,7 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-@property (copy) OFString *username, *password, *server, *resource;
+@property (copy) OFString *username, *password, *server, *domain, *resource;
 @property (copy, readonly) XMPPJID *JID;
 @property (assign) uint16_t port;
 @property (retain) id <XMPPConnectionDelegate> delegate;
@@ -139,6 +139,8 @@
 - (OFString*)password;
 - (void)setServer: (OFString*)server;
 - (OFString*)server;
+- (void)setDomain: (OFString*)domain;
+- (OFString*)domain;
 - (void)setResource: (OFString*)resource;
 - (OFString*)resource;
 - (XMPPJID*)JID;

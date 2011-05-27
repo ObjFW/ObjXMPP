@@ -97,7 +97,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 		[OFApplication terminateWithStatus: 1];
 	}
 
-	[conn setServer: [arguments objectAtIndex: 0]];
+	[conn setDomain: [arguments objectAtIndex: 0]];
 	[conn setUsername: [arguments objectAtIndex: 1]];
 	[conn setPassword: [arguments objectAtIndex: 2]];
 	[conn setResource: @"ObjXMPP"];
