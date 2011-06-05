@@ -238,7 +238,7 @@
 
 	if (server)
 		[sock connectToHost: server
-			     onPort: port];
+			       port: port];
 	else {
 		if ((rc = idna_to_ascii_8z([domain cString], &cDomainToASCII,
 		    IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
@@ -263,7 +263,7 @@
 			while ((candidate = [enumerator nextObject]) != nil) {
 				@try {
 					[sock connectToHost: [candidate target]
-						     onPort: [candidate port]];
+						       port: [candidate port]];
 					break;
 				} @catch (OFAddressTranslationFailedException
 				    *e) {
@@ -278,7 +278,7 @@
 
 		if (!candidate)
 			[sock connectToHost: domainToASCII
-				     onPort: port];
+				       port: port];
 	}
 
 	[self XMPP_startStream];
