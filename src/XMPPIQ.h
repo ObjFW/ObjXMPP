@@ -42,7 +42,7 @@
  *
  * \param type The value for the stanza's type attribute
  * \param ID The value for the stanza's id attribute
- * \return A initialized XMPPIQ
+ * \return An initialized XMPPIQ
  */
 - initWithType: (OFString*)type
 	    ID: (OFString*)ID;

@@ -230,7 +230,7 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	XMPPSRVEntry *candidate = nil;
-	XMPPSRVLookup *SRVLookup;
+	XMPPSRVLookup *SRVLookup = nil;
 	OFEnumerator *enumerator;
 	OFString *domainToASCII;
 	char *cDomainToASCII;
@@ -255,16 +255,17 @@
 			free(cDomainToASCII);
 		}
 
-		SRVLookup = [XMPPSRVLookup
-		    lookupWithDomain: domainToASCII];
+		@try {
+			SRVLookup = [XMPPSRVLookup
+			    lookupWithDomain: domainToASCII];
+		} @catch (id e) {
+			[e release];
+		}
+
 		enumerator = [SRVLookup objectEnumerator];
 
-		// If there are no SRV records connect via A/AAAA record
-		if ((candidate = [enumerator nextObject]) == nil)
-			[sock connectToHost: domainToASCII
-				       port: port];
-		// Iterate over SRV records
-		else {
+		/* Iterate over SRV records, if any */
+		if ((candidate = [enumerator nextObject]) != nil) {
 			do {
 				@try {
 					[sock connectToHost: [candidate target]
@@ -277,7 +278,10 @@
 					[e release];
 				}
 			} while ((candidate = [enumerator nextObject]) != nil);
-		}
+		} else
+			/* No SRV records -> fall back to A / AAAA record */
+			[sock connectToHost: domainToASCII
+				       port: port];
 	}
 
 	[self XMPP_startStream];
