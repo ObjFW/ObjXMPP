@@ -255,12 +255,17 @@
 			free(cDomainToASCII);
 		}
 
-		@try {
-			SRVLookup = [XMPPSRVLookup
-			    lookupWithDomain: domainToASCII];
-			enumerator = [SRVLookup objectEnumerator];
+		SRVLookup = [XMPPSRVLookup
+		    lookupWithDomain: domainToASCII];
+		enumerator = [SRVLookup objectEnumerator];
 
-			while ((candidate = [enumerator nextObject]) != nil) {
+		// If there are no SRV records connect via A/AAAA record
+		if ((candidate = [enumerator nextObject]) == nil)
+			[sock connectToHost: domainToASCII
+				       port: port];
+		// Iterate over SRV records
+		else {
+			do {
 				@try {
 					[sock connectToHost: [candidate target]
 						       port: [candidate port]];
@@ -271,14 +276,8 @@
 				} @catch (OFConnectionFailedException *e) {
 					[e release];
 				}
-			}
-		} @catch (OFAddressTranslationFailedException *e) {
-			[e release];
+			} while ((candidate = [enumerator nextObject]) != nil);
 		}
-
-		if (!candidate)
-			[sock connectToHost: domainToASCII
-				       port: port];
 	}
 
 	[self XMPP_startStream];
