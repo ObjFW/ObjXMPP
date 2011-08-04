@@ -58,18 +58,17 @@
 	if (nodesep == SIZE_MAX)
 		[self setNode: nil];
 	else
-		[self setNode: [str substringFromIndex: 0
-					       toIndex: nodesep]];
+		[self setNode: [str substringWithRange: of_range(0, nodesep)]];
 
 	if (resourcesep == SIZE_MAX) {
 		[self setResource: nil];
 		resourcesep = [str length];
 	} else
-		[self setResource: [str substringFromIndex: resourcesep + 1
-						 toIndex: [str length]]];
+		[self setResource: [str substringWithRange:
+		    of_range(resourcesep + 1, [str length] - resourcesep - 1)]];
 
-	[self setDomain: [str substringFromIndex: nodesep + 1
-					 toIndex: resourcesep]];
+	[self setDomain: [str substringWithRange:
+	    of_range(nodesep + 1, resourcesep - nodesep - 1)]];
 
 	return self;
 }

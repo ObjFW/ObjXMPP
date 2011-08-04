@@ -184,8 +184,8 @@
 	enumerator =
 	    [[chal componentsSeparatedByString: @","] objectEnumerator];
 	while ((comp = [enumerator nextObject]) != nil) {
-		OFString *entry = [comp substringFromIndex: 2
-						   toIndex: [comp length]];
+		OFString *entry = [comp substringWithRange:
+		    of_range(2, [comp length] - 2)];
 
 		if ([comp hasPrefix: @"r="]) {
 			if (![entry hasPrefix: cNonce])
@@ -333,8 +333,8 @@
 	OFString *mess = [OFString stringWithCString: [message cArray]
 					      length: [message count] *
 						      [message itemSize]];
-	OFString *value = [mess substringFromIndex: 2
-					   toIndex: [mess length]];
+	OFString *value = [mess substringWithRange:
+	    of_range(2, [mess length] - 2)];
 
 	if ([mess hasPrefix: @"v="]) {
 		if (![value isEqual: [serverSignature stringByBase64Encoding]])
