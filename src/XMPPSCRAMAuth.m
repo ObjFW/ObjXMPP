@@ -170,7 +170,9 @@
 	OFEnumerator *enumerator;
 	OFString *comp;
 	enum {
-		GOT_SNONCE, GOT_SALT, GOT_ITERCOUNT
+		GOT_SNONCE    = 0x01,
+		GOT_SALT      = 0x02,
+		GOT_ITERCOUNT = 0x04
 	} got = 0;
 
 	hash = [[[hashType alloc] init] autorelease];
