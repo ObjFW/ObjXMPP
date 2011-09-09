@@ -409,7 +409,7 @@
 		[hashI updateWithBuffer: [data cArray]
 				 length: [data itemSize] * [data count]];
 
-		hashO = [[hashType alloc] init];
+		hashO = [[[hashType alloc] init] autorelease];
 		[hashO updateWithBuffer: (char*)kO
 				 length: blockSize];
 		[hashO updateWithBuffer: (char*)[hashI digest]
@@ -419,10 +419,10 @@
 		[self freeMemory: kO];
 	}
 
+	[hashO retain];
 	[pool release];
-	[hashO autorelease];
 
-	return [hashO digest];
+	return [[hashO autorelease] digest];
 }
 
 - (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
