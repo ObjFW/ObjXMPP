@@ -376,60 +376,53 @@
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFDataArray *k = [OFDataArray dataArrayWithItemSize: 1];
 	size_t i, kSize, blockSize = [hashType blockSize];
-	uint8_t *kCArray, *kI = NULL, *kO = NULL;
-	OFHash *hash;
+	uint8_t *kI = NULL, *kO = NULL;
+	OFHash *hashI, *hashO;
 
 	if ([key itemSize] * [key count] > blockSize) {
-		hash = [[[hashType alloc] init] autorelease];
-		[hash updateWithBuffer: [key cArray]
+		hashI = [[[hashType alloc] init] autorelease];
+		[hashI updateWithBuffer: [key cArray]
 				length: [key itemSize] * [key count]];
 		[k addNItems: [hashType digestSize]
-		  fromCArray: [hash digest]];
+		  fromCArray: [hashI digest]];
 	} else
 		[k addNItems: [key itemSize] * [key count]
 		  fromCArray: [key cArray]];
 
 	@try {
-		kI = [self allocMemoryWithSize: blockSize * sizeof(uint8_t)];
-		memset(kI, HMAC_IPAD, blockSize * sizeof(uint8_t));
+		kI = [self allocMemoryWithSize: blockSize];
+		kO = [self allocMemoryWithSize: blockSize];
 
-		kO = [self allocMemoryWithSize: blockSize * sizeof(uint8_t)];
-		memset(kO, HMAC_OPAD, blockSize * sizeof(uint8_t));
-
-		kCArray = [k cArray];
 		kSize = [k count];
-		for (i = 0; i < kSize; i++) {
-			kI[i] ^= kCArray[i];
-			kO[i] ^= kCArray[i];
+		memcpy(kI, [k cArray], kSize);
+		memset(kI + kSize, 0, blockSize - kSize);
+		memcpy(kO, kI, blockSize);
+
+		for (i = 0; i < blockSize; i++) {
+			kI[i] ^= HMAC_IPAD;
+			kO[i] ^= HMAC_OPAD;
 		}
 
-		k = [OFDataArray dataArrayWithItemSize: 1];
-		[k addNItems: blockSize
-		  fromCArray: kI];
-		[k addNItems: [data itemSize] * [data count]
-		  fromCArray: [data cArray]];
+		hashI = [[[hashType alloc] init] autorelease];
+		[hashI updateWithBuffer: (char*)kI
+				 length: blockSize];
+		[hashI updateWithBuffer: [data cArray]
+				 length: [data itemSize] * [data count]];
 
-		hash = [[[hashType alloc] init] autorelease];
-		[hash updateWithBuffer: [k cArray]
-				length: [k count]];
-		k = [OFDataArray dataArrayWithItemSize: 1];
-		[k addNItems: blockSize
-		  fromCArray: kO];
-		[k addNItems: [hashType digestSize]
-		   fromCArray: [hash digest]];
+		hashO = [[hashType alloc] init];
+		[hashO updateWithBuffer: (char*)kO
+				 length: blockSize];
+		[hashO updateWithBuffer: (char*)[hashI digest]
+				 length: [hashType digestSize]];
 	} @finally {
 		[self freeMemory: kI];
 		[self freeMemory: kO];
 	}
 
-	hash = [[[hashType alloc] init] autorelease];
-	[hash updateWithBuffer: [k cArray]
-			length: [k count]];
-
-	[hash retain];
 	[pool release];
+	[hashO autorelease];
 
-	return [hash digest];
+	return [hashO digest];
 }
 
 - (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
