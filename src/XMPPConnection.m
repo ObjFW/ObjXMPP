@@ -61,6 +61,7 @@
 	@try {
 		sock = [[OFTCPSocket alloc] init];
 		port = 5222;
+		encrypted = NO;
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -328,6 +329,11 @@
 	return [[sock retain] autorelease];
 }
 
+- (BOOL)encrypted
+{
+	return encrypted;
+}
+
 - (void)sendStanza: (OFXMLElement*)element
 {
 	of_log(@"Out: %@", element);
@@ -577,6 +583,8 @@
 		[sock release];
 		sock = newSock;
 
+		encrypted = YES;
+
 		if ([delegate respondsToSelector:
 		    @selector(connectionDidUpgradeToTLS:)])
 			[delegate connectionDidUpgradeToTLS: self];
@@ -711,16 +719,29 @@
 		while ((mech = [enumerator nextObject]) != nil)
 			[mechanisms addObject: [mech stringValue]];
 
+		if ([mechanisms containsObject: @"SCRAM-SHA-1-PLUS"]) {
+			authModule = [[XMPPSCRAMAuth alloc]
+			    initWithAuthcid: username
+				   password: password
+				 connection: self
+				       hash: [OFSHA1Hash class]
+			      plusAvailable: YES];
+			[self XMPP_sendAuth: @"SCRAM-SHA-1-PLUS"];
+			return;
+		}
+
 		if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
 			authModule = [[XMPPSCRAMAuth alloc]
 			    initWithAuthcid: username
 				   password: password
-				       hash: [OFSHA1Hash class]];
+				 connection: self
+				       hash: [OFSHA1Hash class]
+			      plusAvailable: NO];
 			[self XMPP_sendAuth: @"SCRAM-SHA-1"];
 			return;
 		}
 
-		if ([mechanisms containsObject: @"PLAIN"]) {
+		if ([mechanisms containsObject: @"PLAIN"] && encrypted) {
 			authModule = [[XMPPPLAINAuth alloc]
 			    initWithAuthcid: username
 				   password: password];

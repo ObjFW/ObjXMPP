@@ -26,10 +26,10 @@
 #endif
 
 #include <string.h>
-
 #include <assert.h>
-
 #include <openssl/rand.h>
+
+#import <ObjOpenSSL/SSLSocket.h>
 
 #import "XMPPSCRAMAuth.h"
 #import "XMPPExceptions.h"
@@ -40,44 +40,60 @@
 @implementation XMPPSCRAMAuth
 + SCRAMAuthWithAuthcid: (OFString*)authcid
 	      password: (OFString*)password
-		  hash: (Class)hash;
+	    connection: (XMPPConnection*)connection_
+		  hash: (Class)hash
+	 plusAvailable: (BOOL)plusAvailable_
 {
 	return [[[self alloc] initWithAuthcid: authcid
 				     password: password
-					 hash: hash] autorelease];
+				   connection: connection_
+					 hash: hash
+				plusAvailable: plusAvailable_] autorelease];
 }
 
 + SCRAMAuthWithAuthzid: (OFString*)authzid
 	       authcid: (OFString*)authcid
 	      password: (OFString*)password
-		  hash: (Class)hash;
+	    connection: (XMPPConnection*)connection_
+		  hash: (Class)hash
+	 plusAvailable: (BOOL)plusAvailable_
 {
 	return [[[self alloc] initWithAuthzid: authzid
 				      authcid: authcid
 				     password: password
-					 hash: hash] autorelease];
+				   connection: connection_
+					 hash: hash
+				plusAvailable: plusAvailable_] autorelease];
 }
 
 - initWithAuthcid: (OFString*)authcid_
 	 password: (OFString*)password_
-	     hash: (Class)hash;
+       connection: (XMPPConnection*)connection_
+	     hash: (Class)hash
+    plusAvailable: (BOOL)plusAvailable_
 {
 	return [self initWithAuthzid: nil
 			     authcid: authcid_
 			    password: password_
-				hash: hash];
+			  connection: connection_
+				hash: hash
+		       plusAvailable: plusAvailable_];
 }
 
 - initWithAuthzid: (OFString*)authzid_
 	  authcid: (OFString*)authcid_
 	 password: (OFString*)password_
-	     hash: (Class)hash;
+       connection: (XMPPConnection*)connection_
+	     hash: (Class)hash
+    plusAvailable: (BOOL)plusAvailable_
 {
 	self = [super initWithAuthzid: authzid_
 			      authcid: authcid_
 			     password: password_];
 
 	hashType = hash;
+	plusAvailable = plusAvailable_;
+	connection = [connection_ retain];
 
 	return self;
 }
@@ -88,6 +104,7 @@
 	[clientFirstMessageBare release];
 	[serverSignature release];
 	[cNonce release];
+	[connection release];
 
 	[super dealloc];
 }
@@ -134,10 +151,10 @@
 	GS2Header = nil;
 
 	if (authzid)
-		GS2Header = [[OFString alloc] initWithFormat: @"n,a=%@,",
-							      authzid];
+		GS2Header = [[OFString alloc] initWithFormat: @"%@,a=%@,",
+			(plusAvailable ? @"p=tls-unique" : @"y"), authzid];
 	else
-		GS2Header = @"n,,";
+		GS2Header = plusAvailable ? @"p=tls-unique,," : @"y,,";
 
 	[cNonce release];
 	cNonce = nil;
@@ -216,6 +233,12 @@
 	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
 	[tmpArray addNItems: [GS2Header cStringLength]
 		 fromCArray: [GS2Header cString]];
+	if (plusAvailable && [connection encrypted]) {
+		OFDataArray *channelBinding = [((SSLSocket*)[connection socket])
+		    channelBindingDataWithType: @"tls-unique"];
+		[tmpArray addNItems: [channelBinding count]
+			 fromCArray: [channelBinding cArray]];
+	}
 	tmpString = [tmpArray stringByBase64Encoding];
 	[ret addNItems: 2
 	    fromCArray: "c="];

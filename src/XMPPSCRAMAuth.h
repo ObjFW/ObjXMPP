@@ -22,6 +22,7 @@
 
 #import <ObjFW/ObjFW.h>
 #import "XMPPAuthenticator.h"
+#import "XMPPConnection.h"
 
 /**
  * \brief A class to authenticate using SCRAM
@@ -33,6 +34,8 @@
 	OFString *GS2Header;
 	OFString *clientFirstMessageBare;
 	OFDataArray *serverSignature;
+	XMPPConnection *connection;
+	BOOL plusAvailable;
 }
 
 /**
@@ -40,12 +43,16 @@
  *
  * \param authcid The authcid to authenticate with
  * \param password The password to authenticate with
+ * \param connection The connection over which authentication is done
  * \param hash The class to use for calulating hashes
+ * \param plusAvailable Whether the PLUS variant was offered
  * \return A new autoreleased XMPPSCRAMAuth
  */
 + SCRAMAuthWithAuthcid: (OFString*)authcid
 	      password: (OFString*)password
-		  hash: (Class)hash;
+	    connection: (XMPPConnection*)connection
+		  hash: (Class)hash
+	 plusAvailable: (BOOL)plusAvailable;
 
 /**
  * Creates a new autoreleased XMPPSCRAMAuth with an authzid,
@@ -54,25 +61,33 @@
  * \param authzid The authzid to get authorization for
  * \param authcid The authcid to authenticate with
  * \param password The password to authenticate with
+ * \param connection The connection over which authentication is done
  * \param hash The class to use for calulating hashes
+ * \param plusAvailable Whether the PLUS variant was offered
  * \return A new autoreleased XMPPSCRAMAuth
  */
 + SCRAMAuthWithAuthzid: (OFString*)authzid
 	       authcid: (OFString*)authcid
 	      password: (OFString*)password
-		  hash: (Class)hash;
+	    connection: (XMPPConnection*)connection
+		  hash: (Class)hash
+	 plusAvailable: (BOOL)plusAvailable;
 
 /**
  * Initializes an already allocated XMPPSCRAMAuth with an authcid and password.
  *
  * \param authcid The authcid to authenticate with
  * \param password The password to authenticate with
+ * \param connection The connection over which authentication is done
  * \param hash The class to use for calulating hashes
+ * \param plusAvailable Whether the PLUS variant was offered
  * \return A initialized XMPPSCRAMAuth
  */
 - initWithAuthcid: (OFString*)authcid
 	 password: (OFString*)password
-	     hash: (Class)hash;
+       connection: (XMPPConnection*)connection
+	     hash: (Class)hash
+    plusAvailable: (BOOL)plusAvailable;
 
 /**
  * Initializes an already allocated XMPPSCRAMAuth with a authzid,
@@ -81,13 +96,17 @@
  * \param authzid The authzid to get authorization for
  * \param authcid The authcid to authenticate with
  * \param password The password to authenticate with
+ * \param connection The connection over which authentication is done
  * \param hash The class to use for calulating hashes
+ * \param plusAvailable Whether the PLUS variant was offered
  * \return A initialized XMPPSCRAMAuth
  */
 - initWithAuthzid: (OFString*)authzid
 	  authcid: (OFString*)authcid
 	 password: (OFString*)password
-	     hash: (Class)hash;
+       connection: (XMPPConnection*)connection
+	     hash: (Class)hash
+    plusAvailable: (BOOL)plusAvailable;
 
 - (OFString*)XMPP_genNonce;
 - (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key

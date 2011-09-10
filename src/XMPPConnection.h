@@ -73,6 +73,7 @@
 	id <XMPPConnectionDelegate, OFObject> delegate;
 	XMPPAuthenticator *authModule;
 	BOOL needsSession;
+	BOOL encrypted;
 	unsigned int lastID;
 	OFString *bindID, *sessionID;
 	XMPPRoster *roster;
@@ -85,6 +86,7 @@
 @property (retain) id <XMPPConnectionDelegate> delegate;
 @property (readonly, retain) XMPPRoster *roster;
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
+@property (readonly) BOOL encrypted;
 #endif
 
 /**
@@ -118,6 +120,11 @@
  * \return The socket used by the XMPPConnection
  */
 - (OFTCPSocket*)socket;
+
+/**
+ * \return Whether the connection is encrypted
+ */
+- (BOOL)encrypted;
 
 /**
  * Sends an OFXMLElement, usually an XMPPStanza.
