@@ -151,10 +151,12 @@
 	GS2Header = nil;
 
 	if (authzid)
-		GS2Header = [[OFString alloc] initWithFormat: @"%@,a=%@,",
-			(plusAvailable ? @"p=tls-unique" : @"y"), authzid];
+		GS2Header = [[OFString alloc]
+		    initWithFormat: @"%@,a=%@,",
+				    (plusAvailable ? @"p=tls-unique" : @"y"),
+				    authzid];
 	else
-		GS2Header = plusAvailable ? @"p=tls-unique,," : @"y,,";
+		GS2Header = (plusAvailable ? @"p=tls-unique,," : @"y,,");
 
 	[cNonce release];
 	cNonce = nil;

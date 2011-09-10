@@ -702,7 +702,7 @@
 					      namespace: XMPP_NS_SESSION];
 	OFXMLElement *mechs = [element elementForName: @"mechanisms"
 					    namespace: XMPP_NS_SASL];
-	OFMutableArray *mechanisms = [OFMutableArray array];
+	OFMutableSet *mechanisms = [OFMutableSet set];
 
 	if (starttls != nil) {
 		[self sendStanza:
