@@ -231,7 +231,6 @@
 		@throw [OFInvalidServerReplyException newWithClass: isa];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
-	// XXX: No channel binding for now
 	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
 	[tmpArray addNItems: [GS2Header cStringLength]
 		 fromCArray: [GS2Header cString]];
