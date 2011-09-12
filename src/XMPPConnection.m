@@ -96,7 +96,7 @@
 	char *node;
 	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([username_ cString], &node,
+	if ((rc = stringprep_profile([username_ UTF8String], &node,
 	    "SASLprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException newWithClass: isa
 							connection: self
@@ -104,7 +104,7 @@
 							    string: username_];
 
 	@try {
-		username = [[OFString alloc] initWithCString: node];
+		username = [[OFString alloc] initWithUTF8String: node];
 	} @finally {
 		free(node);
 	}
@@ -123,7 +123,7 @@
 	char *res;
 	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([resource_ cString], &res,
+	if ((rc = stringprep_profile([resource_ UTF8String], &res,
 	    "Resourceprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException
 		    newWithClass: isa
@@ -132,7 +132,7 @@
 			  string: resource_];
 
 	@try {
-		resource = [[OFString alloc] initWithCString: res];
+		resource = [[OFString alloc] initWithUTF8String: res];
 	} @finally {
 		free(res);
 	}
@@ -151,7 +151,7 @@
 	char *srv;
 	Idna_rc rc;
 
-	if ((rc = idna_to_ascii_8z([server_ cString],
+	if ((rc = idna_to_ascii_8z([server_ UTF8String],
 	    &srv, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
 		@throw [XMPPIDNATranslationFailedException
 		    newWithClass: isa
@@ -160,7 +160,7 @@
 			  string: server_];
 
 	@try {
-		server = [[OFString alloc] initWithCString: srv];
+		server = [[OFString alloc] initWithUTF8String: srv];
 	} @finally {
 		free(srv);
 	}
@@ -179,7 +179,7 @@
 	char *srv;
 	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([domain_ cString], &srv,
+	if ((rc = stringprep_profile([domain_ UTF8String], &srv,
 	    "Nameprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException newWithClass: isa
 							connection: self
@@ -187,7 +187,7 @@
 							    string: domain_];
 
 	@try {
-		domain = [[OFString alloc] initWithCString: srv];
+		domain = [[OFString alloc] initWithUTF8String: srv];
 	} @finally {
 		free(srv);
 	}
@@ -206,7 +206,7 @@
 	char *pass;
 	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([password_ cString], &pass,
+	if ((rc = stringprep_profile([password_ UTF8String], &pass,
 	    "SASLprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException newWithClass: isa
 							connection: self
@@ -214,7 +214,7 @@
 							    string: password_];
 
 	@try {
-		password = [[OFString alloc] initWithCString: pass];
+		password = [[OFString alloc] initWithUTF8String: pass];
 	} @finally {
 		free(pass);
 	}
@@ -241,7 +241,7 @@
 		[sock connectToHost: server
 			       port: port];
 	else {
-		if ((rc = idna_to_ascii_8z([domain cString], &cDomainToASCII,
+		if ((rc = idna_to_ascii_8z([domain UTF8String], &cDomainToASCII,
 		    IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
 			@throw [XMPPIDNATranslationFailedException
 				newWithClass: isa
@@ -251,7 +251,7 @@
 
 		@try {
 			domainToASCII = [OFString
-			    stringWithCString: cDomainToASCII];
+			    stringWithUTF8String: cDomainToASCII];
 		} @finally {
 			free(cDomainToASCII);
 		}

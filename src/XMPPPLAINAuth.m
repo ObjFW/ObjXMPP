@@ -56,15 +56,15 @@
 	[message addItem: ""];
 
 	/* authcid */
-	[message addNItems: [authcid cStringLength]
-		fromCArray: [authcid cString]];
+	[message addNItems: [authcid UTF8StringLength]
+		fromCArray: [authcid UTF8String]];
 
 	/* separator */
 	[message addItem: ""];
 
 	/* passwd */
-	[message addNItems: [password cStringLength]
-		fromCArray: [password cString]];
+	[message addNItems: [password UTF8StringLength]
+		fromCArray: [password UTF8String]];
 
 	return message;
 }

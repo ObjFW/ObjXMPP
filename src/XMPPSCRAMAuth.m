@@ -168,11 +168,11 @@
 								   authcid,
 								   cNonce];
 
-	[ret addNItems: [GS2Header cStringLength]
-	    fromCArray: [GS2Header cString]];
+	[ret addNItems: [GS2Header UTF8StringLength]
+	    fromCArray: [GS2Header UTF8String]];
 
-	[ret addNItems: [clientFirstMessageBare cStringLength]
-	    fromCArray: [clientFirstMessageBare cString]];
+	[ret addNItems: [clientFirstMessageBare UTF8StringLength]
+	    fromCArray: [clientFirstMessageBare UTF8String]];
 
 	return ret;
 }
@@ -198,9 +198,9 @@
 	ret = [OFDataArray dataArrayWithItemSize: 1];
 	authMessage = [OFDataArray dataArrayWithItemSize: 1];
 
-	OFString *chal = [OFString stringWithCString: [challenge cArray]
-					      length: [challenge count] *
-						      [challenge itemSize]];
+	OFString *chal = [OFString stringWithUTF8String: [challenge cArray]
+						 length: [challenge count] *
+							 [challenge itemSize]];
 
 	enumerator =
 	    [[chal componentsSeparatedByString: @","] objectEnumerator];
@@ -232,8 +232,8 @@
 
 	// Add c=<base64(GS2Header+channelBindingData)>
 	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
-	[tmpArray addNItems: [GS2Header cStringLength]
-		 fromCArray: [GS2Header cString]];
+	[tmpArray addNItems: [GS2Header UTF8StringLength]
+		 fromCArray: [GS2Header UTF8String]];
 	if (plusAvailable && [connection encrypted]) {
 		OFDataArray *channelBinding = [((SSLSocket*)[connection socket])
 		    channelBindingDataWithType: @"tls-unique"];
@@ -243,19 +243,19 @@
 	tmpString = [tmpArray stringByBase64Encoding];
 	[ret addNItems: 2
 	    fromCArray: "c="];
-	[ret addNItems: [tmpString cStringLength]
-	    fromCArray: [tmpString cString]];
+	[ret addNItems: [tmpString UTF8StringLength]
+	    fromCArray: [tmpString UTF8String]];
 
 	// Add r=<nonce>
 	[ret addItem: ","];
 	[ret addNItems: 2
 	    fromCArray: "r="];
-	[ret addNItems: [sNonce cStringLength]
-	    fromCArray: [sNonce cString]];
+	[ret addNItems: [sNonce UTF8StringLength]
+	    fromCArray: [sNonce UTF8String]];
 
 	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
-	[tmpArray addNItems: [password cStringLength]
-		 fromCArray: [password cString]];
+	[tmpArray addNItems: [password UTF8StringLength]
+		 fromCArray: [password UTF8String]];
 
 	/*
 	 * IETF RFC 5802:
@@ -271,8 +271,8 @@
 	 *		  server-first-message + "," +
 	 *		  client-final-message-without-proof
 	 */
-	[authMessage addNItems: [clientFirstMessageBare cStringLength]
-		    fromCArray: [clientFirstMessageBare cString]];
+	[authMessage addNItems: [clientFirstMessageBare UTF8StringLength]
+		    fromCArray: [clientFirstMessageBare UTF8String]];
 	[authMessage addItem: ","];
 	[authMessage addNItems: [challenge count] * [challenge itemSize]
 		    fromCArray: [challenge cArray]];
@@ -344,8 +344,8 @@
 	[ret addNItems: 2
 	    fromCArray: "p="];
 	tmpString = [tmpArray stringByBase64Encoding];
-	[ret addNItems: [tmpString cStringLength]
-	    fromCArray: [tmpString cString]];
+	[ret addNItems: [tmpString UTF8StringLength]
+	    fromCArray: [tmpString UTF8String]];
 
 	[ret retain];
 	[pool release];
@@ -356,9 +356,9 @@
 - (void)parseServerFinalMessage: (OFDataArray*)message
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	OFString *mess = [OFString stringWithCString: [message cArray]
-					      length: [message count] *
-						      [message itemSize]];
+	OFString *mess = [OFString stringWithUTF8String: [message cArray]
+						 length: [message count] *
+							 [message itemSize]];
 	OFString *value = [mess substringWithRange:
 	    of_range(2, [mess length] - 2)];
 
@@ -393,6 +393,7 @@
 	}
 
 	return [OFString stringWithCString: (char*)buf
+				  encoding: OF_STRING_ENCODING_ASCII
 				    length: 64];
 }
 

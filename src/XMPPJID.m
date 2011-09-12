@@ -110,7 +110,7 @@
 		return;
 	}
 
-	if ((rc = stringprep_profile([node_ cString], &nodepart,
+	if ((rc = stringprep_profile([node_ UTF8String], &nodepart,
 	    "Nodeprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException newWithClass: isa
 							connection: nil
@@ -118,7 +118,7 @@
 							    string: node_];
 
 	@try {
-		node = [[OFString alloc] initWithCString: nodepart];
+		node = [[OFString alloc] initWithUTF8String: nodepart];
 	} @finally {
 		free(nodepart);
 	}
@@ -137,7 +137,7 @@
 	char *srv;
 	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([domain_ cString], &srv,
+	if ((rc = stringprep_profile([domain_ UTF8String], &srv,
 	    "Nameprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException newWithClass: isa
 							connection: nil
@@ -145,7 +145,7 @@
 							    string: domain_];
 
 	@try {
-		domain = [[OFString alloc] initWithCString: srv];
+		domain = [[OFString alloc] initWithUTF8String: srv];
 	} @finally {
 		free(srv);
 	}
@@ -170,7 +170,7 @@
 		return;
 	}
 
-	if ((rc = stringprep_profile([resource_ cString], &res,
+	if ((rc = stringprep_profile([resource_ UTF8String], &res,
 	    "Resourceprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException
 		    newWithClass: isa
@@ -179,7 +179,7 @@
 			  string: resource_];
 
 	@try {
-		resource = [[OFString alloc] initWithCString: res];
+		resource = [[OFString alloc] initWithUTF8String: res];
 	} @finally {
 		free(res);
 	}
