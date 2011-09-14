@@ -73,7 +73,7 @@
 	id <XMPPConnectionDelegate, OFObject> delegate;
 	XMPPAuthenticator *authModule;
 	BOOL needsSession;
-	BOOL encrypted;
+	BOOL encryptionRequired, encrypted;
 	unsigned int lastID;
 	OFString *bindID, *sessionID;
 	XMPPRoster *roster;
@@ -86,6 +86,7 @@
 @property (retain) id <XMPPConnectionDelegate> delegate;
 @property (readonly, retain) XMPPRoster *roster;
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
+@property (assign) BOOL encryptionRequired;
 @property (readonly) BOOL encrypted;
 #endif
 
@@ -120,6 +121,18 @@
  * \return The socket used by the XMPPConnection
  */
 - (OFTCPSocket*)socket;
+
+/**
+ * \return Whether encryption is encrypted
+ */
+- (BOOL)encryptionRequired;
+
+/**
+ * Sets whether encryption is required.
+ *
+ * \param required Whether encryption is required
+ */
+- (void)setEncryptionRequired: (BOOL)required;
 
 /**
  * \return Whether the connection is encrypted

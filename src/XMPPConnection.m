@@ -329,6 +329,16 @@
 	return [[sock retain] autorelease];
 }
 
+- (BOOL)encryptionRequired
+{
+	return encryptionRequired;
+}
+
+- (void)setEncryptionRequired: (BOOL)required
+{
+	encryptionRequired = required;
+}
+
 - (BOOL)encrypted
 {
 	return encrypted;
@@ -710,6 +720,10 @@
 					namespace: XMPP_NS_STARTTLS]];
 		return;
 	}
+
+	if (encryptionRequired && !encrypted)
+		/* TODO: Find/create an exception to throw here */
+		@throw [OFException newWithClass: isa];
 
 	if (mechs != nil) {
 		OFEnumerator *enumerator;
