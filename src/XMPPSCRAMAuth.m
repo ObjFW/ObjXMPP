@@ -384,12 +384,12 @@
 	assert(RAND_pseudo_bytes(buf, 64) >= 0);
 
 	for (i = 0; i < 64; i++) {
-		uint8_t tmp = (buf[i] % ('~' - '!')) + '!';
+		// Restrict salt to printable range, but do not include '~'...
+		buf[i] = (buf[i] % ('~' - '!')) + '!';
 
-		while (tmp == ',')
-			tmp = ((buf[i] >> 1) % ('~' - '!')) + '!';
-
-		buf[i] = tmp;
+		// ...so we can use it to replace ','
+		if (buf[i] == ',')
+			buf[i] = '~';
 	}
 
 	return [OFString stringWithCString: (char*)buf
