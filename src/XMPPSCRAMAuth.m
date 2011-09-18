@@ -143,12 +143,18 @@
 	[old release];
 }
 
-- (OFDataArray*)clientFirstMessage
+- (OFDataArray*)initialMessage
 {
 	OFDataArray *ret = [OFDataArray dataArrayWithItemSize: 1];
 
+	/* New authentication attempt, reset status */
+	[cNonce release];
+	cNonce = nil;
 	[GS2Header release];
 	GS2Header = nil;
+	[serverSignature release];
+	serverSignature = nil;
+	authenticated = NO;
 
 	if (authzid)
 		GS2Header = [[OFString alloc]
@@ -158,8 +164,6 @@
 	else
 		GS2Header = (plusAvailable ? @"p=tls-unique,," : @"y,,");
 
-	[cNonce release];
-	cNonce = nil;
 	cNonce = [[self XMPP_genNonce] retain];
 
 	[clientFirstMessageBare release];
@@ -174,10 +178,27 @@
 	[ret addNItems: [clientFirstMessageBare UTF8StringLength]
 	    fromCArray: [clientFirstMessageBare UTF8String]];
 
+
 	return ret;
 }
 
-- (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge
+- (OFDataArray*)continueWithData: (OFDataArray*)data
+{
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	OFDataArray *ret;
+
+	if (!serverSignature)
+		ret = [self XMPP_parseServerFirstMessage: data];
+	else
+		ret = [self XMPP_parseServerFinalMessage: data];
+
+	[ret retain];
+	[pool release];
+
+	return [ret autorelease];
+}
+
+- (OFDataArray*)XMPP_parseServerFirstMessage: (OFDataArray*)data
 {
 	size_t i;
 	uint8_t *clientKey, *serverKey, *clientSignature;
@@ -185,7 +206,6 @@
 	OFHash *hash;
 	OFDataArray *ret, *authMessage, *tmpArray, *salt = nil, *saltedPassword;
 	OFString *tmpString, *sNonce = nil;
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFEnumerator *enumerator;
 	OFString *comp;
 	enum {
@@ -198,9 +218,9 @@
 	ret = [OFDataArray dataArrayWithItemSize: 1];
 	authMessage = [OFDataArray dataArrayWithItemSize: 1];
 
-	OFString *chal = [OFString stringWithUTF8String: [challenge cArray]
-						 length: [challenge count] *
-							 [challenge itemSize]];
+	OFString *chal = [OFString stringWithUTF8String: [data cArray]
+						 length: [data count] *
+							 [data itemSize]];
 
 	enumerator =
 	    [[chal componentsSeparatedByString: @","] objectEnumerator];
@@ -253,14 +273,14 @@
 	[ret addNItems: [sNonce UTF8StringLength]
 	    fromCArray: [sNonce UTF8String]];
 
-	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
-	[tmpArray addNItems: [password UTF8StringLength]
-		 fromCArray: [password UTF8String]];
-
 	/*
 	 * IETF RFC 5802:
 	 * SaltedPassword := Hi(Normalize(password), salt, i)
 	 */
+	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
+	[tmpArray addNItems: [password UTF8StringLength]
+		 fromCArray: [password UTF8String]];
+
 	saltedPassword = [self XMPP_hiWithData: tmpArray
 					  salt: salt
 				iterationCount: iterCount];
@@ -274,8 +294,8 @@
 	[authMessage addNItems: [clientFirstMessageBare UTF8StringLength]
 		    fromCArray: [clientFirstMessageBare UTF8String]];
 	[authMessage addItem: ","];
-	[authMessage addNItems: [challenge count] * [challenge itemSize]
-		    fromCArray: [challenge cArray]];
+	[authMessage addNItems: [data count] * [data itemSize]
+		    fromCArray: [data cArray]];
 	[authMessage addItem: ","];
 	[authMessage addNItems: [ret count]
 		    fromCArray: [ret cArray]];
@@ -347,20 +367,24 @@
 	[ret addNItems: [tmpString UTF8StringLength]
 	    fromCArray: [tmpString UTF8String]];
 
-	[ret retain];
-	[pool release];
-
-	return [ret autorelease];
+	return ret;
 }
 
-- (void)parseServerFinalMessage: (OFDataArray*)message
+- (OFDataArray*)XMPP_parseServerFinalMessage: (OFDataArray*)data
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	OFString *mess = [OFString stringWithUTF8String: [message cArray]
-						 length: [message count] *
-							 [message itemSize]];
-	OFString *value = [mess substringWithRange:
-	    of_range(2, [mess length] - 2)];
+	OFString *mess, *value;
+
+	/*
+	 * server-final-message already received,
+	 * we were just waiting for the last word from the server
+	 */
+	if (authenticated)
+		return nil;
+
+	mess = [OFString stringWithUTF8String: [data cArray]
+				       length: [data count] *
+					       [data itemSize]];
+	value = [mess substringWithRange: of_range(2, [mess length] - 2)];
 
 	if ([mess hasPrefix: @"v="]) {
 		if (![value isEqual: [serverSignature stringByBase64Encoding]])
@@ -368,12 +392,13 @@
 			    newWithClass: isa
 			      connection: nil
 				  reason: @"Received wrong ServerSignature"];
+		authenticated = YES;
 	} else
 		@throw [XMPPAuthFailedException newWithClass: isa
 						  connection: nil
 						      reason: value];
 
-	[pool release];
+	return nil;
 }
 
 - (OFString*)XMPP_genNonce

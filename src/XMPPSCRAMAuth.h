@@ -36,6 +36,7 @@
 	OFDataArray *serverSignature;
 	XMPPConnection *connection;
 	BOOL plusAvailable;
+	BOOL authenticated;
 }
 
 /**
@@ -114,4 +115,6 @@
 - (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
 			   salt: (OFDataArray *)salt_
 		 iterationCount: (intmax_t)i;
+- (OFDataArray*)XMPP_parseServerFirstMessage: (OFDataArray*)data;
+- (OFDataArray*)XMPP_parseServerFinalMessage: (OFDataArray*)data;
 @end

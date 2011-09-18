@@ -619,19 +619,26 @@
 		OFDataArray *challenge = [OFDataArray
 		    dataArrayWithBase64EncodedString: [element stringValue]];
 		OFDataArray *response = [authModule
-		    calculateResponseWithChallenge: challenge];
+		    continueWithData: challenge];
 
 		responseTag = [OFXMLElement  elementWithName: @"response"
 						   namespace: XMPP_NS_SASL];
-		[responseTag addChild: [OFXMLElement elementWithCharacters:
-		    [response stringByBase64Encoding]]];
+		if (response) {
+			if ([response count] == 0)
+				[responseTag addChild: [OFXMLElement
+				    elementWithCharacters: @"="]];
+			else
+				[responseTag addChild: [OFXMLElement
+				    elementWithCharacters: [response
+					stringByBase64Encoding]]];
+		}
 
 		[self sendStanza: responseTag];
 		return;
 	}
 
 	if ([[element name] isEqual: @"success"]) {
-		[authModule parseServerFinalMessage: [OFDataArray
+		[authModule continueWithData: [OFDataArray
 		    dataArrayWithBase64EncodedString: [element stringValue]]];
 
 		if ([delegate respondsToSelector:
@@ -780,13 +787,20 @@
 - (void)XMPP_sendAuth: (OFString*)authName
 {
 	OFXMLElement *authTag;
+	OFDataArray *initialMessage = [authModule initialMessage];
 
 	authTag = [OFXMLElement elementWithName: @"auth"
 				      namespace: XMPP_NS_SASL];
 	[authTag addAttributeWithName: @"mechanism"
 			  stringValue: authName];
-	[authTag addChild: [OFXMLElement elementWithCharacters:
-	    [[authModule clientFirstMessage] stringByBase64Encoding]]];
+	if (initialMessage) {
+		if ([initialMessage count] == 0)
+			[authTag addChild: [OFXMLElement
+			    elementWithCharacters: @"="]];
+		else
+			[authTag addChild: [OFXMLElement elementWithCharacters:
+			    [initialMessage stringByBase64Encoding]]];
+	}
 
 	[self sendStanza: authTag];
 }

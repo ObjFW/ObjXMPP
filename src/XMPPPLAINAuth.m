@@ -44,7 +44,7 @@
 				     password: password] autorelease];
 }
 
-- (OFDataArray*)clientFirstMessage
+- (OFDataArray*)initialMessage
 {
 	OFDataArray *message = [OFDataArray dataArrayWithItemSize: 1];
 
@@ -67,18 +67,5 @@
 		fromCArray: [password UTF8String]];
 
 	return message;
-}
-
-- (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge
-{
-	@throw [XMPPAuthFailedException newWithClass: isa
-					  connection: nil
-					      reason: @"Received a challenge "
-						      @"during PLAIN auth"];
-}
-
-- (void)parseServerFinalMessage: (OFDataArray*)message
-{
-	return;
 }
 @end

@@ -68,20 +68,13 @@
 /**
  * \return A OFDataAray containing the initial authentication message
  */
-- (OFDataArray*)clientFirstMessage;
+- (OFDataArray*)initialMessage;
 
 /**
- * \param challenge The challenge to generate a response for
- * \return The response to the given challenge
+ * \param data The continuation data send by the server
+ * \return The appropriate response if the data was a challenge, nil otherwise
  */
-- (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge;
-
-/**
- * Checks whether the servers final message was valid
- *
- * \param  message The servers final message
- */
-- (void)parseServerFinalMessage: (OFDataArray*)message;
+- (OFDataArray*)continueWithData: (OFDataArray*)data;
 
 - (void)setAuthzid: (OFString*)authzid;
 - (OFString*)authzid;

@@ -93,21 +93,13 @@
 	return [[password copy] autorelease];
 }
 
-- (OFDataArray*)clientFirstMessage
+- (OFDataArray*)initialMessage
 {
-	@throw [OFNotImplementedException newWithClass: isa
-					      selector: _cmd];
+	return nil;
 }
 
-- (OFDataArray*)calculateResponseWithChallenge: (OFDataArray*)challenge
+- (OFDataArray*)continueWithData: (OFDataArray*)challenge
 {
-	@throw [OFNotImplementedException newWithClass: isa
-					      selector: _cmd];
-}
-
-- (void)parseServerFinalMessage: (OFDataArray*)message
-{
-	@throw [OFNotImplementedException newWithClass: isa
-					      selector: _cmd];
+	return nil;
 }
 @end
