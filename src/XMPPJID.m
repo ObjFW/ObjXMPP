@@ -112,10 +112,11 @@
 
 	if ((rc = stringprep_profile([node_ UTF8String], &nodepart,
 	    "Nodeprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException newWithClass: isa
-							connection: nil
-							   profile: @"Nodeprep"
-							    string: node_];
+		@throw [XMPPStringPrepFailedException
+		    exceptionWithClass: isa
+			    connection: nil
+			       profile: @"Nodeprep"
+				string: node_];
 
 	@try {
 		node = [[OFString alloc] initWithUTF8String: nodepart];
@@ -139,10 +140,11 @@
 
 	if ((rc = stringprep_profile([domain_ UTF8String], &srv,
 	    "Nameprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException newWithClass: isa
-							connection: nil
-							   profile: @"Nameprep"
-							    string: domain_];
+		@throw [XMPPStringPrepFailedException
+		    exceptionWithClass: isa
+			    connection: nil
+			       profile: @"Nameprep"
+				string: domain_];
 
 	@try {
 		domain = [[OFString alloc] initWithUTF8String: srv];
@@ -173,10 +175,10 @@
 	if ((rc = stringprep_profile([resource_ UTF8String], &res,
 	    "Resourceprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException
-		    newWithClass: isa
-		      connection: nil
-			 profile: @"Resourceprep"
-			  string: resource_];
+		    exceptionWithClass: isa
+			    connection: nil
+			       profile: @"Resourceprep"
+				string: resource_];
 
 	@try {
 		resource = [[OFString alloc] initWithUTF8String: res];

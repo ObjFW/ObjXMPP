@@ -34,8 +34,8 @@
 @property (readonly, nonatomic) XMPPConnection *connection;
 #endif
 
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn;
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn;
 - initWithClass: (Class)class_
      connection: (XMPPConnection*)conn;
 - (XMPPConnection*)connection;
@@ -52,8 +52,8 @@
 @property (readonly, nonatomic) OFString *reason;
 #endif
 
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
      condition: (OFString*)condition_
 	reason: (OFString*)reason_;
 - initWithClass: (Class)class_
@@ -74,10 +74,10 @@
 @property (readonly, nonatomic) OFString *profile, *string;
 #endif
 
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
-       profile: (OFString*)profile
-	string: (OFString*)string;
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
+	     profile: (OFString*)profile
+	      string: (OFString*)string;
 - initWithClass: (Class)class_
      connection: (XMPPConnection*)conn
 	profile: (OFString*)profile
@@ -96,10 +96,10 @@
 @property (readonly, nonatomic) OFString *operation, *string;
 #endif
 
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
-     operation: (OFString*)operation
-	string: (OFString*)string;
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
+	   operation: (OFString*)operation
+	      string: (OFString*)string;
 - initWithClass: (Class)class_
      connection: (XMPPConnection*)conn
       operation: (OFString*)operation
@@ -117,9 +117,9 @@
 @property (readonly, nonatomic) OFString *reason;
 #endif
 
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
-	reason: (OFString*)reason_;
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
+	      reason: (OFString*)reason_;
 - initWithClass: (Class)class_
      connection: (XMPPConnection*)conn
 	 reason: (OFString*)reason_;

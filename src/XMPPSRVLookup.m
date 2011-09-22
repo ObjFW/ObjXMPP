@@ -59,8 +59,8 @@
 {
 	Class c = isa;
 	[self release];
-	@throw [OFNotImplementedException newWithClass: c
-					      selector: _cmd];
+	@throw [OFNotImplementedException exceptionWithClass: c
+						    selector: _cmd];
 }
 
 - initWithPriority: (uint16_t)priority_
@@ -100,7 +100,7 @@
 		if (dn_expand(ns_msg_base(handle), ns_msg_end(handle),
 		    (uint8_t*)&rdata[3], buffer, NS_MAXDNAME) < 1)
 			@throw [OFInitializationFailedException
-			    newWithClass: isa];
+			    exceptionWithClass: isa];
 
 		target = [[OFString alloc]
 		    initWithCString: buffer
@@ -210,9 +210,9 @@
 
 		if (res_ninit(&resState))
 			@throw [OFAddressTranslationFailedException
-			    newWithClass: isa
-				  socket: nil
-				    host: domain];
+			    exceptionWithClass: isa
+					socket: nil
+					  host: domain];
 
 		answer = [self allocMemoryWithSize: of_pagesize];
 		answerLen = res_nsearch(&resState, [request cStringWithEncoding:
@@ -225,16 +225,16 @@
 
 		if (answerLen < 1 || answerLen > of_pagesize) {
 			@throw [OFAddressTranslationFailedException
-			    newWithClass: isa
-				  socket: nil
-				    host: domain];
+			    exceptionWithClass: isa
+					socket: nil
+					  host: domain];
 		}
 
 		if (ns_initparse(answer, answerLen, &handle))
 			@throw [OFAddressTranslationFailedException
-			    newWithClass: isa
-				  socket: nil
-				    host: domain];
+			    exceptionWithClass: isa
+					socket: nil
+					  host: domain];
 
 		resourceRecordCount = ns_msg_count(handle, ns_s_an);
 		for (i = 0; i < resourceRecordCount; i++) {

@@ -98,10 +98,11 @@
 
 	if ((rc = stringprep_profile([username_ UTF8String], &node,
 	    "SASLprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException newWithClass: isa
-							connection: self
-							   profile: @"SASLprep"
-							    string: username_];
+		@throw [XMPPStringPrepFailedException
+		    exceptionWithClass: isa
+			    connection: self
+			       profile: @"SASLprep"
+				string: username_];
 
 	@try {
 		username = [[OFString alloc] initWithUTF8String: node];
@@ -126,10 +127,10 @@
 	if ((rc = stringprep_profile([resource_ UTF8String], &res,
 	    "Resourceprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException
-		    newWithClass: isa
-		      connection: self
-			 profile: @"Resourceprep"
-			  string: resource_];
+		    exceptionWithClass: isa
+			    connection: self
+			       profile: @"Resourceprep"
+				string: resource_];
 
 	@try {
 		resource = [[OFString alloc] initWithUTF8String: res];
@@ -154,10 +155,10 @@
 	if ((rc = idna_to_ascii_8z([server_ UTF8String],
 	    &srv, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
 		@throw [XMPPIDNATranslationFailedException
-		    newWithClass: isa
-		      connection: self
-		       operation: @"ToASCII"
-			  string: server_];
+		    exceptionWithClass: isa
+			    connection: self
+			     operation: @"ToASCII"
+				string: server_];
 
 	@try {
 		server = [[OFString alloc] initWithUTF8String: srv];
@@ -181,10 +182,11 @@
 
 	if ((rc = stringprep_profile([domain_ UTF8String], &srv,
 	    "Nameprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException newWithClass: isa
-							connection: self
-							   profile: @"Nameprep"
-							    string: domain_];
+		@throw [XMPPStringPrepFailedException
+		    exceptionWithClass: isa
+			    connection: self
+			       profile: @"Nameprep"
+				string: domain_];
 
 	@try {
 		domain = [[OFString alloc] initWithUTF8String: srv];
@@ -208,10 +210,11 @@
 
 	if ((rc = stringprep_profile([password_ UTF8String], &pass,
 	    "SASLprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException newWithClass: isa
-							connection: self
-							   profile: @"SASLprep"
-							    string: password_];
+		@throw [XMPPStringPrepFailedException
+		    exceptionWithClass: isa
+			    connection: self
+			       profile: @"SASLprep"
+				string: password_];
 
 	@try {
 		password = [[OFString alloc] initWithUTF8String: pass];
@@ -244,10 +247,10 @@
 		if ((rc = idna_to_ascii_8z([domain UTF8String], &cDomainToASCII,
 		    IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
 			@throw [XMPPIDNATranslationFailedException
-				newWithClass: isa
-				  connection: self
-				   operation: @"ToASCII"
-				      string: domain];
+				exceptionWithClass: isa
+					connection: self
+					 operation: @"ToASCII"
+					    string: domain];
 
 		@try {
 			domainToASCII = [OFString
@@ -260,7 +263,6 @@
 			SRVLookup = [XMPPSRVLookup
 			    lookupWithDomain: domainToASCII];
 		} @catch (id e) {
-			[e release];
 		}
 
 		enumerator = [SRVLookup objectEnumerator];
@@ -274,9 +276,7 @@
 					break;
 				} @catch (OFAddressTranslationFailedException
 				    *e) {
-					[e release];
 				} @catch (OFConnectionFailedException *e) {
-					[e release];
 				}
 			} while ((candidate = [enumerator nextObject]) != nil);
 		} else
@@ -569,10 +569,10 @@
 		    elementForName: @"text"
 			 namespace: XMPP_NS_XMPP_STREAM] stringValue];
 
-		@throw [XMPPStreamErrorException newWithClass: isa
-						   connection: self
-						    condition: condition
-						       reason: reason];
+		@throw [XMPPStreamErrorException exceptionWithClass: isa
+							 connection: self
+							  condition: condition
+							     reason: reason];
 		return;
 	}
 
@@ -607,7 +607,7 @@
 
 	if ([[element name] isEqual: @"failure"])
 		/* TODO: Find/create an exception to throw here */
-		@throw [OFException newWithClass: isa];
+		@throw [OFException exceptionWithClass: isa];
 
 	assert(0);
 }
@@ -655,9 +655,9 @@
 		of_log(@"Auth failed!");
 		// FIXME: Do more parsing/handling
 		@throw [XMPPAuthFailedException
-		    newWithClass: isa
-		      connection: self
-			  reason: [element XMLString]];
+		    exceptionWithClass: isa
+			    connection: self
+				reason: [element XMLString]];
 	}
 
 	assert(0);
@@ -730,7 +730,7 @@
 
 	if (encryptionRequired && !encrypted)
 		/* TODO: Find/create an exception to throw here */
-		@throw [OFException newWithClass: isa];
+		@throw [OFException exceptionWithClass: isa];
 
 	if (mechs != nil) {
 		OFEnumerator *enumerator;

@@ -27,19 +27,19 @@
 #import "XMPPExceptions.h"
 
 @implementation XMPPException
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
 {
-	return [[self alloc] initWithClass: class_
-				connection: conn];
+	return [[[self alloc] initWithClass: class_
+				 connection: conn] autorelease];
 }
 
 - initWithClass: (Class)class_
 {
 	Class c = isa;
 	[self release];
-	@throw [OFNotImplementedException newWithClass: c
-					      selector: _cmd];
+	@throw [OFNotImplementedException exceptionWithClass: c
+						    selector: _cmd];
 }
 
 - initWithClass: (Class)class_
@@ -82,15 +82,15 @@
 @end
 
 @implementation XMPPStreamErrorException
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
-     condition: (OFString*)condition_
-	reason: (OFString*)reason_;
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
+	   condition: (OFString*)condition_
+	      reason: (OFString*)reason_;
 {
-	return [[self alloc] initWithClass: class_
-				connection: conn
-				 condition: condition_
-				    reason: reason_];
+	return [[[self alloc] initWithClass: class_
+				 connection: conn
+				  condition: condition_
+				     reason: reason_] autorelease];
 }
 
 - initWithClass: (Class)class_
@@ -98,8 +98,8 @@
 {
 	Class c = isa;
 	[self release];
-	@throw [OFNotImplementedException newWithClass: c
-					      selector: _cmd];
+	@throw [OFNotImplementedException exceptionWithClass: c
+						    selector: _cmd];
 }
 
 - initWithClass: (Class)class_
@@ -152,15 +152,15 @@
 @end
 
 @implementation XMPPStringPrepFailedException
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
-       profile: (OFString*)profile
-	string: (OFString*)string
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
+	     profile: (OFString*)profile
+	      string: (OFString*)string
 {
-	return [[self alloc] initWithClass: class_
-				connection: conn
-				   profile: profile
-				    string: string];
+	return [[[self alloc] initWithClass: class_
+				 connection: conn
+				    profile: profile
+				     string: string] autorelease];
 }
 
 - initWithClass: (Class)class_
@@ -168,8 +168,8 @@
 {
 	Class c = isa;
 	[self release];
-	@throw [OFNotImplementedException newWithClass: c
-					      selector: _cmd];
+	@throw [OFNotImplementedException exceptionWithClass: c
+						    selector: _cmd];
 }
 
 - initWithClass: (Class)class_
@@ -223,15 +223,15 @@
 @end
 
 @implementation XMPPIDNATranslationFailedException
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
-     operation: (OFString*)operation
-	string: (OFString*)string
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
+	   operation: (OFString*)operation
+	      string: (OFString*)string
 {
-	return [[self alloc] initWithClass: class_
-				connection: conn
-				 operation: operation
-				    string: string];
+	return [[[self alloc] initWithClass: class_
+				 connection: conn
+				  operation: operation
+				     string: string] autorelease];
 }
 
 - initWithClass: (Class)class_
@@ -239,8 +239,8 @@
 {
 	Class c = isa;
 	[self release];
-	@throw [OFNotImplementedException newWithClass: c
-					      selector: _cmd];
+	@throw [OFNotImplementedException exceptionWithClass: c
+						    selector: _cmd];
 }
 
 - initWithClass: (Class)class_
@@ -293,13 +293,13 @@
 @end
 
 @implementation XMPPAuthFailedException
-+ newWithClass: (Class)class_
-    connection: (XMPPConnection*)conn
-	reason: (OFString*)reason_;
++ exceptionWithClass: (Class)class_
+	  connection: (XMPPConnection*)conn
+	      reason: (OFString*)reason_;
 {
-	return [[self alloc] initWithClass: class_
-				connection: conn
-				    reason: reason_];
+	return [[[self alloc] initWithClass: class_
+				 connection: conn
+				     reason: reason_] autorelease];
 }
 
 - initWithClass: (Class)class_
@@ -307,8 +307,8 @@
 {
 	Class c = isa;
 	[self release];
-	@throw [OFNotImplementedException newWithClass: c
-					      selector: _cmd];
+	@throw [OFNotImplementedException exceptionWithClass: c
+						    selector: _cmd];
 }
 
 - initWithClass: (Class)class_

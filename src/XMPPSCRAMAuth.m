@@ -231,9 +231,10 @@
 		if ([comp hasPrefix: @"r="]) {
 			if (![entry hasPrefix: cNonce])
 				@throw [XMPPAuthFailedException
-				    newWithClass: isa
-				      connection: nil
-					  reason: @"Received wrong nonce"];
+				    exceptionWithClass: isa
+					    connection: nil
+						reason: @"Received wrong "
+							@"nonce"];
 
 			sNonce = entry;
 			got |= GOT_SNONCE;
@@ -248,7 +249,7 @@
 	}
 
 	if (got != (GOT_SNONCE | GOT_SALT | GOT_ITERCOUNT))
-		@throw [OFInvalidServerReplyException newWithClass: isa];
+		@throw [OFInvalidServerReplyException exceptionWithClass: isa];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
 	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
@@ -389,14 +390,15 @@
 	if ([mess hasPrefix: @"v="]) {
 		if (![value isEqual: [serverSignature stringByBase64Encoding]])
 			@throw [XMPPAuthFailedException
-			    newWithClass: isa
-			      connection: nil
-				  reason: @"Received wrong ServerSignature"];
+			    exceptionWithClass: isa
+				    connection: nil
+					reason: @"Received wrong "
+						@"ServerSignature"];
 		authenticated = YES;
 	} else
-		@throw [XMPPAuthFailedException newWithClass: isa
-						  connection: nil
-						      reason: value];
+		@throw [XMPPAuthFailedException exceptionWithClass: isa
+							connection: nil
+							    reason: value];
 
 	return nil;
 }
