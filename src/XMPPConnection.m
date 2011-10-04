@@ -621,16 +621,14 @@
 		OFDataArray *response = [authModule
 		    continueWithData: challenge];
 
-		responseTag = [OFXMLElement  elementWithName: @"response"
-						   namespace: XMPP_NS_SASL];
+		responseTag = [OFXMLElement elementWithName: @"response"
+						  namespace: XMPP_NS_SASL];
 		if (response) {
 			if ([response count] == 0)
-				[responseTag addChild: [OFXMLElement
-				    elementWithCharacters: @"="]];
+				[responseTag setStringValue: @"="];
 			else
-				[responseTag addChild: [OFXMLElement
-				    elementWithCharacters: [response
-					stringByBase64Encoding]]];
+				[responseTag setStringValue:
+				    [response stringByBase64Encoding]];
 		}
 
 		[self sendStanza: responseTag];
@@ -795,11 +793,10 @@
 			  stringValue: authName];
 	if (initialMessage) {
 		if ([initialMessage count] == 0)
-			[authTag addChild: [OFXMLElement
-			    elementWithCharacters: @"="]];
+			[authTag setStringValue: @"="];
 		else
-			[authTag addChild: [OFXMLElement elementWithCharacters:
-			    [initialMessage stringByBase64Encoding]]];
+			[authTag setStringValue:
+			    [initialMessage stringByBase64Encoding]];
 	}
 
 	[self sendStanza: authTag];
