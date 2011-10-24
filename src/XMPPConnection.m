@@ -81,7 +81,6 @@
 	[domain release];
 	[resource release];
 	[JID release];
-	[delegate release];
 	[authModule release];
 	[bindID release];
 	[sessionID release];
@@ -895,14 +894,12 @@
 
 - (void)setDelegate: (id <XMPPConnectionDelegate>)delegate_
 {
-	id old = delegate;
-	delegate = [(id)delegate_ retain];
-	[old release];
+	delegate = (id <XMPPConnectionDelegate, OFObject>)delegate_;
 }
 
 - (id <XMPPConnectionDelegate>)delegate
 {
-	return [[delegate retain] autorelease];
+	return delegate;
 }
 
 - (XMPPRoster*)roster

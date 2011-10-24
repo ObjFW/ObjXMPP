@@ -83,7 +83,7 @@
 @property (copy) OFString *username, *password, *server, *domain, *resource;
 @property (copy, readonly) XMPPJID *JID;
 @property (assign) uint16_t port;
-@property (retain) id <XMPPConnectionDelegate> delegate;
+@property (assign) id <XMPPConnectionDelegate> delegate;
 @property (readonly, retain) XMPPRoster *roster;
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
 @property (assign) BOOL encryptionRequired;
