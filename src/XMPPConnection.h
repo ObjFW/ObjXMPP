@@ -31,6 +31,7 @@
 @class XMPPAuthenticator;
 @class XMPPRoster;
 @class XMPPRosterItem;
+@class SSLSocket;
 
 @protocol XMPPConnectionDelegate
 #ifndef XMPP_CONNECTION_M
@@ -64,10 +65,11 @@
     <OFXMLParserDelegate, OFXMLElementBuilderDelegate>
 #endif
 {
-	OFTCPSocket *sock;
+	SSLSocket *sock;
 	OFXMLParser *parser, *oldParser;
 	OFXMLElementBuilder *elementBuilder, *oldElementBuilder;
-	OFString *username, *password, *server, *domain, *resource;
+	OFString *username, *password, *server, *resource;
+	OFString *domain, *domainToASCII;
 	XMPPJID *JID;
 	uint16_t port;
 	id <XMPPConnectionDelegate, OFObject> delegate;
@@ -99,6 +101,12 @@
  * Connects to the XMPP service.
  */
 - (void)connect;
+
+/**
+ * Checks the certificate presented by the server.
+ * Throws SSLInvalidCertificateException on failure.
+ */
+- (void)checkCertificate;
 
 /**
  * Starts a loop handling incomming data.
@@ -184,6 +192,7 @@
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
 - (void)XMPP_sendSession;
 - (void)XMPP_handleSession: (XMPPIQ*)iq;
+- (OFString*)XMPP_IDNAToASCII: (OFString*)domain;
 @end
 
 @interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>

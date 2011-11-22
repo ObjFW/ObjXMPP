@@ -33,6 +33,8 @@
 #include <idna.h>
 
 #import <ObjOpenSSL/SSLSocket.h>
+#import <ObjOpenSSL/SSLInvalidCertificateException.h>
+#import <ObjOpenSSL/X509Certificate.h>
 
 #import "XMPPConnection.h"
 #import "XMPPSRVLookup.h"
@@ -148,23 +150,7 @@
 - (void)setServer: (OFString*)server_
 {
 	OFString *old = server;
-	char *srv;
-	Idna_rc rc;
-
-	if ((rc = idna_to_ascii_8z([server_ UTF8String],
-	    &srv, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
-		@throw [XMPPIDNATranslationFailedException
-		    exceptionWithClass: isa
-			    connection: self
-			     operation: @"ToASCII"
-				string: server_];
-
-	@try {
-		server = [[OFString alloc] initWithUTF8String: srv];
-	} @finally {
-		free(srv);
-	}
-
+	server = [self XMPP_IDNAToASCII: server_];
 	[old release];
 }
 
@@ -175,7 +161,8 @@
 
 - (void)setDomain: (OFString*)domain_
 {
-	OFString *old = domain;
+	OFString *oldDomain = domain;
+	OFString *oldDomainToASCII = domainToASCII;
 	char *srv;
 	Stringprep_rc rc;
 
@@ -192,8 +179,10 @@
 	} @finally {
 		free(srv);
 	}
+	[oldDomain release];
 
-	[old release];
+	domainToASCII = [self XMPP_IDNAToASCII: domain];
+	[oldDomainToASCII release];
 }
 
 - (OFString*)domain
@@ -235,29 +224,11 @@
 	XMPPSRVEntry *candidate = nil;
 	XMPPSRVLookup *SRVLookup = nil;
 	OFEnumerator *enumerator;
-	OFString *domainToASCII;
-	char *cDomainToASCII;
-	Idna_rc rc;
 
 	if (server)
 		[sock connectToHost: server
 			       port: port];
 	else {
-		if ((rc = idna_to_ascii_8z([domain UTF8String], &cDomainToASCII,
-		    IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
-			@throw [XMPPIDNATranslationFailedException
-				exceptionWithClass: isa
-					connection: self
-					 operation: @"ToASCII"
-					    string: domain];
-
-		@try {
-			domainToASCII = [OFString
-			    stringWithUTF8String: cDomainToASCII];
-		} @finally {
-			free(cDomainToASCII);
-		}
-
 		@try {
 			SRVLookup = [XMPPSRVLookup
 			    lookupWithDomain: domainToASCII];
@@ -341,6 +312,34 @@
 - (BOOL)encrypted
 {
 	return encrypted;
+}
+
+- (void)checkCertificate
+{
+	X509Certificate *cert;
+	OFDictionary *SANs;
+	BOOL serviceSpecific = NO;
+
+	[sock verifyPeerCertificate];
+	cert = [sock peerCertificate];
+	SANs = [cert subjectAlternativeName];
+
+	if ([[SANs objectForKey: @"otherName"]
+		objectForKey: OID_SRVName] ||
+	     [SANs objectForKey: @"dNSName"] ||
+	     [SANs objectForKey: @"uniformResourceIdentifier"])
+		serviceSpecific = YES;
+
+	if ([cert hasSRVNameMatchingDomain: domainToASCII
+				   service: @"xmpp-client"] ||
+	    [cert hasDNSNameMatchingDomain: domainToASCII])
+		return;
+
+	if (serviceSpecific ||
+	    ![cert hasCommonNameMatchingDomain: domainToASCII])
+		@throw [SSLInvalidCertificateException
+		    exceptionWithClass: isa
+				reason: @"No matching identifier"];
 }
 
 - (void)sendStanza: (OFXMLElement*)element
@@ -875,6 +874,29 @@
 
 	[sessionID release];
 	sessionID = nil;
+}
+
+- (OFString*)XMPP_IDNAToASCII: (OFString*)domain_
+{
+	OFString *ret;
+	char *cDomain;
+	Idna_rc rc;
+
+	if ((rc = idna_to_ascii_8z([domain_ UTF8String],
+	    &cDomain, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
+		@throw [XMPPIDNATranslationFailedException
+		    exceptionWithClass: isa
+			    connection: self
+			     operation: @"ToASCII"
+				string: domain_];
+
+	@try {
+		ret = [[OFString alloc] initWithUTF8String: cDomain];
+	} @finally {
+		free(cDomain);
+	}
+
+	return ret;
 }
 
 - (XMPPJID*)JID
