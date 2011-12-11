@@ -384,19 +384,6 @@
 	[parser setDelegate: elementBuilder];
 }
 
--    (void)parser: (OFXMLParser*)p
-    didEndElement: (OFString*)name
-       withPrefix: (OFString*)prefix
-	namespace: (OFString*)ns
-       attributes: (OFArray*)attrs
-{
-	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
-	    ![ns isEqual: XMPP_NS_STREAM]) {
-		of_log(@"Did not get expected stream end!");
-		assert(0);
-	}
-}
-
 - (void)elementBuilder: (OFXMLElementBuilder*)builder
        didBuildElement: (OFXMLElement*)element
 {
