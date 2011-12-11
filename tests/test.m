@@ -111,6 +111,18 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	}
 }
 
+-  (void)connection: (XMPPConnection*)conn
+  didReceiveElement: (OFXMLElement*)element
+{
+	of_log(@"In:  %@", element);
+}
+
+- (void)connection: (XMPPConnection*)conn
+    didSendElement: (OFXMLElement*)element
+{
+	of_log(@"Out: %@", element);
+}
+
 - (void)connectionWasAuthenticated: (XMPPConnection*)conn
 {
 	of_log(@"Auth successful");

@@ -344,7 +344,11 @@
 
 - (void)sendStanza: (OFXMLElement*)element
 {
-	of_log(@"Out: %@", element);
+	if ([delegate respondsToSelector:
+	    @selector(connection:didSendElement:)])
+		[delegate connection: self
+		      didSendElement: element];
+
 	[sock writeString: [element XMLString]];
 }
 
@@ -404,7 +408,10 @@
 	[element setPrefix: @"stream"
 	      forNamespace: XMPP_NS_STREAM];
 
-	of_log(@"In:  %@", element);
+	if ([delegate respondsToSelector:
+	    @selector(connection:didReceiveElement:)])
+		[delegate connection: self
+		   didReceiveElement: element];
 
 	if ([[element namespace] isEqual: XMPP_NS_CLIENT])
 		[self XMPP_handleStanza: element];

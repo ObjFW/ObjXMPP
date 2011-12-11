@@ -40,6 +40,10 @@
 #ifdef OF_HAVE_OPTIONAL_PROTOCOLS
 @optional
 #endif
+-  (void)connection: (XMPPConnection*)connection
+  didReceiveElement: (OFXMLElement*)element;
+- (void)connection: (XMPPConnection*)connection
+    didSendElement: (OFXMLElement*)element;
 - (void)connectionWasAuthenticated: (XMPPConnection*)connection;
 - (void)connection: (XMPPConnection*)connection
      wasBoundToJID: (XMPPJID*)JID;
