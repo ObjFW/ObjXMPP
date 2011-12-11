@@ -69,7 +69,7 @@
     <OFXMLParserDelegate, OFXMLElementBuilderDelegate>
 #endif
 {
-	SSLSocket *sock;
+	id sock;
 	OFXMLParser *parser, *oldParser;
 	OFXMLElementBuilder *elementBuilder, *oldElementBuilder;
 	OFString *username, *password, *server, *resource;
