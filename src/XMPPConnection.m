@@ -37,6 +37,7 @@
 #import <ObjOpenSSL/X509Certificate.h>
 
 #import "XMPPConnection.h"
+#import "XMPPCallback.h"
 #import "XMPPSRVLookup.h"
 #import "XMPPSCRAMAuth.h"
 #import "XMPPPLAINAuth.h"
@@ -64,6 +65,7 @@
 		sock = [[OFTCPSocket alloc] init];
 		port = 5222;
 		encrypted = NO;
+		callbacks = [[OFMutableDictionary alloc] init];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -83,9 +85,8 @@
 	[domain release];
 	[resource release];
 	[JID release];
+	[callbacks release];
 	[authModule release];
-	[bindID release];
-	[sessionID release];
 	[roster release];
 
 	[super dealloc];
@@ -351,6 +352,46 @@
 
 	[sock writeString: [element XMLString]];
 }
+
+-     (void)sendIQ: (XMPPIQ*)iq
+withCallbackObject: (id)object
+	  selector: (SEL)selector
+{
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	@try {
+		if (![iq ID])
+			[iq setID: [self generateStanzaID]];
+
+		[callbacks setObject: [XMPPObjectCallback
+					 callbackWithCallbackObject: object
+							   selector: selector]
+			      forKey: [iq ID]];
+	} @finally {
+		[pool release];
+	}
+
+	[self sendStanza: iq];
+}
+
+#ifdef OF_HAVE_BLOCKS
+-    (void)sendIQ: (XMPPIQ*)iq
+withCallbackBlock: (xmpp_callback_block)callback;
+{
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	@try {
+		if (![iq ID])
+			[iq setID: [self generateStanzaID]];
+
+		[callbacks setObject: [XMPPBlockCallback
+					  callbackWithCallbackBlock: callback]
+			      forKey: [iq ID]];
+	} @finally {
+		[pool release];
+	}
+
+	[self sendStanza: iq];
+}
+#endif
 
 - (OFString*)generateStanzaID
 {
@@ -656,14 +697,11 @@
 - (void)XMPP_handleIQ: (XMPPIQ*)iq
 {
 	BOOL handled = NO;
+	id <XMPPCallback> callback;
 
-	if ([[iq ID] isEqual: bindID]) {
-		[self XMPP_handleResourceBind: iq];
-		return;
-	}
-
-	if ([[iq ID] isEqual: sessionID]) {
-		[self XMPP_handleSession: iq];
+	if ((callback = [callbacks objectForKey: [iq ID]])) {
+		[callback runWithIQ: iq];
+		[callbacks removeObjectForKey: [iq ID]];
 		return;
 	}
 
@@ -799,9 +837,8 @@
 	XMPPIQ *iq;
 	OFXMLElement *bind;
 
-	bindID = [[self generateStanzaID] retain];
 	iq = [XMPPIQ IQWithType: @"set"
-			     ID: bindID];
+			     ID: [self generateStanzaID]];
 
 	bind = [OFXMLElement elementWithName: @"bind"
 				   namespace: XMPP_NS_BIND];
@@ -813,7 +850,9 @@
 
 	[iq addChild: bind];
 
-	[self sendStanza: iq];
+	[self sendIQ: iq
+  withCallbackObject: self
+	    selector: @selector(XMPP_handleResourceBind:)];
 }
 
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq
@@ -832,9 +871,6 @@
 				       namespace: XMPP_NS_BIND];
 	JID = [[XMPPJID alloc] initWithString: [jidElement stringValue]];
 
-	[bindID release];
-	bindID = nil;
-
 	if (needsSession) {
 		[self XMPP_sendSession];
 		return;
@@ -849,12 +885,13 @@
 {
 	XMPPIQ *iq;
 
-	sessionID = [[self generateStanzaID] retain];
 	iq = [XMPPIQ IQWithType: @"set"
-			     ID: sessionID];
+			     ID: [self generateStanzaID]];
 	[iq addChild: [OFXMLElement elementWithName: @"session"
 					  namespace: XMPP_NS_SESSION]];
-	[self sendStanza: iq];
+	[self sendIQ: iq
+  withCallbackObject: self
+	    selector: @selector(XMPP_handleSession:)];
 }
 
 - (void)XMPP_handleSession: (XMPPIQ*)iq
@@ -865,9 +902,6 @@
 	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
 		[delegate connection: self
 		       wasBoundToJID: JID];
-
-	[sessionID release];
-	sessionID = nil;
 }
 
 - (OFString*)XMPP_IDNAToASCII: (OFString*)domain_

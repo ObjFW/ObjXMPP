@@ -77,11 +77,11 @@
 	XMPPJID *JID;
 	uint16_t port;
 	id <XMPPConnectionDelegate, OFObject> delegate;
+	OFMutableDictionary *callbacks;
 	XMPPAuthenticator *authModule;
 	BOOL needsSession;
 	BOOL encryptionRequired, encrypted;
 	unsigned int lastID;
-	OFString *bindID, *sessionID;
 	XMPPRoster *roster;
 }
 
@@ -157,6 +157,27 @@
  * \param element The element to send
  */
 - (void)sendStanza: (OFXMLElement*)element;
+
+/**
+ * Sends an XMPPIQ, registering a callback method
+ *
+ * \param object The object that contains the callback method
+ * \param selector The selector of the callback method,
+ *		   must take exactly one parameter of type XMPPIQ*
+ */
+-     (void)sendIQ: (XMPPIQ*)iq
+withCallbackObject: (id)object
+	  selector: (SEL)selector;
+
+#ifdef OF_HAVE_BLOCKS
+/**
+ * Sends an XMPPIQ, registering a callback block
+ *
+ * \param callback The callback block
+ */
+-    (void)sendIQ: (XMPPIQ*)iq
+withCallbackBlock: (void(^)(XMPPIQ*))callback;
+#endif
 
 /**
  * Generates a new, unique stanza ID.

@@ -6,6 +6,7 @@ LIB_MINOR = 0
 STATIC_LIB = ${OBJXMPP_STATIC_LIB}
 
 SRCS = XMPPAuthenticator.m	\
+       XMPPCallback.m		\
        XMPPConnection.m		\
        XMPPExceptions.m		\
        XMPPIQ.m			\
