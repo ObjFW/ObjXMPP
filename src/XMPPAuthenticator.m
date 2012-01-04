@@ -41,9 +41,14 @@
 {
 	self = [super init];
 
-	[self setAuthzid: authzid_];
-	[self setAuthcid: authcid_];
-	[self setPassword: password_];
+	@try {
+		authzid = [authzid_ copy];
+		authcid = [authcid_ copy];
+		password = [password_ copy];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
 
 	return self;
 }
@@ -59,38 +64,32 @@
 
 - (void)setAuthzid: (OFString*)authzid_
 {
-	OFString *old = authzid;
-	authzid = [authzid_ copy];
-	[old release];
+	OF_SETTER(authzid, authzid_, YES, YES)
 }
 
 - (OFString*)authzid
 {
-	return [[authzid copy] autorelease];
+	OF_GETTER(authzid, YES)
 }
 
 - (void)setAuthcid: (OFString*)authcid_
 {
-	OFString *old = authcid;
-	authcid = [authcid_ copy];
-	[old release];
+	OF_SETTER(authcid, authcid_, YES, YES)
 }
 
 - (OFString*)authcid
 {
-	return [[authcid copy] autorelease];
+	OF_GETTER(authcid, YES)
 }
 
 - (void)setPassword: (OFString*)password_
 {
-	OFString *old = password;
-	password = [password_ copy];
-	[old release];
+	OF_SETTER(password, password_, YES, YES)
 }
 
 - (OFString*)password
 {
-	return [[password copy] autorelease];
+	OF_GETTER(password, YES)
 }
 
 - (OFDataArray*)initialMessage
