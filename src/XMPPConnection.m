@@ -362,7 +362,7 @@ withCallbackObject: (id)object
 		if (![iq ID])
 			[iq setID: [self generateStanzaID]];
 
-		[callbacks setObject: [XMPPObjectCallback
+		[callbacks setObject: [XMPPCallback
 					 callbackWithCallbackObject: object
 							   selector: selector]
 			      forKey: [iq ID]];
@@ -382,7 +382,7 @@ withCallbackBlock: (xmpp_callback_block)callback;
 		if (![iq ID])
 			[iq setID: [self generateStanzaID]];
 
-		[callbacks setObject: [XMPPBlockCallback
+		[callbacks setObject: [XMPPCallback
 					  callbackWithCallbackBlock: callback]
 			      forKey: [iq ID]];
 	} @finally {
@@ -697,7 +697,7 @@ withCallbackBlock: (xmpp_callback_block)callback;
 - (void)XMPP_handleIQ: (XMPPIQ*)iq
 {
 	BOOL handled = NO;
-	id <XMPPCallback> callback;
+	XMPPCallback *callback;
 
 	if ((callback = [callbacks objectForKey: [iq ID]])) {
 		[callback runWithIQ: iq];

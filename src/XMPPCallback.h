@@ -24,29 +24,23 @@
 
 @class XMPPIQ;
 
-@protocol XMPPCallback <OFObject>
-- (void)runWithIQ: (XMPPIQ*)iq;
-@end
-
 #ifdef OF_HAVE_BLOCKS
 typedef void(^xmpp_callback_block)(XMPPIQ*);
-
-@interface XMPPBlockCallback: OFObject <XMPPCallback>
-{
-	xmpp_callback_block callback;
-}
-+ callbackWithCallbackBlock: (xmpp_callback_block)callback;
-- initWithCallbackBlock: (xmpp_callback_block)callback;
-@end
 #endif
 
-@interface XMPPObjectCallback: OFObject <XMPPCallback>
+@interface XMPPCallback: OFObject
 {
 	id object;
 	SEL selector;
 }
+#ifdef OF_HAVE_BLOCKS
++ callbackWithCallbackBlock: (xmpp_callback_block)callback;
+- initWithCallbackBlock: (xmpp_callback_block)callback;
+#endif
 + callbackWithCallbackObject: (id)object
 		    selector: (SEL)selector;
 - initWithCallbackObject: (id)object
 		selector: (SEL)selector;
+
+- (void)runWithIQ: (XMPPIQ*)iq;
 @end

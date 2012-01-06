@@ -26,37 +26,23 @@
 
 #import "XMPPCallback.h"
 
+@implementation XMPPCallback
 #ifdef OF_HAVE_BLOCKS
-@implementation XMPPBlockCallback
-+ callbackWithCallbackBlock: (xmpp_callback_block)callback_
++ callbackWithCallbackBlock: (xmpp_callback_block)callback
 {
-	return [[[self alloc] initWithCallbackBlock: callback_] autorelease];
+	return [[[self alloc] initWithCallbackBlock: callback] autorelease];
 }
 
-- initWithCallbackBlock: (xmpp_callback_block)callback_
+- initWithCallbackBlock: (xmpp_callback_block)callback
 {
 	self = [super init];
 
-	callback = [callback_ copy];
+	object = [callback copy];
 
 	return self;
 }
-
-- (void)dealloc
-{
-	[callback release];
-
-	[super dealloc];
-}
-
-- (void)runWithIQ: (XMPPIQ*)iq
-{
-	callback(iq);
-}
-@end
 #endif
 
-@implementation XMPPObjectCallback
 + callbackWithCallbackObject: (id)object_
 		    selector: (SEL)selector_
 {
@@ -85,7 +71,12 @@
 
 - (void)runWithIQ: (XMPPIQ*)iq
 {
-	[object performSelector: selector
-		     withObject: iq];
+#ifdef OF_HAVE_BLOCKS
+	if ([object isKindOfClass: [OFBlock class]])
+		((xmpp_callback_block)object)(iq);
+	else
+#endif
+		[object performSelector: selector
+			     withObject: iq];
 }
 @end

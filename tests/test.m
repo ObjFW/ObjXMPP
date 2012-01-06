@@ -147,6 +147,17 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[pres addStatus: @"ObjXMPP test is working!"];
 
 	[conn sendStanza: pres];
+
+#ifdef OF_HAVE_BLOCKS
+	XMPPIQ *iq = [XMPPIQ IQWithType: @"get"
+				     ID: [conn generateStanzaID]];
+	[iq addChild: [OFXMLElement elementWithName: @"ping"
+					  namespace: @"urn:xmpp:ping"]];
+	[conn sendIQ: iq
+   withCallbackBlock: ^(XMPPIQ* resp) {
+		of_log(@"Ping response: %@", resp);
+	}];
+#endif
 }
 
 - (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn
