@@ -27,10 +27,8 @@
 
 #include <assert.h>
 
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <resolv.h>
 #include <sys/types.h>
 #include <openssl/rand.h>
 

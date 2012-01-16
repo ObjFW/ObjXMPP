@@ -20,6 +20,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <netinet/in.h>
 #include <arpa/nameser.h>
 #include <resolv.h>
 
