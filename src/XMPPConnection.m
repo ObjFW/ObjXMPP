@@ -959,6 +959,16 @@ withCallbackBlock: (xmpp_callback_block)callback;
 @end
 
 @implementation OFObject (XMPPConnectionDelegate)
+-  (void)connection: (XMPPConnection*)connection
+  didReceiveElement: (OFXMLElement*)element
+{
+}
+
+- (void)connection: (XMPPConnection*)connection
+    didSendElement: (OFXMLElement*)element
+{
+}
+
 - (void)connectionWasAuthenticated: (XMPPConnection*)connection
 {
 }
