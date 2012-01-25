@@ -110,8 +110,9 @@
 		return;
 	}
 
-	if ((rc = stringprep_profile([node_ UTF8String], &nodepart,
-	    "Nodeprep", 0)) != STRINGPREP_OK)
+	if (((rc = stringprep_profile([node_ UTF8String], &nodepart,
+	    "Nodeprep", 0)) != STRINGPREP_OK) || (nodepart[0] == '\0') ||
+	    (strnlen(nodepart, 1024) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: isa
 			    connection: nil
@@ -138,8 +139,9 @@
 	char *srv;
 	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([domain_ UTF8String], &srv,
-	    "Nameprep", 0)) != STRINGPREP_OK)
+	if (((rc = stringprep_profile([domain_ UTF8String], &srv,
+	    "Nameprep", 0)) != STRINGPREP_OK) || (srv[0] == '\0') ||
+	    (strnlen(srv, 1024) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: isa
 			    connection: nil
@@ -172,8 +174,9 @@
 		return;
 	}
 
-	if ((rc = stringprep_profile([resource_ UTF8String], &res,
-	    "Resourceprep", 0)) != STRINGPREP_OK)
+	if (((rc = stringprep_profile([resource_ UTF8String], &res,
+	    "Resourceprep", 0)) != STRINGPREP_OK) || (res[0] == '\0') ||
+	    (strnlen(res, 1024) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: isa
 			    connection: nil
