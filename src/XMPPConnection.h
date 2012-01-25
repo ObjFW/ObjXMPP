@@ -73,6 +73,7 @@
 	OFXMLParser *parser, *oldParser;
 	OFXMLElementBuilder *elementBuilder, *oldElementBuilder;
 	OFString *username, *password, *server, *resource;
+	OFString *privateKeyFile, *certificateFile;
 	OFString *domain, *domainToASCII;
 	XMPPJID *JID;
 	uint16_t port;
@@ -88,6 +89,7 @@
 
 #ifdef OF_HAVE_PROPERTIES
 @property (copy) OFString *username, *password, *server, *domain, *resource;
+@property (copy) OFString *privateKeyFile, *certificateFile;
 @property (copy, readonly) XMPPJID *JID;
 @property (assign) uint16_t port;
 @property (assign) id <XMPPConnectionDelegate> delegate;

@@ -39,6 +39,7 @@
 #import "XMPPConnection.h"
 #import "XMPPCallback.h"
 #import "XMPPSRVLookup.h"
+#import "XMPPEXTERNALAuth.h"
 #import "XMPPSCRAMAuth.h"
 #import "XMPPPLAINAuth.h"
 #import "XMPPStanza.h"
@@ -82,6 +83,8 @@
 	[elementBuilder release];
 	[username release];
 	[password release];
+	[privateKeyFile release];
+	[certificateFile release];
 	[server release];
 	[domain release];
 	[resource release];
@@ -218,6 +221,26 @@
 - (OFString*)password
 {
 	return [[password copy] autorelease];
+}
+
+- (void)setPrivateKeyFile: (OFString*)file
+{
+	OF_SETTER(privateKeyFile, file, YES, YES)
+}
+
+- (OFString*)privateKeyFile
+{
+	OF_GETTER(privateKeyFile, YES)
+}
+
+- (void)setCertificateFile: (OFString*)file
+{
+	OF_SETTER(certificateFile, file, YES, YES)
+}
+
+- (OFString*)certificateFile
+{
+	OF_GETTER(certificateFile, YES)
 }
 
 - (void)connect
@@ -673,7 +696,9 @@ withCallbackBlock: (xmpp_callback_block)callback;
 		    @selector(connectionWillUpgradeToTLS:)])
 			[delegate connectionWillUpgradeToTLS: self];
 
-		newSock = [[SSLSocket alloc] initWithSocket: sock];
+		newSock = [[SSLSocket alloc] initWithSocket: sock
+					     privateKeyFile: privateKeyFile
+					    certificateFile: certificateFile];
 		[sock release];
 		sock = newSock;
 
@@ -818,6 +843,13 @@ withCallbackBlock: (xmpp_callback_block)callback;
 		enumerator = [[mechs children] objectEnumerator];
 		while ((mech = [enumerator nextObject]) != nil)
 			[mechanisms addObject: [mech stringValue]];
+
+		if (privateKeyFile && certificateFile &&
+		    [mechanisms containsObject: @"EXTERNAL"]) {
+			authModule = [[XMPPEXTERNALAuth alloc] init];
+			[self XMPP_sendAuth: @"EXTERNAL"];
+			return;
+		}
 
 		if ([mechanisms containsObject: @"SCRAM-SHA-1-PLUS"]) {
 			authModule = [[XMPPSCRAMAuth alloc]

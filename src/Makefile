@@ -9,6 +9,7 @@ SRCS = XMPPAuthenticator.m	\
        XMPPCallback.m		\
        XMPPConnection.m		\
        XMPPExceptions.m		\
+       XMPPEXTERNALAuth.m	\
        XMPPIQ.m			\
        XMPPJID.m		\
        XMPPMessage.m		\
