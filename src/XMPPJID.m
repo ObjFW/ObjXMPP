@@ -112,7 +112,7 @@
 
 	if (((rc = stringprep_profile([node_ UTF8String], &nodepart,
 	    "Nodeprep", 0)) != STRINGPREP_OK) || (nodepart[0] == '\0') ||
-	    (strnlen(nodepart, 1024) > 1023))
+	    (strlen(nodepart) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: isa
 			    connection: nil
@@ -141,7 +141,7 @@
 
 	if (((rc = stringprep_profile([domain_ UTF8String], &srv,
 	    "Nameprep", 0)) != STRINGPREP_OK) || (srv[0] == '\0') ||
-	    (strnlen(srv, 1024) > 1023))
+	    (strlen(srv) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: isa
 			    connection: nil
@@ -176,7 +176,7 @@
 
 	if (((rc = stringprep_profile([resource_ UTF8String], &res,
 	    "Resourceprep", 0)) != STRINGPREP_OK) || (res[0] == '\0') ||
-	    (strnlen(res, 1024) > 1023))
+	    (strlen(res) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: isa
 			    connection: nil
