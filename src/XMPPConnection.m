@@ -269,12 +269,11 @@
 		size_t length = [sock readNBytes: 512
 				      intoBuffer: buffer];
 
-		if (length < 1 && [delegate respondsToSelector:
-		    @selector(connectionWasClosed:)])
-			[delegate connectionWasClosed: self];
+		[self parseBuffer: buffer
+		       withLength: length];
 
-		[parser parseBuffer: buffer
-			 withLength: length];
+		if (length < 1)
+			return;
 	}
 }
 
@@ -282,8 +281,10 @@
 	 withLength: (size_t)length
 {
 	if (length < 1 && [delegate respondsToSelector:
-	    @selector(connectionWasClosed:)])
+	    @selector(connectionWasClosed:)]) {
 		[delegate connectionWasClosed: self];
+		return;
+	}
 
 	[parser parseBuffer: buffer
 		 withLength: length];
@@ -452,6 +453,19 @@ withCallbackBlock: (xmpp_callback_block)callback;
 
 	if ([[element namespace] isEqual: XMPP_NS_SASL])
 		[self XMPP_handleSASL: element];
+}
+
+- (void)elementBuilder: (OFXMLElementBuilder *)builder
+  didNotExpectCloseTag: (OFString *)name
+	    withPrefix: (OFString *)prefix
+	     namespace: (OFString *)ns
+{
+	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
+	    ![ns isEqual: XMPP_NS_STREAM]) {
+		@throw [OFMalformedXMLException
+		    exceptionWithClass: [builder class]
+				parser: nil];
+	}
 }
 
 - (void)XMPP_startStream
