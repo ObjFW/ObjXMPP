@@ -25,6 +25,8 @@
 # include "config.h"
 #endif
 
+#include <string.h>
+
 #include <stringprep.h>
 
 #import "XMPPJID.h"
