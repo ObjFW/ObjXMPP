@@ -77,6 +77,12 @@
 				ID: ID_];
 }
 
+- (OFString*)type
+{
+	if (type == nil)
+		return @"available";
+}
+
 - (void)addShow: (OFString*)show
 {
 	[self addChild: [OFXMLElement elementWithName: @"show"
