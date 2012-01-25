@@ -65,6 +65,7 @@
 		sock = [[OFTCPSocket alloc] init];
 		port = 5222;
 		encrypted = NO;
+		streamOpen = NO;
 		callbacks = [[OFMutableDictionary alloc] init];
 	} @catch (id e) {
 		[self release];
@@ -316,6 +317,11 @@
 	return encrypted;
 }
 
+- (BOOL)streamOpen
+{
+	return streamOpen;
+}
+
 - (void)checkCertificate
 {
 	X509Certificate *cert;
@@ -461,10 +467,12 @@ withCallbackBlock: (xmpp_callback_block)callback;
 	     namespace: (OFString *)ns
 {
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
-	    ![ns isEqual: XMPP_NS_STREAM]) {
+	    ![ns isEqual: XMPP_NS_STREAM])
 		@throw [OFMalformedXMLException
 		    exceptionWithClass: [builder class]
 				parser: nil];
+	else {
+		[self close];
 	}
 }
 
@@ -496,6 +504,15 @@ withCallbackBlock: (xmpp_callback_block)callback;
 			   @"xmlns='" XMPP_NS_CLIENT @"' "
 			   @"xmlns:stream='" XMPP_NS_STREAM @"' "
 			   @"version='1.0'>", domain];
+	streamOpen = YES;
+}
+
+- (void)close
+{
+	if (streamOpen) {
+		[sock writeString: @"</stream:stream>"];
+		streamOpen = NO;
+	}
 }
 
 - (void)XMPP_handleStanza: (OFXMLElement*)element
@@ -530,9 +547,8 @@ withCallbackBlock: (xmpp_callback_block)callback;
 
 	if ([[element name] isEqual: @"error"]) {
 		OFString *condition, *reason;
-		[parser setDelegate: self];
-		[sock writeString: @"</stream:stream>"];
-		[sock close];
+		[self close];
+		[sock close]; // Remote has already closed his stream
 
 		if ([element elementForName: @"bad-format"
 				  namespace: XMPP_NS_XMPP_STREAM])

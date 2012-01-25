@@ -79,6 +79,7 @@
 	id <XMPPConnectionDelegate, OFObject> delegate;
 	OFMutableDictionary *callbacks;
 	XMPPAuthenticator *authModule;
+	BOOL streamOpen;
 	BOOL needsSession;
 	BOOL encryptionRequired, encrypted;
 	unsigned int lastID;
@@ -94,6 +95,7 @@
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
 @property (assign) BOOL encryptionRequired;
 @property (readonly) BOOL encrypted;
+@property (readonly) BOOL streamOpen;
 #endif
 
 /**
@@ -105,6 +107,11 @@
  * Connects to the XMPP service.
  */
 - (void)connect;
+
+/**
+ * Closes the stream to the XMPP service
+ */
+- (void)close;
 
 /**
  * Checks the certificate presented by the server.
