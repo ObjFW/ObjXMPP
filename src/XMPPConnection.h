@@ -216,11 +216,13 @@ withCallbackBlock: (void(^)(XMPPIQ*))callback;
 - (void)XMPP_handleSASL: (OFXMLElement*)element;
 - (void)XMPP_handleStanza: (OFXMLElement*)element;
 - (void)XMPP_sendAuth: (OFString*)authName;
+- (void)XMPP_sendResourceBind;
+- (void)XMPP_sendStreamError: (OFString*)condition
+			text: (OFString*)text;
 - (void)XMPP_handleIQ: (XMPPIQ*)iq;
 - (void)XMPP_handleMessage: (XMPPMessage*)message;
 - (void)XMPP_handlePresence: (XMPPPresence*)presence;
 - (void)XMPP_handleFeatures: (OFXMLElement*)element;
-- (void)XMPP_sendResourceBind;
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
 - (void)XMPP_sendSession;
 - (void)XMPP_handleSession: (XMPPIQ*)iq;

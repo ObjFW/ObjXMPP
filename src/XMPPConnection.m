@@ -414,18 +414,38 @@ withCallbackBlock: (xmpp_callback_block)callback;
 	OFEnumerator *enumerator;
 	OFXMLAttribute *attribute;
 
-	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
-	    ![ns isEqual: XMPP_NS_STREAM]) {
-		of_log(@"Did not get expected stream start!");
-		assert(0);
+	if (![name isEqual: @"stream"]) {
+		// No dedicated stream error for this, may not even be XMPP
+		[self close];
+		[sock close];
+		return;
+	}
+
+	if (![prefix isEqual: @"stream"]) {
+		[self XMPP_sendStreamError: @"bad-namespace-prefix"
+				      text: nil];
+		return;
+	}
+
+	if (![ns isEqual: XMPP_NS_STREAM]) {
+		[self XMPP_sendStreamError: @"invalid-namespace"
+				      text: nil];
+		return;
 	}
 
 	enumerator = [attributes objectEnumerator];
 	while ((attribute = [enumerator nextObject]) != nil) {
 		if ([[attribute name] isEqual: @"from"] &&
 		    ![[attribute stringValue] isEqual: domain]) {
-			of_log(@"Got invalid from in stream start!");
-			assert(0);
+			[self XMPP_sendStreamError: @"invalid-from"
+					      text: nil];
+			return;
+		}
+		if ([[attribute name] isEqual: @"version"] &&
+		    ![[attribute stringValue] isEqual: @"1.0"]) {
+			[self XMPP_sendStreamError: @"unsupported-version"
+					      text: nil];
+			return;
 		}
 	}
 
@@ -534,7 +554,8 @@ withCallbackBlock: (xmpp_callback_block)callback;
 		return;
 	}
 
-	assert(0);
+	[self XMPP_sendStreamError: @"unsupported-stanza-type"
+			      text: nil];
 }
 
 
@@ -883,6 +904,26 @@ withCallbackBlock: (xmpp_callback_block)callback;
 	[self sendIQ: iq
   withCallbackObject: self
 	    selector: @selector(XMPP_handleResourceBind:)];
+}
+
+- (void)XMPP_sendStreamError: (OFString*)condition
+			text: (OFString*)text
+{
+	OFXMLElement *error = [OFXMLElement
+	    elementWithName: @"error"
+		  namespace: XMPP_NS_STREAM];
+	[error setPrefix: @"stream"
+	    forNamespace: XMPP_NS_STREAM];
+	[error addChild: [OFXMLElement elementWithName: condition
+					     namespace: XMPP_NS_XMPP_STREAM]];
+	if (text)
+		[error addChild: [OFXMLElement
+		    elementWithName: @"text"
+			  namespace: XMPP_NS_XMPP_STREAM
+			stringValue: text]];
+	[parser setDelegate: nil];
+	[self sendStanza: error];
+	[self close];
 }
 
 - (void)XMPP_handleResourceBind: (XMPPIQ*)iq
