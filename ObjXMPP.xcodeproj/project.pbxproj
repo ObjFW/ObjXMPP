@@ -16,6 +16,8 @@
 		4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F57814D17081005D52DC /* XMPPEXTERNALAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F57D14D17082005D52DC /* XMPPEXTERNALAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F57914D17081005D52DC /* XMPPEXTERNALAuth.m */; };
 		4B19F5A314D1779E005D52DC /* ObjOpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */; };
+		4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */; };
+		4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F5D014D20B01005D52DC /* XMPPMulticastDelegate.m */; };
 		4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4844F3138BBC7400EB48A5 /* XMPPSRVLookup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B4844F6138BBC7500EB48A5 /* XMPPSRVLookup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4844F4138BBC7500EB48A5 /* XMPPSRVLookup.m */; };
 		4B484501138BBEEB00EB48A5 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B484500138BBEEB00EB48A5 /* libresolv.dylib */; };
@@ -68,6 +70,8 @@
 		4B19F57814D17081005D52DC /* XMPPEXTERNALAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPEXTERNALAuth.h; path = src/XMPPEXTERNALAuth.h; sourceTree = SOURCE_ROOT; };
 		4B19F57914D17081005D52DC /* XMPPEXTERNALAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPEXTERNALAuth.m; path = src/XMPPEXTERNALAuth.m; sourceTree = SOURCE_ROOT; };
 		4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjOpenSSL.framework; path = /Library/Frameworks/ObjOpenSSL.framework; sourceTree = "<group>"; };
+		4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPMulticastDelegate.h; path = src/XMPPMulticastDelegate.h; sourceTree = SOURCE_ROOT; };
+		4B19F5D014D20B01005D52DC /* XMPPMulticastDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPMulticastDelegate.m; path = src/XMPPMulticastDelegate.m; sourceTree = SOURCE_ROOT; };
 		4B4844F3138BBC7400EB48A5 /* XMPPSRVLookup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPSRVLookup.h; path = src/XMPPSRVLookup.h; sourceTree = SOURCE_ROOT; };
 		4B4844F4138BBC7500EB48A5 /* XMPPSRVLookup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPSRVLookup.m; path = src/XMPPSRVLookup.m; sourceTree = SOURCE_ROOT; };
 		4B484500138BBEEB00EB48A5 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -188,6 +192,8 @@
 				4BC559E31337AC0900E345C7 /* XMPPJID.m */,
 				4BC559E41337AC0900E345C7 /* XMPPMessage.h */,
 				4BC559E51337AC0900E345C7 /* XMPPMessage.m */,
+				4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */,
+				4B19F5D014D20B01005D52DC /* XMPPMulticastDelegate.m */,
 				4BC559E61337AC0900E345C7 /* XMPPPLAINAuth.h */,
 				4BC559E71337AC0900E345C7 /* XMPPPLAINAuth.m */,
 				4BC559E81337AC0900E345C7 /* XMPPPresence.h */,
@@ -239,6 +245,7 @@
 				4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */,
 				4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */,
 				4B01D020137C7E7D005624EA /* namespaces.h in Headers */,
+				4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +351,7 @@
 				4BD9BF5A134003F700DAB43A /* XMPPRosterItem.m in Sources */,
 				4BDEF8081340B240000156D1 /* XMPPRoster.m in Sources */,
 				4B4844F6138BBC7500EB48A5 /* XMPPSRVLookup.m in Sources */,
+				4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2010, 2011, 2012, Jonathan Schleifer <js@webkeks.org>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/hg/objxmpp/
@@ -32,6 +32,7 @@
 @class XMPPRoster;
 @class XMPPRosterItem;
 @class SSLSocket;
+@class XMPPMulticastDelegate;
 
 @protocol XMPPConnectionDelegate
 #ifndef XMPP_CONNECTION_M
@@ -77,7 +78,7 @@
 	OFString *domain, *domainToASCII;
 	XMPPJID *JID;
 	uint16_t port;
-	id <XMPPConnectionDelegate, OFObject> delegate;
+	XMPPMulticastDelegate *delegates;
 	OFMutableDictionary *callbacks;
 	XMPPAuthenticator *authModule;
 	BOOL streamOpen;
@@ -92,7 +93,6 @@
 @property (copy) OFString *privateKeyFile, *certificateFile;
 @property (copy, readonly) XMPPJID *JID;
 @property (assign) uint16_t port;
-@property (assign) id <XMPPConnectionDelegate> delegate;
 @property (readonly, retain) XMPPRoster *roster;
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
 @property (assign) BOOL encryptionRequired;
@@ -104,6 +104,20 @@
  * \return A new autoreleased XMPPConnection
  */
 + connection;
+
+/**
+ * Adds the specified delegate.
+ *
+ * \param delegate The delegate to add
+ */
+- (void)addDelegate: (id <XMPPConnectionDelegate>)delegate;
+
+/**
+ * Removes the specified delegate.
+ *
+ * \param delegate The delegate to remove
+ */
+- (void)removeDelegate: (id <XMPPConnectionDelegate>)delegate;
 
 /**
  * Connects to the XMPP service.
@@ -174,9 +188,9 @@
  * \param selector The selector of the callback method,
  *		   must take exactly one parameter of type XMPPIQ*
  */
--     (void)sendIQ: (XMPPIQ*)iq
-withCallbackObject: (id)object
-	  selector: (SEL)selector;
+-	(void)sendIQ: (XMPPIQ*)iq
+  withCallbackObject: (id)object
+	    selector: (SEL)selector;
 
 #ifdef OF_HAVE_BLOCKS
 /**
@@ -184,8 +198,8 @@ withCallbackObject: (id)object
  *
  * \param callback The callback block
  */
--    (void)sendIQ: (XMPPIQ*)iq
-withCallbackBlock: (void(^)(XMPPIQ*))callback;
+-      (void)sendIQ: (XMPPIQ*)iq
+  withCallbackBlock: (void(^)(XMPPIQ*))block;
 #endif
 
 /**
@@ -208,8 +222,6 @@ withCallbackBlock: (void(^)(XMPPIQ*))callback;
 - (XMPPJID*)JID;
 - (void)setPort: (uint16_t)port;
 - (uint16_t)port;
-- (void)setDelegate: (id <XMPPConnectionDelegate>)delegate;
-- (id <XMPPConnectionDelegate>)delegate;
 - (XMPPRoster*)roster;
 
 - (void)XMPP_startStream;
@@ -229,6 +241,7 @@ withCallbackBlock: (void(^)(XMPPIQ*))callback;
 - (void)XMPP_sendSession;
 - (void)XMPP_handleSession: (XMPPIQ*)iq;
 - (OFString*)XMPP_IDNAToASCII: (OFString*)domain;
+- (XMPPMulticastDelegate*)XMPP_delegates;
 @end
 
 @interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>

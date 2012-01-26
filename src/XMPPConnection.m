@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2010, 2011, 2012, Jonathan Schleifer <js@webkeks.org>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/hg/objxmpp/
@@ -49,6 +49,7 @@
 #import "XMPPPresence.h"
 #import "XMPPRoster.h"
 #import "XMPPRosterItem.h"
+#import "XMPPMulticastDelegate.h"
 #import "XMPPExceptions.h"
 #import "namespaces.h"
 
@@ -67,6 +68,7 @@
 		port = 5222;
 		encrypted = NO;
 		streamOpen = NO;
+		delegates = [[XMPPMulticastDelegate alloc] init];
 		callbacks = [[OFMutableDictionary alloc] init];
 	} @catch (id e) {
 		[self release];
@@ -89,6 +91,7 @@
 	[domain release];
 	[resource release];
 	[JID release];
+	[delegates release];
 	[callbacks release];
 	[authModule release];
 	[roster release];
@@ -304,9 +307,9 @@
 - (void)parseBuffer: (const char*)buffer
 	 withLength: (size_t)length
 {
-	if (length < 1 && [delegate respondsToSelector:
-	    @selector(connectionWasClosed:)]) {
-		[delegate connectionWasClosed: self];
+	if (length < 1) {
+		[delegates broadcastSelector: @selector(connectionWasClosed:)
+			       forConnection: self];
 		return;
 	}
 
@@ -375,10 +378,9 @@
 
 - (void)sendStanza: (OFXMLElement*)element
 {
-	if ([delegate respondsToSelector:
-	    @selector(connection:didSendElement:)])
-		[delegate connection: self
-		      didSendElement: element];
+	[delegates broadcastSelector: @selector(connection:didSendElement:)
+		       forConnection: self
+			  withObject: element];
 
 	[sock writeString: [element XMLString]];
 }
@@ -387,37 +389,37 @@
   withCallbackObject: (id)object
 	    selector: (SEL)selector
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	@try {
-		if (![iq ID])
-			[iq setID: [self generateStanzaID]];
+	OFAutoreleasePool *pool;
+	XMPPCallback *callback;
 
-		[callbacks setObject: [XMPPCallback
-					 callbackWithCallbackObject: object
-							   selector: selector]
-			      forKey: [iq ID]];
-	} @finally {
-		[pool release];
-	}
+	if (![iq ID])
+		[iq setID: [self generateStanzaID]];
+
+	pool = [[OFAutoreleasePool alloc] init];
+	callback = [XMPPCallback callbackWithCallbackObject: object
+						   selector: selector];
+	[callbacks setObject: callback
+		      forKey: [iq ID]];
+	[pool release];
 
 	[self sendStanza: iq];
 }
 
 #ifdef OF_HAVE_BLOCKS
 -      (void)sendIQ: (XMPPIQ*)iq
-  withCallbackBlock: (xmpp_callback_block_t)callback;
+  withCallbackBlock: (xmpp_callback_block_t)block;
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	@try {
-		if (![iq ID])
-			[iq setID: [self generateStanzaID]];
+	OFAutoreleasePool *pool;
+	XMPPCallback *callback;
 
-		[callbacks setObject: [XMPPCallback
-					  callbackWithCallbackBlock: callback]
-			      forKey: [iq ID]];
-	} @finally {
-		[pool release];
-	}
+	if (![iq ID])
+		[iq setID: [self generateStanzaID]];
+
+	pool = [[OFAutoreleasePool alloc] init];
+	callback = [XMPPCallback callbackWithCallbackBlock: block];
+	[callbacks setObject: callback
+		      forKey: [iq ID]];
+	[pool release];
 
 	[self sendStanza: iq];
 }
@@ -486,10 +488,9 @@
 	[element setPrefix: @"stream"
 	      forNamespace: XMPP_NS_STREAM];
 
-	if ([delegate respondsToSelector:
-	    @selector(connection:didReceiveElement:)])
-		[delegate connection: self
-		   didReceiveElement: element];
+	[delegates broadcastSelector: @selector(connection:didReceiveElement:)
+		       forConnection: self
+			  withObject: element];
 
 	if ([[element namespace] isEqual: XMPP_NS_CLIENT])
 		[self XMPP_handleStanza: element];
@@ -692,9 +693,9 @@
 		/* FIXME: Catch errors here */
 		SSLSocket *newSock;
 
-		if ([delegate respondsToSelector:
-		    @selector(connectionWillUpgradeToTLS:)])
-			[delegate connectionWillUpgradeToTLS: self];
+		[delegates broadcastSelector: @selector(
+						  connectionWillUpgradeToTLS:)
+			       forConnection: self];
 
 		newSock = [[SSLSocket alloc] initWithSocket: sock
 					     privateKeyFile: privateKeyFile
@@ -704,9 +705,9 @@
 
 		encrypted = YES;
 
-		if ([delegate respondsToSelector:
-		    @selector(connectionDidUpgradeToTLS:)])
-			[delegate connectionDidUpgradeToTLS: self];
+		[delegates broadcastSelector: @selector(
+						  connectionDidUpgradeToTLS:)
+			       forConnection: self];
 
 		/* Stream restart */
 		[self XMPP_startStream];
@@ -748,9 +749,9 @@
 		[authModule continueWithData: [OFDataArray
 		    dataArrayWithBase64EncodedString: [element stringValue]]];
 
-		if ([delegate respondsToSelector:
-		    @selector(connectionWasAuthenticated:)])
-			[delegate connectionWasAuthenticated: self];
+		[delegates broadcastSelector: @selector(
+						  connectionWWasAuthenticated:)
+			       forConnection: self];
 
 		/* Stream restart */
 		[self XMPP_startStream];
@@ -786,9 +787,10 @@
 		if ([roster handleIQ: iq])
 			return;
 
-	if ([delegate respondsToSelector: @selector(connection:didReceiveIQ:)])
-		handled = [delegate connection: self
-				  didReceiveIQ: iq];
+	handled = [delegates broadcastSelector: @selector(
+						    connection:didReceiveIQ:)
+				 forConnection: self
+				    withObject: iq];
 
 	if (!handled && ![[iq type] isEqual: @"error"] &&
 	    ![[iq type] isEqual: @"result"]) {
@@ -799,18 +801,16 @@
 
 - (void)XMPP_handleMessage: (XMPPMessage*)message
 {
-	if ([delegate respondsToSelector:
-	     @selector(connection:didReceiveMessage:)])
-		[delegate connection: self
-		   didReceiveMessage: message];
+	[delegates broadcastSelector: @selector(connection:didReceiveMessage:)
+		       forConnection: self
+			  withObject: message];
 }
 
 - (void)XMPP_handlePresence: (XMPPPresence*)presence
 {
-	if ([delegate respondsToSelector:
-	     @selector(connection:didReceivePresence:)])
-		[delegate connection: self
-		  didReceivePresence: presence];
+	[delegates broadcastSelector: @selector(connection:didReceivePresence:)
+		       forConnection: self
+			  withObject: presence];
 }
 
 - (void)XMPP_handleFeatures: (OFXMLElement*)element
@@ -979,9 +979,9 @@
 		return;
 	}
 
-	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
-		[delegate connection: self
-		       wasBoundToJID: JID];
+	[delegates broadcastSelector: @selector(connection:wasBoundToJID:)
+		       forConnection: self
+			  withObject: JID];
 }
 
 - (void)XMPP_sendSession
@@ -1002,9 +1002,9 @@
 	if (![[iq type] isEqual: @"result"])
 		assert(0);
 
-	if ([delegate respondsToSelector: @selector(connection:wasBoundToJID:)])
-		[delegate connection: self
-		       wasBoundToJID: JID];
+	[delegates broadcastSelector: @selector(connection:wasBoundToJID:)
+		       forConnection: self
+			  withObject: JID];
 }
 
 - (OFString*)XMPP_IDNAToASCII: (OFString*)domain_
@@ -1045,14 +1045,19 @@
 	return port;
 }
 
-- (void)setDelegate: (id <XMPPConnectionDelegate>)delegate_
+- (void)addDelegate: (id <XMPPConnectionDelegate>)delegate
 {
-	delegate = (id <XMPPConnectionDelegate, OFObject>)delegate_;
+	[delegates addDelegate: delegate];
 }
 
-- (id <XMPPConnectionDelegate>)delegate
+- (void)removeDelegate: (id <XMPPConnectionDelegate>)delegate
 {
-	return delegate;
+	[delegates removeDelegate: delegate];
+}
+
+- (XMPPMulticastDelegate*)XMPP_delegates
+{
+	return delegates;
 }
 
 - (XMPPRoster*)roster

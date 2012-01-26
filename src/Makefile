@@ -13,6 +13,7 @@ SRCS = XMPPAuthenticator.m	\
        XMPPIQ.m			\
        XMPPJID.m		\
        XMPPMessage.m		\
+       XMPPMulticastDelegate.m	\
        XMPPPLAINAuth.m		\
        XMPPPresence.m		\
        XMPPRoster.m		\

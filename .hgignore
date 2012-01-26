@@ -12,6 +12,7 @@ config.h.in
 config.log
 config.status
 configure
+DerivedData
 docs
 extra.mk
 ObjXMPP.xcodeproj/*.mode1v3

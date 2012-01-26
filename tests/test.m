@@ -91,7 +91,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	    [stanza ID]] isEqual: @"bob@localhost, alice@localhost, get, 42"]));
 
 	conn = [[XMPPConnection alloc] init];
-	[conn setDelegate: self];
+	[conn addDelegate: self];
 
 	if ([arguments count] != 3) {
 		of_log(@"Invalid count of command line arguments!");

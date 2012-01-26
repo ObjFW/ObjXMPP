@@ -31,6 +31,7 @@
 #import "XMPPConnection.h"
 #import "XMPPIQ.h"
 #import "XMPPJID.h"
+#import "XMPPMulticastDelegate.h"
 #import "namespaces.h"
 
 @implementation XMPPRoster
@@ -157,19 +158,22 @@
 		else
 			[self XMPP_addRosterItem: rosterItem];
 
-		if (isPush && [[connection delegate] respondsToSelector:
-		    @selector(connection:didReceiveRosterItem:)])
-			[[connection delegate] connection: connection
-				     didReceiveRosterItem: rosterItem];
+		if (isPush) {
+			SEL sel = @selector(connection:didReceiveRosterItem:);
+
+			[[connection XMPP_delegates]
+			    broadcastSelector: sel
+				forConnection: connection
+				   withObject: rosterItem];
+		}
 	}
 
 	if (isPush) {
 		[connection sendStanza: [iq resultIQ]];
 	} else {
-		if ([[connection delegate] respondsToSelector:
-		     @selector(connectionDidReceiveRoster:)])
-			[[connection delegate]
-			    connectionDidReceiveRoster: connection];
+		[[connection XMPP_delegates]
+		    broadcastSelector: @selector(connectionDidReceiveRoster:)
+			forConnection: connection];
 
 		[rosterID release];
 		rosterID = nil;
