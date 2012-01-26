@@ -39,7 +39,6 @@
 	self = [super init];
 
 	@try {
-		connection = [conn retain];
 		rosterItems = [[OFMutableDictionary alloc] init];
 	} @catch (id e) {
 		[self release];
@@ -51,7 +50,6 @@
 
 - (void)dealloc
 {
-	[connection release];
 	[rosterItems release];
 	[rosterID release];
 
