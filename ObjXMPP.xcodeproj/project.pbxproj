@@ -11,9 +11,9 @@
 		4B1295EF1337BD5F00154B25 /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B1295EE1337BD5F00154B25 /* test.m */; };
 		4B1295F11337C37E00154B25 /* ObjXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559911337A65400E345C7 /* ObjXMPP.framework */; };
 		4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
-		4B19F57A14D17082005D52DC /* XMPPCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F57614D17081005D52DC /* XMPPCallback.h */; };
+		4B19F57A14D17082005D52DC /* XMPPCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F57614D17081005D52DC /* XMPPCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F57B14D17082005D52DC /* XMPPCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F57714D17081005D52DC /* XMPPCallback.m */; };
-		4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F57814D17081005D52DC /* XMPPEXTERNALAuth.h */; };
+		4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F57814D17081005D52DC /* XMPPEXTERNALAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F57D14D17082005D52DC /* XMPPEXTERNALAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F57914D17081005D52DC /* XMPPEXTERNALAuth.m */; };
 		4B19F5A314D1779E005D52DC /* ObjOpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */; };
 		4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4844F3138BBC7400EB48A5 /* XMPPSRVLookup.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -224,8 +224,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */,
+				4B19F57A14D17082005D52DC /* XMPPCallback.h in Headers */,
 				4BC559EE1337AC0900E345C7 /* XMPPConnection.h in Headers */,
 				4BC559F01337AC0900E345C7 /* XMPPExceptions.h in Headers */,
+				4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */,
 				4BC559F21337AC0900E345C7 /* XMPPIQ.h in Headers */,
 				4BC559F41337AC0900E345C7 /* XMPPJID.h in Headers */,
 				4BC559F61337AC0900E345C7 /* XMPPMessage.h in Headers */,
@@ -237,8 +239,6 @@
 				4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */,
 				4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */,
 				4B01D020137C7E7D005624EA /* namespaces.h in Headers */,
-				4B19F57A14D17082005D52DC /* XMPPCallback.h in Headers */,
-				4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
