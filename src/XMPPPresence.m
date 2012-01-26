@@ -81,6 +81,8 @@
 {
 	if (type == nil)
 		return @"available";
+
+	return type;
 }
 
 - (void)addShow: (OFString*)show

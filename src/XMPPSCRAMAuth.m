@@ -145,7 +145,7 @@
 
 - (OFDataArray*)initialMessage
 {
-	OFDataArray *ret = [OFDataArray dataArrayWithItemSize: 1];
+	OFDataArray *ret = [OFDataArray dataArray];
 
 	/* New authentication attempt, reset status */
 	[cNonce release];
@@ -215,8 +215,8 @@
 	} got = 0;
 
 	hash = [[[hashType alloc] init] autorelease];
-	ret = [OFDataArray dataArrayWithItemSize: 1];
-	authMessage = [OFDataArray dataArrayWithItemSize: 1];
+	ret = [OFDataArray dataArray];
+	authMessage = [OFDataArray dataArray];
 
 	OFString *chal = [OFString stringWithUTF8String: [data cArray]
 						 length: [data count] *
@@ -252,7 +252,7 @@
 		@throw [OFInvalidServerReplyException exceptionWithClass: isa];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
-	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
+	tmpArray = [OFDataArray dataArray];
 	[tmpArray addNItems: [GS2Header UTF8StringLength]
 		 fromCArray: [GS2Header UTF8String]];
 	if (plusAvailable && [connection encrypted]) {
@@ -278,7 +278,7 @@
 	 * IETF RFC 5802:
 	 * SaltedPassword := Hi(Normalize(password), salt, i)
 	 */
-	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
+	tmpArray = [OFDataArray dataArray];
 	[tmpArray addNItems: [password UTF8StringLength]
 		 fromCArray: [password UTF8String]];
 
@@ -305,7 +305,7 @@
 	 * IETF RFC 5802:
 	 * ClientKey := HMAC(SaltedPassword, "Client Key")
 	 */
-	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
+	tmpArray = [OFDataArray dataArray];
 	[tmpArray addNItems: 10
 		 fromCArray: "Client Key"];
 	clientKey = [self XMPP_HMACWithKey: saltedPassword
@@ -317,7 +317,7 @@
 	 */
 	[hash updateWithBuffer: (void*) clientKey
 			length: [hashType digestSize]];
-	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
+	tmpArray = [OFDataArray dataArray];
 	[tmpArray addNItems: [hashType digestSize]
 		 fromCArray: [hash digest]];
 
@@ -332,7 +332,7 @@
 	 * IETF RFC 5802:
 	 * ServerKey := HMAC(SaltedPassword, "Server Key")
 	 */
-	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
+	tmpArray = [OFDataArray dataArray];
 	[tmpArray addNItems: 10
 		 fromCArray: "Server Key"];
 	serverKey = [self XMPP_HMACWithKey: saltedPassword
@@ -342,10 +342,10 @@
 	 * IETF RFC 5802:
 	 * ServerSignature := HMAC(ServerKey, AuthMessage)
 	 */
-	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
+	tmpArray = [OFDataArray dataArray];
 	[tmpArray addNItems: [hashType digestSize]
 		 fromCArray: serverKey];
-	serverSignature = [[OFDataArray alloc] initWithItemSize: 1];
+	serverSignature = [[OFDataArray alloc] init];
 	[serverSignature addNItems: [hashType digestSize]
 			fromCArray: [self XMPP_HMACWithKey: tmpArray
 						      data: authMessage]];
@@ -354,7 +354,7 @@
 	 * IETF RFC 5802:
 	 * ClientProof := ClientKey XOR ClientSignature
 	 */
-	tmpArray = [OFDataArray dataArrayWithItemSize: 1];
+	tmpArray = [OFDataArray dataArray];
 	for (i = 0; i < [hashType digestSize]; i++) {
 		uint8_t c = clientKey[i] ^ clientSignature[i];
 		[tmpArray addItem: &c];
@@ -428,7 +428,7 @@
 			data: (OFDataArray*)data
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	OFDataArray *k = [OFDataArray dataArrayWithItemSize: 1];
+	OFDataArray *k = [OFDataArray dataArray];
 	size_t i, kSize, blockSize = [hashType blockSize];
 	uint8_t *kI = NULL, *kO = NULL;
 	OFHash *hashI, *hashO;
@@ -505,7 +505,7 @@
 			result[j] ^= uOld[j];
 
 		for (j = 0; j < i - 1; j++) {
-			tmp = [OFDataArray dataArrayWithItemSize: 1];
+			tmp = [OFDataArray dataArray];
 			[tmp addNItems: digestSize
 			    fromCArray: uOld];
 
@@ -520,7 +520,7 @@
 			[pool releaseObjects];
 		}
 
-		ret = [OFDataArray dataArrayWithItemSize: 1];
+		ret = [OFDataArray dataArray];
 		[ret addNItems: digestSize
 		    fromCArray: result];
 	} @finally {
