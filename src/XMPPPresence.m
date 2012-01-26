@@ -81,6 +81,7 @@
 {
 	if (type == nil)
 		return @"available";
+
 	return [[type copy] autorelease];
 }
 

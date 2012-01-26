@@ -383,9 +383,9 @@
 	[sock writeString: [element XMLString]];
 }
 
--     (void)sendIQ: (XMPPIQ*)iq
-withCallbackObject: (id)object
-	  selector: (SEL)selector
+-	(void)sendIQ: (XMPPIQ*)iq
+  withCallbackObject: (id)object
+	    selector: (SEL)selector
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	@try {
@@ -404,8 +404,8 @@ withCallbackObject: (id)object
 }
 
 #ifdef OF_HAVE_BLOCKS
--    (void)sendIQ: (XMPPIQ*)iq
-withCallbackBlock: (xmpp_callback_block)callback;
+-      (void)sendIQ: (XMPPIQ*)iq
+  withCallbackBlock: (xmpp_callback_block_t)callback;
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	@try {
@@ -933,9 +933,9 @@ withCallbackBlock: (xmpp_callback_block)callback;
 
 	[iq addChild: bind];
 
-	[self sendIQ: iq
-  withCallbackObject: self
-	    selector: @selector(XMPP_handleResourceBind:)];
+	[self		sendIQ: iq
+	    withCallbackObject: self
+		      selector: @selector(XMPP_handleResourceBind:)];
 }
 
 - (void)XMPP_sendStreamError: (OFString*)condition
@@ -992,9 +992,9 @@ withCallbackBlock: (xmpp_callback_block)callback;
 			     ID: [self generateStanzaID]];
 	[iq addChild: [OFXMLElement elementWithName: @"session"
 					  namespace: XMPP_NS_SESSION]];
-	[self sendIQ: iq
-  withCallbackObject: self
-	    selector: @selector(XMPP_handleSession:)];
+	[self		sendIQ: iq
+	    withCallbackObject: self
+		      selector: @selector(XMPP_handleSession:)];
 }
 
 - (void)XMPP_handleSession: (XMPPIQ*)iq

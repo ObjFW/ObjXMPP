@@ -46,7 +46,7 @@
 
 - (OFDataArray*)initialMessage
 {
-	OFDataArray *message = [OFDataArray dataArrayWithItemSize: 1];
+	OFDataArray *message = [OFDataArray dataArray];
 
 	/* authzid */
 	if (authzid)

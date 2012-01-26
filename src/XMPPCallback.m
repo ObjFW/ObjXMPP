@@ -28,12 +28,12 @@
 
 @implementation XMPPCallback
 #ifdef OF_HAVE_BLOCKS
-+ callbackWithCallbackBlock: (xmpp_callback_block)callback
++ callbackWithCallbackBlock: (xmpp_callback_block_t)callback
 {
 	return [[[self alloc] initWithCallbackBlock: callback] autorelease];
 }
 
-- initWithCallbackBlock: (xmpp_callback_block)callback
+- initWithCallbackBlock: (xmpp_callback_block_t)callback
 {
 	self = [super init];
 
@@ -55,8 +55,7 @@
 {
 	self = [super init];
 
-	// TODO: Retain or follow delegate paradigm?
-	object = [object_ retain];
+	object = object_;
 	selector = selector_;
 
 	return self;
@@ -64,8 +63,6 @@
 
 - (void)dealloc
 {
-	[object release];
-
 	[super dealloc];
 }
 
@@ -73,7 +70,7 @@
 {
 #ifdef OF_HAVE_BLOCKS
 	if ([object isKindOfClass: [OFBlock class]])
-		((xmpp_callback_block)object)(iq);
+		((xmpp_callback_block_t)object)(iq);
 	else
 #endif
 		[object performSelector: selector
