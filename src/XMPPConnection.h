@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2010, 2011, 2012, Jonathan Schleifer <js@webkeks.org>
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/hg/objxmpp/
  *
@@ -29,8 +29,6 @@
 @class XMPPMessage;
 @class XMPPPresence;
 @class XMPPAuthenticator;
-@class XMPPRoster;
-@class XMPPRosterItem;
 @class SSLSocket;
 @class XMPPMulticastDelegate;
 
@@ -48,15 +46,12 @@
 - (void)connectionWasAuthenticated: (XMPPConnection*)connection;
 - (void)connection: (XMPPConnection*)connection
      wasBoundToJID: (XMPPJID*)JID;
-- (void)connectionDidReceiveRoster: (XMPPConnection*)connection;
 - (BOOL)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)iq;
 -   (void)connection: (XMPPConnection*)connection
   didReceivePresence: (XMPPPresence*)presence;
 -  (void)connection: (XMPPConnection*)connection
   didReceiveMessage: (XMPPMessage*)message;
--     (void)connection: (XMPPConnection*)connection
-  didReceiveRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)connectionWasClosed: (XMPPConnection*)connection;
 - (void)connectionWillUpgradeToTLS: (XMPPConnection*)connection;
 - (void)connectionDidUpgradeToTLS: (XMPPConnection*)connection;
@@ -85,7 +80,6 @@
 	BOOL needsSession;
 	BOOL encryptionRequired, encrypted;
 	unsigned int lastID;
-	XMPPRoster *roster;
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -93,7 +87,6 @@
 @property (copy) OFString *privateKeyFile, *certificateFile;
 @property (copy, readonly) XMPPJID *JID;
 @property (assign) uint16_t port;
-@property (readonly, retain) XMPPRoster *roster;
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
 @property (assign) BOOL encryptionRequired;
 @property (readonly) BOOL encrypted;
@@ -222,7 +215,6 @@
 - (XMPPJID*)JID;
 - (void)setPort: (uint16_t)port;
 - (uint16_t)port;
-- (XMPPRoster*)roster;
 
 - (void)XMPP_startStream;
 - (void)XMPP_handleStream: (OFXMLElement*)element;

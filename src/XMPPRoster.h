@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/hg/objxmpp/
  *
@@ -22,25 +23,53 @@
 
 #import <ObjFW/ObjFW.h>
 
-@class XMPPConnection;
+#import "XMPPConnection.h"
+
 @class XMPPRosterItem;
 @class XMPPIQ;
+@class XMPPRoster;
+
+@protocol XMPPRosterDelegate
+#ifndef XMPP_ROSTER_M
+    <OFObject>
+#endif
+#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
+@optional
+#endif
+- (void)rosterWasReceived: (XMPPRoster*)roster;
+-         (void)roster: (XMPPRoster*)roster
+  didReceiveRosterItem: (XMPPRosterItem*)rosterItem;
+@end
+
 
 @interface XMPPRoster: OFObject
+#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
+    <XMPPConnectionDelegate>
+#endif
 {
 	XMPPConnection *connection;
 	OFMutableDictionary *rosterItems;
-	OFString *rosterID;
+	id <XMPPRosterDelegate, OFObject> delegate;
 }
 
+#ifdef OF_HAVE_PROPERTIES
+@property (assign) id <XMPPRosterDelegate> delegate;
+#endif
+
 - initWithConnection: (XMPPConnection*)conn;
-- (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;
-- (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
-- (void)XMPP_deleteRosterItem: (XMPPRosterItem*)rosterItem;
 - (OFDictionary*)rosterItems;
-- (BOOL)handleIQ: (XMPPIQ*)iq;
 - (void)requestRoster;
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)deleteRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)setDelegate: (id <XMPPRosterDelegate>)delegate;
+- (id <XMPPRosterDelegate>)delegate;
+- (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)XMPP_deleteRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)XMPP_handleInitialRoster: (XMPPIQ*)iq;
+- (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element;
+@end
+
+@interface OFObject (XMPPRosterDelegate) <XMPPRosterDelegate>
 @end

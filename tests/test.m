@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2010, 2011, Jonathan Schleifer <js@webkeks.org>
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/hg/objxmpp/
  *
@@ -36,8 +36,12 @@
 
 @interface AppDelegate: OFObject
 #ifdef OF_HAVE_OPTIONAL_PROTOCOLS
-    <OFApplicationDelegate, XMPPConnectionDelegate>
+    <OFApplicationDelegate, XMPPConnectionDelegate, XMPPRosterDelegate>
 #endif
+{
+	XMPPConnection * conn;
+	XMPPRoster *roster;
+}
 @end
 
 OF_APPLICATION_DELEGATE(AppDelegate)
@@ -45,7 +49,6 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 @implementation AppDelegate
 - (void)applicationDidFinishLaunching
 {
-	XMPPConnection *conn;
 	OFArray *arguments = [OFApplication arguments];
 
 	XMPPPresence *pres = [XMPPPresence presence];
@@ -91,7 +94,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	    [stanza ID]] isEqual: @"bob@localhost, alice@localhost, get, 42"]));
 
 	conn = [[XMPPConnection alloc] init];
+	roster = [[XMPPRoster alloc] initWithConnection: conn];
+
 	[conn addDelegate: self];
+	[roster setDelegate: self];
 
 	if ([arguments count] != 3) {
 		of_log(@"Invalid count of command line arguments!");
@@ -133,14 +139,14 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 {
 	of_log(@"Bound to JID: %@", [jid fullJID]);
 
-	[[conn roster] requestRoster];
+	[roster requestRoster];
 }
 
-- (void)connectionDidReceiveRoster: (XMPPConnection*)conn
+- (void)rosterWasReceived: (XMPPRoster*)roster_
 {
 	XMPPPresence *pres;
 
-	of_log(@"Got roster: %@", [[conn roster] rosterItems]);
+	of_log(@"Got roster: %@", [roster_ rosterItems]);
 
 	pres = [XMPPPresence presence];
 	[pres addPriority: 10];
@@ -160,10 +166,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 #endif
 }
 
-- (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn
+- (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn_
 {
 	@try {
-		[conn checkCertificate];
+		[conn_ checkCertificate];
 	} @catch (SSLInvalidCertificateException *e) {
 		OFString *answer;
 		[of_stdout writeString: @"Couldn't verify certificate: "];
@@ -175,7 +181,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	}
 }
 
--     (void)connection: (XMPPConnection*)conn
+-         (void)roster: (XMPPRoster*)roster_
   didReceiveRosterItem: (XMPPRosterItem*)rosterItem
 {
 	of_log(@"Got roster push: %@", rosterItem);

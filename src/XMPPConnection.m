@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2010, 2011, 2012, Jonathan Schleifer <js@webkeks.org>
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/hg/objxmpp/
  *
@@ -47,8 +47,6 @@
 #import "XMPPIQ.h"
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
-#import "XMPPRoster.h"
-#import "XMPPRosterItem.h"
 #import "XMPPMulticastDelegate.h"
 #import "XMPPExceptions.h"
 #import "namespaces.h"
@@ -94,7 +92,6 @@
 	[delegates release];
 	[callbacks release];
 	[authModule release];
-	[roster release];
 
 	[super dealloc];
 }
@@ -533,15 +530,11 @@
 	oldParser = parser;
 	oldElementBuilder = elementBuilder;
 
-	[roster release];
-
 	parser = [[OFXMLParser alloc] init];
 	[parser setDelegate: self];
 
 	elementBuilder = [[OFXMLElementBuilder alloc] init];
 	[elementBuilder setDelegate: self];
-
-	roster = [[XMPPRoster alloc] initWithConnection: self];
 
 	[sock writeFormat: @"<?xml version='1.0'?>\n"
 			   @"<stream:stream to='%@' "
@@ -781,11 +774,6 @@
 		[callbacks removeObjectForKey: [iq ID]];
 		return;
 	}
-
-	if ([iq elementForName: @"query"
-		     namespace: XMPP_NS_ROSTER])
-		if ([roster handleIQ: iq])
-			return;
 
 	handled = [delegates broadcastSelector: @selector(
 						    connection:didReceiveIQ:)
@@ -1059,11 +1047,6 @@
 {
 	return delegates;
 }
-
-- (XMPPRoster*)roster
-{
-	return [[roster retain] autorelease];
-}
 @end
 
 @implementation OFObject (XMPPConnectionDelegate)
@@ -1086,10 +1069,6 @@
 {
 }
 
-- (void)connectionDidReceiveRoster: (XMPPConnection*)connection
-{
-}
-
 - (BOOL)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)iq
 {
@@ -1103,11 +1082,6 @@
 
 -  (void)connection: (XMPPConnection*)connection
   didReceiveMessage: (XMPPMessage*)message
-{
-}
-
--     (void)connection: (XMPPConnection*)connection
-  didReceiveRosterItem: (XMPPRosterItem*)rosterItem
 {
 }
 
