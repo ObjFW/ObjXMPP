@@ -39,7 +39,7 @@
     <OFApplicationDelegate, XMPPConnectionDelegate, XMPPRosterDelegate>
 #endif
 {
-	XMPPConnection * conn;
+	XMPPConnection *conn;
 	XMPPRoster *roster;
 }
 @end

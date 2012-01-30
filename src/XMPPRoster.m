@@ -56,11 +56,11 @@
 
 - (void)dealloc
 {
+	[connection removeDelegate: self];
 	[rosterItems release];
 
 	[super dealloc];
 }
-
 
 - (OFDictionary*)rosterItems
 {
