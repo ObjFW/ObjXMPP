@@ -97,7 +97,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	roster = [[XMPPRoster alloc] initWithConnection: conn];
 
 	[conn addDelegate: self];
-	[roster setDelegate: self];
+	[roster addDelegate: self];
 
 	if ([arguments count] != 3) {
 		of_log(@"Invalid count of command line arguments!");

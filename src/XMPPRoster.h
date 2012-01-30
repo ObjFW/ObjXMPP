@@ -28,6 +28,7 @@
 @class XMPPRosterItem;
 @class XMPPIQ;
 @class XMPPRoster;
+@class XMPPMulticastDelegate;
 
 @protocol XMPPRosterDelegate
 #ifndef XMPP_ROSTER_M
@@ -49,12 +50,8 @@
 {
 	XMPPConnection *connection;
 	OFMutableDictionary *rosterItems;
-	id <XMPPRosterDelegate, OFObject> delegate;
+	XMPPMulticastDelegate *delegates;
 }
-
-#ifdef OF_HAVE_PROPERTIES
-@property (assign) id <XMPPRosterDelegate> delegate;
-#endif
 
 - initWithConnection: (XMPPConnection*)conn;
 - (OFDictionary*)rosterItems;
@@ -62,8 +59,8 @@
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)deleteRosterItem: (XMPPRosterItem*)rosterItem;
-- (void)setDelegate: (id <XMPPRosterDelegate>)delegate;
-- (id <XMPPRosterDelegate>)delegate;
+- (void)addDelegate: (id <XMPPRosterDelegate>)delegate;
+- (void)removeDelegate: (id <XMPPRosterDelegate>)delegate;
 - (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_deleteRosterItem: (XMPPRosterItem*)rosterItem;

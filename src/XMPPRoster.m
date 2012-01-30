@@ -46,6 +46,7 @@
 		rosterItems = [[OFMutableDictionary alloc] init];
 		connection = connection_;
 		[connection addDelegate: self];
+		delegates = [[XMPPMulticastDelegate alloc] init];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -57,6 +58,7 @@
 - (void)dealloc
 {
 	[connection removeDelegate: self];
+	[delegates release];
 	[rosterItems release];
 
 	[super dealloc];
@@ -107,10 +109,10 @@
 		else
 			[self XMPP_addRosterItem: rosterItem];
 
-		if ([delegate respondsToSelector:
-		    @selector(roster:didReceiveRosterItem:)])
-			[delegate         roster: self
-			    didReceiveRosterItem: rosterItem];
+		[delegates broadcastSelector: @selector(
+						  roster:didReceiveRosterItem:)
+				  withObject: self
+				  withObject: rosterItem];
 	}
 
 	[connection_ sendStanza: [iq resultIQ]];
@@ -172,14 +174,14 @@
 	[connection sendStanza: iq];
 }
 
-- (void)setDelegate: (id <XMPPRosterDelegate>)delegate_
+- (void)addDelegate: (id <XMPPRosterDelegate>)delegate
 {
-	delegate = (id <XMPPRosterDelegate, OFObject>)delegate_;
+	[delegates addDelegate: delegate];
 }
 
-- (id <XMPPRosterDelegate>)delegate
+- (void)removeDelegate: (id <XMPPRosterDelegate>)delegate
 {
-	return delegate;
+	[delegates removeDelegate: delegate];
 }
 
 - (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem
@@ -258,8 +260,8 @@
 			[self XMPP_addRosterItem: rosterItem];
 	}
 
-	if ([delegate respondsToSelector: @selector(rosterWasReceived:)])
-		[delegate rosterWasReceived: self];
+	[delegates broadcastSelector: @selector(rosterWasReceived:)
+			  withObject: self];
 }
 @end
 

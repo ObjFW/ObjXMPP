@@ -306,7 +306,7 @@
 {
 	if (length < 1) {
 		[delegates broadcastSelector: @selector(connectionWasClosed:)
-			       forConnection: self];
+				  withObject: self];
 		return;
 	}
 
@@ -376,7 +376,7 @@
 - (void)sendStanza: (OFXMLElement*)element
 {
 	[delegates broadcastSelector: @selector(connection:didSendElement:)
-		       forConnection: self
+			  withObject: self
 			  withObject: element];
 
 	[sock writeString: [element XMLString]];
@@ -486,7 +486,7 @@
 	      forNamespace: XMPP_NS_STREAM];
 
 	[delegates broadcastSelector: @selector(connection:didReceiveElement:)
-		       forConnection: self
+			  withObject: self
 			  withObject: element];
 
 	if ([[element namespace] isEqual: XMPP_NS_CLIENT])
@@ -688,7 +688,7 @@
 
 		[delegates broadcastSelector: @selector(
 						  connectionWillUpgradeToTLS:)
-			       forConnection: self];
+				  withObject: self];
 
 		newSock = [[SSLSocket alloc] initWithSocket: sock
 					     privateKeyFile: privateKeyFile
@@ -700,7 +700,7 @@
 
 		[delegates broadcastSelector: @selector(
 						  connectionDidUpgradeToTLS:)
-			       forConnection: self];
+				  withObject: self];
 
 		/* Stream restart */
 		[self XMPP_startStream];
@@ -744,7 +744,7 @@
 
 		[delegates broadcastSelector: @selector(
 						  connectionWWasAuthenticated:)
-			       forConnection: self];
+				  withObject: self];
 
 		/* Stream restart */
 		[self XMPP_startStream];
@@ -777,7 +777,7 @@
 
 	handled = [delegates broadcastSelector: @selector(
 						    connection:didReceiveIQ:)
-				 forConnection: self
+				    withObject: self
 				    withObject: iq];
 
 	if (!handled && ![[iq type] isEqual: @"error"] &&
@@ -790,14 +790,14 @@
 - (void)XMPP_handleMessage: (XMPPMessage*)message
 {
 	[delegates broadcastSelector: @selector(connection:didReceiveMessage:)
-		       forConnection: self
+			  withObject: self
 			  withObject: message];
 }
 
 - (void)XMPP_handlePresence: (XMPPPresence*)presence
 {
 	[delegates broadcastSelector: @selector(connection:didReceivePresence:)
-		       forConnection: self
+			  withObject: self
 			  withObject: presence];
 }
 
@@ -968,7 +968,7 @@
 	}
 
 	[delegates broadcastSelector: @selector(connection:wasBoundToJID:)
-		       forConnection: self
+			  withObject: self
 			  withObject: JID];
 }
 
@@ -991,7 +991,7 @@
 		assert(0);
 
 	[delegates broadcastSelector: @selector(connection:wasBoundToJID:)
-		       forConnection: self
+			  withObject: self
 			  withObject: JID];
 }
 

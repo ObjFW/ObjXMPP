@@ -20,7 +20,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "XMPPConnection.h"
+#import <ObjFW/OFObject.h>
 
 @class OFDataArray;
 
@@ -29,11 +29,11 @@
 	OFDataArray *delegates;
 }
 
-- (void)addDelegate: (id <XMPPConnectionDelegate>)delegate;
-- (void)removeDelegate: (id <XMPPConnectionDelegate>)delegate;
+- (void)addDelegate: (id)delegate;
+- (void)removeDelegate: (id)delegate;
 - (BOOL)broadcastSelector: (SEL)selector
-	    forConnection: (XMPPConnection*)connection;
-- (BOOL)broadcastSelector: (SEL)selector
-	    forConnection: (XMPPConnection*)connection
 	       withObject: (id)object;
+- (BOOL)broadcastSelector: (SEL)selector
+	       withObject: (id)object1
+	       withObject: (id)object2;
 @end

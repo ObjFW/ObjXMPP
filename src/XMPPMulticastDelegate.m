@@ -50,12 +50,12 @@
 	[super dealloc];
 }
 
-- (void)addDelegate: (id <XMPPConnectionDelegate>)delegate
+- (void)addDelegate: (id)delegate
 {
 	[delegates addItem: &delegate];
 }
 
-- (void)removeDelegate: (id<XMPPConnectionDelegate>)delegate
+- (void)removeDelegate: (id)delegate
 {
 	id *cArray = [delegates cArray];
 	size_t i, count = [delegates count];
@@ -69,7 +69,7 @@
 }
 
 - (BOOL)broadcastSelector: (SEL)selector
-	    forConnection: (XMPPConnection*)connection
+	       withObject: (id)object
 {
 	id *cArray = [delegates cArray];
 	size_t i, count = [delegates count];
@@ -82,15 +82,15 @@
 		BOOL (*imp)(id, SEL, id) = (BOOL(*)(id, SEL, id))
 		    [cArray[i] methodForSelector: selector];
 
-		handled |= imp(cArray[i], selector, connection);
+		handled |= imp(cArray[i], selector, object);
 	}
 
 	return handled;
 }
 
 - (BOOL)broadcastSelector: (SEL)selector
-	    forConnection: (XMPPConnection*)connection
-	       withObject: (id)object
+	       withObject: (id)object1
+	       withObject: (id)object2
 {
 	id *cArray = [delegates cArray];
 	size_t i, count = [delegates count];
@@ -103,7 +103,7 @@
 		BOOL (*imp)(id, SEL, id, id) = (BOOL(*)(id, SEL, id, id))
 		    [cArray[i] methodForSelector: selector];
 
-		handled |= imp(cArray[i], selector, connection, object);
+		handled |= imp(cArray[i], selector, object1, object2);
 	}
 
 	return handled;
