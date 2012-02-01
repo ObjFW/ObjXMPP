@@ -34,7 +34,7 @@
 
 /**
  * \brief A protocol should be (partially) implemented
- * 	  by delegates of a XMPPConnection
+ *	  by delegates of a XMPPConnection
  */
 @protocol XMPPConnectionDelegate
 #ifndef XMPP_CONNECTION_M

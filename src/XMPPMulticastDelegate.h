@@ -24,15 +24,44 @@
 
 @class OFDataArray;
 
+/**
+ * \brief A class to provide multiple delegates in a single class
+ */
 @interface XMPPMulticastDelegate: OFObject
 {
 	OFDataArray *delegates;
 }
 
+/**
+ * Adds a delegate to the set of managed delegates
+ *
+ * \param delegate The delegate to add
+ */
 - (void)addDelegate: (id)delegate;
+
+/**
+ * Removes a delegate from the set of managed delegates
+ *
+ * \param delegate The delegate to remove
+ */
 - (void)removeDelegate: (id)delegate;
+
+/**
+ * Broadcasts a selector with one object to all managed delegates
+ *
+ * \param selector The selector to broadcast
+ * \param object The object to broadcast
+ */
 - (BOOL)broadcastSelector: (SEL)selector
 	       withObject: (id)object;
+
+/**
+ * Broadcasts a selector with two objects to all managed delegates
+ *
+ * \param selector The selector to broadcast
+ * \param object1 The first object to broadcast
+ * \param object2 The second object to broadcast
+ */
 - (BOOL)broadcastSelector: (SEL)selector
 	       withObject: (id)object1
 	       withObject: (id)object2;
