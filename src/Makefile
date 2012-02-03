@@ -20,7 +20,8 @@ SRCS = XMPPAuthenticator.m	\
        XMPPRosterItem.m		\
        XMPPSCRAMAuth.m		\
        XMPPSRVLookup.m		\
-       XMPPStanza.m
+       XMPPStanza.m		\
+       XMPPXMLElementBuilder.m
 
 INCLUDES = ${SRCS:.m=.h}	\
 	   namespaces.h		\

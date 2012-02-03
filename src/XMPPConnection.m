@@ -502,10 +502,10 @@
 		[self XMPP_handleSASL: element];
 }
 
-- (void)elementBuilder: (OFXMLElementBuilder *)builder
-  didNotExpectCloseTag: (OFString *)name
-	    withPrefix: (OFString *)prefix
-	     namespace: (OFString *)ns
+- (void)elementBuilder: (OFXMLElementBuilder*)builder
+  didNotExpectCloseTag: (OFString*)name
+	    withPrefix: (OFString*)prefix
+	     namespace: (OFString*)ns
 {
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
 	    ![ns isEqual: XMPP_NS_STREAM])
@@ -533,7 +533,7 @@
 	parser = [[OFXMLParser alloc] init];
 	[parser setDelegate: self];
 
-	elementBuilder = [[OFXMLElementBuilder alloc] init];
+	elementBuilder = [[XMPPXMLElementBuilder alloc] init];
 	[elementBuilder setDelegate: self];
 
 	[sock writeFormat: @"<?xml version='1.0'?>\n"
