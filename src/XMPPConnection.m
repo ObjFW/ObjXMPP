@@ -52,6 +52,8 @@
 #import "XMPPXMLElementBuilder.h"
 #import "namespaces.h"
 
+#import <ObjFW/macros.h>
+
 @implementation XMPPConnection
 + connection
 {
@@ -528,6 +530,8 @@
 
 - (void)XMPP_startStream
 {
+	OFString *langString = @"";
+
 	/* Make sure we don't get any old events */
 	[parser setDelegate: nil];
 	[elementBuilder setDelegate: nil];
@@ -545,11 +549,16 @@
 	elementBuilder = [[XMPPXMLElementBuilder alloc] init];
 	[elementBuilder setDelegate: self];
 
+	if (language != nil)
+		langString = [OFString stringWithFormat: @"xml:lang='%@' ",
+							 language];
+
 	[sock writeFormat: @"<?xml version='1.0'?>\n"
 			   @"<stream:stream to='%@' "
 			   @"xmlns='" XMPP_NS_CLIENT @"' "
-			   @"xmlns:stream='" XMPP_NS_STREAM @"' "
-			   @"version='1.0'>", domain];
+			   @"xmlns:stream='" XMPP_NS_STREAM @"' %@"
+			   @"version='1.0'>", domain, langString];
+
 	streamOpen = YES;
 }
 
@@ -1040,6 +1049,16 @@
 - (uint16_t)port
 {
 	return port;
+}
+
+- (void)setLanguage: (OFString*)language_
+{
+	OF_SETTER(language, language_, YES, YES)
+}
+
+- (OFString*)language
+{
+	OF_GETTER(language, YES)
 }
 
 - (void)addDelegate: (id <XMPPConnectionDelegate>)delegate

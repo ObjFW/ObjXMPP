@@ -146,6 +146,7 @@
 	OFString *domain, *domainToASCII;
 	XMPPJID *JID;
 	uint16_t port;
+	OFString *language;
 	XMPPMulticastDelegate *delegates;
 	OFMutableDictionary *callbacks;
 	XMPPAuthenticator *authModule;
@@ -170,6 +171,8 @@
 @property (copy) OFString *domain;
 /// \brief The resource to request for the connection
 @property (copy) OFString *resource;
+/// \brief The language to request for the connection
+@property (copy) OFString *language;
 /// \brief A private key file to use for authentication
 @property (copy) OFString *privateKeyFile;
 /// \brief A certificate file to use for authentication
@@ -321,6 +324,8 @@
 - (XMPPJID*)JID;
 - (void)setPort: (uint16_t)port;
 - (uint16_t)port;
+- (void)setLanguage: (OFString*)language;
+- (OFString*)language;
 
 /// \cond internal
 - (void)XMPP_startStream;

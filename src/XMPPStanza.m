@@ -211,7 +211,7 @@
 
 - (void)setID: (OFString*)ID_
 {
-	OFString* old = ID;
+	OFString *old = ID;
 	ID = [ID_ copy];
 	[old release];
 
@@ -219,11 +219,32 @@
 
 	if (ID_ != nil)
 		[self addAttributeWithName: @"id"
-			       stringValue: ID];
+			       stringValue: ID_];
 }
 
 - (OFString*)ID
 {
 	return [[ID copy] autorelease];
+}
+
+- (void)setLanguage: (OFString*)language_
+{
+	OFString *old = language;
+	language = [language_ copy];
+	[old release];
+
+	[self removeAttributeForName: @"lang"
+			   namespace: @"http://www.w3.org/XML/1998/namespace"];
+
+	if (language_ != nil)
+		[self addAttributeWithName: @"lang"
+				 namespace: @"http://www.w3.org/XML/1998/"
+					    @"namespace"
+			       stringValue: language_];
+}
+
+- (OFString*)language
+{
+	return [[language copy] autorelease];
 }
 @end

@@ -35,6 +35,7 @@
 	XMPPJID *to;
 	OFString *type;
 	OFString *ID;
+	OFString *language;
 /// \endcond
 }
 
@@ -47,6 +48,7 @@
 @property (copy) OFString *type;
 /// \brief The value of the stanza's id attribute
 @property (copy) OFString *ID;
+/// \brief The stanza's xml:lang
 #endif
 
 /**
@@ -158,4 +160,6 @@
 - (OFString*)type;
 - (void)setID: (OFString*)ID;
 - (OFString*)ID;
+- (void)setLanguage: (OFString*)language;
+- (OFString*)language;
 @end
