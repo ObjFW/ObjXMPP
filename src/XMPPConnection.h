@@ -218,11 +218,15 @@
 - (void)close;
 
 /**
- * \brief Checks the certificate presented by the server.
+ * \brief Checks the certificate presented by the server and sets the specified
+ *	  pointer to the reason why the certificate is not valid
  *
- * \throw SSLInvalidCertificateException Thrown if the certificate is invalid
+ * \param reason A pointer to an OFString which is set to a reason in case the
+ *		 certificate is not valid (otherwise, it does not touch it).
+ *		 Passing NULL means the reason is not stored anywhere.
+ * \return Whether the certificate is valid
  */
-- (void)checkCertificate;
+- (BOOL)checkCertificateAndGetReason: (OFString**)reason;
 
 /**
  * \brief Starts a loop handling incomming data.

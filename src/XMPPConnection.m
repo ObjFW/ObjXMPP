@@ -346,32 +346,40 @@
 	return streamOpen;
 }
 
-- (void)checkCertificate
+- (BOOL)checkCertificateAndGetReason: (OFString**)reason
 {
 	X509Certificate *cert;
 	OFDictionary *SANs;
 	BOOL serviceSpecific = NO;
 
-	[sock verifyPeerCertificate];
+	@try {
+		[sock verifyPeerCertificate];
+	} @catch (SSLInvalidCertificateException *e) {
+		if (reason != NULL)
+			*reason = [[[e reason] copy] autorelease];
+
+		return NO;
+	}
+
 	cert = [sock peerCertificate];
 	SANs = [cert subjectAlternativeName];
 
 	if ([[SANs objectForKey: @"otherName"]
-		objectForKey: OID_SRVName] ||
-	     [SANs objectForKey: @"dNSName"] ||
-	     [SANs objectForKey: @"uniformResourceIdentifier"])
+		objectForKey: OID_SRVName] != nil ||
+	     [SANs objectForKey: @"dNSName"] != nil ||
+	     [SANs objectForKey: @"uniformResourceIdentifier"] != nil)
 		serviceSpecific = YES;
 
 	if ([cert hasSRVNameMatchingDomain: domainToASCII
 				   service: @"xmpp-client"] ||
 	    [cert hasDNSNameMatchingDomain: domainToASCII])
-		return;
+		return YES;
 
-	if (serviceSpecific ||
-	    ![cert hasCommonNameMatchingDomain: domainToASCII])
-		@throw [SSLInvalidCertificateException
-		    exceptionWithClass: isa
-				reason: @"No matching identifier"];
+	if (!serviceSpecific &&
+	    [cert hasCommonNameMatchingDomain: domainToASCII])
+		return YES;
+
+	return NO;
 }
 
 - (void)sendStanza: (OFXMLElement*)element

@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #import <ObjFW/ObjFW.h>
-#import <ObjOpenSSL/SSLInvalidCertificateException.h>
 
 #import "XMPPConnection.h"
 #import "XMPPJID.h"
@@ -168,16 +167,15 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 
 - (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn_
 {
-	@try {
-		[conn_ checkCertificate];
-	} @catch (SSLInvalidCertificateException *e) {
-		OFString *answer;
+	OFString *reason;
+
+	if (![conn_ checkCertificateAndGetReason: &reason]) {
 		[of_stdout writeString: @"Couldn't verify certificate: "];
-		[of_stdout writeFormat: @"%@\n", e];
+		[of_stdout writeFormat: @"%@\n", reason];
 		[of_stdout writeString: @"Do you want to continue [y/N]? "];
-		answer = [of_stdin readLine];
-		if (![answer hasPrefix: @"y"])
-			@throw e;
+
+		if (![[of_stdin readLine] hasPrefix: @"y"])
+			[OFApplication terminateWithStatus: 1];
 	}
 }
 
