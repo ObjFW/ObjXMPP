@@ -153,14 +153,18 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-@property (copy) OFString *username, *password, *server, *domain, *resource;
+@property (copy) OFString *username;
+@property (copy) OFString *password;
+@property (copy) OFString *server;
+@property (copy) OFString *domain;
+@property (copy) OFString *resource;
 @property (copy) OFString *privateKeyFile, *certificateFile;
 @property (copy, readonly) XMPPJID *JID;
 @property uint16_t port;
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
 @property BOOL encryptionRequired;
+/// \brief Whether the connection is encrypted
 @property (readonly) BOOL encrypted;
-@property (readonly) BOOL streamOpen;
 #endif
 
 /**
