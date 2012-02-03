@@ -32,6 +32,10 @@
 @class SSLSocket;
 @class XMPPMulticastDelegate;
 
+/**
+ * \brief A protocol should be (partially) implemented
+ *	  by delegates of a XMPPConnection
+ */
 @protocol XMPPConnectionDelegate
 #ifndef XMPP_CONNECTION_M
     <OFObject>
@@ -39,21 +43,87 @@
 #ifdef OF_HAVE_OPTIONAL_PROTOCOLS
 @optional
 #endif
+
+/**
+ * This callback is called when the connection received an element
+ *
+ * \param connection The connection that received the element
+ * \param element The element that was received
+ */
 -  (void)connection: (XMPPConnection*)connection
   didReceiveElement: (OFXMLElement*)element;
+
+/**
+ * This callback is called when the connection sent an element
+ *
+ * \param connection The connection that sent the element
+ * \param element The element that was sent
+ */
 - (void)connection: (XMPPConnection*)connection
     didSendElement: (OFXMLElement*)element;
+
+/**
+ * This callback is called when the connection sucessfully authenticated
+ *
+ * \param connection The connection that was authenticated
+ */
 - (void)connectionWasAuthenticated: (XMPPConnection*)connection;
+
+/**
+ * This callback is called when the connection was bound to a JID
+ *
+ * \param connection The connection that was bound to a JID
+ * \param JID The JID the conecction was bound to
+ */
 - (void)connection: (XMPPConnection*)connection
      wasBoundToJID: (XMPPJID*)JID;
+
+/**
+ * This callback is called when the connection received an IQ stanza
+ *
+ * \param connection The connection that received the stanza
+ * \param iq The IQ stanza that was received
+ */
 - (BOOL)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)iq;
+
+/**
+ * This callback is called when the connection received a presence stanza
+ *
+ * \param connection The connection that received the stanza
+ * \param presence The presence stanza that was received
+ */
 -   (void)connection: (XMPPConnection*)connection
   didReceivePresence: (XMPPPresence*)presence;
+
+/**
+ * This callback is called when the connection received a message stanza
+ *
+ * \param connection The connection that received the stanza
+ * \param message The message stanza that was received
+ */
 -  (void)connection: (XMPPConnection*)connection
   didReceiveMessage: (XMPPMessage*)message;
+
+/**
+ * This callback is called when the connection was closed
+ *
+ * \param connection The connection that was closed
+ */
 - (void)connectionWasClosed: (XMPPConnection*)connection;
+
+/**
+ * This callback is called when the connection is about to upgraded to TLS
+ *
+ * \param connection The connection that will upgraded to TLS
+ */
 - (void)connectionWillUpgradeToTLS: (XMPPConnection*)connection;
+
+/**
+ * This callback is called when the connection was upgraded to use TLS
+ *
+ * \param connection The connection that was upgraded to TLS
+ */
 - (void)connectionDidUpgradeToTLS: (XMPPConnection*)connection;
 @end
 
