@@ -135,6 +135,7 @@
     <OFXMLParserDelegate, OFXMLElementBuilderDelegate>
 #endif
 {
+/// \cond internal
 	id sock;
 	OFXMLParser *parser, *oldParser;
 	OFXMLElementBuilder *elementBuilder, *oldElementBuilder;
@@ -150,6 +151,7 @@
 	BOOL needsSession;
 	BOOL encryptionRequired, encrypted;
 	unsigned int lastID;
+/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES

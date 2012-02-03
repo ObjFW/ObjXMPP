@@ -24,12 +24,17 @@
 
 @class XMPPJID;
 
+/**
+ * \brief A class for representing an item in the roster.
+ */
 @interface XMPPRosterItem: OFObject
 {
+/// \cond intenral
 	XMPPJID *JID;
 	OFString *name;
 	OFString *subscription;
 	OFArray *groups;
+/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES

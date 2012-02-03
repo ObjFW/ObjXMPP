@@ -28,9 +28,11 @@
  */
 @interface XMPPJID: OFObject <OFCopying>
 {
+/// \cond internal
 	OFString *node;
 	OFString *domain;
 	OFString *resource;
+/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES

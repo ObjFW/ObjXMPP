@@ -67,9 +67,11 @@
     <XMPPConnectionDelegate>
 #endif
 {
+/// \cond internal
 	XMPPConnection *connection;
 	OFMutableDictionary *rosterItems;
 	XMPPMulticastDelegate *delegates;
+/// \endcond
 }
 
 /**
