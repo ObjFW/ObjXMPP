@@ -251,7 +251,7 @@
 	OFEnumerator *enumerator;
 
 	if (server)
-		[sock connectToHost: server
+		[sock connectToHost: [self XMPP_IDNAToASCII: server]
 			       port: port];
 	else {
 		@try {
