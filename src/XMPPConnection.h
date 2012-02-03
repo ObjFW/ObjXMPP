@@ -86,9 +86,9 @@
 @property (copy) OFString *username, *password, *server, *domain, *resource;
 @property (copy) OFString *privateKeyFile, *certificateFile;
 @property (copy, readonly) XMPPJID *JID;
-@property (assign) uint16_t port;
+@property uint16_t port;
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
-@property (assign) BOOL encryptionRequired;
+@property BOOL encryptionRequired;
 @property (readonly) BOOL encrypted;
 @property (readonly) BOOL streamOpen;
 #endif

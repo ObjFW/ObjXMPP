@@ -35,7 +35,7 @@
 
 #ifdef OF_HAVE_PROPERTIES
 /// The connection the exception relates to
-@property (readonly, nonatomic) XMPPConnection *connection;
+@property (readonly, assign) XMPPConnection *connection;
 #endif
 
 /**
@@ -74,9 +74,9 @@
 
 #ifdef OF_HAVE_PROPERTIES
 /// The defined error condition specified by the stream error
-@property (readonly, nonatomic) OFString *condition;
+@property (readonly, assign) OFString *condition;
 /// The descriptive free-form text specified by the stream error
-@property (readonly, nonatomic) OFString *reason;
+@property (readonly, assign) OFString *reason;
 #endif
 
 /**
@@ -123,9 +123,9 @@
 
 #ifdef OF_HAVE_PROPERTIES
 /// The name of the stringprep profile that did not apply
-@property (readonly, nonatomic) OFString *profile;
+@property (readonly, assign) OFString *profile;
 /// The string that failed the stringprep profile
-@property (readonly, nonatomic) OFString *string;
+@property (readonly, assign) OFString *string;
 #endif
 
 /**
@@ -171,9 +171,9 @@
 
 #ifdef OF_HAVE_PROPERTIES
 /// The IDNA translation operation which failed
-@property (readonly, nonatomic) OFString *operation;
+@property (readonly, assign) OFString *operation;
 /// The string that could not be translated
-@property (readonly, nonatomic) OFString *string;
+@property (readonly, assign) OFString *string;
 #endif
 
 /**
@@ -218,7 +218,7 @@
 
 #ifdef OF_HAVE_PROPERTIES
 /// The reason the authentication failed
-@property (readonly, nonatomic) OFString *reason;
+@property (readonly, assign) OFString *reason;
 #endif
 
 /**

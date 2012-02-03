@@ -36,10 +36,10 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-@property (readonly, assign) uint16_t priority;
-@property (readonly, assign) uint16_t weight;
-@property (assign) uint32_t accumulatedWeight;
-@property (readonly, assign) uint16_t port;
+@property (readonly) uint16_t priority;
+@property (readonly) uint16_t weight;
+@property uint32_t accumulatedWeight;
+@property (readonly) uint16_t port;
 @property (readonly, copy) OFString *target;
 #endif
 
