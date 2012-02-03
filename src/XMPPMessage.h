@@ -27,6 +27,10 @@
  * \brief A class describing a message stanza.
  */
 @interface XMPPMessage: XMPPStanza
+#ifdef OF_HAVE_PROPERTIES
+@property (copy) OFString *body;
+#endif
+
 /**
  * Creates a new autoreleased XMPPMessage.
  *
@@ -94,9 +98,16 @@
 	    ID: (OFString*)ID;
 
 /**
- * Sets the body element of the XMPPMessage.
+ * Sets the text content of the body of the XMPPMessage.
  *
  * \param body The text content of the body element or nil to remove the body
  */
 - (void)setBody: (OFString*)body;
+
+/**
+ * Returns the text content of the body element of the XMPPMessage.
+ *
+ * \return The text content of the body element of the XMPPMessage.
+ */
+- (OFString*)body;
 @end

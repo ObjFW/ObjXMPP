@@ -90,4 +90,10 @@
 						    namespace: XMPP_NS_CLIENT
 						  stringValue: body]];
 }
+
+- (OFString*)body
+{
+	return [[self elementForName: @"body"
+			   namespace: XMPP_NS_CLIENT] stringValue];
+}
 @end
