@@ -49,6 +49,7 @@
 #import "XMPPPresence.h"
 #import "XMPPMulticastDelegate.h"
 #import "XMPPExceptions.h"
+#import "XMPPXMLElementBuilder.h"
 #import "namespaces.h"
 
 @implementation XMPPConnection
