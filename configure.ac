@@ -91,7 +91,9 @@ PKG_CHECK_MODULES(libidn, [libidn >= 0.25], [
 
 AS_IF([test x"$GOBJC" = x"yes"], [
 	OBJCFLAGS="$OBJCFLAGS -Wwrite-strings -Wcast-align -Wpointer-arith"
-	OBJCFLAGS="$OBJCFLAGS -Werror"
+	dnl We need -Wno-deprecated-declarations as OpenSSL is deprecated on
+	dnl OS X.
+	OBJCFLAGS="$OBJCFLAGS -Wno-deprecated-declarations -Werror"
 ])
 
 BUILDSYS_INIT
