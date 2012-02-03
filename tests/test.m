@@ -63,7 +63,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	    @"</presence>"]);
 
 	XMPPMessage *msg = [XMPPMessage messageWithType: @"chat"];
-	[msg addBody: @"Hello everyone"];
+	[msg setBody: @"Hello everyone"];
 	[msg setTo: [XMPPJID JIDWithString: @"jdev@conference.jabber.org"]];
 	[msg setFrom: [XMPPJID JIDWithString: @"alice@example.com"]];
 	assert([[msg XMLString] isEqual: @"<message type='chat' "
