@@ -286,6 +286,7 @@
 - (void)setPort: (uint16_t)port;
 - (uint16_t)port;
 
+/// \cond internal
 - (void)XMPP_startStream;
 - (void)XMPP_handleStream: (OFXMLElement*)element;
 - (void)XMPP_handleTLS: (OFXMLElement*)element;
@@ -304,6 +305,7 @@
 - (void)XMPP_handleSession: (XMPPIQ*)iq;
 - (OFString*)XMPP_IDNAToASCII: (OFString*)domain;
 - (XMPPMulticastDelegate*)XMPP_delegates;
+/// \endcond
 @end
 
 @interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>

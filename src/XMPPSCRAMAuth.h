@@ -109,6 +109,7 @@
 	     hash: (Class)hash
     plusAvailable: (BOOL)plusAvailable;
 
+/// \cond internal
 - (OFString*)XMPP_genNonce;
 - (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
 			data: (OFDataArray*)data;
@@ -117,4 +118,5 @@
 		 iterationCount: (intmax_t)i;
 - (OFDataArray*)XMPP_parseServerFirstMessage: (OFDataArray*)data;
 - (OFDataArray*)XMPP_parseServerFinalMessage: (OFDataArray*)data;
+/// \endcond
 @end

@@ -128,11 +128,13 @@
  */
 - (void)removeDelegate: (id <XMPPRosterDelegate>)delegate;
 
+/// \cond internal
 - (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_deleteRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_handleInitialRoster: (XMPPIQ*)iq;
 - (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element;
+/// \endcond
 @end
 
 @interface OFObject (XMPPRosterDelegate) <XMPPRosterDelegate>
