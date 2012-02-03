@@ -32,7 +32,7 @@
 {
 /// \cond internal
 	XMPPConnection *connection;
-/// \end
+/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES
