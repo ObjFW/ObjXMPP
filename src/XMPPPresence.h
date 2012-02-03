@@ -28,14 +28,14 @@
  */
 @interface XMPPPresence: XMPPStanza
 /**
- * Creates a new autoreleased XMPPPresence.
+ * \brief Creates a new autoreleased XMPPPresence.
  *
  * \return A new autoreleased XMPPPresence
  */
 + presence;
 
 /**
- * Creates a new autoreleased XMPPPresence with the specified id.
+ * \brief Creates a new autoreleased XMPPPresence with the specified ID.
  *
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPPresence
@@ -43,7 +43,7 @@
 + presenceWithID: (OFString*)ID;
 
 /**
- * Creates a new autoreleased XMPPPresence with the specified type.
+ * \brief Creates a new autoreleased XMPPPresence with the specified type.
  *
  * \param type The value for the stanza's type attribute
  * \return A new autoreleased XMPPPresence
@@ -51,7 +51,8 @@
 + presenceWithType: (OFString*)type;
 
 /**
- * Creates a new autoreleased XMPPPresence with the specified type and id.
+ * \brief Creates a new autoreleased XMPPPresence with the specified type and
+ *	  ID.
  *
  * \param type The value for the stanza's type attribute
  * \param ID The value for the stanza's id attribute
@@ -61,14 +62,7 @@
 		ID: (OFString*)ID;
 
 /**
- * Initializes an already allocated XMPPPresence.
- *
- * \return A initialized XMPPPresence
- */
-- init;
-
-/**
- * Initializes an already allocated XMPPPresence with the specified id.
+ * \brief Initializes an already allocated XMPPPresence with the specified ID.
  *
  * \param ID The value for the stanza's id attribute
  * \return A initialized XMPPPresence
@@ -76,7 +70,7 @@
 - initWithID: (OFString*)ID;
 
 /**
- * Initializes an already allocated XMPPPresence with the specified type.
+ * \brief Initializes an already allocated XMPPPresence with the specified type.
  *
  * \param type The value for the stanza's type attribute
  * \return A initialized XMPPPresence
@@ -84,7 +78,8 @@
 - initWithType: (OFString*)type;
 
 /**
- * Initializes an already allocated XMPPPresence with the specified type and id.
+ * \brief Initializes an already allocated XMPPPresence with the specified type
+ *	  and ID.
  *
  * \param type The value for the stanza's type attribute
  * \param ID The value for the stanza's id attribute
@@ -94,21 +89,21 @@
 	    ID: (OFString*)ID;
 
 /**
- * Adds a show element to the presence stanza.
+ * \brief Adds a show element to the presence stanza.
  *
  * \param show The text content of the show element
  */
 - (void)addShow: (OFString*)show;
 
 /**
- * Adds a status element to the presence stanza.
+ * \brief Adds a status element to the presence stanza.
  *
  * \param status The text content of the status element
  */
 - (void)addStatus: (OFString*)status;
 
 /**
- * Adds a priority element to the presence stanza.
+ * \brief Adds a priority element to the presence stanza.
  *
  * \param priority The text content of the priority element
  */

@@ -28,18 +28,19 @@
  */
 @interface XMPPMessage: XMPPStanza
 #ifdef OF_HAVE_PROPERTIES
+/// \brief The text content of the body of the message
 @property (copy) OFString *body;
 #endif
 
 /**
- * Creates a new autoreleased XMPPMessage.
+ * \brief Creates a new autoreleased XMPPMessage.
  *
  * \return A new autoreleased XMPPMessage
  */
 + message;
 
 /**
- * Creates a new autoreleased XMPPMessage with the specified id.
+ * \brief Creates a new autoreleased XMPPMessage with the specified ID.
  *
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPMessage
@@ -47,7 +48,7 @@
 + messageWithID: (OFString*)ID;
 
 /**
- * Creates a new autoreleased XMPPMessage with the specified type.
+ * \brief Creates a new autoreleased XMPPMessage with the specified type.
  *
  * \param type The value for the stanza's type attribute
  * \return A new autoreleased XMPPMessage
@@ -55,7 +56,7 @@
 + messageWithType: (OFString*)type;
 
 /**
- * Creates a new autoreleased XMPPMessage with the specified type and id.
+ * \brief Creates a new autoreleased XMPPMessage with the specified type and ID.
  *
  * \param type The value for the stanza's type attribute
  * \param ID The value for the stanza's id attribute
@@ -65,14 +66,7 @@
 	       ID: (OFString*)ID;
 
 /**
- * Initializes an already allocated XMPPMessage.
- *
- * \return A initialized XMPPMessage
- */
-- init;
-
-/**
- * Initializes an already allocated XMPPMessage with the specified id.
+ * \brief Initializes an already allocated XMPPMessage with the specified ID.
  *
  * \param ID The value for the stanza's id attribute
  * \return A initialized XMPPMessage
@@ -80,7 +74,7 @@
 - initWithID: (OFString*)ID;
 
 /**
- * Initializes an already allocated XMPPMessage with the specified type.
+ * \brief Initializes an already allocated XMPPMessage with the specified type.
  *
  * \param type The value for the stanza's type attribute
  * \return A initialized XMPPMessage
@@ -88,7 +82,8 @@
 - initWithType: (OFString*)type;
 
 /**
- * Initializes an already allocated XMPPMessage with the specified type and id.
+ * \brief Initializes an already allocated XMPPMessage with the specified type
+ *	  and ID.
  *
  * \param type The value for the stanza's type attribute
  * \param ID The value for the stanza's id attribute
@@ -98,14 +93,14 @@
 	    ID: (OFString*)ID;
 
 /**
- * Sets the text content of the body of the XMPPMessage.
+ * \brief Sets the text content of the body of the XMPPMessage.
  *
  * \param body The text content of the body element or nil to remove the body
  */
 - (void)setBody: (OFString*)body;
 
 /**
- * Returns the text content of the body element of the XMPPMessage.
+ * \brief Returns the text content of the body element of the XMPPMessage.
  *
  * \return The text content of the body element of the XMPPMessage.
  */

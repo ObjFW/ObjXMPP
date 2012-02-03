@@ -35,17 +35,17 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-/// The authzid to get authorization for
+/// \brief The authzid to get authorization for
 @property (copy) OFString *authzid;
-/// The authcid to authenticate with
+/// \brief The authcid to authenticate with
 @property (copy) OFString *authcid;
-/// The password to authenticate with
+/// \brief The password to authenticate with
 @property (copy) OFString *password;
 #endif
 
 /**
- * Initializes an already allocated XMPPAuthenticator with an authcid
- * and password.
+ * \brief Initializes an already allocated XMPPAuthenticator with an authcid
+ *	  and password.
  *
  * \param authcid The authcid to authenticate with
  * \param password The password to authenticate with
@@ -55,8 +55,8 @@
 	 password: (OFString*)password;
 
 /**
- * Initializes an already allocated XMPPSCRAMAuthenticator with an authzid,
- * authcid and password.
+ * \brief Initializes an already allocated XMPPSCRAMAuthenticator with an
+ *	  authzid, authcid and password.
  *
  * \param authzid The authzid to get authorization for
  * \param authcid The authcid to authenticate with
@@ -68,11 +68,15 @@
 	 password: (OFString*)password;
 
 /**
- * \return A OFDataAray containing the initial authentication message
+ * \brief Returns an OFDataArray containing the initial authentication message.
+ *
+ * \return An OFDataAray containing the initial authentication message
  */
 - (OFDataArray*)initialMessage;
 
 /**
+ * \brief Continue authentication with the specified data.
+ *
  * \param data The continuation data send by the server
  * \return The appropriate response if the data was a challenge, nil otherwise
  */

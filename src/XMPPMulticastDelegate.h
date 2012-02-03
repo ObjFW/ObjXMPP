@@ -35,21 +35,21 @@
 }
 
 /**
- * Adds a delegate to the set of managed delegates
+ * \brief Adds a delegate which should receive the broadcasts.
  *
  * \param delegate The delegate to add
  */
 - (void)addDelegate: (id)delegate;
 
 /**
- * Removes a delegate from the set of managed delegates
+ * \brief Removes a delegate so it does not receive the broadcasts anymore.
  *
  * \param delegate The delegate to remove
  */
 - (void)removeDelegate: (id)delegate;
 
 /**
- * Broadcasts a selector with one object to all managed delegates
+ * \brief Broadcasts a selector with an object to all registered delegates.
  *
  * \param selector The selector to broadcast
  * \param object The object to broadcast
@@ -58,7 +58,7 @@
 	       withObject: (id)object;
 
 /**
- * Broadcasts a selector with two objects to all managed delegates
+ * \brief Broadcasts a selector with two objects to all registered delegates.
  *
  * \param selector The selector to broadcast
  * \param object1 The first object to broadcast

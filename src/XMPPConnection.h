@@ -170,47 +170,50 @@
 #endif
 
 /**
+ * \brief Creates a new autoreleased XMPPConnection.
+ *
  * \return A new autoreleased XMPPConnection
  */
 + connection;
 
 /**
- * Adds the specified delegate.
+ * \brief Adds the specified delegate.
  *
  * \param delegate The delegate to add
  */
 - (void)addDelegate: (id <XMPPConnectionDelegate>)delegate;
 
 /**
- * Removes the specified delegate.
+ * \brief Removes the specified delegate.
  *
  * \param delegate The delegate to remove
  */
 - (void)removeDelegate: (id <XMPPConnectionDelegate>)delegate;
 
 /**
- * Connects to the XMPP service.
+ * \brief Connects to the XMPP service.
  */
 - (void)connect;
 
 /**
- * Closes the stream to the XMPP service
+ * \brief Closes the stream to the XMPP service
  */
 - (void)close;
 
 /**
- * Checks the certificate presented by the server.
- * Throws SSLInvalidCertificateException on failure.
+ * \brief Checks the certificate presented by the server.
+ *
+ * \throw SSLInvalidCertificateException Thrown if the certificate is invalid
  */
 - (void)checkCertificate;
 
 /**
- * Starts a loop handling incomming data.
+ * \brief Starts a loop handling incomming data.
  */
 - (void)handleConnection;
 
 /**
- * Parses the specified buffer.
+ * \brief Parses the specified buffer.
  *
  * This is useful for handling multiple connections at once.
  *
@@ -222,36 +225,42 @@
 	 withLength: (size_t)length;
 
 /**
+ * \brief Returns the socket used by the XMPPConnection.
+ *
  * \return The socket used by the XMPPConnection
  */
 - (OFTCPSocket*)socket;
 
 /**
+ * \brief Returns whether encryption is encrypted.
+ *
  * \return Whether encryption is encrypted
  */
 - (BOOL)encryptionRequired;
 
 /**
- * Sets whether encryption is required.
+ * \brief Sets whether encryption is required.
  *
  * \param required Whether encryption is required
  */
 - (void)setEncryptionRequired: (BOOL)required;
 
 /**
+ * \brief Returns whether the connection is encrypted.
+ *
  * \return Whether the connection is encrypted
  */
 - (BOOL)encrypted;
 
 /**
- * Sends an OFXMLElement, usually an XMPPStanza.
+ * \brief Sends an OFXMLElement, usually an XMPPStanza.
  *
  * \param element The element to send
  */
 - (void)sendStanza: (OFXMLElement*)element;
 
 /**
- * Sends an XMPPIQ, registering a callback method
+ * \brief Sends an XMPPIQ, registering a callback method.
  *
  * \param object The object that contains the callback method
  * \param selector The selector of the callback method,
@@ -263,7 +272,7 @@
 
 #ifdef OF_HAVE_BLOCKS
 /**
- * Sends an XMPPIQ, registering a callback block
+ * \brief Sends an XMPPIQ, registering a callback block.
  *
  * \param callback The callback block
  */
@@ -272,7 +281,7 @@
 #endif
 
 /**
- * Generates a new, unique stanza ID.
+ * \brief Generates a new, unique stanza ID.
  *
  * \return A new, generated, unique stanza ID.
  */

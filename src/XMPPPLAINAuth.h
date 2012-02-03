@@ -28,7 +28,7 @@
  */
 @interface XMPPPLAINAuth: XMPPAuthenticator
 /**
- * Creates a new autoreleased XMPPPLAINAuth with an authcid and password.
+ * \brief Creates a new autoreleased XMPPPLAINAuth with an authcid and password.
  *
  * \param authcid The authcid to authenticate with
  * \param password The password to authenticate with
@@ -38,8 +38,8 @@
 	      password: (OFString*)password;
 
 /**
- * Creates a new autoreleased XMPPPLAINAuth with an authzid,
- * authcid and password.
+ * \brief Creates a new autoreleased XMPPPLAINAuth with an authzid, authcid and
+ *	  password.
  *
  * \param authzid The authzid to get authorization for
  * \param authcid The authcid to authenticate with

@@ -36,12 +36,12 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-/// The connection the exception relates to
+/// \brief The connection the exception relates to
 @property (readonly, assign) XMPPConnection *connection;
 #endif
 
 /**
- * Creates a new XMPPException
+ * \brief Creates a new XMPPException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection that received the data responsible
@@ -52,7 +52,7 @@
 	  connection: (XMPPConnection*)connection;
 
 /**
- * Initializes an already allocated XMPPException
+ * \brief Initializes an already allocated XMPPException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection that received the data responsible
@@ -77,14 +77,14 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-/// The defined error condition specified by the stream error
+/// \brief The defined error condition specified by the stream error
 @property (readonly, assign) OFString *condition;
-/// The descriptive free-form text specified by the stream error
+/// \brief The descriptive free-form text specified by the stream error
 @property (readonly, assign) OFString *reason;
 #endif
 
 /**
- * Creates a new XMPPStreamErrorException
+ * \brief Creates a new XMPPStreamErrorException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection that received the stream error
@@ -98,7 +98,7 @@
 	      reason: (OFString*)reason;
 
 /**
- * Initializes an already allocated XMPPStreamErrorException
+ * \brief Initializes an already allocated XMPPStreamErrorException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection that received the stream error
@@ -128,14 +128,14 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-/// The name of the stringprep profile that did not apply
+/// \brief The name of the stringprep profile that did not apply
 @property (readonly, assign) OFString *profile;
-/// The string that failed the stringprep profile
+/// \brief The string that failed the stringprep profile
 @property (readonly, assign) OFString *string;
 #endif
 
 /**
- * Creates a new XMPPStringPrepFailedException
+ * \brief Creates a new XMPPStringPrepFailedException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection the string relates to
@@ -149,7 +149,7 @@
 	      string: (OFString*)string;
 
 /**
- *  Initializes an already allocated XMPPStringPrepFailedException
+ * \brief Initializes an already allocated XMPPStringPrepFailedException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection the string relates to
@@ -178,14 +178,14 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-/// The IDNA translation operation which failed
+/// \brief The IDNA translation operation which failed
 @property (readonly, assign) OFString *operation;
-/// The string that could not be translated
+/// \brief The string that could not be translated
 @property (readonly, assign) OFString *string;
 #endif
 
 /**
- * Creates a new XMPPIDNATranslationFailedException
+ * \brief Creates a new XMPPIDNATranslationFailedException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection the string relates to
@@ -199,7 +199,7 @@
 	      string: (OFString*)string;
 
 /**
- * Initializes an already allocated XMPPIDNATranslationFailedException
+ * \brief Initializes an already allocated XMPPIDNATranslationFailedException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection the string relates to
@@ -227,12 +227,12 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-/// The reason the authentication failed
+/// \brief The reason the authentication failed
 @property (readonly, assign) OFString *reason;
 #endif
 
 /**
- * Creates a new XMPPAuthFailedException
+ * \brief Creates a new XMPPAuthFailedException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection that could not be authenticated
@@ -244,7 +244,7 @@
 	      reason: (OFString*)reason;
 
 /**
- * Initializes an already allocated XMPPAuthFailedException
+ * \brief Initializes an already allocated XMPPAuthFailedException.
  *
  * \param class_ The class of the object which caused the exception
  * \param connection The connection that could not be authenticated

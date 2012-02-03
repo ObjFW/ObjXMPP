@@ -42,15 +42,15 @@
 @optional
 #endif
 /**
- * This callback is called after the roster was received (as a result of
- * calling -requestRoster.
+ * \brief This callback is called after the roster was received (as a result of
+ *	  calling -requestRoster).
  *
  * \param roster The roster that was received
  */
 - (void)rosterWasReceived: (XMPPRoster*)roster;
 
 /**
- * This callback is called whenever a roster push was received.
+ * \brief This callback is called whenever a roster push was received.
  *
  * \param roster The roster that was updated by the roster push
  * \param rosterItem The roster item received in the push
@@ -60,7 +60,7 @@
 @end
 
 /**
- * \brief A class implementing roster related functionality
+ * \brief A class implementing roster related functionality.
  */
 @interface XMPPRoster: OFObject
 #ifdef OF_HAVE_OPTIONAL_PROTOCOLS
@@ -75,7 +75,7 @@
 }
 
 /**
- * Initializes an already allocated XMPPRoster
+ * \brief Initializes an already allocated XMPPRoster.
  *
  * \param connection The connection roster related stanzas
  *	  are send and received over
@@ -84,47 +84,48 @@
 - initWithConnection: (XMPPConnection*)connection;
 
 /**
- * Returns the list of contacts as a OFDictionary with the bare JID as key
+ * \brief Returns the list of contacts as an OFDictionary with the bare JID as
+ *	  a string as key.
  *
  * \return An autoreleased copy of the dictionary containing the roster items
  */
 - (OFDictionary*)rosterItems;
 
 /**
- * Requests the roster from the server
+ * \brief Requests the roster from the server.
  */
 - (void)requestRoster;
 
 /**
- * Adds a new contact to the roster
+ * \brief Adds a new contact to the roster.
  *
  * \param rosterItem The roster item to add to the roster
  */
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem;
 
 /**
- * Updates an already existing contact in the roster
+ * \brief Updates an already existing contact in the roster.
  *
  * \param rosterItem The roster item to update
  */
 - (void)updateRosterItem: (XMPPRosterItem*)rosterItem;
 
 /**
- * Delete a contact from the roster
+ * \brief Delete a contact from the roster.
  *
  * \param rosterItem The roster item to delete
  */
 - (void)deleteRosterItem: (XMPPRosterItem*)rosterItem;
 
 /**
- * Adds the specified delegate
+ * \brief Adds the specified delegate.
  *
  * \param delegate The delegate to add
  */
 - (void)addDelegate: (id <XMPPRosterDelegate>)delegate;
 
 /**
- * Removes the specified delegate
+ * \brief Removes the specified delegate.
  *
  * \param delegate The delegate to remove
  */

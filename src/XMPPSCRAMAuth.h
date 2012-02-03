@@ -42,7 +42,7 @@
 }
 
 /**
- * Creates a new autoreleased XMPPSCRAMAuth with an authcid and password.
+ * \brief Creates a new autoreleased XMPPSCRAMAuth with an authcid and password.
  *
  * \param authcid The authcid to authenticate with
  * \param password The password to authenticate with
@@ -58,8 +58,8 @@
 	 plusAvailable: (BOOL)plusAvailable;
 
 /**
- * Creates a new autoreleased XMPPSCRAMAuth with an authzid,
- * authcid and password.
+ * \brief Creates a new autoreleased XMPPSCRAMAuth with an authzid, authcid and
+ *	  password.
  *
  * \param authzid The authzid to get authorization for
  * \param authcid The authcid to authenticate with
@@ -77,7 +77,8 @@
 	 plusAvailable: (BOOL)plusAvailable;
 
 /**
- * Initializes an already allocated XMPPSCRAMAuth with an authcid and password.
+ * \brief Initializes an already allocated XMPPSCRAMAuth with an authcid and
+ *	  password.
  *
  * \param authcid The authcid to authenticate with
  * \param password The password to authenticate with
@@ -93,8 +94,8 @@
     plusAvailable: (BOOL)plusAvailable;
 
 /**
- * Initializes an already allocated XMPPSCRAMAuth with a authzid,
- * authcid and password.
+ * \brief Initializes an already allocated XMPPSCRAMAuth with a authzid,
+ *	  authcid and password.
  *
  * \param authzid The authzid to get authorization for
  * \param authcid The authcid to authenticate with

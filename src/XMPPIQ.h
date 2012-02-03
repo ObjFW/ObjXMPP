@@ -28,7 +28,7 @@
  */
 @interface XMPPIQ: XMPPStanza
 /**
- * Creates a new XMPPIQ with the specified type and id.
+ * \brief Creates a new XMPPIQ with the specified type and ID.
  *
  * \param type The value for the stanza's type attribute
  * \param ID The value for the stanza's id attribute
@@ -38,7 +38,8 @@
 	  ID: (OFString*)ID;
 
 /**
- * Initializes an already allocated XMPPIQ with the specified type and id
+ * \brief Initializes an already allocated XMPPIQ with the specified type and
+ *	  ID.
  *
  * \param type The value for the stanza's type attribute
  * \param ID The value for the stanza's id attribute
@@ -48,17 +49,17 @@
 	    ID: (OFString*)ID;
 
 /**
- * Generates a result IQ for the receiving object
+ * \brief Generates a result IQ for the receiving object.
  *
  * \return A new autoreleased XMPPIQ
  */
 - (XMPPIQ*)resultIQ;
 
 /**
- * Generates a error IQ for the receiving object
+ * \brief Generates an error IQ for the receiving object.
  *
- * \param type A error type as defined by RFC 6120
- * \param condition A error condition as defined by RFC 6120
+ * \param type An error type as defined by RFC 6120
+ * \param condition An error condition as defined by RFC 6120
  * \param text A descriptive text
  * \return A new autoreleased XMPPIQ
  */
@@ -67,9 +68,9 @@
 		      text: (OFString*)text;
 
 /**
- * Generates a error IQ for the receiving object
+ * \brief Generates an error IQ for the receiving object.
  *
- * \param type A error type as defined by RFC 6120
+ * \param type An error type as defined by RFC 6120
  * \param condition A defined conditions from RFC 6120
  * \return A new autoreleased XMPPIQ
  */

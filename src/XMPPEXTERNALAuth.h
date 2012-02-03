@@ -28,14 +28,14 @@
  */
 @interface XMPPEXTERNALAuth: XMPPAuthenticator
 /**
- * Creates a new autoreleased XMPPEXTERNALAuth.
+ * \brief Creates a new autoreleased XMPPEXTERNALAuth.
  *
  * \return A new autoreleased XMPPEXTERNALAuth
  */
 + EXTERNALAuth;
 
 /**
- * Creates a new autoreleased XMPPEXTERNALAuth with an authzid.
+ * \brief Creates a new autoreleased XMPPEXTERNALAuth with an authzid.
  *
  * \param authzid The authzid to get authorization for
  * \return A new autoreleased XMPPEXTERNALAuth

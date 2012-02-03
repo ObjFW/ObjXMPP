@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, Jonathan Schleifer <js@webkeks.org>
  *
  * https://webkeks.org/hg/objxmpp/
  *
@@ -38,13 +38,23 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
+/// \brief The JID of the roster item
 @property (copy) XMPPJID *JID;
+/// \brief The name of the roster item to show to the user
 @property (copy) OFString *name;
+/// \brief The subscription for the roster item
 @property (copy) OFString *subscription;
+/// \brief An array of groups in which the roster item is
 @property (copy) OFArray *groups;
 #endif
 
+/**
+ * \brief Creates a new autoreleased roster item.
+ *
+ * \return A new autoreleased roster item.
+ */
 + rosterItem;
+
 - (void)setJID: (XMPPJID*)JID;
 - (XMPPJID*)JID;
 - (void)setName: (OFString*)name;

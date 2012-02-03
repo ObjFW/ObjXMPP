@@ -36,23 +36,23 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
-/// The JID's localpart
+/// \brief The JID's localpart
 @property (copy) OFString *node;
-/// The JID's domainpart
+/// \brief The JID's domainpart
 @property (copy) OFString *domain;
-/// The JID's resourcepart
+/// \brief The JID's resourcepart
 @property (copy) OFString *resource;
 #endif
 
 /**
- * Creates a new autoreleased XMPPJID.
+ * \brief Creates a new autoreleased XMPPJID.
  *
  * \return A new autoreleased XMPPJID
  */
 + JID;
 
 /**
- * Creates a new autoreleased XMPPJID from a string.
+ * \brief Creates a new autoreleased XMPPJID from a string.
  *
  * \param str The string to parse into a JID object
  * \return A new autoreleased XMPPJID
@@ -60,7 +60,7 @@
 + JIDWithString: (OFString*)str;
 
 /**
- * Initializes an already allocated XMPPJID with a string.
+ * \brief Initializes an already allocated XMPPJID with a string.
  *
  * \param str The string to parse into a JID object
  * \return A initialized XMPPJID
@@ -68,11 +68,15 @@
 - initWithString: (OFString*)str;
 
 /**
+ * \brief Returns the bare JID.
+ *
  * \return An OFString containing the bare JID
  */
 - (OFString*)bareJID;
 
 /**
+ * \brief Returns the full JID.
+ *
  * \return An OFString containing the full JID
  */
 - (OFString*)fullJID;
