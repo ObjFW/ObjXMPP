@@ -16,11 +16,14 @@
 		4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F57814D17081005D52DC /* XMPPEXTERNALAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F57D14D17082005D52DC /* XMPPEXTERNALAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F57914D17081005D52DC /* XMPPEXTERNALAuth.m */; };
 		4B19F5A314D1779E005D52DC /* ObjOpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */; };
-		4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */; };
+		4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F5D014D20B01005D52DC /* XMPPMulticastDelegate.m */; };
 		4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4844F3138BBC7400EB48A5 /* XMPPSRVLookup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B4844F6138BBC7500EB48A5 /* XMPPSRVLookup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4844F4138BBC7500EB48A5 /* XMPPSRVLookup.m */; };
 		4B484501138BBEEB00EB48A5 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B484500138BBEEB00EB48A5 /* libresolv.dylib */; };
+		4B48B95E14DC260000546D39 /* ObjXMPP.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B48B95B14DC260000546D39 /* ObjXMPP.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B48B95F14DC260000546D39 /* XMPPXMLElementBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B48B95C14DC260000546D39 /* XMPPXMLElementBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B48B96014DC260000546D39 /* XMPPXMLElementBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48B95D14DC260000546D39 /* XMPPXMLElementBuilder.m */; };
 		4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC559ED1337AC0900E345C7 /* XMPPAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */; };
@@ -75,6 +78,9 @@
 		4B4844F3138BBC7400EB48A5 /* XMPPSRVLookup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPSRVLookup.h; path = src/XMPPSRVLookup.h; sourceTree = SOURCE_ROOT; };
 		4B4844F4138BBC7500EB48A5 /* XMPPSRVLookup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPSRVLookup.m; path = src/XMPPSRVLookup.m; sourceTree = SOURCE_ROOT; };
 		4B484500138BBEEB00EB48A5 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
+		4B48B95B14DC260000546D39 /* ObjXMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjXMPP.h; path = src/ObjXMPP.h; sourceTree = SOURCE_ROOT; };
+		4B48B95C14DC260000546D39 /* XMPPXMLElementBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPXMLElementBuilder.h; path = src/XMPPXMLElementBuilder.h; sourceTree = SOURCE_ROOT; };
+		4B48B95D14DC260000546D39 /* XMPPXMLElementBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPXMLElementBuilder.m; path = src/XMPPXMLElementBuilder.m; sourceTree = SOURCE_ROOT; };
 		4BC559911337A65400E345C7 /* ObjXMPP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjXMPP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC559D61337ABD300E345C7 /* ObjFW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjFW.framework; path = ../../../../Library/Frameworks/ObjFW.framework; sourceTree = "<group>"; };
 		4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPAuthenticator.h; path = src/XMPPAuthenticator.h; sourceTree = SOURCE_ROOT; };
@@ -176,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				4BC5599B1337A65400E345C7 /* Supporting Files */,
+				4B48B95B14DC260000546D39 /* ObjXMPP.h */,
 				4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */,
 				4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */,
 				4B19F57614D17081005D52DC /* XMPPCallback.h */,
@@ -208,6 +215,8 @@
 				4B4844F4138BBC7500EB48A5 /* XMPPSRVLookup.m */,
 				4BC559FE1337AC1800E345C7 /* XMPPStanza.h */,
 				4BC559FF1337AC1800E345C7 /* XMPPStanza.m */,
+				4B48B95C14DC260000546D39 /* XMPPXMLElementBuilder.h */,
+				4B48B95D14DC260000546D39 /* XMPPXMLElementBuilder.m */,
 				4B01D01F137C7E7D005624EA /* namespaces.h */,
 			);
 			path = ObjXMPP;
@@ -229,6 +238,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B48B95E14DC260000546D39 /* ObjXMPP.h in Headers */,
 				4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */,
 				4B19F57A14D17082005D52DC /* XMPPCallback.h in Headers */,
 				4BC559EE1337AC0900E345C7 /* XMPPConnection.h in Headers */,
@@ -237,6 +247,7 @@
 				4BC559F21337AC0900E345C7 /* XMPPIQ.h in Headers */,
 				4BC559F41337AC0900E345C7 /* XMPPJID.h in Headers */,
 				4BC559F61337AC0900E345C7 /* XMPPMessage.h in Headers */,
+				4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */,
 				4BC559F81337AC0900E345C7 /* XMPPPLAINAuth.h in Headers */,
 				4BC559FA1337AC0900E345C7 /* XMPPPresence.h in Headers */,
 				4BDEF8071340B240000156D1 /* XMPPRoster.h in Headers */,
@@ -244,8 +255,8 @@
 				4BC559FC1337AC0900E345C7 /* XMPPSCRAMAuth.h in Headers */,
 				4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */,
 				4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */,
+				4B48B95F14DC260000546D39 /* XMPPXMLElementBuilder.h in Headers */,
 				4B01D020137C7E7D005624EA /* namespaces.h in Headers */,
-				4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +363,7 @@
 				4BDEF8081340B240000156D1 /* XMPPRoster.m in Sources */,
 				4B4844F6138BBC7500EB48A5 /* XMPPSRVLookup.m in Sources */,
 				4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */,
+				4B48B96014DC260000546D39 /* XMPPXMLElementBuilder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
