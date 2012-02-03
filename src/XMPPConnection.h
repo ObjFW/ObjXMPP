@@ -45,7 +45,7 @@
 #endif
 
 /**
- * This callback is called when the connection received an element
+ * \brief This callback is called when the connection received an element.
  *
  * \param connection The connection that received the element
  * \param element The element that was received
@@ -54,7 +54,7 @@
   didReceiveElement: (OFXMLElement*)element;
 
 /**
- * This callback is called when the connection sent an element
+ * \brief This callback is called when the connection sent an element.
  *
  * \param connection The connection that sent the element
  * \param element The element that was sent
@@ -63,14 +63,14 @@
     didSendElement: (OFXMLElement*)element;
 
 /**
- * This callback is called when the connection sucessfully authenticated
+ * \brief This callback is called when the connection sucessfully authenticated.
  *
  * \param connection The connection that was authenticated
  */
 - (void)connectionWasAuthenticated: (XMPPConnection*)connection;
 
 /**
- * This callback is called when the connection was bound to a JID
+ * \brief This callback is called when the connection was bound to a JID.
  *
  * \param connection The connection that was bound to a JID
  * \param JID The JID the conecction was bound to
@@ -79,7 +79,7 @@
      wasBoundToJID: (XMPPJID*)JID;
 
 /**
- * This callback is called when the connection received an IQ stanza
+ * \brief This callback is called when the connection received an IQ stanza.
  *
  * \param connection The connection that received the stanza
  * \param iq The IQ stanza that was received
@@ -88,7 +88,8 @@
       didReceiveIQ: (XMPPIQ*)iq;
 
 /**
- * This callback is called when the connection received a presence stanza
+ * \brief This callback is called when the connection received a presence
+ *	  stanza.
  *
  * \param connection The connection that received the stanza
  * \param presence The presence stanza that was received
@@ -97,7 +98,7 @@
   didReceivePresence: (XMPPPresence*)presence;
 
 /**
- * This callback is called when the connection received a message stanza
+ * \brief This callback is called when the connection received a message stanza.
  *
  * \param connection The connection that received the stanza
  * \param message The message stanza that was received
@@ -106,21 +107,22 @@
   didReceiveMessage: (XMPPMessage*)message;
 
 /**
- * This callback is called when the connection was closed
+ * \brief This callback is called when the connection was closed.
  *
  * \param connection The connection that was closed
  */
 - (void)connectionWasClosed: (XMPPConnection*)connection;
 
 /**
- * This callback is called when the connection is about to upgraded to TLS
+ * \brief This callback is called when the connection is about to upgrade to
+ *	  TLS.
  *
  * \param connection The connection that will upgraded to TLS
  */
 - (void)connectionWillUpgradeToTLS: (XMPPConnection*)connection;
 
 /**
- * This callback is called when the connection was upgraded to use TLS
+ * \brief This callback is called when the connection was upgraded to use TLS.
  *
  * \param connection The connection that was upgraded to TLS
  */
@@ -155,15 +157,30 @@
 }
 
 #ifdef OF_HAVE_PROPERTIES
+/// \brief The username to use for authentication
 @property (copy) OFString *username;
+/// \brief The password to use for authentication
 @property (copy) OFString *password;
+/** \brief The server to use for the connection
+ *
+ * This is useful if the address of the server is different from the domain.
+ */
 @property (copy) OFString *server;
+/// \brief The domain to connect to
 @property (copy) OFString *domain;
+/// \brief The resource to request for the connection
 @property (copy) OFString *resource;
-@property (copy) OFString *privateKeyFile, *certificateFile;
+/// \brief A private key file to use for authentication
+@property (copy) OFString *privateKeyFile;
+/// \brief A certificate file to use for authentication
+@property (copy) OFString *certificateFile;
+/// \brief The JID the server assigned to the connection after binding
 @property (copy, readonly) XMPPJID *JID;
+/// \brief The port to connect to
 @property uint16_t port;
+/// \brief The socket used for the connection
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
+/// \brief Whether encryption is required
 @property BOOL encryptionRequired;
 /// \brief Whether the connection is encrypted
 @property (readonly) BOOL encrypted;
