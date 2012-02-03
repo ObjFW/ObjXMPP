@@ -94,9 +94,9 @@
 	    ID: (OFString*)ID;
 
 /**
- * Adds a body element to the XMPPMessage
+ * Sets the body element of the XMPPMessage.
  *
- * \param body The text content of the body element
+ * \param body The text content of the body element or nil to remove the body
  */
-- (void)addBody: (OFString*)body;
+- (void)setBody: (OFString*)body;
 @end

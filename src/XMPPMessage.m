@@ -77,10 +77,17 @@
 				ID: ID_];
 }
 
-- (void)addBody: (OFString*)body
+- (void)setBody: (OFString*)body
 {
-	[self addChild: [OFXMLElement elementWithName: @"body"
-					    namespace: XMPP_NS_CLIENT
-					  stringValue: body]];
+	OFXMLElement *oldBody = [self elementForName: @"body"
+					   namespace: XMPP_NS_CLIENT];
+
+	if (oldBody != nil)
+		[self removeChild: oldBody];
+
+	if (body != nil)
+		[self addChild: [OFXMLElement elementWithName: @"body"
+						    namespace: XMPP_NS_CLIENT
+						  stringValue: body]];
 }
 @end
