@@ -33,7 +33,7 @@
 @class XMPPMulticastDelegate;
 
 /**
- * \brief A protocol should be (partially) implemented
+ * \brief A protocol that should be (partially) implemented
  *	  by delegates of a XMPPConnection
  */
 @protocol XMPPConnectionDelegate
