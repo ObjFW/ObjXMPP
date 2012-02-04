@@ -79,7 +79,8 @@
 					  namespace: XMPP_NS_ROSTER]];
 	[connection     sendIQ: iq
 	    withCallbackObject: self
-		      selector: @selector(XMPP_handleInitialRoster:)];
+		      selector: @selector(XMPP_handleInitialRosterForConnection:
+			withIQ:)];
 }
 
 - (BOOL)connection: (XMPPConnection*)connection_
@@ -236,7 +237,8 @@
 	return rosterItem;
 }
 
-- (void)XMPP_handleInitialRoster: (XMPPIQ*)iq
+- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection
+				       withIQ: (XMPPIQ*)iq
 {
 	OFXMLElement *rosterElement;
 	OFEnumerator *enumerator;

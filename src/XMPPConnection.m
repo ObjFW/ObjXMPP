@@ -942,7 +942,8 @@
 
 	[self		sendIQ: iq
 	    withCallbackObject: self
-		      selector: @selector(XMPP_handleResourceBind:)];
+		      selector: @selector(XMPP_handleResourceBindForConnection:
+				    withIQ:)];
 }
 
 - (void)XMPP_sendStreamError: (OFString*)condition
@@ -965,7 +966,8 @@
 	[self close];
 }
 
-- (void)XMPP_handleResourceBind: (XMPPIQ*)iq
+- (void)XMPP_handleResourceBindForConnection: (XMPPConnection*)connection
+				      withIQ: (XMPPIQ*)iq
 {
 	OFXMLElement *bindElement;
 	OFXMLElement *jidElement;
@@ -1001,10 +1003,12 @@
 					  namespace: XMPP_NS_SESSION]];
 	[self		sendIQ: iq
 	    withCallbackObject: self
-		      selector: @selector(XMPP_handleSession:)];
+		      selector: @selector(
+				    XMPP_handleSessionForConnection:withIQ:)];
 }
 
-- (void)XMPP_handleSession: (XMPPIQ*)iq
+- (void)XMPP_handleSessionForConnection: (XMPPConnection*)connection
+				 withIQ: (XMPPIQ*)iq
 {
 	if (![[iq type] isEqual: @"result"])
 		assert(0);

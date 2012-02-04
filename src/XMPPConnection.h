@@ -343,9 +343,11 @@
 - (void)XMPP_handleMessage: (XMPPMessage*)message;
 - (void)XMPP_handlePresence: (XMPPPresence*)presence;
 - (void)XMPP_handleFeatures: (OFXMLElement*)element;
-- (void)XMPP_handleResourceBind: (XMPPIQ*)iq;
+- (void)XMPP_handleResourceBindForConnection: (XMPPConnection*)connection
+				      withIQ: (XMPPIQ*)iq;
 - (void)XMPP_sendSession;
-- (void)XMPP_handleSession: (XMPPIQ*)iq;
+- (void)XMPP_handleSessionForConnection: (XMPPConnection*)connection
+				 withIQ: (XMPPIQ*)iq;
 - (OFString*)XMPP_IDNAToASCII: (OFString*)domain;
 - (XMPPMulticastDelegate*)XMPP_delegates;
 /// \endcond
