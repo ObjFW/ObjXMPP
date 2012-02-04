@@ -788,7 +788,8 @@
 	XMPPCallback *callback;
 
 	if ((callback = [callbacks objectForKey: [iq ID]])) {
-		[callback runWithIQ: iq];
+		[callback runWithIQ: iq
+			 connection: self];
 		[callbacks removeObjectForKey: [iq ID]];
 		return;
 	}

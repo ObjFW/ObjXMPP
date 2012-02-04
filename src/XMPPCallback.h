@@ -22,10 +22,11 @@
 
 #import <ObjFW/ObjFW.h>
 
+@class XMPPConnection;
 @class XMPPIQ;
 
 #ifdef OF_HAVE_BLOCKS
-typedef void(^xmpp_callback_block_t)(XMPPIQ*);
+typedef void(^xmpp_callback_block_t)(XMPPConnection*, XMPPIQ*);
 #endif
 
 @interface XMPPCallback: OFObject
@@ -44,5 +45,6 @@ typedef void(^xmpp_callback_block_t)(XMPPIQ*);
 - initWithCallbackObject: (id)object
 		selector: (SEL)selector;
 
-- (void)runWithIQ: (XMPPIQ*)iq;
+- (void)runWithIQ: (XMPPIQ*)iq
+       connection: (XMPPConnection*)connection;
 @end

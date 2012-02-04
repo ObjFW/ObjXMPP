@@ -23,6 +23,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+#import "XMPPCallback.h"
+
 @class XMPPConnection;
 @class XMPPJID;
 @class XMPPIQ;
@@ -301,7 +303,7 @@
  * \param callback The callback block
  */
 -      (void)sendIQ: (XMPPIQ*)iq
-  withCallbackBlock: (void(^)(XMPPIQ*))block;
+  withCallbackBlock: (xmpp_callback_block_t)block;
 #endif
 
 /**

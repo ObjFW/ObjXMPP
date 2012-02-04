@@ -67,13 +67,15 @@
 }
 
 - (void)runWithIQ: (XMPPIQ*)iq
+       connection: (XMPPConnection*)connection
 {
 #ifdef OF_HAVE_BLOCKS
 	if ([object isKindOfClass: [OFBlock class]])
-		((xmpp_callback_block_t)object)(iq);
+		((xmpp_callback_block_t)object)(connection, iq);
 	else
 #endif
 		[object performSelector: selector
+			     withObject: connection
 			     withObject: iq];
 }
 @end
