@@ -20,7 +20,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #import <ObjFW/OFString.h>
 #import <ObjFW/OFArray.h>
