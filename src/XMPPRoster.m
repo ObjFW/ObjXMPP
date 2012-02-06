@@ -29,6 +29,8 @@
 
 #include <assert.h>
 
+#import <ObjFW/OFInvalidArgumentException.h>
+
 #import "XMPPRoster.h"
 #import "XMPPRosterItem.h"
 #import "XMPPConnection.h"
@@ -73,6 +75,8 @@
 - (void)requestRoster
 {
 	XMPPIQ *iq;
+
+	rosterRequested = YES;
 
 	iq = [XMPPIQ IQWithType: @"get"
 			     ID: [connection generateStanzaID]];
@@ -188,7 +192,9 @@
 
 - (void)setDataStorage: (id <XMPPStorage>)dataStorage_
 {
-	/* TODO: Prevent changing it after it has been used */
+	if (rosterRequested)
+		@throw [OFInvalidArgumentException exceptionWithClass: isa];
+
 	dataStorage = dataStorage_;
 }
 

@@ -73,6 +73,7 @@
 	OFMutableDictionary *rosterItems;
 	XMPPMulticastDelegate *delegates;
 	id <XMPPStorage> dataStorage;
+	BOOL rosterRequested;
 /// \endcond
 }
 
