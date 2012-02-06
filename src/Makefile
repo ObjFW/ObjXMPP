@@ -12,6 +12,7 @@ SRCS = XMPPAuthenticator.m	\
        XMPPEXTERNALAuth.m	\
        XMPPIQ.m			\
        XMPPJID.m		\
+       XMPPJSONFileStorage.m	\
        XMPPMessage.m		\
        XMPPMulticastDelegate.m	\
        XMPPPLAINAuth.m		\
@@ -25,7 +26,8 @@ SRCS = XMPPAuthenticator.m	\
 
 INCLUDES = ${SRCS:.m=.h}	\
 	   namespaces.h		\
-	   ObjXMPP.h
+	   ObjXMPP.h		\
+	   XMPPStorage.h
 
 include ../buildsys.mk
 

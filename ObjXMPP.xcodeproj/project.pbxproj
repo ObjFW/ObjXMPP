@@ -18,6 +18,9 @@
 		4B19F5A314D1779E005D52DC /* ObjOpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */; };
 		4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F5D014D20B01005D52DC /* XMPPMulticastDelegate.m */; };
+		4B23D6C114DFF2B3001DBDDD /* XMPPJSONFileStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B23D6BE14DFF2B3001DBDDD /* XMPPJSONFileStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B23D6C214DFF2B3001DBDDD /* XMPPJSONFileStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B23D6BF14DFF2B3001DBDDD /* XMPPJSONFileStorage.m */; };
+		4B23D6C314DFF2B3001DBDDD /* XMPPStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B23D6C014DFF2B3001DBDDD /* XMPPStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4844F3138BBC7400EB48A5 /* XMPPSRVLookup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B4844F6138BBC7500EB48A5 /* XMPPSRVLookup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4844F4138BBC7500EB48A5 /* XMPPSRVLookup.m */; };
 		4B484501138BBEEB00EB48A5 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B484500138BBEEB00EB48A5 /* libresolv.dylib */; };
@@ -75,6 +78,9 @@
 		4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjOpenSSL.framework; path = /Library/Frameworks/ObjOpenSSL.framework; sourceTree = "<group>"; };
 		4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPMulticastDelegate.h; path = src/XMPPMulticastDelegate.h; sourceTree = SOURCE_ROOT; };
 		4B19F5D014D20B01005D52DC /* XMPPMulticastDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPMulticastDelegate.m; path = src/XMPPMulticastDelegate.m; sourceTree = SOURCE_ROOT; };
+		4B23D6BE14DFF2B3001DBDDD /* XMPPJSONFileStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPJSONFileStorage.h; path = src/XMPPJSONFileStorage.h; sourceTree = SOURCE_ROOT; };
+		4B23D6BF14DFF2B3001DBDDD /* XMPPJSONFileStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPJSONFileStorage.m; path = src/XMPPJSONFileStorage.m; sourceTree = SOURCE_ROOT; };
+		4B23D6C014DFF2B3001DBDDD /* XMPPStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPStorage.h; path = src/XMPPStorage.h; sourceTree = SOURCE_ROOT; };
 		4B4844F3138BBC7400EB48A5 /* XMPPSRVLookup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPSRVLookup.h; path = src/XMPPSRVLookup.h; sourceTree = SOURCE_ROOT; };
 		4B4844F4138BBC7500EB48A5 /* XMPPSRVLookup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPSRVLookup.m; path = src/XMPPSRVLookup.m; sourceTree = SOURCE_ROOT; };
 		4B484500138BBEEB00EB48A5 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -197,6 +203,8 @@
 				4BC559E11337AC0900E345C7 /* XMPPIQ.m */,
 				4BC559E21337AC0900E345C7 /* XMPPJID.h */,
 				4BC559E31337AC0900E345C7 /* XMPPJID.m */,
+				4B23D6BE14DFF2B3001DBDDD /* XMPPJSONFileStorage.h */,
+				4B23D6BF14DFF2B3001DBDDD /* XMPPJSONFileStorage.m */,
 				4BC559E41337AC0900E345C7 /* XMPPMessage.h */,
 				4BC559E51337AC0900E345C7 /* XMPPMessage.m */,
 				4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */,
@@ -215,6 +223,7 @@
 				4B4844F4138BBC7500EB48A5 /* XMPPSRVLookup.m */,
 				4BC559FE1337AC1800E345C7 /* XMPPStanza.h */,
 				4BC559FF1337AC1800E345C7 /* XMPPStanza.m */,
+				4B23D6C014DFF2B3001DBDDD /* XMPPStorage.h */,
 				4B48B95C14DC260000546D39 /* XMPPXMLElementBuilder.h */,
 				4B48B95D14DC260000546D39 /* XMPPXMLElementBuilder.m */,
 				4B01D01F137C7E7D005624EA /* namespaces.h */,
@@ -246,6 +255,7 @@
 				4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */,
 				4BC559F21337AC0900E345C7 /* XMPPIQ.h in Headers */,
 				4BC559F41337AC0900E345C7 /* XMPPJID.h in Headers */,
+				4B23D6C114DFF2B3001DBDDD /* XMPPJSONFileStorage.h in Headers */,
 				4BC559F61337AC0900E345C7 /* XMPPMessage.h in Headers */,
 				4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */,
 				4BC559F81337AC0900E345C7 /* XMPPPLAINAuth.h in Headers */,
@@ -255,6 +265,7 @@
 				4BC559FC1337AC0900E345C7 /* XMPPSCRAMAuth.h in Headers */,
 				4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */,
 				4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */,
+				4B23D6C314DFF2B3001DBDDD /* XMPPStorage.h in Headers */,
 				4B48B95F14DC260000546D39 /* XMPPXMLElementBuilder.h in Headers */,
 				4B01D020137C7E7D005624EA /* namespaces.h in Headers */,
 			);
@@ -364,6 +375,7 @@
 				4B4844F6138BBC7500EB48A5 /* XMPPSRVLookup.m in Sources */,
 				4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */,
 				4B48B96014DC260000546D39 /* XMPPXMLElementBuilder.m in Sources */,
+				4B23D6C214DFF2B3001DBDDD /* XMPPJSONFileStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
