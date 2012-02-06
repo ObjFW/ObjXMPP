@@ -26,6 +26,8 @@
 
 #import "XMPPRosterItem.h"
 
+#import <ObjFW/macros.h>
+
 @implementation XMPPRosterItem
 + rosterItem
 {
@@ -104,13 +106,11 @@
 
 - (void)setGroups: (OFArray*)groups_
 {
-	OFArray *old = groups;
-	groups = [groups_ copy];
-	[old release];
+	OF_SETTER(groups, groups_, YES, YES)
 }
 
 - (OFArray*)groups
 {
-	return [[groups copy] autorelease];
+	OF_GETTER(groups, YES)
 }
 @end

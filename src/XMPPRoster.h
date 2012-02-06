@@ -147,9 +147,7 @@
 - (id <XMPPStorage>)dataStorage;
 
 /// \cond internal
-- (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
-- (void)XMPP_deleteRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection
 				       withIQ: (XMPPIQ*)iq;
 - (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element;

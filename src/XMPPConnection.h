@@ -157,7 +157,7 @@
 	BOOL streamOpen;
 	BOOL needsSession;
 	BOOL encryptionRequired, encrypted;
-	BOOL rosterVersioningSupported;
+	BOOL supportsRosterVersioning;
 	unsigned int lastID;
 /// \endcond
 }
@@ -196,7 +196,7 @@
 /// \brief Whether the connection is encrypted
 @property (readonly) BOOL encrypted;
 /// \brief Whether roster versioning is supported
-@property (readonly) BOOL rosterVersioningSupported;
+@property (readonly) BOOL supportsRosterVersioning;
 #endif
 
 /**
@@ -338,7 +338,7 @@
 - (id <XMPPStorage>)dataStorage;
 - (void)setLanguage: (OFString*)language;
 - (OFString*)language;
-- (BOOL)rosterVersioningSupported;
+- (BOOL)supportsRosterVersioning;
 
 /// \cond internal
 - (void)XMPP_startStream;

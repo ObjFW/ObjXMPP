@@ -350,9 +350,9 @@
 	return streamOpen;
 }
 
-- (BOOL)rosterVersioningSupported
+- (BOOL)supportsRosterVersioning
 {
-	return rosterVersioningSupported;
+	return supportsRosterVersioning;
 }
 
 - (BOOL)checkCertificateAndGetReason: (OFString**)reason
@@ -852,7 +852,7 @@
 
 	if ([element elementForName: @"ver"
 			  namespace: XMPP_NS_ROSTERVER] != nil)
-		rosterVersioningSupported = YES;
+		supportsRosterVersioning = YES;
 
 	if (mechs != nil) {
 		OFEnumerator *enumerator;
