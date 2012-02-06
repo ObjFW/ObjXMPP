@@ -350,6 +350,11 @@
 	return streamOpen;
 }
 
+- (BOOL)rosterVersioningSupported
+{
+	return rosterVersioningSupported;
+}
+
 - (BOOL)checkCertificateAndGetReason: (OFString**)reason
 {
 	X509Certificate *cert;
@@ -844,6 +849,10 @@
 	if (encryptionRequired && !encrypted)
 		/* TODO: Find/create an exception to throw here */
 		@throw [OFException exceptionWithClass: isa];
+
+	if ([element elementForName: @"ver"
+			  namespace: XMPP_NS_ROSTERVER] != nil)
+		rosterVersioningSupported = YES;
 
 	if (mechs != nil) {
 		OFEnumerator *enumerator;

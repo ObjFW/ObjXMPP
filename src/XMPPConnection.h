@@ -149,6 +149,7 @@
 	OFString *domain, *domainToASCII;
 	XMPPJID *JID;
 	uint16_t port;
+	id <XMPPStorage> dataStorage;
 	OFString *language;
 	XMPPMulticastDelegate *delegates;
 	OFMutableDictionary *callbacks;
@@ -156,8 +157,8 @@
 	BOOL streamOpen;
 	BOOL needsSession;
 	BOOL encryptionRequired, encrypted;
+	BOOL rosterVersioningSupported;
 	unsigned int lastID;
-	id <XMPPStorage> dataStorage;
 /// \endcond
 }
 
@@ -186,14 +187,16 @@
 @property (copy, readonly) XMPPJID *JID;
 /// \brief The port to connect to
 @property uint16_t port;
+/// \brief An object for data storage, conforming to the XMPPStorage protocol
+@property (assign) id <XMPPStorage> dataStorage;
 /// \brief The socket used for the connection
 @property (readonly, retain, getter=socket) OFTCPSocket *sock;
 /// \brief Whether encryption is required
 @property BOOL encryptionRequired;
 /// \brief Whether the connection is encrypted
 @property (readonly) BOOL encrypted;
-/// \brief An object for data storage, conforming to the XMPPStorage protocol
-@property (assign) id <XMPPStorage> dataStorage;
+/// \brief Whether roster versioning is supported
+@property (readonly) BOOL rosterVersioningSupported;
 #endif
 
 /**
