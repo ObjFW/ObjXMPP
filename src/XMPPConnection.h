@@ -338,6 +338,7 @@
 - (id <XMPPStorage>)dataStorage;
 - (void)setLanguage: (OFString*)language;
 - (OFString*)language;
+- (BOOL)rosterVersioningSupported;
 
 /// \cond internal
 - (void)XMPP_startStream;
