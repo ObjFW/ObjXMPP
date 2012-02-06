@@ -310,7 +310,7 @@
 	rosterElement = [iq elementForName: @"query"
 				 namespace: XMPP_NS_ROSTER];
 
-	if ([connection supportsRosterVersioning]) {
+	if ([connection supportsRosterVersioning] && rosterElement == nil) {
 		OFDictionary *items = [dataStorage
 		    dictionaryForPath: @"roster.items"];
 		OFEnumerator *enumerator = [items objectEnumerator];
