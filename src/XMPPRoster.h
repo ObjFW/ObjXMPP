@@ -24,6 +24,7 @@
 #import <ObjFW/ObjFW.h>
 
 #import "XMPPConnection.h"
+#import "XMPPStorage.h"
 
 @class XMPPRosterItem;
 @class XMPPIQ;
@@ -71,8 +72,18 @@
 	XMPPConnection *connection;
 	OFMutableDictionary *rosterItems;
 	XMPPMulticastDelegate *delegates;
+	id <XMPPStorage> dataStorage;
 /// \endcond
 }
+
+#ifdef OF_HAVE_PROPERTIES
+/**
+ * \brief An object for data storage, conforming to the XMPPStorage protocol.
+ *
+ * Inherited from the connection if not overridden.
+ */
+@property (assign) id <XMPPStorage> dataStorage;
+#endif
 
 /**
  * \brief Initializes an already allocated XMPPRoster.
@@ -130,6 +141,9 @@
  * \param delegate The delegate to remove
  */
 - (void)removeDelegate: (id <XMPPRosterDelegate>)delegate;
+
+- (void)setDataStorage: (id <XMPPStorage>)dataStorage;
+- (id <XMPPStorage>)dataStorage;
 
 /// \cond internal
 - (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem;

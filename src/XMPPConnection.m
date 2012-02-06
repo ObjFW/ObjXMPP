@@ -36,6 +36,8 @@
 #import <ObjOpenSSL/SSLInvalidCertificateException.h>
 #import <ObjOpenSSL/X509Certificate.h>
 
+#import <ObjFW/OFInvalidArgumentException.h>
+
 #import "XMPPConnection.h"
 #import "XMPPCallback.h"
 #import "XMPPSRVLookup.h"
@@ -1054,6 +1056,19 @@
 - (uint16_t)port
 {
 	return port;
+}
+
+- (void)setDataStorage: (id <XMPPStorage>)dataStorage_
+{
+	if (streamOpen)
+		@throw [OFInvalidArgumentException exceptionWithClass: isa];
+
+	dataStorage = dataStorage_;
+}
+
+- (id <XMPPStorage>)dataStorage
+{
+	return dataStorage;
 }
 
 - (void)setLanguage: (OFString*)language_

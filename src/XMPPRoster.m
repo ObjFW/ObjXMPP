@@ -47,6 +47,7 @@
 		connection = connection_;
 		[connection addDelegate: self];
 		delegates = [[XMPPMulticastDelegate alloc] init];
+		dataStorage = [connection dataStorage];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -183,6 +184,17 @@
 - (void)removeDelegate: (id <XMPPRosterDelegate>)delegate
 {
 	[delegates removeDelegate: delegate];
+}
+
+- (void)setDataStorage: (id <XMPPStorage>)dataStorage_
+{
+	/* TODO: Prevent changing it after it has been used */
+	dataStorage = dataStorage_;
+}
+
+- (id <XMPPStorage>)dataStorage
+{
+	return dataStorage;
 }
 
 - (void)XMPP_addRosterItem: (XMPPRosterItem*)rosterItem

@@ -24,6 +24,7 @@
 #import <ObjFW/ObjFW.h>
 
 #import "XMPPCallback.h"
+#import "XMPPStorage.h"
 
 @class XMPPConnection;
 @class XMPPJID;
@@ -156,6 +157,7 @@
 	BOOL needsSession;
 	BOOL encryptionRequired, encrypted;
 	unsigned int lastID;
+	id <XMPPStorage> dataStorage;
 /// \endcond
 }
 
@@ -164,7 +166,8 @@
 @property (copy) OFString *username;
 /// \brief The password to use for authentication
 @property (copy) OFString *password;
-/** \brief The server to use for the connection
+/**
+ * \brief The server to use for the connection
  *
  * This is useful if the address of the server is different from the domain.
  */
@@ -189,6 +192,8 @@
 @property BOOL encryptionRequired;
 /// \brief Whether the connection is encrypted
 @property (readonly) BOOL encrypted;
+/// \brief An object for data storage, conforming to the XMPPStorage protocol
+@property (assign) id <XMPPStorage> dataStorage;
 #endif
 
 /**
@@ -326,6 +331,8 @@
 - (XMPPJID*)JID;
 - (void)setPort: (uint16_t)port;
 - (uint16_t)port;
+- (void)setDataStorage: (id <XMPPStorage>)dataStorage;
+- (id <XMPPStorage>)dataStorage;
 - (void)setLanguage: (OFString*)language;
 - (OFString*)language;
 
