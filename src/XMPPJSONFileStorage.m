@@ -39,7 +39,8 @@
 {
 	Class c = isa;
 	[self release];
-	@throw [OFNotImplementedException exceptionWithClass: c];
+	@throw [OFNotImplementedException exceptionWithClass: c
+						    selector: _cmd];
 }
 
 - initWithFile: (OFString*)file_
@@ -103,8 +104,11 @@
 		iter = iter2;
 	}
 
-	[iter setObject: object
-		 forKey: [pathComponents lastObject]];
+	if (object != nil)
+		[iter setObject: object
+			 forKey: [pathComponents lastObject]];
+	else
+		[iter removeObjectForKey: [pathComponents lastObject]];
 }
 
 - (id)XMPP_objectForPath: (OFString*)path

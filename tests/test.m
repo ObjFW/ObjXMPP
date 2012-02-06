@@ -32,6 +32,7 @@
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
 #import "XMPPRoster.h"
+#import "XMPPJSONFileStorage.h"
 
 @interface AppDelegate: OFObject
 #ifdef OF_HAVE_OPTIONAL_PROTOCOLS
@@ -92,10 +93,15 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	    [[stanza from] fullJID], [[stanza to] fullJID], [stanza type],
 	    [stanza ID]] isEqual: @"bob@localhost, alice@localhost, get, 42"]));
 
-	conn = [[XMPPConnection alloc] init];
-	roster = [[XMPPRoster alloc] initWithConnection: conn];
 
+	conn = [[XMPPConnection alloc] init];
 	[conn addDelegate: self];
+
+	XMPPJSONFileStorage *storage =
+	    [[XMPPJSONFileStorage alloc] initWithFile: @"storage.json"];
+	[conn setDataStorage: storage];
+
+	roster = [[XMPPRoster alloc] initWithConnection: conn];
 	[roster addDelegate: self];
 
 	if ([arguments count] != 3) {

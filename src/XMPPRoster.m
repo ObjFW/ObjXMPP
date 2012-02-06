@@ -133,6 +133,7 @@
 		    [[rosterElement attributeForName: @"ver"] stringValue];
 		[dataStorage setStringValue: ver
 				    forPath: @"roster.ver"];
+		[dataStorage save];
 	}
 
 	[delegates broadcastSelector: @selector(
@@ -227,6 +228,9 @@
 	if ([connection supportsRosterVersioning]) {
 		OFMutableDictionary *items = [[[dataStorage dictionaryForPath:
 		    @"roster.items"] mutableCopy] autorelease];
+
+		if (items == nil)
+			items = [OFMutableDictionary dictionary];
 
 		if (![[rosterItem subscription] isEqual: @"remove"]) {
 			OFMutableDictionary *item = [OFMutableDictionary
@@ -342,6 +346,7 @@
 		    [[rosterElement attributeForName: @"ver"] stringValue];
 		[dataStorage setStringValue: ver
 				    forPath: @"roster.ver"];
+		[dataStorage save];
 	}
 
 	[delegates broadcastSelector: @selector(rosterWasReceived:)
