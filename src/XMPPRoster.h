@@ -153,6 +153,3 @@
 - (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element;
 /// \endcond
 @end
-
-@interface OFObject (XMPPRosterDelegate) <XMPPRosterDelegate>
-@end

@@ -363,6 +363,3 @@
 - (XMPPMulticastDelegate*)XMPP_delegates;
 /// \endcond
 @end
-
-@interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>
-@end

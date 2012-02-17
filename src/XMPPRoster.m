@@ -353,14 +353,3 @@
 			  withObject: self];
 }
 @end
-
-@implementation OFObject (XMPPRosterDelegate)
-- (void)rosterWasReceived: (XMPPRoster*)roster
-{
-}
-
--         (void)roster: (XMPPRoster*)roster
-  didReceiveRosterItem: (XMPPRosterItem*)rosterItem
-{
-}
-@end
