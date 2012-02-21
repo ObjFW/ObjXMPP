@@ -21,7 +21,7 @@ LDFLAGS="$LDFLAGS $($OBJFW_CONFIG --ldflags)"
 LIBS="$LIBS $($OBJFW_CONFIG --libs)"
 
 AC_ARG_ENABLE(shared,
-	AS_HELP_STRING([--disabel-shared], [do not build shared library]))
+	AS_HELP_STRING([--disable-shared], [do not build shared library]))
 AS_IF([test x"$enable_shared" != x"no"], [
 	BUILDSYS_SHARED_LIB
 	AC_SUBST(OBJXMPP_SHARED_LIB, "${LIB_PREFIX}objxmpp${LIB_SUFFIX}")
@@ -100,7 +100,7 @@ BUILDSYS_INIT
 BUILDSYS_TOUCH_DEPS
 
 dnl We don't call AC_PROG_CPP, but only AC_PROG_OBJCPP and set CPP to OBJCPP
-dnl and add OBJCPPA.FLAGS to CPPFLAGS, thus we need to AC_SUBST these ourself
+dnl and add OBJCPPFLAGS to CPPFLAGS, thus we need to AC_SUBST these ourself.
 AC_SUBST(CPP)
 AC_SUBST(CPPFLAGS)
 
