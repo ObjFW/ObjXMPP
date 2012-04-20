@@ -126,6 +126,11 @@
 		rosterItem = [self XMPP_rosterItemWithXMLElement: element];
 
 		[self XMPP_updateRosterItem: rosterItem];
+
+		[delegates broadcastSelector: @selector(
+						  roster:didReceiveRosterItem:)
+				  withObject: self
+				  withObject: rosterItem];
 	}
 
 	if ([connection supportsRosterVersioning]) {
@@ -135,11 +140,6 @@
 				    forPath: @"roster.ver"];
 		[dataStorage save];
 	}
-
-	[delegates broadcastSelector: @selector(
-					  roster:didReceiveRosterItem:)
-			  withObject: self
-			  withObject: rosterItem];
 
 	[connection_ sendStanza: [iq resultIQ]];
 
