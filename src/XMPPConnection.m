@@ -315,8 +315,14 @@
 		return;
 	}
 
-	[parser parseBuffer: buffer
-		     length: length];
+	@try {
+		[parser parseBuffer: buffer
+			 length: length];
+	} @catch (OFMalformedXMLException *e) {
+		[self XMPP_sendStreamError: @"bad-format"
+				      text: nil];
+		[self close];
+	}
 
 	[oldParser release];
 	[oldElementBuilder release];
