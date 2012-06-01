@@ -25,6 +25,7 @@
 #endif
 
 #import "XMPPRosterItem.h"
+#import "XMPPJID.h"
 
 #import <ObjFW/macros.h>
 

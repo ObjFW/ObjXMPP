@@ -25,6 +25,7 @@
 #endif
 
 #import "XMPPExceptions.h"
+#import "XMPPConnection.h"
 
 @implementation XMPPException
 + exceptionWithClass: (Class)class_
