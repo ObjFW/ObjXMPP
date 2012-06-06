@@ -295,11 +295,11 @@
 	char buffer[512];
 
 	for (;;) {
-		size_t length = [sock readNBytes: 512
-				      intoBuffer: buffer];
+		size_t length = [sock readIntoBuffer: buffer
+					      length: 512];
 
 		[self parseBuffer: buffer
-		       withLength: length];
+			   length: length];
 
 		if (length < 1)
 			return;
@@ -307,7 +307,7 @@
 }
 
 - (void)parseBuffer: (const char*)buffer
-	 withLength: (size_t)length
+	     length: (size_t)length
 {
 	if (length < 1) {
 		[delegates broadcastSelector: @selector(connectionWasClosed:)
@@ -316,7 +316,7 @@
 	}
 
 	[parser parseBuffer: buffer
-		 withLength: length];
+		     length: length];
 
 	[oldParser release];
 	[oldElementBuilder release];

@@ -256,7 +256,7 @@
  *		 the connection was closed.
  */
 - (void)parseBuffer: (const char*)buffer
-	 withLength: (size_t)length;
+	     length: (size_t)length;
 
 /**
  * \brief Returns the socket used by the XMPPConnection.
