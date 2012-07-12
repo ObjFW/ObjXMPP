@@ -116,7 +116,7 @@
 	    "Nodeprep", 0)) != STRINGPREP_OK) || (nodepart[0] == '\0') ||
 	    (strlen(nodepart) > 1023))
 		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: nil
 			       profile: @"Nodeprep"
 				string: node_];
@@ -145,7 +145,7 @@
 	    "Nameprep", 0)) != STRINGPREP_OK) || (srv[0] == '\0') ||
 	    (strlen(srv) > 1023))
 		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: nil
 			       profile: @"Nameprep"
 				string: domain_];
@@ -180,7 +180,7 @@
 	    "Resourceprep", 0)) != STRINGPREP_OK) || (res[0] == '\0') ||
 	    (strlen(res) > 1023))
 		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: nil
 			       profile: @"Resourceprep"
 				string: resource_];

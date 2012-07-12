@@ -231,7 +231,7 @@
 		if ([comp hasPrefix: @"r="]) {
 			if (![entry hasPrefix: cNonce])
 				@throw [XMPPAuthFailedException
-				    exceptionWithClass: isa
+				    exceptionWithClass: [self class]
 					    connection: nil
 						reason: @"Received wrong "
 							@"nonce"];
@@ -249,7 +249,8 @@
 	}
 
 	if (got != (GOT_SNONCE | GOT_SALT | GOT_ITERCOUNT))
-		@throw [OFInvalidServerReplyException exceptionWithClass: isa];
+		@throw [OFInvalidServerReplyException
+		    exceptionWithClass: [self class]];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
 	tmpArray = [OFDataArray dataArray];
@@ -392,13 +393,13 @@
 	if ([mess hasPrefix: @"v="]) {
 		if (![value isEqual: [serverSignature stringByBase64Encoding]])
 			@throw [XMPPAuthFailedException
-			    exceptionWithClass: isa
+			    exceptionWithClass: [self class]
 				    connection: nil
 					reason: @"Received wrong "
 						@"ServerSignature"];
 		authenticated = YES;
 	} else
-		@throw [XMPPAuthFailedException exceptionWithClass: isa
+		@throw [XMPPAuthFailedException exceptionWithClass: [self class]
 							connection: nil
 							    reason: value];
 

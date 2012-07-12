@@ -55,7 +55,7 @@
 
 - init
 {
-	Class c = isa;
+	Class c = [self class];
 	[self release];
 	@throw [OFNotImplementedException exceptionWithClass: c
 						    selector: _cmd];
@@ -98,7 +98,7 @@
 		if (dn_expand(ns_msg_base(handle), ns_msg_end(handle),
 		    (uint8_t*)&rdata[3], buffer, NS_MAXDNAME) < 1)
 			@throw [OFInitializationFailedException
-			    exceptionWithClass: isa];
+			    exceptionWithClass: [self class]];
 
 		target = [[OFString alloc]
 		    initWithCString: buffer
@@ -120,10 +120,9 @@
 
 - (OFString*)description
 {
-	return [OFString stringWithFormat: @"<%@ priority: %" PRIu16
-					   @", weight: %" PRIu16
-					   @", target: %@:%" PRIu16 @">",
-					   isa, priority, weight, target, port];
+	return [OFString stringWithFormat:
+	    @"<%@ priority: %" PRIu16 @", weight: %" PRIu16 @", target: %@:%"
+	    PRIu16 @">", [self class], priority, weight, target, port];
 }
 
 - (uint16_t)priority
@@ -208,7 +207,7 @@
 
 		if (res_ninit(&resState))
 			@throw [OFAddressTranslationFailedException
-			    exceptionWithClass: isa
+			    exceptionWithClass: [self class]
 					socket: nil
 					  host: domain];
 
@@ -223,14 +222,14 @@
 
 		if (answerLen < 1 || answerLen > of_pagesize) {
 			@throw [OFAddressTranslationFailedException
-			    exceptionWithClass: isa
+			    exceptionWithClass: [self class]
 					socket: nil
 					  host: domain];
 		}
 
 		if (ns_initparse(answer, answerLen, &handle))
 			@throw [OFAddressTranslationFailedException
-			    exceptionWithClass: isa
+			    exceptionWithClass: [self class]
 					socket: nil
 					  host: domain];
 

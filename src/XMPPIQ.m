@@ -47,7 +47,7 @@
 		if (![type_ isEqual: @"get"] && ![type_ isEqual: @"set"] &&
 		    ![type_ isEqual: @"result"] && ![type_ isEqual: @"error"])
 			@throw [OFInvalidArgumentException
-			    exceptionWithClass: isa
+			    exceptionWithClass: [self class]
 				      selector: _cmd];
 	} @catch (id e) {
 		[self release];

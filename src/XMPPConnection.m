@@ -110,7 +110,7 @@
 	if ((rc = stringprep_profile([username_ UTF8String], &node,
 	    "SASLprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: self
 			       profile: @"SASLprep"
 				string: username_];
@@ -138,7 +138,7 @@
 	if ((rc = stringprep_profile([resource_ UTF8String], &res,
 	    "Resourceprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: self
 			       profile: @"Resourceprep"
 				string: resource_];
@@ -179,7 +179,7 @@
 	if ((rc = stringprep_profile([domain_ UTF8String], &srv,
 	    "Nameprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: self
 			       profile: @"Nameprep"
 				string: domain_];
@@ -209,7 +209,7 @@
 	if ((rc = stringprep_profile([password_ UTF8String], &pass,
 	    "SASLprep", 0)) != STRINGPREP_OK)
 		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: self
 			       profile: @"SASLprep"
 				string: password_];
@@ -695,10 +695,11 @@
 		    elementForName: @"text"
 			 namespace: XMPP_NS_XMPP_STREAM] stringValue];
 
-		@throw [XMPPStreamErrorException exceptionWithClass: isa
-							 connection: self
-							  condition: condition
-							     reason: reason];
+		@throw [XMPPStreamErrorException
+		    exceptionWithClass: [self class]
+			    connection: self
+			     condition: condition
+				reason: reason];
 		return;
 	}
 
@@ -735,7 +736,7 @@
 
 	if ([[element name] isEqual: @"failure"])
 		/* TODO: Find/create an exception to throw here */
-		@throw [OFException exceptionWithClass: isa];
+		@throw [OFException exceptionWithClass: [self class]];
 
 	assert(0);
 }
@@ -781,7 +782,7 @@
 		of_log(@"Auth failed!");
 		// FIXME: Do more parsing/handling
 		@throw [XMPPAuthFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: self
 				reason: [element XMLString]];
 	}
@@ -848,7 +849,7 @@
 
 	if (encryptionRequired && !encrypted)
 		/* TODO: Find/create an exception to throw here */
-		@throw [OFException exceptionWithClass: isa];
+		@throw [OFException exceptionWithClass: [self class]];
 
 	if ([element elementForName: @"ver"
 			  namespace: XMPP_NS_ROSTERVER] != nil)
@@ -1038,7 +1039,7 @@
 	if ((rc = idna_to_ascii_8z([domain_ UTF8String],
 	    &cDomain, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
 		@throw [XMPPIDNATranslationFailedException
-		    exceptionWithClass: isa
+		    exceptionWithClass: [self class]
 			    connection: self
 			     operation: @"ToASCII"
 				string: domain_];
@@ -1070,7 +1071,8 @@
 - (void)setDataStorage: (id <XMPPStorage>)dataStorage_
 {
 	if (streamOpen)
-		@throw [OFInvalidArgumentException exceptionWithClass: isa];
+		@throw [OFInvalidArgumentException
+		    exceptionWithClass: [self class]];
 
 	dataStorage = dataStorage_;
 }

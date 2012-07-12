@@ -213,7 +213,8 @@
 - (void)setDataStorage: (id <XMPPStorage>)dataStorage_
 {
 	if (rosterRequested)
-		@throw [OFInvalidArgumentException exceptionWithClass: isa];
+		@throw [OFInvalidArgumentException
+		    exceptionWithClass: [self class]];
 
 	dataStorage = dataStorage_;
 }

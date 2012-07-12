@@ -97,7 +97,7 @@
 		if (![name_ isEqual: @"iq"] && ![name_ isEqual: @"message"] &&
 		    ![name_ isEqual: @"presence"])
 			@throw [OFInvalidArgumentException
-			    exceptionWithClass: isa
+			    exceptionWithClass: [self class]
 				      selector: _cmd];
 
 		[self setDefaultNamespace: XMPP_NS_CLIENT];
