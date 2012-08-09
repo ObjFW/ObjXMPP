@@ -158,6 +158,7 @@
 	BOOL needsSession;
 	BOOL encryptionRequired, encrypted;
 	BOOL supportsRosterVersioning;
+	BOOL supportsStreamManagement;
 	unsigned int lastID;
 /// \endcond
 }
@@ -197,6 +198,8 @@
 @property (readonly) BOOL encrypted;
 /// \brief Whether roster versioning is supported
 @property (readonly) BOOL supportsRosterVersioning;
+/// \brief Whether stream management is supported
+@property (readonly) BOOL supportsStreamManagement;
 #endif
 
 /**

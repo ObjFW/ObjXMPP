@@ -32,6 +32,7 @@
 #import "XMPPMessage.h"
 #import "XMPPPresence.h"
 #import "XMPPRoster.h"
+#import "XMPPStreamManagement.h"
 #import "XMPPJSONFileStorage.h"
 
 @interface AppDelegate: OFObject
@@ -104,6 +105,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	roster = [[XMPPRoster alloc] initWithConnection: conn];
 	[roster addDelegate: self];
 
+	[[XMPPStreamManagement alloc] initWithConnection: conn];
+
 	if ([arguments count] != 3) {
 		of_log(@"Invalid count of command line arguments!");
 		[OFApplication terminateWithStatus: 1];
@@ -139,10 +142,11 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	of_log(@"Auth successful");
 }
 
-- (void)connection: (XMPPConnection*)conn
+- (void)connection: (XMPPConnection*)conn_
      wasBoundToJID: (XMPPJID*)jid
 {
 	of_log(@"Bound to JID: %@", [jid fullJID]);
+	of_log(@"Supports SM: %@", [conn_ supportsStreamManagement] ? @"YES" : @"NO");
 
 	[roster requestRoster];
 }

@@ -22,6 +22,7 @@ SRCS = XMPPAuthenticator.m	\
        XMPPSCRAMAuth.m		\
        XMPPSRVLookup.m		\
        XMPPStanza.m		\
+       XMPPStreamManagement.m	\
        XMPPXMLElementBuilder.m
 
 INCLUDES = ${SRCS:.m=.h}	\

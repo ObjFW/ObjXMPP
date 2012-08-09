@@ -361,6 +361,11 @@
 	return supportsRosterVersioning;
 }
 
+- (BOOL)supportsStreamManagement
+{
+	return supportsStreamManagement;
+}
+
 - (BOOL)checkCertificateAndGetReason: (OFString**)reason
 {
 	X509Certificate *cert;
@@ -860,6 +865,10 @@
 	if ([element elementForName: @"ver"
 			  namespace: XMPP_NS_ROSTERVER] != nil)
 		supportsRosterVersioning = YES;
+
+	if ([element elementForName: @"sm"
+			  namespace: XMPP_NS_SM] != nil)
+		supportsStreamManagement = YES;
 
 	if (mechs != nil) {
 		OFEnumerator *enumerator;

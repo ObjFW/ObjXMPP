@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/git/?p=objxmpp.git
  *
@@ -20,14 +20,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define XMPP_NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
-#define XMPP_NS_CLIENT @"jabber:client"
-#define XMPP_NS_ROSTER @"jabber:iq:roster"
-#define XMPP_NS_ROSTERVER @"urn:xmpp:features:rosterver"
-#define XMPP_NS_SASL @"urn:ietf:params:xml:ns:xmpp-sasl"
-#define XMPP_NS_SESSION @"urn:ietf:params:xml:ns:xmpp-session"
-#define XMPP_NS_SM @"urn:xmpp:sm:3"
-#define XMPP_NS_STARTTLS @"urn:ietf:params:xml:ns:xmpp-tls"
-#define XMPP_NS_STANZAS @"urn:ietf:params:xml:ns:xmpp-stanzas"
-#define XMPP_NS_STREAM @"http://etherx.jabber.org/streams"
-#define XMPP_NS_XMPP_STREAM @"urn:ietf:params:xml:ns:xmpp-streams"
+#import "XMPPConnection.h"
+
+@interface XMPPStreamManagement: OFObject
+#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
+    <XMPPConnectionDelegate>
+#endif
+{
+/// \cond internal
+	XMPPConnection *connection;
+	uint32_t receivedCount;
+/// \endcond
+}
+
+- initWithConnection: (XMPPConnection*)connection;
+@end
