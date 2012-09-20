@@ -245,7 +245,7 @@
 - (BOOL)checkCertificateAndGetReason: (OFString**)reason;
 
 /**
- * \brief Starts a loop handling incomming data.
+ * \brief Adds the connection to the run loop.
  */
 - (void)handleConnection;
 
@@ -258,7 +258,7 @@
  * \param length The length of the buffer. If length is 0, it is assumed that
  *		 the connection was closed.
  */
-- (void)parseBuffer: (const char*)buffer
+- (void)parseBuffer: (const void*)buffer
 	     length: (size_t)length;
 
 /**

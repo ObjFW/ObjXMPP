@@ -146,7 +146,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
      wasBoundToJID: (XMPPJID*)jid
 {
 	of_log(@"Bound to JID: %@", [jid fullJID]);
-	of_log(@"Supports SM: %@", [conn_ supportsStreamManagement] ? @"YES" : @"NO");
+	of_log(@"Supports SM: %@",
+	    [conn_ supportsStreamManagement] ? @"YES" : @"NO");
 
 	[roster requestRoster];
 }

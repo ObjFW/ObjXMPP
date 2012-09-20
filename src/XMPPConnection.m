@@ -56,6 +56,8 @@
 
 #import <ObjFW/macros.h>
 
+#define BUFFER_LENGTH 512
+
 @implementation XMPPConnection
 + connection
 {
@@ -292,43 +294,74 @@
 
 - (void)handleConnection
 {
-	char buffer[512];
+	char *buffer = [self allocMemoryWithSize: BUFFER_LENGTH];
 
-	for (;;) {
-		size_t length = [sock readIntoBuffer: buffer
-					      length: 512];
-
-		[self parseBuffer: buffer
-			   length: length];
-
-		if (length < 1)
-			return;
-	}
+	[sock asyncReadIntoBuffer: buffer
+			   length: BUFFER_LENGTH
+			   target: self
+			 selector: @selector(stream:didReadIntoBuffer:length:)];
 }
 
-- (void)parseBuffer: (const char*)buffer
-	     length: (size_t)length
+-  (BOOL)XMPP_parseBuffer: (const void*)buffer
+		   length: (size_t)length
 {
-	if (length < 1) {
+	if ([sock isAtEndOfStream]) {
 		[delegates broadcastSelector: @selector(connectionWasClosed:)
 				  withObject: self];
-		return;
+		return NO;
 	}
 
 	@try {
 		[parser parseBuffer: buffer
-			 length: length];
+			     length: length];
 	} @catch (OFMalformedXMLException *e) {
 		[self XMPP_sendStreamError: @"bad-format"
 				      text: nil];
 		[self close];
+		return NO;
 	}
+
+	return YES;
+}
+
+- (void)parseBuffer: (const void*)buffer
+	     length: (size_t)length
+{
+	[self XMPP_parseBuffer: buffer
+			length: length];
 
 	[oldParser release];
 	[oldElementBuilder release];
 
 	oldParser = nil;
 	oldElementBuilder = nil;
+}
+
+-      (BOOL)stream: (OFStream*)stream
+  didReadIntoBuffer: (char*)buffer
+	     length: (size_t)length
+{
+	if (![self XMPP_parseBuffer: buffer
+			     length: length])
+		return NO;
+
+	if (oldParser != nil || oldElementBuilder != nil) {
+		[oldParser release];
+		[oldElementBuilder release];
+
+		oldParser = nil;
+		oldElementBuilder = nil;
+
+		[sock asyncReadIntoBuffer: buffer
+				   length: BUFFER_LENGTH
+				   target: self
+				 selector: @selector(stream:
+					       didReadIntoBuffer:length:)];
+
+		return NO;
+	}
+
+	return YES;
 }
 
 - (OFTCPSocket*)socket
