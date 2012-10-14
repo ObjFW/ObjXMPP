@@ -54,8 +54,8 @@
 		return nil;
 	}
 
-	nodesep = [str indexOfFirstOccurrenceOfString: @"@"];
-	resourcesep = [str indexOfFirstOccurrenceOfString: @"/"];
+	nodesep = [str rangeOfString: @"@"].location;
+	resourcesep = [str rangeOfString: @"/"].location;
 
 	if (nodesep == SIZE_MAX)
 		[self setNode: nil];
