@@ -299,7 +299,8 @@
 	[sock asyncReadIntoBuffer: buffer
 			   length: BUFFER_LENGTH
 			   target: self
-			 selector: @selector(stream:didReadIntoBuffer:length:)];
+			 selector: @selector(stream:didReadIntoBuffer:length:
+				       exception:)];
 }
 
 -  (BOOL)XMPP_parseBuffer: (const void*)buffer
@@ -340,7 +341,13 @@
 -      (BOOL)stream: (OFStream*)stream
   didReadIntoBuffer: (char*)buffer
 	     length: (size_t)length
+	  exception: (OFException*)exception
 {
+	if (exception != nil) {
+		[self close];
+		return NO;
+	}
+
 	if (![self XMPP_parseBuffer: buffer
 			     length: length])
 		return NO;
@@ -355,8 +362,8 @@
 		[sock asyncReadIntoBuffer: buffer
 				   length: BUFFER_LENGTH
 				   target: self
-				 selector: @selector(stream:
-					       didReadIntoBuffer:length:)];
+				 selector: @selector(stream:didReadIntoBuffer:
+					       length:exception:)];
 
 		return NO;
 	}
