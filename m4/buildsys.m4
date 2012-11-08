@@ -1,7 +1,8 @@
 dnl
-dnl Copyright (c) 2007 - 2009, Jonathan Schleifer <js@webkeks.org>
+dnl Copyright (c) 2007, 2008, 2009, 2010, 2011, 2012
+dnl Jonathan Schleifer <js@webkeks.org>
 dnl
-dnl https://webkeks.org/hg/buildsys/
+dnl https://webkeks.org/git/?p=buildsys.git
 dnl
 dnl Permission to use, copy, modify, and/or distribute this software for any
 dnl purpose with or without fee is hereby granted, provided that the above
@@ -21,6 +22,11 @@ dnl POSSIBILITY OF SUCH DAMAGE.
 dnl
 
 AC_DEFUN([BUILDSYS_INIT], [
+	AC_SUBST(CC_DEPENDS, $GCC)
+	AC_SUBST(CXX_DEPENDS, $GXX)
+	AC_SUBST(OBJC_DEPENDS, $GOBJC)
+	AC_SUBST(OBJCXX_DEPENDS, $GOBJCXX)
+
 	AC_PATH_PROG(TPUT, tput)
 
 	AS_IF([test x"$TPUT" != x""], [
@@ -100,15 +106,15 @@ AC_DEFUN([BUILDSYS_SHARED_LIB], [
 			LDFLAGS_RPATH='-Wl,-rpath,${libdir}'
 			PLUGIN_CFLAGS='-fPIC -DPIC'
 			PLUGIN_LDFLAGS='-bundle -undefined dynamic_lookup'
-			PLUGIN_SUFFIX='.impl'
-			INSTALL_LIB='&& ${INSTALL} -m 755 $$i ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib && ${LN_S} -f $${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.dylib && ${LN_S} -f $${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib ${DESTDIR}${libdir}/$$i'
+			PLUGIN_SUFFIX='.bundle'
+			INSTALL_LIB='&& ${INSTALL} -m 755 $$i ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib && install_name_tool -id ${libdir}/$${i%.dylib}.${LIB_MAJOR}.dylib ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib && ${LN_S} -f $${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.dylib && ${LN_S} -f $${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib ${DESTDIR}${libdir}/$$i'
 			UNINSTALL_LIB='&& rm -f ${DESTDIR}${libdir}/$$i ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.dylib ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib'
 			CLEAN_LIB=''
 			;;
 		solaris*)
 			AC_MSG_RESULT(Solaris)
 			LIB_CFLAGS='-fPIC -DPIC'
-			LIB_LDFLAGS='-shared -Wl,-soname=${LIB}.${LIB_MAJOR}.${LIB_MINOR}'
+			LIB_LDFLAGS='-shared -Wl,-soname=${SHARED_LIB}.${LIB_MAJOR}.${LIB_MINOR}'
 			LIB_PREFIX='lib'
 			LIB_SUFFIX='.so'
 			LDFLAGS_RPATH='-Wl,-rpath,${libdir}'
@@ -136,7 +142,7 @@ AC_DEFUN([BUILDSYS_SHARED_LIB], [
 		cygwin* | mingw*)
 			AC_MSG_RESULT(Win32)
 			LIB_CFLAGS=''
-			LIB_LDFLAGS='-shared -Wl,--out-implib,${LIB}.a'
+			LIB_LDFLAGS='-shared -Wl,--out-implib,${SHARED_LIB}.a'
 			LIB_PREFIX='lib'
 			LIB_SUFFIX='.dll'
 			LDFLAGS_RPATH='-Wl,-rpath,${libdir}'
@@ -145,12 +151,12 @@ AC_DEFUN([BUILDSYS_SHARED_LIB], [
 			PLUGIN_SUFFIX='.dll'
 			INSTALL_LIB='&& ${MKDIR_P} ${DESTDIR}${bindir} && ${INSTALL} -m 755 $$i ${DESTDIR}${bindir}/$$i && ${INSTALL} -m 755 $$i.a ${DESTDIR}${libdir}/$$i.a'
 			UNINSTALL_LIB='&& rm -f ${DESTDIR}${bindir}/$$i ${DESTDIR}${libdir}/$$i.a'
-			CLEAN_LIB='${LIB}.a'
+			CLEAN_LIB='${SHARED_LIB}.a'
 			;;
 		*)
 			AC_MSG_RESULT(GNU)
 			LIB_CFLAGS='-fPIC -DPIC'
-			LIB_LDFLAGS='-shared -Wl,-soname=${LIB}.${LIB_MAJOR}'
+			LIB_LDFLAGS='-shared -Wl,-soname=${SHARED_LIB}.${LIB_MAJOR}'
 			LIB_PREFIX='lib'
 			LIB_SUFFIX='.so'
 			LDFLAGS_RPATH='-Wl,-rpath,${libdir}'

@@ -1,9 +1,9 @@
 include ../extra.mk
 
-LIB = ${OBJXMPP_SHARED_LIB}
+SHARED_LIB = ${OBJXMPP_SHARED_LIB}
+STATIC_LIB = ${OBJXMPP_STATIC_LIB}
 LIB_MAJOR = 0
 LIB_MINOR = 0
-STATIC_LIB = ${OBJXMPP_STATIC_LIB}
 
 SRCS = XMPPAuthenticator.m	\
        XMPPCallback.m		\
