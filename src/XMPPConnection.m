@@ -69,7 +69,6 @@
 	self = [super init];
 
 	@try {
-		sock = [[OFTCPSocket alloc] init];
 		port = 5222;
 		encrypted = NO;
 		streamOpen = NO;
@@ -256,6 +255,12 @@
 	XMPPSRVEntry *candidate = nil;
 	XMPPSRVLookup *SRVLookup = nil;
 	OFEnumerator *enumerator;
+
+	if (sock != nil)
+		@throw [OFAlreadyConnectedException
+		    exceptionWithClass: [self class]];
+
+	sock = [[OFTCPSocket alloc] init];
 
 	if (server)
 		[sock connectToHost: [self XMPP_IDNAToASCII: server]
@@ -635,10 +640,23 @@
 
 - (void)close
 {
-	if (streamOpen) {
+	if (streamOpen)
 		[sock writeString: @"</stream:stream>"];
-		streamOpen = NO;
-	}
+
+
+	[oldParser release];
+	oldParser = nil;
+	[oldElementBuilder release];
+	oldElementBuilder = nil;
+	[authModule release];
+	authModule = nil;
+	[sock release];
+	sock = nil;
+	[JID release];
+	JID = nil;
+	streamOpen = needsSession = encrypted = NO;
+	supportsRosterVersioning = supportsStreamManagement = NO;
+	lastID = 0;
 }
 
 - (void)XMPP_handleStanza: (OFXMLElement*)element
