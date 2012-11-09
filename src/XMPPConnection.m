@@ -820,7 +820,7 @@
 		    dataArrayWithBase64EncodedString: [element stringValue]]];
 
 		[delegates broadcastSelector: @selector(
-						  connectionWWasAuthenticated:)
+						  connectionWasAuthenticated:)
 				  withObject: self];
 
 		/* Stream restart */
