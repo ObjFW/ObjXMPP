@@ -79,6 +79,11 @@
 
 #ifdef OF_HAVE_PROPERTIES
 /**
+ * \brief The connection to which the roster belongs
+ */
+@property (readonly, assign) XMPPConnection *connection;
+
+/**
  * \brief An object for data storage, conforming to the XMPPStorage protocol.
  *
  * Inherited from the connection if not overridden.
@@ -142,6 +147,8 @@
  * \param delegate The delegate to remove
  */
 - (void)removeDelegate: (id <XMPPRosterDelegate>)delegate;
+
+- (XMPPConnection*)connection;
 
 - (void)setDataStorage: (id <XMPPStorage>)dataStorage;
 - (id <XMPPStorage>)dataStorage;

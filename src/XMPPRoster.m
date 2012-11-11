@@ -219,6 +219,11 @@
 	dataStorage = dataStorage_;
 }
 
+- (XMPPConnection*)connection
+{
+	return connection;
+}
+
 - (id <XMPPStorage>)dataStorage
 {
 	return dataStorage;
