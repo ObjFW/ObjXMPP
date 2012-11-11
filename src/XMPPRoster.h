@@ -89,6 +89,12 @@
  * Inherited from the connection if not overridden.
  */
 @property (assign) id <XMPPStorage> dataStorage;
+
+/**
+ * \brief The list of contacts as an OFDictionary with the bare JID as a string
+ *	  as key.
+ */
+@property (readonly, copy) OFDictionary *rosterItems;
 #endif
 
 /**
@@ -100,12 +106,6 @@
  */
 - initWithConnection: (XMPPConnection*)connection;
 
-/**
- * \brief Returns the list of contacts as an OFDictionary with the bare JID as
- *	  a string as key.
- *
- * \return An autoreleased copy of the dictionary containing the roster items
- */
 - (OFDictionary*)rosterItems;
 
 /**
