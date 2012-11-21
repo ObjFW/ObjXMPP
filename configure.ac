@@ -90,10 +90,32 @@ PKG_CHECK_MODULES(libidn, [libidn >= 0.25], [
 ])
 
 AS_IF([test x"$GOBJC" = x"yes"], [
-	OBJCFLAGS="$OBJCFLAGS -Wwrite-strings -Wcast-align -Wpointer-arith"
+	OBJCFLAGS="$OBJCFLAGS -Wwrite-strings -Wpointer-arith"
 	dnl We need -Wno-deprecated-declarations as OpenSSL is deprecated on
 	dnl OS X.
 	OBJCFLAGS="$OBJCFLAGS -Wno-deprecated-declarations -Werror"
+
+	old_OBJCFLAGS="$OBJCFLAGS"
+	OBJCFLAGS="$OBJCFLAGS -Wcast-align"
+	AC_MSG_CHECKING(whether -Wcast-align is buggy)
+	AC_TRY_COMPILE([
+		#import <ObjFW/OFObject.h>
+
+		@interface Foo: OFObject
+		@end
+
+		@implementation Foo
+		- (void)foo
+		{
+		}
+		@end
+	], [
+	], [
+		AC_MSG_RESULT(no)
+	], [
+		AC_MSG_RESULT(yes)
+		OBJCFLAGS="$old_OBJCFLAGS"
+	])
 ])
 
 BUILDSYS_INIT
