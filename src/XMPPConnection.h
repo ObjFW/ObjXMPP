@@ -117,6 +117,18 @@
 - (void)connectionWasClosed: (XMPPConnection*)connection;
 
 /**
+ * \brief This callback is called when the connection threw an exception.
+ *
+ * This is only called for connections on which \ref handleConnection: has been
+ * called.
+ *
+ * \param connection The connection which threw an exception
+ * \param exception The exception the connection threw
+ */
+-  (void)connection: (XMPPConnection*)connection
+  didThrowException: (OFException*)exception;
+
+/**
  * \brief This callback is called when the connection is about to upgrade to
  *	  TLS.
  *

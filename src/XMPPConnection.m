@@ -344,13 +344,26 @@
 	  exception: (OFException*)exception
 {
 	if (exception != nil) {
+		[delegates broadcastSelector: @selector(connection:
+						  didThrowException::)
+				  withObject: self
+				  withObject: exception];
 		[self close];
 		return NO;
 	}
 
-	if (![self XMPP_parseBuffer: buffer
-			     length: length])
+	@try {
+		if (![self XMPP_parseBuffer: buffer
+				     length: length])
+			return NO;
+	} @catch (id e) {
+		[delegates broadcastSelector: @selector(connection:
+						  didThrowException::)
+				  withObject: self
+				  withObject: e];
+		[self close];
 		return NO;
+	}
 
 	if (oldParser != nil || oldElementBuilder != nil) {
 		[oldParser release];
