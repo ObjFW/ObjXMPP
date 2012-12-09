@@ -29,7 +29,7 @@
  */
 @interface XMPPRosterItem: OFObject
 {
-/// \cond intenral
+/// \cond internal
 	XMPPJID *JID;
 	OFString *name;
 	OFString *subscription;
