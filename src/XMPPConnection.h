@@ -262,6 +262,12 @@
 - (void)handleConnection;
 
 /**
+ * \brief Asynchronously connects to the server and adds the connection to the
+ *	  run loop.
+ */
+- (void)asyncConnectAndHandle;
+
+/**
  * \brief Parses the specified buffer.
  *
  * This is useful for handling multiple connections at once.

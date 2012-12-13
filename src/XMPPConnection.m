@@ -58,6 +58,64 @@
 
 #define BUFFER_LENGTH 512
 
+@interface XMPPConnection_ConnectThread: OFThread
+{
+	OFThread *sourceThread;
+	XMPPConnection *connection;
+}
+
+- initWithSourceThread: (OFThread*)sourceThread
+	    connection: (XMPPConnection*)connection;
+@end
+
+@implementation XMPPConnection_ConnectThread
+- initWithSourceThread: (OFThread*)sourceThread_
+	    connection: (XMPPConnection*)connection_
+{
+	self = [super init];
+
+	@try {
+		sourceThread = [sourceThread_ retain];
+		connection = [connection_ retain];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+	[sourceThread release];
+	[connection release];
+
+	[super dealloc];
+}
+
+- (void)didConnect
+{
+	[self join];
+
+	[connection handleConnection];
+}
+
+- (id)main
+{
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+
+	[connection connect];
+
+	[self performSelector: @selector(didConnect)
+		     onThread: sourceThread
+		waitUntilDone: NO];
+
+	[pool release];
+
+	return nil;
+}
+@end
+
 @implementation XMPPConnection
 + connection
 {
@@ -306,6 +364,17 @@
 			   target: self
 			 selector: @selector(stream:didReadIntoBuffer:length:
 				       exception:)];
+}
+
+- (void)asyncConnectAndHandle
+{
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+
+	[[[[XMPPConnection_ConnectThread alloc]
+	    initWithSourceThread: [OFThread currentThread]
+		      connection: self] autorelease] start];
+
+	[pool release];
 }
 
 -  (BOOL)XMPP_parseBuffer: (const void*)buffer
