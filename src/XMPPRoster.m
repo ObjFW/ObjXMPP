@@ -125,12 +125,12 @@
 	if (element != nil) {
 		rosterItem = [self XMPP_rosterItemWithXMLElement: element];
 
-		[self XMPP_updateRosterItem: rosterItem];
-
 		[delegates broadcastSelector: @selector(
 						  roster:didReceiveRosterItem:)
 				  withObject: self
 				  withObject: rosterItem];
+
+		[self XMPP_updateRosterItem: rosterItem];
 	}
 
 	if ([connection supportsRosterVersioning]) {
