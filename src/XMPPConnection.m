@@ -469,9 +469,9 @@
 	[sock writeString: [element XMLString]];
 }
 
--	(void)sendIQ: (XMPPIQ*)iq
-  withCallbackObject: (id)object
-	    selector: (SEL)selector
+-   (void)sendIQ: (XMPPIQ*)iq
+  callbackTarget: (id)target
+	selector: (SEL)selector
 {
 	OFAutoreleasePool *pool;
 	XMPPCallback *callback;
@@ -480,8 +480,8 @@
 		[iq setID: [self generateStanzaID]];
 
 	pool = [[OFAutoreleasePool alloc] init];
-	callback = [XMPPCallback callbackWithCallbackObject: object
-						   selector: selector];
+	callback = [XMPPCallback callbackWithTarget: target
+					   selector: selector];
 	[callbacks setObject: callback
 		      forKey: [iq ID]];
 	[pool release];
@@ -490,8 +490,8 @@
 }
 
 #ifdef OF_HAVE_BLOCKS
--      (void)sendIQ: (XMPPIQ*)iq
-  withCallbackBlock: (xmpp_callback_block_t)block;
+-  (void)sendIQ: (XMPPIQ*)iq
+  callbackBlock: (xmpp_callback_block_t)block
 {
 	OFAutoreleasePool *pool;
 	XMPPCallback *callback;
@@ -500,7 +500,7 @@
 		[iq setID: [self generateStanzaID]];
 
 	pool = [[OFAutoreleasePool alloc] init];
-	callback = [XMPPCallback callbackWithCallbackBlock: block];
+	callback = [XMPPCallback callbackWithBlock: block];
 	[callbacks setObject: callback
 		      forKey: [iq ID]];
 	[pool release];
@@ -1038,10 +1038,10 @@
 
 	[iq addChild: bind];
 
-	[self		sendIQ: iq
-	    withCallbackObject: self
-		      selector: @selector(XMPP_handleResourceBindForConnection:
-				    withIQ:)];
+	[self	    sendIQ: iq
+	    callbackTarget: self
+		  selector: @selector(XMPP_handleResourceBindForConnection:
+				IQ:)];
 }
 
 - (void)XMPP_sendStreamError: (OFString*)condition
@@ -1065,7 +1065,7 @@
 }
 
 - (void)XMPP_handleResourceBindForConnection: (XMPPConnection*)connection
-				      withIQ: (XMPPIQ*)iq
+					  IQ: (XMPPIQ*)iq
 {
 	OFXMLElement *bindElement;
 	OFXMLElement *jidElement;
@@ -1099,14 +1099,13 @@
 			     ID: [self generateStanzaID]];
 	[iq addChild: [OFXMLElement elementWithName: @"session"
 					  namespace: XMPP_NS_SESSION]];
-	[self		sendIQ: iq
-	    withCallbackObject: self
-		      selector: @selector(
-				    XMPP_handleSessionForConnection:withIQ:)];
+	[self	    sendIQ: iq
+	    callbackTarget: self
+		  selector: @selector(XMPP_handleSessionForConnection:IQ:)];
 }
 
 - (void)XMPP_handleSessionForConnection: (XMPPConnection*)connection
-				 withIQ: (XMPPIQ*)iq
+				     IQ: (XMPPIQ*)iq
 {
 	if (![[iq type] isEqual: @"result"])
 		assert(0);

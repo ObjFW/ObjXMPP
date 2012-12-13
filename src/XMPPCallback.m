@@ -28,34 +28,39 @@
 
 @implementation XMPPCallback
 #ifdef OF_HAVE_BLOCKS
-+ callbackWithCallbackBlock: (xmpp_callback_block_t)callback
++ callbackWithBlock: (xmpp_callback_block_t)block
 {
-	return [[[self alloc] initWithCallbackBlock: callback] autorelease];
+	return [[(XMPPCallback*)[self alloc] initWithBlock: block] autorelease];
 }
 
-- initWithCallbackBlock: (xmpp_callback_block_t)callback
+- initWithBlock: (xmpp_callback_block_t)block_
 {
 	self = [super init];
 
-	object = [callback copy];
+	@try {
+		block = [block_ copy];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
 
 	return self;
 }
 #endif
 
-+ callbackWithCallbackObject: (id)object_
-		    selector: (SEL)selector_
++ callbackWithTarget: (id)target
+	    selector: (SEL)selector
 {
-	return [[[self alloc] initWithCallbackObject: object_
-					    selector: selector_] autorelease];
+	return [[[self alloc] initWithTarget: target
+				    selector: selector] autorelease];
 }
 
-- initWithCallbackObject: (id)object_
-		selector: (SEL)selector_
+- initWithTarget: (id)target_
+	selector: (SEL)selector_
 {
 	self = [super init];
 
-	object = object_;
+	target = [target_ retain];
 	selector = selector_;
 
 	return self;
@@ -63,6 +68,11 @@
 
 - (void)dealloc
 {
+	[target release];
+#ifdef OF_HAVE_BLOCKS
+	[block release];
+#endif
+
 	[super dealloc];
 }
 
@@ -70,11 +80,11 @@
        connection: (XMPPConnection*)connection
 {
 #ifdef OF_HAVE_BLOCKS
-	if ([object isKindOfClass: [OFBlock class]])
-		((xmpp_callback_block_t)object)(connection, iq);
+	if (block != NULL)
+		block(connection, iq);
 	else
 #endif
-		[object performSelector: selector
+		[target performSelector: selector
 			     withObject: connection
 			     withObject: iq];
 }

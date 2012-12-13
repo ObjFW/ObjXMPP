@@ -169,8 +169,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 				     ID: [conn generateStanzaID]];
 	[iq addChild: [OFXMLElement elementWithName: @"ping"
 					  namespace: @"urn:xmpp:ping"]];
-	[conn	       sendIQ: iq
-	    withCallbackBlock: ^ (XMPPConnection *c, XMPPIQ *resp) {
+	[conn	   sendIQ: iq
+	    callbackBlock: ^ (XMPPConnection *c, XMPPIQ *resp) {
 		of_log(@"Ping response: %@", resp);
 	}];
 #endif

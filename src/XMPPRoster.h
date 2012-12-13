@@ -156,7 +156,7 @@
 /// \cond internal
 - (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection
-				       withIQ: (XMPPIQ*)iq;
+					   IQ: (XMPPIQ*)iq;
 - (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element;
 /// \endcond
 @end

@@ -315,9 +315,9 @@
  * \param selector The selector of the callback method,
  *		   must take exactly one parameter of type XMPPIQ*
  */
--	(void)sendIQ: (XMPPIQ*)iq
-  withCallbackObject: (id)object
-	    selector: (SEL)selector;
+-   (void)sendIQ: (XMPPIQ*)iq
+  callbackTarget: (id)target
+	selector: (SEL)selector;
 
 #ifdef OF_HAVE_BLOCKS
 /**
@@ -325,8 +325,8 @@
  *
  * \param callback The callback block
  */
--      (void)sendIQ: (XMPPIQ*)iq
-  withCallbackBlock: (xmpp_callback_block_t)block;
+-  (void)sendIQ: (XMPPIQ*)iq
+  callbackBlock: (xmpp_callback_block_t)block;
 #endif
 
 /**
@@ -370,10 +370,10 @@
 - (void)XMPP_handlePresence: (XMPPPresence*)presence;
 - (void)XMPP_handleFeatures: (OFXMLElement*)element;
 - (void)XMPP_handleResourceBindForConnection: (XMPPConnection*)connection
-				      withIQ: (XMPPIQ*)iq;
+					  IQ: (XMPPIQ*)iq;
 - (void)XMPP_sendSession;
 - (void)XMPP_handleSessionForConnection: (XMPPConnection*)connection
-				 withIQ: (XMPPIQ*)iq;
+				     IQ: (XMPPIQ*)iq;
 - (OFString*)XMPP_IDNAToASCII: (OFString*)domain;
 - (XMPPMulticastDelegate*)XMPP_delegates;
 /// \endcond

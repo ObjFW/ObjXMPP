@@ -31,19 +31,22 @@ typedef void(^xmpp_callback_block_t)(XMPPConnection*, XMPPIQ*);
 
 @interface XMPPCallback: OFObject
 {
-	id object;
+	id target;
 	SEL selector;
+#ifdef OF_HAVE_BLOCKS
+	xmpp_callback_block_t block;
+#endif
 }
 
 #ifdef OF_HAVE_BLOCKS
-+ callbackWithCallbackBlock: (xmpp_callback_block_t)callback;
-- initWithCallbackBlock: (xmpp_callback_block_t)callback;
++ callbackWithBlock: (xmpp_callback_block_t)callback;
+- initWithBlock: (xmpp_callback_block_t)callback;
 #endif
 
-+ callbackWithCallbackObject: (id)object
-		    selector: (SEL)selector;
-- initWithCallbackObject: (id)object
-		selector: (SEL)selector;
++ callbackWithTarget: (id)target
+	    selector: (SEL)selector;
+- initWithTarget: (id)target
+	selector: (SEL)selector;
 
 - (void)runWithIQ: (XMPPIQ*)iq
        connection: (XMPPConnection*)connection;

@@ -97,10 +97,10 @@
 
 	[iq addChild: query];
 
-	[connection     sendIQ: iq
-	    withCallbackObject: self
-		      selector: @selector(XMPP_handleInitialRosterForConnection:
-			withIQ:)];
+	[connection sendIQ: iq
+	    callbackTarget: self
+		  selector: @selector(XMPP_handleInitialRosterForConnection:
+				IQ:)];
 }
 
 - (BOOL)connection: (XMPPConnection*)connection_
@@ -306,7 +306,7 @@
 }
 
 - (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection_
-				       withIQ: (XMPPIQ*)iq
+					   IQ: (XMPPIQ*)iq
 {
 	OFXMLElement *rosterElement;
 	OFEnumerator *enumerator;
