@@ -172,12 +172,11 @@
 								   authcid,
 								   cNonce];
 
-	[ret addItemsFromCArray: [GS2Header UTF8String]
-			  count: [GS2Header UTF8StringLength]];
+	[ret addItems: [GS2Header UTF8String]
+		count: [GS2Header UTF8StringLength]];
 
-	[ret addItemsFromCArray: [clientFirstMessageBare UTF8String]
-			  count: [clientFirstMessageBare UTF8StringLength]];
-
+	[ret addItems: [clientFirstMessageBare UTF8String]
+		count: [clientFirstMessageBare UTF8StringLength]];
 
 	return ret;
 }
@@ -218,7 +217,7 @@
 	ret = [OFDataArray dataArray];
 	authMessage = [OFDataArray dataArray];
 
-	OFString *chal = [OFString stringWithUTF8String: [data cArray]
+	OFString *chal = [OFString stringWithUTF8String: [data items]
 						 length: [data count] *
 							 [data itemSize]];
 
@@ -254,34 +253,34 @@
 
 	// Add c=<base64(GS2Header+channelBindingData)>
 	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItemsFromCArray: [GS2Header UTF8String]
-			       count: [GS2Header UTF8StringLength]];
+	[tmpArray addItems: [GS2Header UTF8String]
+		     count: [GS2Header UTF8StringLength]];
 	if (plusAvailable && [connection encrypted]) {
 		OFDataArray *channelBinding = [((SSLSocket*)[connection socket])
 		    channelBindingDataWithType: @"tls-unique"];
-		[tmpArray addItemsFromCArray: [channelBinding cArray]
-				       count: [channelBinding count]];
+		[tmpArray addItems: [channelBinding items]
+			     count: [channelBinding count]];
 	}
 	tmpString = [tmpArray stringByBase64Encoding];
-	[ret addItemsFromCArray: "c="
-			  count: 2];
-	[ret addItemsFromCArray: [tmpString UTF8String]
-			  count: [tmpString UTF8StringLength]];
+	[ret addItems: "c="
+		count: 2];
+	[ret addItems: [tmpString UTF8String]
+		count: [tmpString UTF8StringLength]];
 
 	// Add r=<nonce>
 	[ret addItem: ","];
-	[ret addItemsFromCArray: "r="
-			  count: 2];
-	[ret addItemsFromCArray: [sNonce UTF8String]
-			  count: [sNonce UTF8StringLength]];
+	[ret addItems: "r="
+		count: 2];
+	[ret addItems: [sNonce UTF8String]
+		count: [sNonce UTF8StringLength]];
 
 	/*
 	 * IETF RFC 5802:
 	 * SaltedPassword := Hi(Normalize(password), salt, i)
 	 */
 	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItemsFromCArray: [password UTF8String]
-			       count: [password UTF8StringLength]];
+	[tmpArray addItems: [password UTF8String]
+		     count: [password UTF8StringLength]];
 
 	saltedPassword = [self XMPP_hiWithData: tmpArray
 					  salt: salt
@@ -293,23 +292,22 @@
 	 *		  server-first-message + "," +
 	 *		  client-final-message-without-proof
 	 */
-	[authMessage addItemsFromCArray: [clientFirstMessageBare UTF8String]
-				  count: [clientFirstMessageBare
-					     UTF8StringLength]];
+	[authMessage addItems: [clientFirstMessageBare UTF8String]
+			count: [clientFirstMessageBare UTF8StringLength]];
 	[authMessage addItem: ","];
-	[authMessage addItemsFromCArray: [data cArray]
-				  count: [data count] * [data itemSize]];
+	[authMessage addItems: [data items]
+			count: [data count] * [data itemSize]];
 	[authMessage addItem: ","];
-	[authMessage addItemsFromCArray: [ret cArray]
-				  count: [ret count]];
+	[authMessage addItems: [ret items]
+			count: [ret count]];
 
 	/*
 	 * IETF RFC 5802:
 	 * ClientKey := HMAC(SaltedPassword, "Client Key")
 	 */
 	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItemsFromCArray: "Client Key"
-			       count: 10];
+	[tmpArray addItems: "Client Key"
+		     count: 10];
 	clientKey = [self XMPP_HMACWithKey: saltedPassword
 				      data: tmpArray];
 
@@ -320,8 +318,8 @@
 	[hash updateWithBuffer: (void*) clientKey
 			length: [hashType digestSize]];
 	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItemsFromCArray: [hash digest]
-			       count: [hashType digestSize]];
+	[tmpArray addItems: [hash digest]
+		     count: [hashType digestSize]];
 
 	/*
 	 * IETF RFC 5802:
@@ -335,8 +333,8 @@
 	 * ServerKey := HMAC(SaltedPassword, "Server Key")
 	 */
 	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItemsFromCArray: "Server Key"
-			       count: 10];
+	[tmpArray addItems: "Server Key"
+		     count: 10];
 	serverKey = [self XMPP_HMACWithKey: saltedPassword
 				      data: tmpArray];
 
@@ -345,13 +343,12 @@
 	 * ServerSignature := HMAC(ServerKey, AuthMessage)
 	 */
 	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItemsFromCArray: serverKey
-			       count: [hashType digestSize]];
+	[tmpArray addItems: serverKey
+		     count: [hashType digestSize]];
 	serverSignature = [[OFDataArray alloc] init];
-	[serverSignature addItemsFromCArray: [self
-						 XMPP_HMACWithKey: tmpArray
-							     data: authMessage]
-				      count: [hashType digestSize]];
+	[serverSignature addItems: [self XMPP_HMACWithKey: tmpArray
+						     data: authMessage]
+			    count: [hashType digestSize]];
 
 	/*
 	 * IETF RFC 5802:
@@ -365,11 +362,11 @@
 
 	// Add p=<base64(ClientProof)>
 	[ret addItem: ","];
-	[ret addItemsFromCArray: "p="
-			  count: 2];
+	[ret addItems: "p="
+		count: 2];
 	tmpString = [tmpArray stringByBase64Encoding];
-	[ret addItemsFromCArray: [tmpString UTF8String]
-			  count: [tmpString UTF8StringLength]];
+	[ret addItems: [tmpString UTF8String]
+		count: [tmpString UTF8StringLength]];
 
 	return ret;
 }
@@ -385,7 +382,7 @@
 	if (authenticated)
 		return nil;
 
-	mess = [OFString stringWithUTF8String: [data cArray]
+	mess = [OFString stringWithUTF8String: [data items]
 				       length: [data count] *
 					       [data itemSize]];
 	value = [mess substringWithRange: of_range(2, [mess length] - 2)];
@@ -438,20 +435,20 @@
 
 	if ([key itemSize] * [key count] > blockSize) {
 		hashI = [[[hashType alloc] init] autorelease];
-		[hashI updateWithBuffer: [key cArray]
+		[hashI updateWithBuffer: [key items]
 				length: [key itemSize] * [key count]];
-		[k addItemsFromCArray: [hashI digest]
-				count: [hashType digestSize]];
+		[k addItems: [hashI digest]
+		      count: [hashType digestSize]];
 	} else
-		[k addItemsFromCArray: [key cArray]
-				count: [key itemSize] * [key count]];
+		[k addItems: [key items]
+		      count: [key itemSize] * [key count]];
 
 	@try {
 		kI = [self allocMemoryWithSize: blockSize];
 		kO = [self allocMemoryWithSize: blockSize];
 
 		kSize = [k count];
-		memcpy(kI, [k cArray], kSize);
+		memcpy(kI, [k items], kSize);
 		memset(kI + kSize, 0, blockSize - kSize);
 		memcpy(kO, kI, blockSize);
 
@@ -463,7 +460,7 @@
 		hashI = [[[hashType alloc] init] autorelease];
 		[hashI updateWithBuffer: (char*)kI
 				 length: blockSize];
-		[hashI updateWithBuffer: [data cArray]
+		[hashI updateWithBuffer: [data items]
 				 length: [data itemSize] * [data count]];
 
 		hashO = [[[hashType alloc] init] autorelease];
@@ -498,8 +495,8 @@
 		memset(result, 0, digestSize);
 
 		salty = [[salt_ copy] autorelease];
-		[salty addItemsFromCArray: "\0\0\0\1"
-				    count: 4];
+		[salty addItems: "\0\0\0\1"
+			  count: 4];
 
 		uOld = [self XMPP_HMACWithKey: str
 					 data: salty];
@@ -509,8 +506,8 @@
 
 		for (j = 0; j < i - 1; j++) {
 			tmp = [OFDataArray dataArray];
-			[tmp addItemsFromCArray: uOld
-					  count: digestSize];
+			[tmp addItems: uOld
+				count: digestSize];
 
 			u = [self XMPP_HMACWithKey: str
 					      data: tmp];
@@ -524,8 +521,8 @@
 		}
 
 		ret = [OFDataArray dataArray];
-		[ret addItemsFromCArray: result
-				  count: digestSize];
+		[ret addItems: result
+			count: digestSize];
 	} @finally {
 		[self freeMemory: result];
 	}

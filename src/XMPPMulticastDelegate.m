@@ -57,7 +57,7 @@
 
 - (void)removeDelegate: (id)delegate
 {
-	id *cArray = [delegates cArray];
+	id *cArray = [delegates items];
 	size_t i, count = [delegates count];
 
 	for (i = 0; i < count; i++) {
@@ -71,7 +71,7 @@
 - (BOOL)broadcastSelector: (SEL)selector
 	       withObject: (id)object
 {
-	id *cArray = [delegates cArray];
+	id *cArray = [delegates items];
 	size_t i, count = [delegates count];
 	BOOL handled = NO;
 
@@ -92,7 +92,7 @@
 	       withObject: (id)object1
 	       withObject: (id)object2
 {
-	id *cArray = [delegates cArray];
+	id *cArray = [delegates items];
 	size_t i, count = [delegates count];
 	BOOL handled = NO;
 
