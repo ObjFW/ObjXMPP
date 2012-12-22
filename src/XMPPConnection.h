@@ -317,7 +317,7 @@
 /**
  * \brief Sends an XMPPIQ, registering a callback method.
  *
- * \param object The object that contains the callback method
+ * \param target The object that contains the callback method
  * \param selector The selector of the callback method,
  *		   must take exactly one parameter of type XMPPIQ*
  */
@@ -329,7 +329,7 @@
 /**
  * \brief Sends an XMPPIQ, registering a callback block.
  *
- * \param callback The callback block
+ * \param block The callback block
  */
 -  (void)sendIQ: (XMPPIQ*)iq
   callbackBlock: (xmpp_callback_block_t)block;

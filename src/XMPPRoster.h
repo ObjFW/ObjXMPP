@@ -33,7 +33,7 @@
 
 /**
  * \brief A protocol that should be (partially) implemented by delegates
- * 	  of a XMPPRoster
+ *	  of a XMPPRoster
  */
 @protocol XMPPRosterDelegate
 #ifndef XMPP_ROSTER_M
