@@ -585,7 +585,7 @@
 
 -    (void)parser: (OFXMLParser*)p
   didStartElement: (OFString*)name
-       withPrefix: (OFString*)prefix
+	   prefix: (OFString*)prefix
 	namespace: (OFString*)ns
        attributes: (OFArray*)attributes
 {
@@ -660,7 +660,7 @@
 
 - (void)elementBuilder: (OFXMLElementBuilder*)builder
   didNotExpectCloseTag: (OFString*)name
-	    withPrefix: (OFString*)prefix
+		prefix: (OFString*)prefix
 	     namespace: (OFString*)ns
 {
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
