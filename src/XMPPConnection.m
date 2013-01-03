@@ -163,22 +163,26 @@
 - (void)setUsername: (OFString*)username_
 {
 	OFString *old = username;
-	char *node;
-	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([username_ UTF8String], &node,
-	    "SASLprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: [self class]
-			    connection: self
-			       profile: @"SASLprep"
-				string: username_];
+	if (username_ != nil) {
+		char *node;
+		Stringprep_rc rc;
 
-	@try {
-		username = [[OFString alloc] initWithUTF8String: node];
-	} @finally {
-		free(node);
-	}
+		if ((rc = stringprep_profile([username_ UTF8String], &node,
+		    "SASLprep", 0)) != STRINGPREP_OK)
+			@throw [XMPPStringPrepFailedException
+			    exceptionWithClass: [self class]
+				    connection: self
+				       profile: @"SASLprep"
+					string: username_];
+
+		@try {
+			username = [[OFString alloc] initWithUTF8String: node];
+		} @finally {
+			free(node);
+		}
+	} else
+		username = nil;
 
 	[old release];
 }
@@ -191,22 +195,26 @@
 - (void)setResource: (OFString*)resource_
 {
 	OFString *old = resource;
-	char *res;
-	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([resource_ UTF8String], &res,
-	    "Resourceprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: [self class]
-			    connection: self
-			       profile: @"Resourceprep"
-				string: resource_];
+	if (resource_ != nil) {
+		char *res;
+		Stringprep_rc rc;
 
-	@try {
-		resource = [[OFString alloc] initWithUTF8String: res];
-	} @finally {
-		free(res);
-	}
+		if ((rc = stringprep_profile([resource_ UTF8String], &res,
+		    "Resourceprep", 0)) != STRINGPREP_OK)
+			@throw [XMPPStringPrepFailedException
+			    exceptionWithClass: [self class]
+				    connection: self
+				       profile: @"Resourceprep"
+					string: resource_];
+
+		@try {
+			resource = [[OFString alloc] initWithUTF8String: res];
+		} @finally {
+			free(res);
+		}
+	} else
+		resource = nil;
 
 	[old release];
 }
@@ -219,7 +227,12 @@
 - (void)setServer: (OFString*)server_
 {
 	OFString *old = server;
-	server = [self XMPP_IDNAToASCII: server_];
+
+	if (server_ != nil)
+		server = [self XMPP_IDNAToASCII: server_];
+	else
+		server = nil;
+
 	[old release];
 }
 
@@ -232,25 +245,32 @@
 {
 	OFString *oldDomain = domain;
 	OFString *oldDomainToASCII = domainToASCII;
-	char *srv;
-	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([domain_ UTF8String], &srv,
-	    "Nameprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: [self class]
-			    connection: self
-			       profile: @"Nameprep"
-				string: domain_];
+	if (domain_ != nil) {
+		char *srv;
+		Stringprep_rc rc;
 
-	@try {
-		domain = [[OFString alloc] initWithUTF8String: srv];
-	} @finally {
-		free(srv);
+		if ((rc = stringprep_profile([domain_ UTF8String], &srv,
+		    "Nameprep", 0)) != STRINGPREP_OK)
+			@throw [XMPPStringPrepFailedException
+			    exceptionWithClass: [self class]
+				    connection: self
+				       profile: @"Nameprep"
+					string: domain_];
+
+		@try {
+			domain = [[OFString alloc] initWithUTF8String: srv];
+		} @finally {
+			free(srv);
+		}
+
+		domainToASCII = [self XMPP_IDNAToASCII: domain];
+	} else {
+		domain = nil;
+		domainToASCII = nil;
 	}
-	[oldDomain release];
 
-	domainToASCII = [self XMPP_IDNAToASCII: domain];
+	[oldDomain release];
 	[oldDomainToASCII release];
 }
 
@@ -262,22 +282,26 @@
 - (void)setPassword: (OFString*)password_
 {
 	OFString *old = password;
-	char *pass;
-	Stringprep_rc rc;
 
-	if ((rc = stringprep_profile([password_ UTF8String], &pass,
-	    "SASLprep", 0)) != STRINGPREP_OK)
-		@throw [XMPPStringPrepFailedException
-		    exceptionWithClass: [self class]
-			    connection: self
-			       profile: @"SASLprep"
-				string: password_];
+	if (password_ != nil) {
+		char *pass;
+		Stringprep_rc rc;
 
-	@try {
-		password = [[OFString alloc] initWithUTF8String: pass];
-	} @finally {
-		free(pass);
-	}
+		if ((rc = stringprep_profile([password_ UTF8String], &pass,
+		    "SASLprep", 0)) != STRINGPREP_OK)
+			@throw [XMPPStringPrepFailedException
+			    exceptionWithClass: [self class]
+				    connection: self
+				       profile: @"SASLprep"
+					string: password_];
+
+		@try {
+			password = [[OFString alloc] initWithUTF8String: pass];
+		} @finally {
+			free(pass);
+		}
+	} else
+		password = nil;
 
 	[old release];
 }
