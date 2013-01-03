@@ -196,6 +196,7 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	unsigned char *answer = NULL;
+	size_t pageSize = [OFSystemInfo pageSize];
 	OFString *request;
 
 	request = [OFString stringWithFormat: @"_xmpp-client._tcp.%@", domain];
@@ -211,16 +212,16 @@
 					socket: nil
 					  host: domain];
 
-		answer = [self allocMemoryWithSize: of_pagesize];
+		answer = [self allocMemoryWithSize: pageSize];
 		answerLen = res_nsearch(&resState,
 		    [request cStringUsingEncoding: OF_STRING_ENCODING_NATIVE],
-		    ns_c_in, ns_t_srv, answer, (int)of_pagesize);
+		    ns_c_in, ns_t_srv, answer, (int)pageSize);
 
 		if ((answerLen == -1) && ((h_errno == HOST_NOT_FOUND) ||
 		    (h_errno == NO_DATA)))
 			return;
 
-		if (answerLen < 1 || answerLen > of_pagesize) {
+		if (answerLen < 1 || answerLen > pageSize) {
 			@throw [OFAddressTranslationFailedException
 			    exceptionWithClass: [self class]
 					socket: nil
