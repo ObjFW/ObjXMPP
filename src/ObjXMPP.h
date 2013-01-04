@@ -32,3 +32,5 @@
 
 #import "XMPPRosterItem.h"
 #import "XMPPRoster.h"
+
+#import "XMPPStreamManagement.h"
