@@ -161,7 +161,7 @@
 
 - (OFString*)domain
 {
-	return [[node copy] autorelease];
+	return [[domain copy] autorelease];
 }
 
 - (void)setResource: (OFString*)resource_
