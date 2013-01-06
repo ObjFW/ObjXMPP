@@ -225,4 +225,24 @@
 {
 	return [self fullJID];
 }
+
+- (BOOL)isEqual: (id)object
+{
+	XMPPJID *otherJID;
+
+	if (object == self)
+		return YES;
+
+	if (![object isKindOfClass: [XMPPJID class]])
+		return NO;
+
+	otherJID = object;
+
+	if ([node isEqual: [otherJID node]] &&
+	    [domain isEqual: [otherJID domain]] &&
+	    [resource isEqual: [otherJID resource]])
+		return YES;
+
+	return NO;
+}
 @end
