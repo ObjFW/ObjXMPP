@@ -53,9 +53,9 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	OFArray *arguments = [OFApplication arguments];
 
 	XMPPPresence *pres = [XMPPPresence presence];
-	[pres addShow: @"chat"];
-	[pres addStatus: @"Bored"];
-	[pres addPriority: 20];
+	[pres setShow: @"chat"];
+	[pres setStatus: @"Bored"];
+	[pres setPriority: [OFNumber numberWithInt8: 20]];
 	[pres setTo: [XMPPJID JIDWithString: @"alice@example.com"]];
 	[pres setFrom: [XMPPJID JIDWithString: @"bob@example.org"]];
 	assert([[pres XMLString] isEqual: @"<presence to='alice@example.com' "
@@ -154,8 +154,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	of_log(@"Got roster: %@", [roster_ rosterItems]);
 
 	pres = [XMPPPresence presence];
-	[pres addPriority: 10];
-	[pres addStatus: @"ObjXMPP test is working!"];
+	[pres setPriority: [OFNumber numberWithInt8: 10]];
+	[pres setStatus: @"ObjXMPP test is working!"];
 
 	[conn sendStanza: pres];
 

@@ -77,6 +77,15 @@
 				ID: ID_];
 }
 
+- (void)dealloc
+{
+	[status release];
+	[show release];
+	[priority release];
+
+	[super dealloc];
+}
+
 - (OFString*)type
 {
 	if (type == nil)
@@ -85,25 +94,74 @@
 	return [[type copy] autorelease];
 }
 
-- (void)addShow: (OFString*)show
+- (void)setShow: (OFString*)show_
 {
-	[self addChild: [OFXMLElement elementWithName: @"show"
-					    namespace: XMPP_NS_CLIENT
-					  stringValue: show]];
+	OFXMLElement *oldShow = [self elementForName: @"show"
+					   namespace: XMPP_NS_CLIENT];
+
+	if (oldShow != nil)
+		[self removeChild: oldShow];
+
+	if (show_ != nil)
+		[self addChild: [OFXMLElement elementWithName: @"show"
+						    namespace: XMPP_NS_CLIENT
+						  stringValue: show_]];
+
+	OF_SETTER(show, show_, YES, 1);
 }
 
-- (void)addStatus: (OFString*)status
+- (OFString*)show
 {
-	[self addChild: [OFXMLElement elementWithName: @"status"
-					    namespace: XMPP_NS_CLIENT
-					  stringValue: status]];
+	return [[show copy] autorelease];
 }
 
-- (void)addPriority: (int8_t)priority
+- (void)setStatus: (OFString*)status_
 {
-	OFString* prio = [OFString stringWithFormat: @"%" @PRId8, priority];
+	OFXMLElement *oldStatus = [self elementForName: @"status"
+					     namespace: XMPP_NS_CLIENT];
+
+	if (oldStatus != nil)
+		[self removeChild: oldStatus];
+
+	if (status_ != nil)
+		[self addChild: [OFXMLElement elementWithName: @"status"
+						    namespace: XMPP_NS_CLIENT
+						  stringValue: status_]];
+
+	OF_SETTER(status, status_, YES, 1);
+}
+
+- (OFString*)status
+{
+	return [[status copy] autorelease];
+}
+
+- (void)setPriority: (OFNumber*)priority_
+{
+	intmax_t prio = [priority_ intMaxValue];
+
+	if ((prio < -128) || (prio > 127))
+		@throw [OFInvalidArgumentException
+		    exceptionWithClass: [self class]
+			      selector: _cmd];
+
+	OFXMLElement *oldPriority = [self elementForName: @"priority"
+					       namespace: XMPP_NS_CLIENT];
+
+	if (oldPriority != nil)
+		[self removeChild: oldPriority];
+
+	OFString* priority_s =
+	    [OFString stringWithFormat: @"%" @PRId8, [priority_ int8Value]];
 	[self addChild: [OFXMLElement elementWithName: @"priority"
 					    namespace: XMPP_NS_CLIENT
-					  stringValue: prio]];
+					  stringValue: priority_s]];
+
+	OF_SETTER(priority, priority_, YES, 1);
+}
+
+- (OFString*)priority
+{
+	return [[priority copy] autorelease];
 }
 @end

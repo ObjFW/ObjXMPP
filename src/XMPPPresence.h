@@ -27,6 +27,19 @@
  * \brief A class describing a presence stanza.
  */
 @interface XMPPPresence: XMPPStanza
+{
+/// \cond internal
+	OFString *status;
+	OFString *show;
+	OFNumber *priority;
+/// \endcond
+}
+#ifdef OF_HAVE_PROPERTIES
+@property (copy) OFString *status;
+@property (copy) OFString *show;
+@property (copy) OFNumber *priority;
+#endif
+
 /**
  * \brief Creates a new autoreleased XMPPPresence.
  *
@@ -89,23 +102,44 @@
 	    ID: (OFString*)ID;
 
 /**
- * \brief Adds a show element to the presence stanza.
+ * \brief Sets/Adds the show element of the presence stanza.
  *
  * \param show The text content of the show element
  */
-- (void)addShow: (OFString*)show;
+- (void)setShow: (OFString*)show;
 
 /**
- * \brief Adds a status element to the presence stanza.
+ * \brief Returns the text content of the show element of the presence stanza.
+ *
+ * \return The text content of the show element of the presence stanza.
+ */
+- (OFString*)show;
+
+/**
+ * \brief Sets/Adds the status element of the presence stanza.
  *
  * \param status The text content of the status element
  */
-- (void)addStatus: (OFString*)status;
+- (void)setStatus: (OFString*)status;
 
 /**
- * \brief Adds a priority element to the presence stanza.
+ * \brief Returns the text content of the status element of the presence stanza.
  *
- * \param priority The text content of the priority element
+ * \return The text content of the status element of the presence stanza.
  */
-- (void)addPriority: (int8_t)priority;
+- (OFString*)status;
+
+/**
+ * \brief Sets/Adds the priority element of the presence stanza.
+ *
+ * \param priority The numeric content of the priority element
+ */
+- (void)setPriority: (OFNumber*)priority;
+
+/**
+ * \brief Returns the numeric content of the priority element of the presence stanza.
+ *
+ * \return The numeric content of the priority element of the presence stanza.
+ */
+- (OFNumber*)priority;
 @end
