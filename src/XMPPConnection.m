@@ -345,7 +345,7 @@
 	sock = [[OFTCPSocket alloc] init];
 
 	if (server)
-		[sock connectToHost: [self XMPP_IDNAToASCII: server]
+		[sock connectToHost: server
 			       port: port];
 	else {
 		@try {
