@@ -214,7 +214,7 @@
 
 		answer = [self allocMemoryWithSize: pageSize];
 		answerLen = res_nsearch(&resState,
-		    [request cStringUsingEncoding: OF_STRING_ENCODING_NATIVE],
+		    [request cStringWithEncoding: OF_STRING_ENCODING_NATIVE],
 		    ns_c_in, ns_t_srv, answer, (int)pageSize);
 
 		if ((answerLen == -1) && ((h_errno == HOST_NOT_FOUND) ||
