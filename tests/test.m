@@ -53,15 +53,24 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	OFArray *arguments = [OFApplication arguments];
 
 	XMPPPresence *pres = [XMPPPresence presence];
-	[pres setShow: @"chat"];
+	[pres setShow: @"xa"];
 	[pres setStatus: @"Bored"];
 	[pres setPriority: [OFNumber numberWithInt8: 20]];
 	[pres setTo: [XMPPJID JIDWithString: @"alice@example.com"]];
 	[pres setFrom: [XMPPJID JIDWithString: @"bob@example.org"]];
 	assert([[pres XMLString] isEqual: @"<presence to='alice@example.com' "
-	    @"from='bob@example.org'><show>chat</show>"
+	    @"from='bob@example.org'><show>xa</show>"
 	    @"<status>Bored</status><priority>20</priority>"
 	    @"</presence>"]);
+
+	XMPPPresence *pres2 = [XMPPPresence presence];
+	[pres2 setShow: @"away"];
+	[pres2 setStatus: @"Bored"];
+	[pres2 setPriority: [OFNumber numberWithInt8: 23]];
+	[pres2 setTo: [XMPPJID JIDWithString: @"alice@example.com"]];
+	[pres2 setFrom: [XMPPJID JIDWithString: @"bob@example.org"]];
+
+	assert([pres compare: pres2] == OF_ORDERED_ASCENDING);
 
 	XMPPMessage *msg = [XMPPMessage messageWithType: @"chat"];
 	[msg setBody: @"Hello everyone"];

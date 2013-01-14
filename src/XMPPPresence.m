@@ -25,8 +25,22 @@
 # include "config.h"
 #endif
 
+#include <assert.h>
+
 #import "XMPPPresence.h"
 #import "namespaces.h"
+
+// This provides us with sortable values for show values
+static int show_to_int(OFString *show)
+{
+	if ([show isEqual: @"chat"]) return 0;
+	if (show == nil) return 1; // available
+	if ([show isEqual: @"away"]) return 2;
+	if ([show isEqual: @"dnd"]) return 3;
+	if ([show isEqual: @"xa"]) return 4;
+
+	assert(0);
+}
 
 @implementation XMPPPresence
 + presence
@@ -163,5 +177,36 @@
 - (OFString*)priority
 {
 	return [[priority copy] autorelease];
+}
+
+- (of_comparison_result_t)compare: (id <OFComparing>)object
+{
+	XMPPPresence *otherPresence;
+	OFString *otherShow;
+	of_comparison_result_t priorityOrder;
+
+	if (object == self)
+		return OF_ORDERED_SAME;
+
+	if (![object isKindOfClass: [XMPPPresence class]])
+		@throw [OFInvalidArgumentException
+		    exceptionWithClass: [self class]
+			      selector: _cmd];
+
+	otherPresence = (XMPPPresence*)object;
+
+	priorityOrder = [priority compare: [otherPresence priority]];
+
+	if (priorityOrder != OF_ORDERED_SAME)
+		return priorityOrder;
+
+	otherShow = [otherPresence show];
+	if ([show isEqual: otherShow])
+		return OF_ORDERED_SAME;
+
+	if (show_to_int(show) < show_to_int(otherShow))
+		return OF_ORDERED_ASCENDING;
+
+	return OF_ORDERED_DESCENDING;
 }
 @end

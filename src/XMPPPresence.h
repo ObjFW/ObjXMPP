@@ -26,7 +26,7 @@
 /**
  * \brief A class describing a presence stanza.
  */
-@interface XMPPPresence: XMPPStanza
+@interface XMPPPresence: XMPPStanza <OFComparing>
 {
 /// \cond internal
 	OFString *status;
