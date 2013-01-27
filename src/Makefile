@@ -8,6 +8,8 @@ LIB_MINOR = 0
 SRCS = XMPPAuthenticator.m	\
        XMPPCallback.m		\
        XMPPConnection.m		\
+       XMPPContact.m		\
+       XMPPContactManager.m	\
        XMPPExceptions.m		\
        XMPPEXTERNALAuth.m	\
        XMPPIQ.m			\

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/git/?p=objxmpp.git
  *
@@ -20,20 +20,53 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "XMPPJID.h"
-
-#import "XMPPConnection.h"
-#import "XMPPExceptions.h"
-
-#import "XMPPStanza.h"
-#import "XMPPIQ.h"
-#import "XMPPMessage.h"
-#import "XMPPPresence.h"
-
-#import "XMPPRosterItem.h"
-#import "XMPPRoster.h"
-
-#import "XMPPStreamManagement.h"
-
 #import "XMPPContact.h"
-#import "XMPPContactManager.h"
+#import "XMPPMessage.h"
+#import "XMPPConnection.h"
+
+@implementation XMPPContact
+- (XMPPRosterItem*)rosterItem
+{
+	OF_GETTER(rosterItem, YES);
+}
+
+- (OFDictionary*)presences
+{
+	OF_GETTER(presences, YES);
+}
+
+- (void)sendMessage: (XMPPMessage*)message
+	 connection: (XMPPConnection*)connection
+{
+	if (lockedOnJID == nil)
+		[message setTo: [rosterItem JID]];
+	else
+		[message setTo: lockedOnJID];
+
+	[connection sendStanza: message];
+}
+
+- (void)XMPP_setRosterItem: (XMPPRosterItem*)rosterItem_
+{
+	OF_SETTER(rosterItem, rosterItem_, YES, 0);
+}
+
+- (void)XMPP_setPresence: (XMPPPresence*)presence
+		resource: (OFString*)resource
+{
+	[presences setObject: presence
+		      forKey: resource];
+	OF_SETTER(lockedOnJID, nil, YES, 0);
+}
+
+- (void)XMPP_removePresenceForResource: (OFString*)resource
+{
+	[presences removeObjectForKey: resource];
+	OF_SETTER(lockedOnJID, nil, YES, 0);
+}
+
+- (void)XMPP_setLockedOnJID: (XMPPJID*)JID;
+{
+	OF_SETTER(lockedOnJID, JID, YES, 0);
+}
+@end
