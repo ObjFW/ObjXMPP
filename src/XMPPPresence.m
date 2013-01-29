@@ -91,6 +91,35 @@ static int show_to_int(OFString *show)
 				ID: ID_];
 }
 
+- initWithElement: (OFXMLElement*)element
+{
+	self = [super initWithElement: element];
+
+	@try {
+		OFXMLElement *subElement;
+
+		if ((subElement = [element elementForName: @"show"
+						namespace: XMPP_NS_CLIENT]))
+			[self setShow: [subElement stringValue]];
+
+		if ((subElement = [element elementForName: @"status"
+						namespace: XMPP_NS_CLIENT]))
+			[self setStatus: [subElement stringValue]];
+
+		if ((subElement = [element elementForName: @"priority"
+						namespace: XMPP_NS_CLIENT]))
+			[self setPriority:
+			    [OFNumber numberWithIntMax:
+				[[subElement stringValue] decimalValue]]];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
+}
+
+
 - (void)dealloc
 {
 	[status release];
