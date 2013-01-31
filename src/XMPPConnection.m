@@ -1015,7 +1015,7 @@
 					    namespace: XMPP_NS_SASL];
 	OFMutableSet *mechanisms = [OFMutableSet set];
 
-	if (starttls != nil) {
+	if (!encrypted && starttls != nil) {
 		[self sendStanza:
 		    [OFXMLElement elementWithName: @"starttls"
 					namespace: XMPP_NS_STARTTLS]];
