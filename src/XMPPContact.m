@@ -25,6 +25,27 @@
 #import "XMPPConnection.h"
 
 @implementation XMPPContact
+- init
+{
+	self = [super init];
+
+	@try {
+		presences = [[OFMutableDictionary alloc] init];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+	[presences release];
+
+	[super dealloc];
+}
+
 - (XMPPRosterItem*)rosterItem
 {
 	OF_GETTER(rosterItem, YES);
