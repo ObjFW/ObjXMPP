@@ -245,4 +245,9 @@
 
 	return NO;
 }
+
+- (uint32_t) hash
+{
+	return [[self fullJID] hash];
+}
 @end
