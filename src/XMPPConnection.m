@@ -443,7 +443,7 @@
 {
 	if (exception != nil) {
 		[delegates broadcastSelector: @selector(connection:
-						  didThrowException::)
+						  didThrowException:)
 				  withObject: self
 				  withObject: exception];
 		[self close];
@@ -456,7 +456,7 @@
 			return NO;
 	} @catch (id e) {
 		[delegates broadcastSelector: @selector(connection:
-						  didThrowException::)
+						  didThrowException:)
 				  withObject: self
 				  withObject: e];
 		[self close];

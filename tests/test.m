@@ -220,6 +220,12 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	of_log(@"Presence: %@", pres);
 }
 
+-  (void)connection: (XMPPConnection*)conn
+  didThrowException: (id)e
+{
+	@throw e;
+}
+
 - (void)connectionWasClosed: (XMPPConnection*)conn
 {
 	of_log(@"Connection was closed!");
