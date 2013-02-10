@@ -311,43 +311,57 @@
 	OFXMLElement *rosterElement;
 	OFEnumerator *enumerator;
 	OFXMLElement *element;
-	XMPPRosterItem *rosterItem;
 
 	rosterElement = [iq elementForName: @"query"
 				 namespace: XMPP_NS_ROSTER];
 
-	if ([connection supportsRosterVersioning] && rosterElement == nil) {
-		OFDictionary *items = [dataStorage
-		    dictionaryForPath: @"roster.items"];
-		OFEnumerator *enumerator = [items objectEnumerator];
-		OFDictionary *item;
+	if ([connection supportsRosterVersioning]) {
+		if (rosterElement == nil) {
+			OFDictionary *items = [dataStorage
+			    dictionaryForPath: @"roster.items"];
+			OFEnumerator *enumerator = [items objectEnumerator];
+			OFDictionary *item;
 
-		while ((item = [enumerator nextObject]) != nil) {
-			rosterItem = [XMPPRosterItem rosterItem];
-			[rosterItem setJID: [XMPPJID JIDWithString:
-			    [item objectForKey: @"JID"]]];
-			[rosterItem setName: [item objectForKey: @"name"]];
-			[rosterItem setSubscription:
-			    [item objectForKey: @"subscription"]];
-			[rosterItem setGroups: [item objectForKey: @"groups"]];
+			while ((item = [enumerator nextObject]) != nil) {
+				XMPPRosterItem *rosterItem;
+				XMPPJID *JID;
 
-			[rosterItems setObject: rosterItem
-					forKey: [[rosterItem JID] bareJID]];
-		}
+				rosterItem = [XMPPRosterItem rosterItem];
+				JID = [XMPPJID JIDWithString:
+					  [item objectForKey: @"JID"]];
+				[rosterItem setJID: JID];
+				[rosterItem setName:
+				    [item objectForKey: @"name"]];
+				[rosterItem setSubscription:
+				    [item objectForKey: @"subscription"]];
+				[rosterItem setGroups:
+				    [item objectForKey: @"groups"]];
+
+				[rosterItems setObject: rosterItem
+						forKey: [JID bareJID]];
+			}
+		} else
+			[dataStorage setDictionary: nil
+					   forPath: @"roster.items"];
 	}
 
 	enumerator = [[rosterElement children] objectEnumerator];
 	while ((element = [enumerator nextObject]) != nil) {
+		OFAutoreleasePool *pool;
+		XMPPRosterItem *rosterItem;
+
 		if (![[element name] isEqual: @"item"] ||
 		    ![[element namespace] isEqual: XMPP_NS_ROSTER])
 			continue;
 
+		pool = [OFAutoreleasePool new];
 		rosterItem = [self XMPP_rosterItemWithXMLElement: element];
 
 		[self XMPP_updateRosterItem: rosterItem];
+		[pool release];
 	}
 
-	if ([connection supportsRosterVersioning]) {
+	if ([connection supportsRosterVersioning] && rosterElement != nil) {
 		OFString *ver =
 		    [[rosterElement attributeForName: @"ver"] stringValue];
 		[dataStorage setStringValue: ver
