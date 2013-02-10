@@ -211,6 +211,7 @@ static int show_to_int(OFString *show)
 - (of_comparison_result_t)compare: (id <OFComparing>)object
 {
 	XMPPPresence *otherPresence;
+	OFNumber *otherPriority;
 	OFString *otherShow;
 	of_comparison_result_t priorityOrder;
 
@@ -223,8 +224,15 @@ static int show_to_int(OFString *show)
 			      selector: _cmd];
 
 	otherPresence = (XMPPPresence*)object;
+	otherPriority = [otherPresence priority];
+	if (otherPriority == nil)
+		otherPriority = [OFNumber numberWithInt8: 0];
 
-	priorityOrder = [priority compare: [otherPresence priority]];
+	if (priority != nil)
+		priorityOrder = [priority compare: otherPriority];
+	else
+		priorityOrder =
+		    [[OFNumber numberWithInt8: 0] compare: otherPriority];
 
 	if (priorityOrder != OF_ORDERED_SAME)
 		return priorityOrder;
