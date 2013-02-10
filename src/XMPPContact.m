@@ -75,14 +75,25 @@
 - (void)XMPP_setPresence: (XMPPPresence*)presence
 		resource: (OFString*)resource
 {
-	[presences setObject: presence
-		      forKey: resource];
+	if (resource != nil)
+		[presences setObject: presence
+			      forKey: resource];
+	else
+		[presences setObject: presence
+			      forKey: @""];
+
 	OF_SETTER(lockedOnJID, nil, YES, 0);
 }
 
 - (void)XMPP_removePresenceForResource: (OFString*)resource
 {
-	[presences removeObjectForKey: resource];
+	if (resource != nil) {
+		[presences removeObjectForKey: resource];
+	} else {
+		[presences release];
+		presences = [[OFMutableDictionary alloc] init];
+	}
+
 	OF_SETTER(lockedOnJID, nil, YES, 0);
 }
 
