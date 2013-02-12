@@ -27,6 +27,12 @@
 		4B48B95E14DC260000546D39 /* ObjXMPP.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B48B95B14DC260000546D39 /* ObjXMPP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B48B95F14DC260000546D39 /* XMPPXMLElementBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B48B95C14DC260000546D39 /* XMPPXMLElementBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B48B96014DC260000546D39 /* XMPPXMLElementBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48B95D14DC260000546D39 /* XMPPXMLElementBuilder.m */; };
+		4B9CFBAF16CAC42800E44063 /* XMPPContact.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9CFBA916CAC42800E44063 /* XMPPContact.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B9CFBB016CAC42800E44063 /* XMPPContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CFBAA16CAC42800E44063 /* XMPPContact.m */; };
+		4B9CFBB116CAC42800E44063 /* XMPPContactManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9CFBAB16CAC42800E44063 /* XMPPContactManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B9CFBB216CAC42800E44063 /* XMPPContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CFBAC16CAC42800E44063 /* XMPPContactManager.m */; };
+		4B9CFBB316CAC42800E44063 /* XMPPStreamManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9CFBAD16CAC42800E44063 /* XMPPStreamManagement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B9CFBB416CAC42800E44063 /* XMPPStreamManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CFBAE16CAC42800E44063 /* XMPPStreamManagement.m */; };
 		4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC559ED1337AC0900E345C7 /* XMPPAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */; };
@@ -87,6 +93,12 @@
 		4B48B95B14DC260000546D39 /* ObjXMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjXMPP.h; path = src/ObjXMPP.h; sourceTree = SOURCE_ROOT; };
 		4B48B95C14DC260000546D39 /* XMPPXMLElementBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPXMLElementBuilder.h; path = src/XMPPXMLElementBuilder.h; sourceTree = SOURCE_ROOT; };
 		4B48B95D14DC260000546D39 /* XMPPXMLElementBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPXMLElementBuilder.m; path = src/XMPPXMLElementBuilder.m; sourceTree = SOURCE_ROOT; };
+		4B9CFBA916CAC42800E44063 /* XMPPContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPContact.h; path = src/XMPPContact.h; sourceTree = SOURCE_ROOT; };
+		4B9CFBAA16CAC42800E44063 /* XMPPContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPContact.m; path = src/XMPPContact.m; sourceTree = SOURCE_ROOT; };
+		4B9CFBAB16CAC42800E44063 /* XMPPContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPContactManager.h; path = src/XMPPContactManager.h; sourceTree = SOURCE_ROOT; };
+		4B9CFBAC16CAC42800E44063 /* XMPPContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPContactManager.m; path = src/XMPPContactManager.m; sourceTree = SOURCE_ROOT; };
+		4B9CFBAD16CAC42800E44063 /* XMPPStreamManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPStreamManagement.h; path = src/XMPPStreamManagement.h; sourceTree = SOURCE_ROOT; };
+		4B9CFBAE16CAC42800E44063 /* XMPPStreamManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPStreamManagement.m; path = src/XMPPStreamManagement.m; sourceTree = SOURCE_ROOT; };
 		4BC559911337A65400E345C7 /* ObjXMPP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjXMPP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC559D61337ABD300E345C7 /* ObjFW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjFW.framework; path = ../../../../Library/Frameworks/ObjFW.framework; sourceTree = "<group>"; };
 		4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPAuthenticator.h; path = src/XMPPAuthenticator.h; sourceTree = SOURCE_ROOT; };
@@ -195,6 +207,10 @@
 				4B19F57714D17081005D52DC /* XMPPCallback.m */,
 				4BC559DC1337AC0900E345C7 /* XMPPConnection.h */,
 				4BC559DD1337AC0900E345C7 /* XMPPConnection.m */,
+				4B9CFBA916CAC42800E44063 /* XMPPContact.h */,
+				4B9CFBAA16CAC42800E44063 /* XMPPContact.m */,
+				4B9CFBAB16CAC42800E44063 /* XMPPContactManager.h */,
+				4B9CFBAC16CAC42800E44063 /* XMPPContactManager.m */,
 				4BC559DE1337AC0900E345C7 /* XMPPExceptions.h */,
 				4BC559DF1337AC0900E345C7 /* XMPPExceptions.m */,
 				4B19F57814D17081005D52DC /* XMPPEXTERNALAuth.h */,
@@ -224,6 +240,8 @@
 				4BC559FE1337AC1800E345C7 /* XMPPStanza.h */,
 				4BC559FF1337AC1800E345C7 /* XMPPStanza.m */,
 				4B23D6C014DFF2B3001DBDDD /* XMPPStorage.h */,
+				4B9CFBAD16CAC42800E44063 /* XMPPStreamManagement.h */,
+				4B9CFBAE16CAC42800E44063 /* XMPPStreamManagement.m */,
 				4B48B95C14DC260000546D39 /* XMPPXMLElementBuilder.h */,
 				4B48B95D14DC260000546D39 /* XMPPXMLElementBuilder.m */,
 				4B01D01F137C7E7D005624EA /* namespaces.h */,
@@ -251,6 +269,8 @@
 				4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */,
 				4B19F57A14D17082005D52DC /* XMPPCallback.h in Headers */,
 				4BC559EE1337AC0900E345C7 /* XMPPConnection.h in Headers */,
+				4B9CFBAF16CAC42800E44063 /* XMPPContact.h in Headers */,
+				4B9CFBB116CAC42800E44063 /* XMPPContactManager.h in Headers */,
 				4BC559F01337AC0900E345C7 /* XMPPExceptions.h in Headers */,
 				4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */,
 				4BC559F21337AC0900E345C7 /* XMPPIQ.h in Headers */,
@@ -266,6 +286,7 @@
 				4B4844F5138BBC7500EB48A5 /* XMPPSRVLookup.h in Headers */,
 				4BC55A011337AC1800E345C7 /* XMPPStanza.h in Headers */,
 				4B23D6C314DFF2B3001DBDDD /* XMPPStorage.h in Headers */,
+				4B9CFBB316CAC42800E44063 /* XMPPStreamManagement.h in Headers */,
 				4B48B95F14DC260000546D39 /* XMPPXMLElementBuilder.h in Headers */,
 				4B01D020137C7E7D005624EA /* namespaces.h in Headers */,
 			);
@@ -361,21 +382,24 @@
 				4BC559ED1337AC0900E345C7 /* XMPPAuthenticator.m in Sources */,
 				4B19F57B14D17082005D52DC /* XMPPCallback.m in Sources */,
 				4BC559EF1337AC0900E345C7 /* XMPPConnection.m in Sources */,
+				4B9CFBB016CAC42800E44063 /* XMPPContact.m in Sources */,
+				4B9CFBB216CAC42800E44063 /* XMPPContactManager.m in Sources */,
 				4BC559F11337AC0900E345C7 /* XMPPExceptions.m in Sources */,
 				4B19F57D14D17082005D52DC /* XMPPEXTERNALAuth.m in Sources */,
 				4BC559F31337AC0900E345C7 /* XMPPIQ.m in Sources */,
 				4BC559F51337AC0900E345C7 /* XMPPJID.m in Sources */,
+				4B23D6C214DFF2B3001DBDDD /* XMPPJSONFileStorage.m in Sources */,
 				4BC559F71337AC0900E345C7 /* XMPPMessage.m in Sources */,
+				4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */,
 				4BC559F91337AC0900E345C7 /* XMPPPLAINAuth.m in Sources */,
 				4BC559FB1337AC0900E345C7 /* XMPPPresence.m in Sources */,
-				4BC55A001337AC1800E345C7 /* XMPPSCRAMAuth.m in Sources */,
-				4BC55A021337AC1800E345C7 /* XMPPStanza.m in Sources */,
 				4BD9BF5A134003F700DAB43A /* XMPPRosterItem.m in Sources */,
 				4BDEF8081340B240000156D1 /* XMPPRoster.m in Sources */,
+				4BC55A001337AC1800E345C7 /* XMPPSCRAMAuth.m in Sources */,
 				4B4844F6138BBC7500EB48A5 /* XMPPSRVLookup.m in Sources */,
-				4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */,
+				4BC55A021337AC1800E345C7 /* XMPPStanza.m in Sources */,
+				4B9CFBB416CAC42800E44063 /* XMPPStreamManagement.m in Sources */,
 				4B48B96014DC260000546D39 /* XMPPXMLElementBuilder.m in Sources */,
-				4B23D6C214DFF2B3001DBDDD /* XMPPJSONFileStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
