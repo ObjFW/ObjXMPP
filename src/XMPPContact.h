@@ -34,9 +34,9 @@
 @interface XMPPContact: OFObject
 {
 /// \cond internal
-	XMPPRosterItem *rosterItem;
-	OFMutableDictionary *presences;
-	XMPPJID *lockedOnJID;
+	XMPPRosterItem *_rosterItem;
+	OFMutableDictionary *_presences;
+	XMPPJID *_lockedOnJID;
 /// \endcond
 }
 #ifdef OF_HAVE_PROPERTIES

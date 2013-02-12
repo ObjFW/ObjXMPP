@@ -31,11 +31,11 @@
 @interface XMPPStanza: OFXMLElement
 {
 /// \cond internal
-	XMPPJID *from;
-	XMPPJID *to;
-	OFString *type;
-	OFString *ID;
-	OFString *language;
+	XMPPJID *_from;
+	XMPPJID *_to;
+	OFString *_type;
+	OFString *_ID;
+	OFString *_language;
 /// \endcond
 }
 

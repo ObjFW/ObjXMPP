@@ -49,7 +49,7 @@
 	self = [super initWithClass: class_];
 
 	@try {
-		connection = [conn retain];
+		_connection = [conn retain];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -60,25 +60,25 @@
 
 - (void)dealloc
 {
-	[connection release];
+	[_connection release];
 
 	[super dealloc];
 }
 
 - (OFString*)description
 {
-	if (description != nil)
-		return description;
+	if (_description != nil)
+		return _description;
 
-	description = [[OFString alloc] initWithFormat:
-	    @"An exception occurred in class %@!", inClass];
+	_description = [[OFString alloc] initWithFormat:
+	    @"An exception occurred in class %@!", _inClass];
 
-	return description;
+	return _description;
 }
 
 - (XMPPConnection*)connection
 {
-	return connection;
+	return _connection;
 }
 @end
 
@@ -132,13 +132,13 @@
 
 - (OFString*)description
 {
-	if (description != nil)
-		return description;
+	if (_description != nil)
+		return _description;
 
-	description = [[OFString alloc] initWithFormat:
+	_description = [[OFString alloc] initWithFormat:
 		@"Got stream error: %@. Reason: %@!", condition, reason];
 
-	return description;
+	return _description;
 }
 
 - (OFString*)condition
@@ -202,14 +202,14 @@
 
 - (OFString*)description
 {
-	if (description != nil)
-		return description;
+	if (_description != nil)
+		return _description;
 
-	description = [[OFString alloc] initWithFormat:
+	_description = [[OFString alloc] initWithFormat:
 	    @"Stringprep with profile %@ failed on string '%@'!",
 	    profile, string];
 
-	return description;
+	return _description;
 }
 
 - (OFString*)profile
@@ -273,13 +273,13 @@
 
 - (OFString*)description
 {
-	if (description != nil)
-		return description;
+	if (_description != nil)
+		return _description;
 
-	description = [[OFString alloc] initWithFormat:
+	_description = [[OFString alloc] initWithFormat:
 	    @"IDNA operation %@ failed on string '%@'!", operation, string];
 
-	return description;
+	return _description;
 }
 
 - (OFString*)operation
@@ -338,13 +338,13 @@
 
 - (OFString*)description
 {
-	if (description != nil)
-		return description;
+	if (_description != nil)
+		return _description;
 
-	description = [[OFString alloc] initWithFormat:
+	_description = [[OFString alloc] initWithFormat:
 	    @"Authentication failed. Reason: %@!", reason];
 
-	return description;
+	return _description;
 }
 
 - (OFString*)reason

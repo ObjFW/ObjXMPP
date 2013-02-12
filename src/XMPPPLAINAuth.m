@@ -49,22 +49,22 @@
 	OFDataArray *message = [OFDataArray dataArray];
 
 	/* authzid */
-	if (authzid)
-		[message addItem: authzid];
+	if (_authzid)
+		[message addItem: _authzid];
 
 	/* separator */
 	[message addItem: ""];
 
 	/* authcid */
-	[message addItems: [authcid UTF8String]
-		    count: [authcid UTF8StringLength]];
+	[message addItems: [_authcid UTF8String]
+		    count: [_authcid UTF8StringLength]];
 
 	/* separator */
 	[message addItem: ""];
 
 	/* passwd */
-	[message addItems: [password UTF8String]
-		    count: [password UTF8StringLength]];
+	[message addItems: [_password UTF8String]
+		    count: [_password UTF8StringLength]];
 
 	return message;
 }

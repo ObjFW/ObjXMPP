@@ -31,7 +31,7 @@
 @interface XMPPException: OFException
 {
 /// \cond internal
-	XMPPConnection *connection;
+	XMPPConnection *_connection;
 /// \endcond
 }
 

@@ -31,8 +31,8 @@ typedef void(^xmpp_callback_block_t)(XMPPConnection*, XMPPIQ*);
 
 @interface XMPPCallback: OFObject
 {
-	id target;
-	SEL selector;
+	id _target;
+	SEL _selector;
 #ifdef OF_HAVE_BLOCKS
 	xmpp_callback_block_t block;
 #endif

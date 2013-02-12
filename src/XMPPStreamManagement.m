@@ -29,8 +29,8 @@
 	self = [super init];
 
 	@try {
-		connection = connection_;
-		[connection addDelegate: self];
+		_connection = connection_;
+		[_connection addDelegate: self];
 		receivedCount = 0;
 	} @catch (id e) {
 		[self release];
@@ -42,7 +42,7 @@
 
 - (void)dealloc
 {
-	[connection removeDelegate: self];
+	[_connection removeDelegate: self];
 
 	[super dealloc];
 }

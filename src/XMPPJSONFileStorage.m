@@ -50,12 +50,12 @@
 	@try {
 		OFAutoreleasePool *pool = [OFAutoreleasePool new];
 
-		file = [file_ copy];
+		_file = [file_ copy];
 		@try {
-			data = [[[OFString stringWithContentsOfFile:
-			    file] JSONValue] retain];
+			_data = [[[OFString stringWithContentsOfFile:
+			    _file] JSONValue] retain];
 		} @catch (id e) {
-			data = [OFMutableDictionary new];
+			_data = [OFMutableDictionary new];
 		}
 
 		[pool release];
@@ -69,22 +69,22 @@
 
 - (void)dealloc
 {
-	[file release];
-	[data release];
+	[_file release];
+	[_data release];
 
 	[super dealloc];
 }
 
 - (void)save
 {
-	[[data JSONRepresentation] writeToFile: file];
+	[[_data JSONRepresentation] writeToFile: _file];
 }
 
 - (void)XMPP_setObject: (id)object
 	       forPath: (OFString*)path
 {
 	OFArray *pathComponents = [path componentsSeparatedByString: @"."];
-	OFMutableDictionary *iter = data;
+	OFMutableDictionary *iter = _data;
 	OFEnumerator *enumerator = [pathComponents objectEnumerator];
 	OFString *component;
 	size_t i = 0, components = [pathComponents count];
@@ -116,7 +116,7 @@
 	OFArray *pathComponents = [path componentsSeparatedByString: @"."];
 	OFEnumerator *enumerator = [pathComponents objectEnumerator];
 	OFString *component;
-	id object = data;
+	id object = _data;
 
 	while ((component = [enumerator nextObject]) != nil)
 		object = [object objectForKey: component];

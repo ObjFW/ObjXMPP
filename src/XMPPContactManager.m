@@ -34,12 +34,12 @@
 	self = [super init];
 
 	@try {
-		connection = connection_;
-		[connection addDelegate: self];
-		roster = roster_;
-		[roster addDelegate: self];
-		contacts = [[OFMutableDictionary alloc] init];
-		delegates = [[XMPPMulticastDelegate alloc] init];
+		_connection = connection_;
+		[_connection addDelegate: self];
+		_roster = roster_;
+		[_roster addDelegate: self];
+		_contacts = [[OFMutableDictionary alloc] init];
+		_delegates = [[XMPPMulticastDelegate alloc] init];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -50,27 +50,27 @@
 
 - (void)dealloc
 {
-	[connection removeDelegate: self];
-	[roster removeDelegate: self];
-	[delegates release];
-	[contacts release];
+	[_connection removeDelegate: self];
+	[_roster removeDelegate: self];
+	[_delegates release];
+	[_contacts release];
 
 	[super dealloc];
 }
 
 - (void)addDelegate: (id <XMPPConnectionDelegate>)delegate
 {
-	[delegates addDelegate: delegate];
+	[_delegates addDelegate: delegate];
 }
 
 - (void)removeDelegate: (id <XMPPConnectionDelegate>)delegate
 {
-	[delegates removeDelegate: delegate];
+	[_delegates removeDelegate: delegate];
 }
 
 - (OFDictionary*)contacts
 {
-	OF_GETTER(contacts, YES);
+	OF_GETTER(_contacts, YES);
 }
 
 - (void)rosterWasReceived: (XMPPRoster*)roster_
@@ -81,28 +81,28 @@
 	OFEnumerator *rosterItemEnumerator;
 	OFString *bareJID;
 
-	contactEnumerator = [contacts objectEnumerator];
+	contactEnumerator = [_contacts objectEnumerator];
 	while ((contact = [contactEnumerator nextObject]) != nil) {
-		[delegates broadcastSelector: @selector(contactManager:
-						  didRemoveContact:)
-				  withObject: self
-				  withObject: contact];
+		[_delegates broadcastSelector: @selector(contactManager:
+						   didRemoveContact:)
+				   withObject: self
+				   withObject: contact];
 	}
-	[contacts release];
+	[_contacts release];
 
-	contacts = [[OFMutableDictionary alloc] init];
+	_contacts = [[OFMutableDictionary alloc] init];
 	rosterItems = [roster_ rosterItems];
 	rosterItemEnumerator = [rosterItems keyEnumerator];
 	while ((bareJID = [rosterItemEnumerator nextObject]) != nil) {
 		contact = [[XMPPContact new] autorelease];
 		[contact XMPP_setRosterItem:
 		    [rosterItems objectForKey: bareJID]];
-		[contacts setObject: contact
-			     forKey: bareJID];
-		[delegates broadcastSelector: @selector(contactManager:
-						  didAddContact:)
-				  withObject: self
-				  withObject: contact];
+		[_contacts setObject: contact
+			      forKey: bareJID];
+		[_delegates broadcastSelector: @selector(contactManager:
+						   didAddContact:)
+				   withObject: self
+				   withObject: contact];
 	}
 }
 
@@ -112,12 +112,12 @@
 	XMPPContact *contact;
 	OFString *bareJID = [[rosterItem JID] bareJID];
 
-	contact = [contacts objectForKey: bareJID];
+	contact = [_contacts objectForKey: bareJID];
 
 	if ([[rosterItem subscription] isEqual: @"remove"]) {
-		[contacts removeObjectForKey: bareJID];
+		[_contacts removeObjectForKey: bareJID];
 		if (contact != nil)
-			[delegates broadcastSelector: @selector(contactManager:
+			[_delegates broadcastSelector: @selector(contactManager:
 							  didRemoveContact:)
 					  withObject: self
 					  withObject: contact];
@@ -127,14 +127,14 @@
 	if (contact == nil) {
 		contact = [[XMPPContact new] autorelease];
 		[contact XMPP_setRosterItem: rosterItem];
-		[contacts setObject: contact
+		[_contacts setObject: contact
 			     forKey: bareJID];
-		[delegates broadcastSelector: @selector(contactManager:
+		[_delegates broadcastSelector: @selector(contactManager:
 						  didAddContact:)
 				  withObject: self
 				  withObject: contact];
 	} else {
-		[delegates broadcastSelector: @selector(contact:
+		[_delegates broadcastSelector: @selector(contact:
 						  willUpdateWithRosterItem:)
 				  withObject: contact
 				  withObject: rosterItem];
@@ -146,7 +146,7 @@
   didReceivePresence: (XMPPPresence*)presence
 {
 	XMPPJID *JID = [presence from];
-	XMPPContact *contact = [contacts objectForKey: [JID bareJID]];
+	XMPPContact *contact = [_contacts objectForKey: [JID bareJID]];
 
 	if (contact == nil)
 		return;
@@ -155,16 +155,16 @@
 	if ([[presence type] isEqual: @"available"]) {
 		[contact XMPP_setPresence: presence
 				 resource: [JID resource]];
-		[delegates broadcastSelector: @selector(contact:
+		[_delegates broadcastSelector: @selector(contact:
 						  didSendPresence:)
 				  withObject: contact
 				  withObject: presence];
 	} else if ([[presence type] isEqual: @"unavailable"]) {
 		[contact XMPP_removePresenceForResource: [JID resource]];
-		[delegates broadcastSelector: @selector(contact:
-						  didSendPresence:)
-				  withObject: contact
-				  withObject: presence];
+		[_delegates broadcastSelector: @selector(contact:
+						    didSendPresence:)
+				   withObject: contact
+				   withObject: presence];
 	}
 }
 
@@ -172,15 +172,15 @@
   didReceiveMessage: (XMPPMessage*)message
 {
 	XMPPJID *JID = [message from];
-	XMPPContact *contact = [contacts objectForKey: [JID bareJID]];
+	XMPPContact *contact = [_contacts objectForKey: [JID bareJID]];
 
 	if (contact == nil)
 		return;
 
 	[contact XMPP_setLockedOnJID: JID];
 
-	[delegates broadcastSelector: @selector(contact:didSendMessage:)
-			  withObject: contact
-			  withObject: message];
+	[_delegates broadcastSelector: @selector(contact:didSendMessage:)
+			   withObject: contact
+			   withObject: message];
 }
 @end

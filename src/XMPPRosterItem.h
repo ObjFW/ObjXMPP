@@ -30,10 +30,10 @@
 @interface XMPPRosterItem: OFObject
 {
 /// \cond internal
-	XMPPJID *JID;
-	OFString *name;
-	OFString *subscription;
-	OFArray *groups;
+	XMPPJID *_JID;
+	OFString *_name;
+	OFString *_subscription;
+	OFArray *_groups;
 /// \endcond
 }
 

@@ -45,11 +45,11 @@
 	self = [super init];
 
 	@try {
-		rosterItems = [[OFMutableDictionary alloc] init];
-		connection = connection_;
-		[connection addDelegate: self];
-		delegates = [[XMPPMulticastDelegate alloc] init];
-		dataStorage = [connection dataStorage];
+		_rosterItems = [[OFMutableDictionary alloc] init];
+		_connection = connection_;
+		[_connection addDelegate: self];
+		_delegates = [[XMPPMulticastDelegate alloc] init];
+		_dataStorage = [_connection dataStorage];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -60,16 +60,16 @@
 
 - (void)dealloc
 {
-	[connection removeDelegate: self];
-	[delegates release];
-	[rosterItems release];
+	[_connection removeDelegate: self];
+	[_delegates release];
+	[_rosterItems release];
 
 	[super dealloc];
 }
 
 - (OFDictionary*)rosterItems
 {
-	return [[rosterItems copy] autorelease];
+	return [[_rosterItems copy] autorelease];
 }
 
 - (void)requestRoster
@@ -77,16 +77,16 @@
 	XMPPIQ *iq;
 	OFXMLElement *query;
 
-	rosterRequested = YES;
+	_rosterRequested = YES;
 
 	iq = [XMPPIQ IQWithType: @"get"
-			     ID: [connection generateStanzaID]];
+			     ID: [_connection generateStanzaID]];
 
 	query = [OFXMLElement elementWithName: @"query"
 				    namespace: XMPP_NS_ROSTER];
 
-	if ([connection supportsRosterVersioning]) {
-		OFString *ver = [dataStorage stringValueForPath: @"roster.ver"];
+	if ([_connection supportsRosterVersioning]) {
+		OFString *ver = [_dataStorage stringValueForPath: @"roster.ver"];
 
 		if (ver == nil)
 			ver = @"";
@@ -97,13 +97,13 @@
 
 	[iq addChild: query];
 
-	[connection sendIQ: iq
-	    callbackTarget: self
-		  selector: @selector(XMPP_handleInitialRosterForConnection:
+	[_connection sendIQ: iq
+	     callbackTarget: self
+		   selector: @selector(XMPP_handleInitialRosterForConnection:
 				IQ:)];
 }
 
-- (BOOL)connection: (XMPPConnection*)connection_
+- (BOOL)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)iq
 {
 	OFXMLElement *rosterElement;
@@ -125,23 +125,23 @@
 	if (element != nil) {
 		rosterItem = [self XMPP_rosterItemWithXMLElement: element];
 
-		[delegates broadcastSelector: @selector(
-						  roster:didReceiveRosterItem:)
-				  withObject: self
-				  withObject: rosterItem];
+		[_delegates broadcastSelector: @selector(
+						   roster:didReceiveRosterItem:)
+				   withObject: self
+				   withObject: rosterItem];
 
 		[self XMPP_updateRosterItem: rosterItem];
 	}
 
-	if ([connection supportsRosterVersioning]) {
+	if ([_connection supportsRosterVersioning]) {
 		OFString *ver =
 		    [[rosterElement attributeForName: @"ver"] stringValue];
-		[dataStorage setStringValue: ver
-				    forPath: @"roster.ver"];
-		[dataStorage save];
+		[_dataStorage setStringValue: ver
+				     forPath: @"roster.ver"];
+		[_dataStorage save];
 	}
 
-	[connection_ sendStanza: [iq resultIQ]];
+	[connection sendStanza: [iq resultIQ]];
 
 	return YES;
 }
@@ -153,8 +153,8 @@
 
 - (void)updateRosterItem: (XMPPRosterItem*)rosterItem
 {
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
-				     ID: [connection generateStanzaID]];
+	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
+				     ID: [_connection generateStanzaID]];
 	OFXMLElement *query = [OFXMLElement elementWithName: @"query"
 						  namespace: XMPP_NS_ROSTER];
 	OFXMLElement *item = [OFXMLElement elementWithName: @"item"
@@ -175,15 +175,15 @@
 						  stringValue: group]];
 
 	[query addChild: item];
-	[iq addChild: query];
+	[IQ addChild: query];
 
-	[connection sendStanza: iq];
+	[_connection sendStanza: IQ];
 }
 
 - (void)deleteRosterItem: (XMPPRosterItem*)rosterItem
 {
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"set"
-				     ID: [connection generateStanzaID]];
+	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
+				     ID: [_connection generateStanzaID]];
 	OFXMLElement *query = [OFXMLElement elementWithName: @"query"
 						  namespace: XMPP_NS_ROSTER];
 	OFXMLElement *item = [OFXMLElement elementWithName: @"item"
@@ -195,44 +195,44 @@
 		       stringValue: @"remove"];
 
 	[query addChild: item];
-	[iq addChild: query];
+	[IQ addChild: query];
 
-	[connection sendStanza: iq];
+	[_connection sendStanza: IQ];
 }
 
 - (void)addDelegate: (id <XMPPRosterDelegate>)delegate
 {
-	[delegates addDelegate: delegate];
+	[_delegates addDelegate: delegate];
 }
 
 - (void)removeDelegate: (id <XMPPRosterDelegate>)delegate
 {
-	[delegates removeDelegate: delegate];
+	[_delegates removeDelegate: delegate];
 }
 
-- (void)setDataStorage: (id <XMPPStorage>)dataStorage_
+- (void)setDataStorage: (id <XMPPStorage>)dataStorage
 {
-	if (rosterRequested)
+	if (_rosterRequested)
 		@throw [OFInvalidArgumentException
 		    exceptionWithClass: [self class]];
 
-	dataStorage = dataStorage_;
+	_dataStorage = dataStorage;
 }
 
 - (XMPPConnection*)connection
 {
-	return connection;
+	return _connection;
 }
 
 - (id <XMPPStorage>)dataStorage
 {
-	return dataStorage;
+	return _dataStorage;
 }
 
 - (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem
 {
-	if ([connection supportsRosterVersioning]) {
-		OFMutableDictionary *items = [[[dataStorage dictionaryForPath:
+	if ([_connection supportsRosterVersioning]) {
+		OFMutableDictionary *items = [[[_dataStorage dictionaryForPath:
 		    @"roster.items"] mutableCopy] autorelease];
 
 		if (items == nil)
@@ -258,15 +258,15 @@
 		} else
 			[items removeObjectForKey: [[rosterItem JID] bareJID]];
 
-		[dataStorage setDictionary: items
-				   forPath: @"roster.items"];
+		[_dataStorage setDictionary: items
+				    forPath: @"roster.items"];
 	}
 
 	if (![[rosterItem subscription] isEqual: @"remove"])
-		[rosterItems setObject: rosterItem
-				forKey: [[rosterItem JID] bareJID]];
+		[_rosterItems setObject: rosterItem
+				 forKey: [[rosterItem JID] bareJID]];
 	else
-		[rosterItems removeObjectForKey: [[rosterItem JID] bareJID]];
+		[_rosterItems removeObjectForKey: [[rosterItem JID] bareJID]];
 }
 
 - (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element
@@ -315,9 +315,9 @@
 	rosterElement = [iq elementForName: @"query"
 				 namespace: XMPP_NS_ROSTER];
 
-	if ([connection supportsRosterVersioning]) {
+	if ([_connection supportsRosterVersioning]) {
 		if (rosterElement == nil) {
-			OFDictionary *items = [dataStorage
+			OFDictionary *items = [_dataStorage
 			    dictionaryForPath: @"roster.items"];
 			OFEnumerator *enumerator = [items objectEnumerator];
 			OFDictionary *item;
@@ -337,12 +337,12 @@
 				[rosterItem setGroups:
 				    [item objectForKey: @"groups"]];
 
-				[rosterItems setObject: rosterItem
-						forKey: [JID bareJID]];
+				[_rosterItems setObject: rosterItem
+						 forKey: [JID bareJID]];
 			}
 		} else
-			[dataStorage setDictionary: nil
-					   forPath: @"roster.items"];
+			[_dataStorage setDictionary: nil
+					    forPath: @"roster.items"];
 	}
 
 	enumerator = [[rosterElement children] objectEnumerator];
@@ -361,15 +361,15 @@
 		[pool release];
 	}
 
-	if ([connection supportsRosterVersioning] && rosterElement != nil) {
+	if ([_connection supportsRosterVersioning] && rosterElement != nil) {
 		OFString *ver =
 		    [[rosterElement attributeForName: @"ver"] stringValue];
-		[dataStorage setStringValue: ver
-				    forPath: @"roster.ver"];
-		[dataStorage save];
+		[_dataStorage setStringValue: ver
+				     forPath: @"roster.ver"];
+		[_dataStorage save];
 	}
 
-	[delegates broadcastSelector: @selector(rosterWasReceived:)
-			  withObject: self];
+	[_delegates broadcastSelector: @selector(rosterWasReceived:)
+			   withObject: self];
 }
 @end

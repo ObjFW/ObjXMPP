@@ -40,105 +40,105 @@
 @implementation XMPPSCRAMAuth
 + SCRAMAuthWithAuthcid: (OFString*)authcid
 	      password: (OFString*)password
-	    connection: (XMPPConnection*)connection_
+	    connection: (XMPPConnection*)connection
 		  hash: (Class)hash
-	 plusAvailable: (BOOL)plusAvailable_
+	 plusAvailable: (BOOL)plusAvailable
 {
 	return [[[self alloc] initWithAuthcid: authcid
 				     password: password
-				   connection: connection_
+				   connection: connection
 					 hash: hash
-				plusAvailable: plusAvailable_] autorelease];
+				plusAvailable: plusAvailable] autorelease];
 }
 
 + SCRAMAuthWithAuthzid: (OFString*)authzid
 	       authcid: (OFString*)authcid
 	      password: (OFString*)password
-	    connection: (XMPPConnection*)connection_
+	    connection: (XMPPConnection*)connection
 		  hash: (Class)hash
-	 plusAvailable: (BOOL)plusAvailable_
+	 plusAvailable: (BOOL)plusAvailable
 {
 	return [[[self alloc] initWithAuthzid: authzid
 				      authcid: authcid
 				     password: password
-				   connection: connection_
+				   connection: connection
 					 hash: hash
-				plusAvailable: plusAvailable_] autorelease];
+				plusAvailable: plusAvailable] autorelease];
 }
 
-- initWithAuthcid: (OFString*)authcid_
-	 password: (OFString*)password_
-       connection: (XMPPConnection*)connection_
+- initWithAuthcid: (OFString*)authcid
+	 password: (OFString*)password
+       connection: (XMPPConnection*)connection
 	     hash: (Class)hash
-    plusAvailable: (BOOL)plusAvailable_
+    plusAvailable: (BOOL)plusAvailable
 {
 	return [self initWithAuthzid: nil
-			     authcid: authcid_
-			    password: password_
-			  connection: connection_
+			     authcid: authcid
+			    password: password
+			  connection: connection
 				hash: hash
-		       plusAvailable: plusAvailable_];
+		       plusAvailable: plusAvailable];
 }
 
-- initWithAuthzid: (OFString*)authzid_
-	  authcid: (OFString*)authcid_
-	 password: (OFString*)password_
-       connection: (XMPPConnection*)connection_
+- initWithAuthzid: (OFString*)authzid
+	  authcid: (OFString*)authcid
+	 password: (OFString*)password
+       connection: (XMPPConnection*)connection
 	     hash: (Class)hash
-    plusAvailable: (BOOL)plusAvailable_
+    plusAvailable: (BOOL)plusAvailable
 {
-	self = [super initWithAuthzid: authzid_
-			      authcid: authcid_
-			     password: password_];
+	self = [super initWithAuthzid: authzid
+			      authcid: authcid
+			     password: password];
 
-	hashType = hash;
-	plusAvailable = plusAvailable_;
-	connection = [connection_ retain];
+	_hashType = hash;
+	_plusAvailable = plusAvailable;
+	_connection = [connection retain];
 
 	return self;
 }
 
 - (void)dealloc
 {
-	[GS2Header release];
-	[clientFirstMessageBare release];
-	[serverSignature release];
-	[cNonce release];
-	[connection release];
+	[_GS2Header release];
+	[_clientFirstMessageBare release];
+	[_serverSignature release];
+	[_cNonce release];
+	[_connection release];
 
 	[super dealloc];
 }
 
-- (void)setAuthzid: (OFString*)authzid_
+- (void)setAuthzid: (OFString*)authzid
 {
-	OFString *old = authzid;
+	OFString *old = _authzid;
 
-	if (authzid_) {
-		OFMutableString *new = [[authzid_ mutableCopy] autorelease];
+	if (authzid) {
+		OFMutableString *new = [[authzid mutableCopy] autorelease];
 		[new replaceOccurrencesOfString: @"="
 				     withString: @"=3D"];
 		[new replaceOccurrencesOfString: @","
 				     withString: @"=2C"];
-		authzid = [new retain];
+		_authzid = [new retain];
 	} else
-		authzid = nil;
+		_authzid = nil;
 
 	[old release];
 }
 
-- (void)setAuthcid: (OFString*)authcid_
+- (void)setAuthcid: (OFString*)authcid
 {
-	OFString *old = authcid;
+	OFString *old = _authcid;
 
-	if (authcid_) {
-		OFMutableString *new = [[authcid_ mutableCopy] autorelease];
+	if (authcid) {
+		OFMutableString *new = [[authcid mutableCopy] autorelease];
 		[new replaceOccurrencesOfString: @"="
 				     withString: @"=3D"];
 		[new replaceOccurrencesOfString: @","
 				     withString: @"=2C"];
-		authcid = [new retain];
+		_authcid = [new retain];
 	} else
-		authcid = nil;
+		_authcid = nil;
 
 	[old release];
 }
@@ -148,35 +148,35 @@
 	OFDataArray *ret = [OFDataArray dataArray];
 
 	/* New authentication attempt, reset status */
-	[cNonce release];
-	cNonce = nil;
-	[GS2Header release];
-	GS2Header = nil;
-	[serverSignature release];
-	serverSignature = nil;
-	authenticated = NO;
+	[_cNonce release];
+	_cNonce = nil;
+	[_GS2Header release];
+	_GS2Header = nil;
+	[_serverSignature release];
+	_serverSignature = nil;
+	_authenticated = NO;
 
-	if (authzid)
-		GS2Header = [[OFString alloc]
+	if (_authzid)
+		_GS2Header = [[OFString alloc]
 		    initWithFormat: @"%@,a=%@,",
-				    (plusAvailable ? @"p=tls-unique" : @"y"),
-				    authzid];
+				    (_plusAvailable ? @"p=tls-unique" : @"y"),
+				    _authzid];
 	else
-		GS2Header = (plusAvailable ? @"p=tls-unique,," : @"y,,");
+		_GS2Header = (_plusAvailable ? @"p=tls-unique,," : @"y,,");
 
-	cNonce = [[self XMPP_genNonce] retain];
+	_cNonce = [[self XMPP_genNonce] retain];
 
-	[clientFirstMessageBare release];
-	clientFirstMessageBare = nil;
-	clientFirstMessageBare = [[OFString alloc] initWithFormat: @"n=%@,r=%@",
-								   authcid,
-								   cNonce];
+	[_clientFirstMessageBare release];
+	_clientFirstMessageBare = nil;
+	_clientFirstMessageBare = [[OFString alloc] initWithFormat: @"n=%@,r=%@",
+								   _authcid,
+								   _cNonce];
 
-	[ret addItems: [GS2Header UTF8String]
-		count: [GS2Header UTF8StringLength]];
+	[ret addItems: [_GS2Header UTF8String]
+		count: [_GS2Header UTF8StringLength]];
 
-	[ret addItems: [clientFirstMessageBare UTF8String]
-		count: [clientFirstMessageBare UTF8StringLength]];
+	[ret addItems: [_clientFirstMessageBare UTF8String]
+		count: [_clientFirstMessageBare UTF8StringLength]];
 
 	return ret;
 }
@@ -186,7 +186,7 @@
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFDataArray *ret;
 
-	if (!serverSignature)
+	if (!_serverSignature)
 		ret = [self XMPP_parseServerFirstMessage: data];
 	else
 		ret = [self XMPP_parseServerFinalMessage: data];
@@ -213,7 +213,7 @@
 		GOT_ITERCOUNT = 0x04
 	} got = 0;
 
-	hash = [[[hashType alloc] init] autorelease];
+	hash = [[[_hashType alloc] init] autorelease];
 	ret = [OFDataArray dataArray];
 	authMessage = [OFDataArray dataArray];
 
@@ -228,7 +228,7 @@
 		    of_range(2, [comp length] - 2)];
 
 		if ([comp hasPrefix: @"r="]) {
-			if (![entry hasPrefix: cNonce])
+			if (![entry hasPrefix: _cNonce])
 				@throw [XMPPAuthFailedException
 				    exceptionWithClass: [self class]
 					    connection: nil
@@ -253,10 +253,10 @@
 
 	// Add c=<base64(GS2Header+channelBindingData)>
 	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItems: [GS2Header UTF8String]
-		     count: [GS2Header UTF8StringLength]];
-	if (plusAvailable && [connection encrypted]) {
-		OFDataArray *channelBinding = [((SSLSocket*)[connection socket])
+	[tmpArray addItems: [_GS2Header UTF8String]
+		     count: [_GS2Header UTF8StringLength]];
+	if (_plusAvailable && [_connection encrypted]) {
+		OFDataArray *channelBinding = [((SSLSocket*)[_connection socket])
 		    channelBindingDataWithType: @"tls-unique"];
 		[tmpArray addItems: [channelBinding items]
 			     count: [channelBinding count]];
@@ -279,8 +279,8 @@
 	 * SaltedPassword := Hi(Normalize(password), salt, i)
 	 */
 	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItems: [password UTF8String]
-		     count: [password UTF8StringLength]];
+	[tmpArray addItems: [_password UTF8String]
+		     count: [_password UTF8StringLength]];
 
 	saltedPassword = [self XMPP_hiWithData: tmpArray
 					  salt: salt
@@ -292,8 +292,8 @@
 	 *		  server-first-message + "," +
 	 *		  client-final-message-without-proof
 	 */
-	[authMessage addItems: [clientFirstMessageBare UTF8String]
-			count: [clientFirstMessageBare UTF8StringLength]];
+	[authMessage addItems: [_clientFirstMessageBare UTF8String]
+			count: [_clientFirstMessageBare UTF8StringLength]];
 	[authMessage addItem: ","];
 	[authMessage addItems: [data items]
 			count: [data count] * [data itemSize]];
@@ -316,10 +316,10 @@
 	 * StoredKey := H(ClientKey)
 	 */
 	[hash updateWithBuffer: (void*) clientKey
-			length: [hashType digestSize]];
+			length: [_hashType digestSize]];
 	tmpArray = [OFDataArray dataArray];
 	[tmpArray addItems: [hash digest]
-		     count: [hashType digestSize]];
+		     count: [_hashType digestSize]];
 
 	/*
 	 * IETF RFC 5802:
@@ -344,18 +344,18 @@
 	 */
 	tmpArray = [OFDataArray dataArray];
 	[tmpArray addItems: serverKey
-		     count: [hashType digestSize]];
-	serverSignature = [[OFDataArray alloc] init];
-	[serverSignature addItems: [self XMPP_HMACWithKey: tmpArray
+		     count: [_hashType digestSize]];
+	_serverSignature = [[OFDataArray alloc] init];
+	[_serverSignature addItems: [self XMPP_HMACWithKey: tmpArray
 						     data: authMessage]
-			    count: [hashType digestSize]];
+			    count: [_hashType digestSize]];
 
 	/*
 	 * IETF RFC 5802:
 	 * ClientProof := ClientKey XOR ClientSignature
 	 */
 	tmpArray = [OFDataArray dataArray];
-	for (i = 0; i < [hashType digestSize]; i++) {
+	for (i = 0; i < [_hashType digestSize]; i++) {
 		uint8_t c = clientKey[i] ^ clientSignature[i];
 		[tmpArray addItem: &c];
 	}
@@ -379,7 +379,7 @@
 	 * server-final-message already received,
 	 * we were just waiting for the last word from the server
 	 */
-	if (authenticated)
+	if (_authenticated)
 		return nil;
 
 	mess = [OFString stringWithUTF8String: [data items]
@@ -388,13 +388,13 @@
 	value = [mess substringWithRange: of_range(2, [mess length] - 2)];
 
 	if ([mess hasPrefix: @"v="]) {
-		if (![value isEqual: [serverSignature stringByBase64Encoding]])
+		if (![value isEqual: [_serverSignature stringByBase64Encoding]])
 			@throw [XMPPAuthFailedException
 			    exceptionWithClass: [self class]
 				    connection: nil
 					reason: @"Received wrong "
 						@"ServerSignature"];
-		authenticated = YES;
+		_authenticated = YES;
 	} else
 		@throw [XMPPAuthFailedException exceptionWithClass: [self class]
 							connection: nil
@@ -429,16 +429,16 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFDataArray *k = [OFDataArray dataArray];
-	size_t i, kSize, blockSize = [hashType blockSize];
+	size_t i, kSize, blockSize = [_hashType blockSize];
 	uint8_t *kI = NULL, *kO = NULL;
 	OFHash *hashI, *hashO;
 
 	if ([key itemSize] * [key count] > blockSize) {
-		hashI = [[[hashType alloc] init] autorelease];
+		hashI = [[[_hashType alloc] init] autorelease];
 		[hashI updateWithBuffer: [key items]
 				length: [key itemSize] * [key count]];
 		[k addItems: [hashI digest]
-		      count: [hashType digestSize]];
+		      count: [_hashType digestSize]];
 	} else
 		[k addItems: [key items]
 		      count: [key itemSize] * [key count]];
@@ -457,17 +457,17 @@
 			kO[i] ^= HMAC_OPAD;
 		}
 
-		hashI = [[[hashType alloc] init] autorelease];
+		hashI = [[[_hashType alloc] init] autorelease];
 		[hashI updateWithBuffer: (char*)kI
 				 length: blockSize];
 		[hashI updateWithBuffer: [data items]
 				 length: [data itemSize] * [data count]];
 
-		hashO = [[[hashType alloc] init] autorelease];
+		hashO = [[[_hashType alloc] init] autorelease];
 		[hashO updateWithBuffer: (char*)kO
 				 length: blockSize];
 		[hashO updateWithBuffer: (char*)[hashI digest]
-				 length: [hashType digestSize]];
+				 length: [_hashType digestSize]];
 	} @finally {
 		[self freeMemory: kI];
 		[self freeMemory: kO];
@@ -484,7 +484,7 @@
 		 iterationCount: (intmax_t)i
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	size_t digestSize = [hashType digestSize];
+	size_t digestSize = [_hashType digestSize];
 	uint8_t *result = NULL, *u, *uOld;
 	intmax_t j, k;
 	OFDataArray *salty, *tmp, *ret;

@@ -29,23 +29,23 @@
 #import "XMPPIQ.h"
 
 @implementation XMPPIQ
-+ IQWithType: (OFString*)type_
-	  ID: (OFString*)ID_
++ IQWithType: (OFString*)type
+	  ID: (OFString*)ID
 {
-	return [[[self alloc] initWithType: type_
-					ID: ID_] autorelease];
+	return [[[self alloc] initWithType: type
+					ID: ID] autorelease];
 }
 
-- initWithType: (OFString*)type_
-	    ID: (OFString*)ID_
+- initWithType: (OFString*)type
+	    ID: (OFString*)ID
 {
 	self = [super initWithName: @"iq"
-			      type: type_
-				ID: ID_];
+			      type: type
+				ID: ID];
 
 	@try {
-		if (![type_ isEqual: @"get"] && ![type_ isEqual: @"set"] &&
-		    ![type_ isEqual: @"result"] && ![type_ isEqual: @"error"])
+		if (![type isEqual: @"get"] && ![type isEqual: @"set"] &&
+		    ![type isEqual: @"result"] && ![type isEqual: @"error"])
 			@throw [OFInvalidArgumentException
 			    exceptionWithClass: [self class]
 				      selector: _cmd];

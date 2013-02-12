@@ -36,26 +36,26 @@
 }
 
 + stanzaWithName: (OFString*)name
-	    type: (OFString*)type_
+	    type: (OFString*)type
 {
 	return [[[self alloc] initWithName: name
-				      type: type_] autorelease];
+				      type: type] autorelease];
 }
 
 + stanzaWithName: (OFString*)name
-	      ID: (OFString*)ID_
+	      ID: (OFString*)ID
 {
 	return [[[self alloc] initWithName: name
-					ID: ID_] autorelease];
+					ID: ID] autorelease];
 }
 
 + stanzaWithName: (OFString*)name
-	    type: (OFString*)type_
-	      ID: (OFString*)ID_
+	    type: (OFString*)type
+	      ID: (OFString*)ID
 {
 	return [[[self alloc] initWithName: name
-				      type: type_
-					ID: ID_] autorelease];
+				      type: type
+					ID: ID] autorelease];
 }
 
 + stanzaWithElement: (OFXMLElement*)element
@@ -63,39 +63,39 @@
 	return [[[self alloc] initWithElement: element] autorelease];
 }
 
-- initWithName: (OFString*)name_
+- initWithName: (OFString*)name
 {
-	return [self initWithName: name_
+	return [self initWithName: name
 			     type: nil
 			       ID: nil];
 }
 
-- initWithName: (OFString*)name_
-	  type: (OFString*)type_
+- initWithName: (OFString*)name
+	  type: (OFString*)type
 {
-	return [self initWithName: name_
-			     type: type_
+	return [self initWithName: name
+			     type: type
 			       ID: nil];
 }
 
-- initWithName: (OFString*)name_
-	    ID: (OFString*)ID_
+- initWithName: (OFString*)name
+	    ID: (OFString*)ID
 {
-	return [self initWithName: name_
+	return [self initWithName: name
 			     type: nil
-			       ID: ID_];
+			       ID: ID];
 }
 
-- initWithName: (OFString*)name_
-	  type: (OFString*)type_
-	    ID: (OFString*)ID_
+- initWithName: (OFString*)name
+	  type: (OFString*)type
+	    ID: (OFString*)ID
 {
-	self = [super initWithName: name_
+	self = [super initWithName: name
 			 namespace: XMPP_NS_CLIENT];
 
 	@try {
-		if (![name_ isEqual: @"iq"] && ![name_ isEqual: @"message"] &&
-		    ![name_ isEqual: @"presence"])
+		if (![name isEqual: @"iq"] && ![name isEqual: @"message"] &&
+		    ![name isEqual: @"presence"])
 			@throw [OFInvalidArgumentException
 			    exceptionWithClass: [self class]
 				      selector: _cmd];
@@ -104,11 +104,11 @@
 		[self setPrefix: @"stream"
 		   forNamespace: XMPP_NS_STREAM];
 
-		if (type_ != nil)
-			[self setType: type_];
+		if (type != nil)
+			[self setType: type];
 
-		if (ID_ != nil)
-			[self setID: ID_];
+		if (ID != nil)
+			[self setID: ID];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -147,104 +147,104 @@
 
 - (void)dealloc
 {
-	[from release];
-	[to release];
-	[type release];
-	[ID release];
+	[_from release];
+	[_to release];
+	[_type release];
+	[_ID release];
 
 	[super dealloc];
 }
 
-- (void)setFrom: (XMPPJID*)from_
+- (void)setFrom: (XMPPJID*)from
 {
-	XMPPJID *old = from;
-	from = [from_ copy];
+	XMPPJID *old = _from;
+	_from = [from copy];
 	[old release];
 
 	[self removeAttributeForName: @"from"];
 
-	if (from_ != nil)
+	if (from != nil)
 		[self addAttributeWithName: @"from"
-			       stringValue: [from_ fullJID]];
+			       stringValue: [from fullJID]];
 }
 
 - (XMPPJID*)from
 {
-	return [[from copy] autorelease];
+	return [[_from copy] autorelease];
 }
 
-- (void)setTo: (XMPPJID*)to_
+- (void)setTo: (XMPPJID*)to
 {
-	XMPPJID *old = to;
-	to = [to_ copy];
+	XMPPJID *old = _to;
+	_to = [to copy];
 	[old release];
 
 	[self removeAttributeForName: @"to"];
 
-	if (to_ != nil)
+	if (to != nil)
 		[self addAttributeWithName: @"to"
-			       stringValue: [to_ fullJID]];
+			       stringValue: [to fullJID]];
 }
 
 - (XMPPJID*)to
 {
-	return [[to copy] autorelease];
+	return [[_to copy] autorelease];
 }
 
-- (void)setType: (OFString*)type_
+- (void)setType: (OFString*)type
 {
-	OFString *old = type;
-	type = [type_ copy];
+	OFString *old = _type;
+	_type = [type copy];
 	[old release];
 
 	[self removeAttributeForName: @"type"];
 
-	if (type_ != nil)
+	if (type != nil)
 		[self addAttributeWithName: @"type"
 			       stringValue: type];
 }
 
 - (OFString*)type
 {
-	return [[type copy] autorelease];
+	return [[_type copy] autorelease];
 }
 
-- (void)setID: (OFString*)ID_
+- (void)setID: (OFString*)ID
 {
-	OFString *old = ID;
-	ID = [ID_ copy];
+	OFString *old = _ID;
+	_ID = [ID copy];
 	[old release];
 
 	[self removeAttributeForName: @"id"];
 
-	if (ID_ != nil)
+	if (ID != nil)
 		[self addAttributeWithName: @"id"
-			       stringValue: ID_];
+			       stringValue: ID];
 }
 
 - (OFString*)ID
 {
-	return [[ID copy] autorelease];
+	return [[_ID copy] autorelease];
 }
 
-- (void)setLanguage: (OFString*)language_
+- (void)setLanguage: (OFString*)language
 {
-	OFString *old = language;
-	language = [language_ copy];
+	OFString *old = _language;
+	_language = [language copy];
 	[old release];
 
 	[self removeAttributeForName: @"lang"
 			   namespace: @"http://www.w3.org/XML/1998/namespace"];
 
-	if (language_ != nil)
+	if (language != nil)
 		[self addAttributeWithName: @"lang"
 				 namespace: @"http://www.w3.org/XML/1998/"
 					    @"namespace"
-			       stringValue: language_];
+			       stringValue: language];
 }
 
 - (OFString*)language
 {
-	return [[language copy] autorelease];
+	return [[_language copy] autorelease];
 }
 @end

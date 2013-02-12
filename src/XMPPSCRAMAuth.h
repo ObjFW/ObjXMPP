@@ -30,14 +30,14 @@
 @interface XMPPSCRAMAuth: XMPPAuthenticator
 {
 /// \cond internal
-	Class hashType;
-	OFString *cNonce;
-	OFString *GS2Header;
-	OFString *clientFirstMessageBare;
-	OFDataArray *serverSignature;
-	XMPPConnection *connection;
-	BOOL plusAvailable;
-	BOOL authenticated;
+	Class _hashType;
+	OFString *_cNonce;
+	OFString *_GS2Header;
+	OFString *_clientFirstMessageBare;
+	OFDataArray *_serverSignature;
+	XMPPConnection *_connection;
+	BOOL _plusAvailable;
+	BOOL _authenticated;
 /// \endcond
 }
 

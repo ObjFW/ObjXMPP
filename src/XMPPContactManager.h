@@ -98,10 +98,10 @@
 #endif
 {
 /// \cond internal
-	OFMutableDictionary *contacts;
-	XMPPConnection *connection;
-	XMPPRoster *roster;
-	XMPPMulticastDelegate *delegates;
+	OFMutableDictionary *_contacts;
+	XMPPConnection *_connection;
+	XMPPRoster *_roster;
+	XMPPMulticastDelegate *_delegates;
 /// \endcond
 }
 #ifdef OF_HAVE_PROPERTIES

@@ -60,15 +60,15 @@
 {
 	self = [super init];
 
-	target = [target_ retain];
-	selector = selector_;
+	_target = [target_ retain];
+	_selector = selector_;
 
 	return self;
 }
 
 - (void)dealloc
 {
-	[target release];
+	[_target release];
 #ifdef OF_HAVE_BLOCKS
 	[block release];
 #endif
@@ -84,8 +84,8 @@
 		block(connection, iq);
 	else
 #endif
-		[target performSelector: selector
-			     withObject: connection
-			     withObject: iq];
+		[_target performSelector: _selector
+			      withObject: connection
+			      withObject: iq];
 }
 @end

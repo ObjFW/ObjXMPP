@@ -34,21 +34,21 @@
 	return [[[self alloc] init] autorelease];
 }
 
-+ messageWithID: (OFString*)ID_
++ messageWithID: (OFString*)ID
 {
-	return [[[self alloc] initWithID: ID_] autorelease];
+	return [[[self alloc] initWithID: ID] autorelease];
 }
 
-+ messageWithType: (OFString*)type_
++ messageWithType: (OFString*)type
 {
-	return [[[self alloc] initWithType: type_] autorelease];
+	return [[[self alloc] initWithType: type] autorelease];
 }
 
-+ messageWithType: (OFString*)type_
-	       ID: (OFString*)ID_
++ messageWithType: (OFString*)type
+	       ID: (OFString*)ID
 {
-	return [[[self alloc] initWithType: type_
-					ID: ID_] autorelease];
+	return [[[self alloc] initWithType: type
+					ID: ID] autorelease];
 }
 
 - init
@@ -57,24 +57,24 @@
 			       ID: nil];
 }
 
-- initWithID: (OFString*)ID_
+- initWithID: (OFString*)ID
 {
 	return [self initWithType: nil
-			       ID: ID_];
+			       ID: ID];
 }
 
-- initWithType: (OFString*)type_
+- initWithType: (OFString*)type
 {
-	return [self initWithType: type_
+	return [self initWithType: type
 			       ID: nil];
 }
 
-- initWithType: (OFString*)type_
-	    ID: (OFString*)ID_
+- initWithType: (OFString*)type
+	    ID: (OFString*)ID
 {
 	return [super initWithName: @"message"
-			      type: type_
-				ID: ID_];
+			      type: type
+				ID: ID];
 }
 
 - (void)setBody: (OFString*)body

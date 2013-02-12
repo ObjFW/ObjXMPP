@@ -28,8 +28,8 @@
 
 @interface XMPPJSONFileStorage: OFObject <XMPPStorage>
 {
-	OFString *file;
-	OFMutableDictionary *data;
+	OFString *_file;
+	OFMutableDictionary *_data;
 }
 
 - initWithFile: (OFString*)file;

@@ -153,25 +153,25 @@
 #endif
 {
 /// \cond internal
-	id sock;
-	OFXMLParser *parser, *oldParser;
-	OFXMLElementBuilder *elementBuilder, *oldElementBuilder;
-	OFString *username, *password, *server, *resource;
-	OFString *privateKeyFile, *certificateFile;
-	OFString *domain, *domainToASCII;
-	XMPPJID *JID;
-	uint16_t port;
-	id <XMPPStorage> dataStorage;
-	OFString *language;
-	XMPPMulticastDelegate *delegates;
-	OFMutableDictionary *callbacks;
-	XMPPAuthenticator *authModule;
-	BOOL streamOpen;
-	BOOL needsSession;
-	BOOL encryptionRequired, encrypted;
-	BOOL supportsRosterVersioning;
-	BOOL supportsStreamManagement;
-	unsigned int lastID;
+	id _socket;
+	OFXMLParser *_parser, *_oldParser;
+	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
+	OFString *_username, *_password, *_server, *_resource;
+	OFString *_privateKeyFile, *_certificateFile;
+	OFString *_domain, *_domainToASCII;
+	XMPPJID *_JID;
+	uint16_t _port;
+	id <XMPPStorage> _dataStorage;
+	OFString *_language;
+	XMPPMulticastDelegate *_delegates;
+	OFMutableDictionary *_callbacks;
+	XMPPAuthenticator *_authModule;
+	BOOL _streamOpen;
+	BOOL _needsSession;
+	BOOL _encryptionRequired, _encrypted;
+	BOOL _supportsRosterVersioning;
+	BOOL _supportsStreamManagement;
+	unsigned int _lastID;
 /// \endcond
 }
 
@@ -203,7 +203,7 @@
 /// \brief An object for data storage, conforming to the XMPPStorage protocol
 @property (assign) id <XMPPStorage> dataStorage;
 /// \brief The socket used for the connection
-@property (readonly, retain, getter=socket) OFTCPSocket *sock;
+@property (readonly, retain) OFTCPSocket *socket;
 /// \brief Whether encryption is required
 @property BOOL encryptionRequired;
 /// \brief Whether the connection is encrypted

@@ -37,10 +37,10 @@
 
 - (void)dealloc
 {
-	[JID release];
-	[name release];
-	[subscription release];
-	[groups release];
+	[_JID release];
+	[_name release];
+	[_subscription release];
+	[_groups release];
 
 	[super dealloc];
 }
@@ -50,10 +50,10 @@
 	XMPPRosterItem *new = [[XMPPRosterItem alloc] init];
 
 	@try {
-		new->JID = [JID copy];
-		new->name = [name copy];
-		new->subscription = [subscription copy];
-		new->groups = [groups copy];
+		new->_JID = [_JID copy];
+		new->_name = [_name copy];
+		new->_subscription = [_subscription copy];
+		new->_groups = [_groups copy];
 	} @catch (id e) {
 		[new release];
 		@throw e;
@@ -66,52 +66,46 @@
 {
 	return [OFString stringWithFormat: @"<XMPPRosterItem, JID=%@, name=%@, "
 					   @"subscription=%@, groups=%@>",
-					   JID, name, subscription, groups];
+					   _JID, _name, _subscription, _groups];
 }
 
-- (void)setJID: (XMPPJID*)JID_
+- (void)setJID: (XMPPJID*)JID
 {
-	XMPPJID *old = JID;
-	JID = [JID_ copy];
-	[old release];
+	OF_SETTER(_JID, JID, YES, YES)
 }
 
 - (XMPPJID*)JID
 {
-	return [[JID copy] autorelease];
+	OF_GETTER(_JID, YES)
 }
 
-- (void)setName: (OFString*)name_
+- (void)setName: (OFString*)name
 {
-	OFString *old = name;
-	name = [name_ copy];
-	[old release];
+	OF_SETTER(_name, name, YES, YES)
 }
 
 - (OFString*)name
 {
-	return [[name copy] autorelease];
+	OF_GETTER(_name, YES)
 }
 
-- (void)setSubscription: (OFString*)subscription_
+- (void)setSubscription: (OFString*)subscription
 {
-	OFString *old = subscription;
-	subscription = [subscription_ copy];
-	[old release];
+	OF_SETTER(_subscription, subscription, YES, YES)
 }
 
 - (OFString*)subscription
 {
-	return [[subscription copy] autorelease];
+	OF_GETTER(_subscription, YES)
 }
 
-- (void)setGroups: (OFArray*)groups_
+- (void)setGroups: (OFArray*)groups
 {
-	OF_SETTER(groups, groups_, YES, YES)
+	OF_SETTER(_groups, groups, YES, YES)
 }
 
 - (OFArray*)groups
 {
-	OF_GETTER(groups, YES)
+	OF_GETTER(_groups, YES)
 }
 @end

@@ -28,7 +28,7 @@
 #endif
 {
 /// \cond internal
-	XMPPConnection *connection;
+	XMPPConnection *_connection;
 	uint32_t receivedCount;
 /// \endcond
 }

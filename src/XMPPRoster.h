@@ -69,11 +69,11 @@
 #endif
 {
 /// \cond internal
-	XMPPConnection *connection;
-	OFMutableDictionary *rosterItems;
-	XMPPMulticastDelegate *delegates;
-	id <XMPPStorage> dataStorage;
-	BOOL rosterRequested;
+	XMPPConnection *_connection;
+	OFMutableDictionary *_rosterItems;
+	XMPPMulticastDelegate *_delegates;
+	id <XMPPStorage> _dataStorage;
+	BOOL _rosterRequested;
 /// \endcond
 }
 

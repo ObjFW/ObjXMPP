@@ -33,9 +33,9 @@
 				     password: nil] autorelease];
 }
 
-+ EXTERNALAuthWithAuthzid: (OFString*)authzid_
++ EXTERNALAuthWithAuthzid: (OFString*)authzid
 {
-	return [[[self alloc] initWithAuthzid: authzid_
+	return [[[self alloc] initWithAuthzid: authzid
 				      authcid: nil
 				     password: nil] autorelease];
 }
@@ -45,8 +45,8 @@
 	OFDataArray *message = [OFDataArray dataArray];
 
 	/* authzid */
-	if (authzid)
-		[message addItem: authzid];
+	if (_authzid)
+		[message addItem: _authzid];
 
 	return message;
 }

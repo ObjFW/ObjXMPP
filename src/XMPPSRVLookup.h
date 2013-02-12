@@ -28,11 +28,11 @@
 
 @interface XMPPSRVEntry: OFObject
 {
-	uint16_t priority;
-	uint16_t weight;
-	uint32_t accumulatedWeight;
-	uint16_t port;
-	OFString *target;
+	uint16_t _priority;
+	uint16_t _weight;
+	uint32_t _accumulatedWeight;
+	uint16_t _port;
+	OFString *_target;
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -65,9 +65,9 @@
 
 @interface XMPPSRVLookup: OFObject <OFEnumerating>
 {
-	OFString *domain;
-	struct __res_state resState;
-	OFList *list;
+	OFString *_domain;
+	struct __res_state _resState;
+	OFList *_list;
 }
 
 #ifdef OF_HAVE_PROPERTIES

@@ -48,21 +48,21 @@ static int show_to_int(OFString *show)
 	return [[[self alloc] init] autorelease];
 }
 
-+ presenceWithID: (OFString*)ID_
++ presenceWithID: (OFString*)ID
 {
-	return [[[self alloc] initWithID: ID_] autorelease];
+	return [[[self alloc] initWithID: ID] autorelease];
 }
 
-+ presenceWithType: (OFString*)type_
++ presenceWithType: (OFString*)type
 {
-	return [[[self alloc] initWithType: type_] autorelease];
+	return [[[self alloc] initWithType: type] autorelease];
 }
 
-+ presenceWithType: (OFString*)type_
-		ID: (OFString*)ID_
++ presenceWithType: (OFString*)type
+		ID: (OFString*)ID
 {
-	return [[[self alloc] initWithType: type_
-					ID: ID_] autorelease];
+	return [[[self alloc] initWithType: type
+					ID: ID] autorelease];
 }
 
 - init
@@ -71,24 +71,24 @@ static int show_to_int(OFString *show)
 			       ID: nil];
 }
 
-- initWithID: (OFString*)ID_
+- initWithID: (OFString*)ID
 {
 	return [self initWithType: nil
-			       ID: ID_];
+			       ID: ID];
 }
 
-- initWithType: (OFString*)type_
+- initWithType: (OFString*)type
 {
-	return [self initWithType: type_
+	return [self initWithType: type
 			       ID: nil];
 }
 
-- initWithType: (OFString*)type_
-	    ID: (OFString*)ID_
+- initWithType: (OFString*)type
+	    ID: (OFString*)ID
 {
 	return [super initWithName: @"presence"
-			      type: type_
-				ID: ID_];
+			      type: type
+				ID: ID];
 }
 
 - initWithElement: (OFXMLElement*)element
@@ -122,22 +122,22 @@ static int show_to_int(OFString *show)
 
 - (void)dealloc
 {
-	[status release];
-	[show release];
-	[priority release];
+	[_status release];
+	[_show release];
+	[_priority release];
 
 	[super dealloc];
 }
 
 - (OFString*)type
 {
-	if (type == nil)
+	if (_type == nil)
 		return @"available";
 
-	return [[type copy] autorelease];
+	return [[_type copy] autorelease];
 }
 
-- (void)setShow: (OFString*)show_
+- (void)setShow: (OFString*)show
 {
 	OFXMLElement *oldShow = [self elementForName: @"show"
 					   namespace: XMPP_NS_CLIENT];
@@ -145,20 +145,20 @@ static int show_to_int(OFString *show)
 	if (oldShow != nil)
 		[self removeChild: oldShow];
 
-	if (show_ != nil)
+	if (show != nil)
 		[self addChild: [OFXMLElement elementWithName: @"show"
 						    namespace: XMPP_NS_CLIENT
-						  stringValue: show_]];
+						  stringValue: show]];
 
-	OF_SETTER(show, show_, YES, 1);
+	OF_SETTER(_show, show, YES, 1);
 }
 
 - (OFString*)show
 {
-	return [[show copy] autorelease];
+	return [[_show copy] autorelease];
 }
 
-- (void)setStatus: (OFString*)status_
+- (void)setStatus: (OFString*)status
 {
 	OFXMLElement *oldStatus = [self elementForName: @"status"
 					     namespace: XMPP_NS_CLIENT];
@@ -166,22 +166,22 @@ static int show_to_int(OFString *show)
 	if (oldStatus != nil)
 		[self removeChild: oldStatus];
 
-	if (status_ != nil)
+	if (status != nil)
 		[self addChild: [OFXMLElement elementWithName: @"status"
 						    namespace: XMPP_NS_CLIENT
-						  stringValue: status_]];
+						  stringValue: status]];
 
-	OF_SETTER(status, status_, YES, 1);
+	OF_SETTER(_status, status, YES, 1);
 }
 
 - (OFString*)status
 {
-	return [[status copy] autorelease];
+	return [[_status copy] autorelease];
 }
 
-- (void)setPriority: (OFNumber*)priority_
+- (void)setPriority: (OFNumber*)priority
 {
-	intmax_t prio = [priority_ intMaxValue];
+	intmax_t prio = [priority intMaxValue];
 
 	if ((prio < -128) || (prio > 127))
 		@throw [OFInvalidArgumentException
@@ -195,17 +195,17 @@ static int show_to_int(OFString *show)
 		[self removeChild: oldPriority];
 
 	OFString* priority_s =
-	    [OFString stringWithFormat: @"%" @PRId8, [priority_ int8Value]];
+	    [OFString stringWithFormat: @"%" @PRId8, [priority int8Value]];
 	[self addChild: [OFXMLElement elementWithName: @"priority"
 					    namespace: XMPP_NS_CLIENT
 					  stringValue: priority_s]];
 
-	OF_SETTER(priority, priority_, YES, 1);
+	OF_SETTER(_priority, priority, YES, 1);
 }
 
-- (OFString*)priority
+- (OFNumber*)priority
 {
-	return [[priority copy] autorelease];
+	return [[_priority copy] autorelease];
 }
 
 - (of_comparison_result_t)compare: (id <OFComparing>)object
@@ -228,8 +228,8 @@ static int show_to_int(OFString *show)
 	if (otherPriority == nil)
 		otherPriority = [OFNumber numberWithInt8: 0];
 
-	if (priority != nil)
-		priorityOrder = [priority compare: otherPriority];
+	if (_priority != nil)
+		priorityOrder = [_priority compare: otherPriority];
 	else
 		priorityOrder =
 		    [[OFNumber numberWithInt8: 0] compare: otherPriority];
@@ -238,10 +238,10 @@ static int show_to_int(OFString *show)
 		return priorityOrder;
 
 	otherShow = [otherPresence show];
-	if ([show isEqual: otherShow])
+	if ([_show isEqual: otherShow])
 		return OF_ORDERED_SAME;
 
-	if (show_to_int(show) < show_to_int(otherShow))
+	if (show_to_int(_show) < show_to_int(otherShow))
 		return OF_ORDERED_ASCENDING;
 
 	return OF_ORDERED_DESCENDING;

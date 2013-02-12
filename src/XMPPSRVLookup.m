@@ -61,18 +61,18 @@
 						    selector: _cmd];
 }
 
-- initWithPriority: (uint16_t)priority_
-	    weight: (uint16_t)weight_
-	      port: (uint16_t)port_
-	    target: (OFString*)target_
+- initWithPriority: (uint16_t)priority
+	    weight: (uint16_t)weight
+	      port: (uint16_t)port
+	    target: (OFString*)target
 {
 	self = [super init];
 
 	@try {
-		priority = priority_;
-		weight = weight_;
-		port = port_;
-		target = [target_ copy];
+		_priority = priority;
+		_weight = weight;
+		_port = port;
+		_target = [target copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -91,16 +91,16 @@
 		char buffer[NS_MAXDNAME];
 
 		rdata = (const uint16_t*)(void*)ns_rr_rdata(resourceRecord);
-		priority = ntohs(rdata[0]);
-		weight = ntohs(rdata[1]);
-		port = ntohs(rdata[2]);
+		_priority = ntohs(rdata[0]);
+		_weight = ntohs(rdata[1]);
+		_port = ntohs(rdata[2]);
 
 		if (dn_expand(ns_msg_base(handle), ns_msg_end(handle),
 		    (uint8_t*)&rdata[3], buffer, NS_MAXDNAME) < 1)
 			@throw [OFInitializationFailedException
 			    exceptionWithClass: [self class]];
 
-		target = [[OFString alloc]
+		_target = [[OFString alloc]
 		    initWithCString: buffer
 			   encoding: OF_STRING_ENCODING_NATIVE];
 	} @catch (id e) {
@@ -113,7 +113,7 @@
 
 - (void)dealloc
 {
-	[target release];
+	[_target release];
 
 	[super dealloc];
 }
@@ -122,37 +122,37 @@
 {
 	return [OFString stringWithFormat:
 	    @"<%@ priority: %" PRIu16 @", weight: %" PRIu16 @", target: %@:%"
-	    PRIu16 @">", [self class], priority, weight, target, port];
+	    PRIu16 @">", [self class], _priority, _weight, _target, _port];
 }
 
 - (uint16_t)priority
 {
-	return priority;
+	return _priority;
 }
 
 - (uint16_t)weight
 {
-	return weight;
+	return _weight;
 }
 
-- (void)setAccumulatedWeight: (uint32_t)accumulatedWeight_
+- (void)setAccumulatedWeight: (uint32_t)accumulatedWeight
 {
-	accumulatedWeight = accumulatedWeight_;
+	_accumulatedWeight = accumulatedWeight;
 }
 
 - (uint32_t)accumulatedWeight
 {
-	return accumulatedWeight;
+	return _accumulatedWeight;
 }
 
 - (uint16_t)port
 {
-	return port;
+	return _port;
 }
 
 - (OFString*)target
 {
-	OF_GETTER(target, YES)
+	OF_GETTER(_target, YES)
 }
 @end
 
@@ -162,13 +162,13 @@
 	return [[[self alloc] initWithDomain: domain] autorelease];
 }
 
-- initWithDomain: (OFString*)domain_
+- initWithDomain: (OFString*)domain
 {
 	self = [super init];
 
 	@try {
-		list = [[OFList alloc] init];
-		domain = [domain_ copy];
+		_list = [[OFList alloc] init];
+		_domain = [domain copy];
 
 		[self XMPP_lookup];
 	} @catch (id e) {
@@ -181,15 +181,15 @@
 
 - (void)dealloc
 {
-	[list release];
-	[domain release];
+	[_list release];
+	[_domain release];
 
 	[super dealloc];
 }
 
 - (OFString*)domain;
 {
-	OF_GETTER(domain, YES)
+	OF_GETTER(_domain, YES)
 }
 
 - (void)XMPP_lookup
@@ -199,21 +199,21 @@
 	size_t pageSize = [OFSystemInfo pageSize];
 	OFString *request;
 
-	request = [OFString stringWithFormat: @"_xmpp-client._tcp.%@", domain];
+	request = [OFString stringWithFormat: @"_xmpp-client._tcp.%@", _domain];
 
 	@try {
 		int answerLen, resourceRecordCount, i;
 		ns_rr resourceRecord;
 		ns_msg handle;
 
-		if (res_ninit(&resState))
+		if (res_ninit(&_resState))
 			@throw [OFAddressTranslationFailedException
 			    exceptionWithClass: [self class]
 					socket: nil
-					  host: domain];
+					  host: _domain];
 
 		answer = [self allocMemoryWithSize: pageSize];
-		answerLen = res_nsearch(&resState,
+		answerLen = res_nsearch(&_resState,
 		    [request cStringWithEncoding: OF_STRING_ENCODING_NATIVE],
 		    ns_c_in, ns_t_srv, answer, (int)pageSize);
 
@@ -225,14 +225,14 @@
 			@throw [OFAddressTranslationFailedException
 			    exceptionWithClass: [self class]
 					socket: nil
-					  host: domain];
+					  host: _domain];
 		}
 
 		if (ns_initparse(answer, answerLen, &handle))
 			@throw [OFAddressTranslationFailedException
 			    exceptionWithClass: [self class]
 					socket: nil
-					  host: domain];
+					  host: _domain];
 
 		resourceRecordCount = ns_msg_count(handle, ns_s_an);
 		for (i = 0; i < resourceRecordCount; i++) {
@@ -250,7 +250,7 @@
 	} @finally {
 		[self freeMemory: answer];
 #ifdef HAVE_RES_NDESTROY
-		res_ndestroy(&resState);
+		res_ndestroy(&_resState);
 #endif
 	}
 
@@ -264,7 +264,7 @@
 	of_list_object_t *iter;
 
 	/* Look if there already is a list with the priority */
-	for (iter = [list firstListObject]; iter != NULL; iter = iter->next) {
+	for (iter = [_list firstListObject]; iter != NULL; iter = iter->next) {
 		if ([[iter->object firstObject] priority] == [entry priority]) {
 			/*
 			 * RFC 2782 says those with weight 0 should be at the
@@ -289,17 +289,17 @@
 	[subList appendObject: entry];
 
 	if (iter != NULL)
-		[list insertObject: subList
-		  beforeListObject: iter];
+		[_list insertObject: subList
+		   beforeListObject: iter];
 	else
-		[list appendObject: subList];
+		[_list appendObject: subList];
 
 	[pool release];
 }
 
 - (OFEnumerator*)objectEnumerator
 {
-	return [[[XMPPSRVEnumerator alloc] initWithList: list] autorelease];
+	return [[[XMPPSRVEnumerator alloc] initWithList: _list] autorelease];
 }
 @end
 

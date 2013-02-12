@@ -38,38 +38,41 @@
 	return [[[self alloc] init] autorelease];
 }
 
-+ JIDWithString: (OFString*)str
++ JIDWithString: (OFString*)string
 {
-	return [[[self alloc] initWithString: str] autorelease];
+	return [[[self alloc] initWithString: string] autorelease];
 }
 
-- initWithString: (OFString*)str
+- initWithString: (OFString*)string
 {
 	size_t nodesep, resourcesep;
 
 	self = [super init];
 
-	if (str == nil) {
+	if (string == nil) {
 		[self release];
 		return nil;
 	}
 
-	nodesep = [str rangeOfString: @"@"].location;
-	resourcesep = [str rangeOfString: @"/"].location;
+	nodesep = [string rangeOfString: @"@"].location;
+	resourcesep = [string rangeOfString: @"/"].location;
 
 	if (nodesep == SIZE_MAX)
 		[self setNode: nil];
 	else
-		[self setNode: [str substringWithRange: of_range(0, nodesep)]];
+		[self setNode:
+		    [string substringWithRange: of_range(0, nodesep)]];
 
 	if (resourcesep == SIZE_MAX) {
 		[self setResource: nil];
-		resourcesep = [str length];
-	} else
-		[self setResource: [str substringWithRange:
-		    of_range(resourcesep + 1, [str length] - resourcesep - 1)]];
+		resourcesep = [string length];
+	} else {
+		of_range_t range = of_range(resourcesep + 1,
+		    [string length] - resourcesep - 1);
+		[self setResource: [string substringWithRange: range]];
+	}
 
-	[self setDomain: [str substringWithRange:
+	[self setDomain: [string substringWithRange:
 	    of_range(nodesep + 1, resourcesep - nodesep - 1)]];
 
 	return self;
@@ -77,9 +80,9 @@
 
 - (void)dealloc
 {
-	[node release];
-	[domain release];
-	[resource release];
+	[_node release];
+	[_domain release];
+	[_resource release];
 
 	[super dealloc];
 }
@@ -89,9 +92,9 @@
 	XMPPJID *new = [[XMPPJID alloc] init];
 
 	@try {
-		new->node = [node copy];
-		new->domain = [domain copy];
-		new->resource = [resource copy];
+		new->_node = [_node copy];
+		new->_domain = [_domain copy];
+		new->_resource = [_resource copy];
 	} @catch (id e) {
 		[new release];
 		@throw e;
@@ -100,29 +103,29 @@
 	return new;
 }
 
-- (void)setNode: (OFString*)node_
+- (void)setNode: (OFString*)node
 {
-	OFString *old = node;
+	OFString *old = _node;
 	char *nodepart;
 	Stringprep_rc rc;
 
-	if (node_ == nil) {
+	if (node == nil) {
 		[old release];
-		node = nil;
+		_node = nil;
 		return;
 	}
 
-	if (((rc = stringprep_profile([node_ UTF8String], &nodepart,
+	if (((rc = stringprep_profile([node UTF8String], &nodepart,
 	    "Nodeprep", 0)) != STRINGPREP_OK) || (nodepart[0] == '\0') ||
 	    (strlen(nodepart) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: [self class]
 			    connection: nil
 			       profile: @"Nodeprep"
-				string: node_];
+				string: node];
 
 	@try {
-		node = [[OFString alloc] initWithUTF8String: nodepart];
+		_node = [[OFString alloc] initWithUTF8String: nodepart];
 	} @finally {
 		free(nodepart);
 	}
@@ -132,26 +135,26 @@
 
 - (OFString*)node
 {
-	return [[node copy] autorelease];
+	return [[_node copy] autorelease];
 }
 
-- (void)setDomain: (OFString*)domain_
+- (void)setDomain: (OFString*)domain
 {
-	OFString *old = domain;
+	OFString *old = _domain;
 	char *srv;
 	Stringprep_rc rc;
 
-	if (((rc = stringprep_profile([domain_ UTF8String], &srv,
+	if (((rc = stringprep_profile([domain UTF8String], &srv,
 	    "Nameprep", 0)) != STRINGPREP_OK) || (srv[0] == '\0') ||
 	    (strlen(srv) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: [self class]
 			    connection: nil
 			       profile: @"Nameprep"
-				string: domain_];
+				string: domain];
 
 	@try {
-		domain = [[OFString alloc] initWithUTF8String: srv];
+		_domain = [[OFString alloc] initWithUTF8String: srv];
 	} @finally {
 		free(srv);
 	}
@@ -161,32 +164,32 @@
 
 - (OFString*)domain
 {
-	return [[domain copy] autorelease];
+	return [[_domain copy] autorelease];
 }
 
-- (void)setResource: (OFString*)resource_
+- (void)setResource: (OFString*)resource
 {
-	OFString *old = resource;
+	OFString *old = _resource;
 	char *res;
 	Stringprep_rc rc;
 
-	if (resource_ == nil) {
+	if (resource == nil) {
 		[old release];
-		resource = nil;
+		_resource = nil;
 		return;
 	}
 
-	if (((rc = stringprep_profile([resource_ UTF8String], &res,
+	if (((rc = stringprep_profile([resource UTF8String], &res,
 	    "Resourceprep", 0)) != STRINGPREP_OK) || (res[0] == '\0') ||
 	    (strlen(res) > 1023))
 		@throw [XMPPStringPrepFailedException
 		    exceptionWithClass: [self class]
 			    connection: nil
 			       profile: @"Resourceprep"
-				string: resource_];
+				string: resource];
 
 	@try {
-		resource = [[OFString alloc] initWithUTF8String: res];
+		_resource = [[OFString alloc] initWithUTF8String: res];
 	} @finally {
 		free(res);
 	}
@@ -196,29 +199,29 @@
 
 - (OFString*)resource
 {
-	return [[resource copy] autorelease];
+	return [[_resource copy] autorelease];
 }
 
 - (OFString*)bareJID
 {
-	if (node != nil)
-		return [OFString stringWithFormat: @"%@@%@", node, domain];
+	if (_node != nil)
+		return [OFString stringWithFormat: @"%@@%@", _node, _domain];
 	else
-		return [OFString stringWithFormat: @"%@", domain];
+		return [OFString stringWithFormat: @"%@", _domain];
 }
 
 - (OFString*)fullJID
 {
 	/* If we don't have a resource, the full JID is equal to the bare JID */
-	if (resource == nil)
+	if (_resource == nil)
 		return [self bareJID];
 
-	if (node != nil)
+	if (_node != nil)
 		return [OFString stringWithFormat: @"%@@%@/%@",
-		       node, domain, resource];
+		       _node, _domain, _resource];
 	else
 		return [OFString stringWithFormat: @"%@/%@",
-		       domain, resource];
+		       _domain, _resource];
 }
 
 - (OFString*)description
@@ -228,7 +231,7 @@
 
 - (BOOL)isEqual: (id)object
 {
-	XMPPJID *otherJID;
+	XMPPJID *JID;
 
 	if (object == self)
 		return YES;
@@ -236,11 +239,10 @@
 	if (![object isKindOfClass: [XMPPJID class]])
 		return NO;
 
-	otherJID = object;
+	JID = object;
 
-	if ([node isEqual: [otherJID node]] &&
-	    [domain isEqual: [otherJID domain]] &&
-	    [resource isEqual: [otherJID resource]])
+	if ([_node isEqual: JID->_node] && [_domain isEqual: JID->_domain] &&
+	    [_resource isEqual: JID->_resource])
 		return YES;
 
 	return NO;

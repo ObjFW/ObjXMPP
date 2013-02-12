@@ -30,7 +30,7 @@
 	self = [super init];
 
 	@try {
-		presences = [[OFMutableDictionary alloc] init];
+		_presences = [[OFMutableDictionary alloc] init];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -41,64 +41,64 @@
 
 - (void)dealloc
 {
-	[presences release];
+	[_presences release];
 
 	[super dealloc];
 }
 
 - (XMPPRosterItem*)rosterItem
 {
-	OF_GETTER(rosterItem, YES);
+	OF_GETTER(_rosterItem, YES);
 }
 
 - (OFDictionary*)presences
 {
-	OF_GETTER(presences, YES);
+	OF_GETTER(_presences, YES);
 }
 
 - (void)sendMessage: (XMPPMessage*)message
 	 connection: (XMPPConnection*)connection
 {
-	if (lockedOnJID == nil)
-		[message setTo: [rosterItem JID]];
+	if (_lockedOnJID == nil)
+		[message setTo: [_rosterItem JID]];
 	else
-		[message setTo: lockedOnJID];
+		[message setTo: _lockedOnJID];
 
 	[connection sendStanza: message];
 }
 
-- (void)XMPP_setRosterItem: (XMPPRosterItem*)rosterItem_
+- (void)XMPP_setRosterItem: (XMPPRosterItem*)rosterItem
 {
-	OF_SETTER(rosterItem, rosterItem_, YES, 0);
+	OF_SETTER(_rosterItem, rosterItem, YES, 0);
 }
 
 - (void)XMPP_setPresence: (XMPPPresence*)presence
 		resource: (OFString*)resource
 {
 	if (resource != nil)
-		[presences setObject: presence
-			      forKey: resource];
+		[_presences setObject: presence
+			       forKey: resource];
 	else
-		[presences setObject: presence
-			      forKey: @""];
+		[_presences setObject: presence
+			       forKey: @""];
 
-	OF_SETTER(lockedOnJID, nil, YES, 0);
+	OF_SETTER(_lockedOnJID, nil, YES, 0);
 }
 
 - (void)XMPP_removePresenceForResource: (OFString*)resource
 {
 	if (resource != nil) {
-		[presences removeObjectForKey: resource];
+		[_presences removeObjectForKey: resource];
 	} else {
-		[presences release];
-		presences = [[OFMutableDictionary alloc] init];
+		[_presences release];
+		_presences = [[OFMutableDictionary alloc] init];
 	}
 
-	OF_SETTER(lockedOnJID, nil, YES, 0);
+	OF_SETTER(_lockedOnJID, nil, YES, 0);
 }
 
 - (void)XMPP_setLockedOnJID: (XMPPJID*)JID;
 {
-	OF_SETTER(lockedOnJID, JID, YES, 0);
+	OF_SETTER(_lockedOnJID, JID, YES, 0);
 }
 @end

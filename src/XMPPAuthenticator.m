@@ -27,24 +27,24 @@
 #import "XMPPAuthenticator.h"
 
 @implementation XMPPAuthenticator
-- initWithAuthcid: (OFString*)authcid_
-	 password: (OFString*)password_
+- initWithAuthcid: (OFString*)authcid
+	 password: (OFString*)password
 {
 	return [self initWithAuthzid: nil
-			     authcid: authcid_
-			    password: password_];
+			     authcid: authcid
+			    password: password];
 }
 
-- initWithAuthzid: (OFString*)authzid_
-	  authcid: (OFString*)authcid_
-	 password: (OFString*)password_
+- initWithAuthzid: (OFString*)authzid
+	  authcid: (OFString*)authcid
+	 password: (OFString*)password
 {
 	self = [super init];
 
 	@try {
-		authzid = [authzid_ copy];
-		authcid = [authcid_ copy];
-		password = [password_ copy];
+		_authzid = [authzid copy];
+		_authcid = [authcid copy];
+		_password = [password copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -55,41 +55,41 @@
 
 - (void)dealloc
 {
-	[authzid release];
-	[authcid release];
-	[password release];
+	[_authzid release];
+	[_authcid release];
+	[_password release];
 
 	[super dealloc];
 }
 
-- (void)setAuthzid: (OFString*)authzid_
+- (void)setAuthzid: (OFString*)authzid
 {
-	OF_SETTER(authzid, authzid_, YES, YES)
+	OF_SETTER(_authzid, authzid, YES, YES)
 }
 
 - (OFString*)authzid
 {
-	OF_GETTER(authzid, YES)
+	OF_GETTER(_authzid, YES)
 }
 
-- (void)setAuthcid: (OFString*)authcid_
+- (void)setAuthcid: (OFString*)authcid
 {
-	OF_SETTER(authcid, authcid_, YES, YES)
+	OF_SETTER(_authcid, authcid, YES, YES)
 }
 
 - (OFString*)authcid
 {
-	OF_GETTER(authcid, YES)
+	OF_GETTER(_authcid, YES)
 }
 
-- (void)setPassword: (OFString*)password_
+- (void)setPassword: (OFString*)password
 {
-	OF_SETTER(password, password_, YES, YES)
+	OF_SETTER(_password, password, YES, YES)
 }
 
 - (OFString*)password
 {
-	OF_GETTER(password, YES)
+	OF_GETTER(_password, YES)
 }
 
 - (OFDataArray*)initialMessage

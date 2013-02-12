@@ -29,9 +29,9 @@
 @interface XMPPJID: OFObject <OFCopying>
 {
 /// \cond internal
-	OFString *node;
-	OFString *domain;
-	OFString *resource;
+	OFString *_node;
+	OFString *_domain;
+	OFString *_resource;
 /// \endcond
 }
 
@@ -54,10 +54,10 @@
 /**
  * \brief Creates a new autoreleased XMPPJID from a string.
  *
- * \param str The string to parse into a JID object
+ * \param string The string to parse into a JID object
  * \return A new autoreleased XMPPJID
  */
-+ JIDWithString: (OFString*)str;
++ JIDWithString: (OFString*)string;
 
 /**
  * \brief Initializes an already allocated XMPPJID with a string.
@@ -65,7 +65,7 @@
  * \param str The string to parse into a JID object
  * \return A initialized XMPPJID
  */
-- initWithString: (OFString*)str;
+- initWithString: (OFString*)string;
 
 /**
  * \brief Returns the bare JID.

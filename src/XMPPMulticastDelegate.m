@@ -34,7 +34,7 @@
 	self = [super init];
 
 	@try {
-		delegates = [[OFDataArray alloc] initWithItemSize: sizeof(id)];
+		_delegates = [[OFDataArray alloc] initWithItemSize: sizeof(id)];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -45,24 +45,24 @@
 
 - (void)dealloc
 {
-	[delegates release];
+	[_delegates release];
 
 	[super dealloc];
 }
 
 - (void)addDelegate: (id)delegate
 {
-	[delegates addItem: &delegate];
+	[_delegates addItem: &delegate];
 }
 
 - (void)removeDelegate: (id)delegate
 {
-	id *cArray = [delegates items];
-	size_t i, count = [delegates count];
+	id *items = [_delegates items];
+	size_t i, count = [_delegates count];
 
 	for (i = 0; i < count; i++) {
-		if (cArray[i] == delegate) {
-			[delegates removeItemAtIndex: i];
+		if (items[i] == delegate) {
+			[_delegates removeItemAtIndex: i];
 			return;
 		}
 	}
@@ -71,18 +71,18 @@
 - (BOOL)broadcastSelector: (SEL)selector
 	       withObject: (id)object
 {
-	id *cArray = [delegates items];
-	size_t i, count = [delegates count];
+	id *items = [_delegates items];
+	size_t i, count = [_delegates count];
 	BOOL handled = NO;
 
 	for (i = 0; i < count; i++) {
-		if (![cArray[i] respondsToSelector: selector])
+		if (![items[i] respondsToSelector: selector])
 			continue;
 
 		BOOL (*imp)(id, SEL, id) = (BOOL(*)(id, SEL, id))
-		    [cArray[i] methodForSelector: selector];
+		    [items[i] methodForSelector: selector];
 
-		handled |= imp(cArray[i], selector, object);
+		handled |= imp(items[i], selector, object);
 	}
 
 	return handled;
@@ -92,18 +92,18 @@
 	       withObject: (id)object1
 	       withObject: (id)object2
 {
-	id *cArray = [delegates items];
-	size_t i, count = [delegates count];
+	id *items = [_delegates items];
+	size_t i, count = [_delegates count];
 	BOOL handled = NO;
 
 	for (i = 0; i < count; i++) {
-		if (![cArray[i] respondsToSelector: selector])
+		if (![items[i] respondsToSelector: selector])
 			continue;
 
 		BOOL (*imp)(id, SEL, id, id) = (BOOL(*)(id, SEL, id, id))
-		    [cArray[i] methodForSelector: selector];
+		    [items[i] methodForSelector: selector];
 
-		handled |= imp(cArray[i], selector, object1, object2);
+		handled |= imp(items[i], selector, object1, object2);
 	}
 
 	return handled;
