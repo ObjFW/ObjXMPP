@@ -71,8 +71,8 @@
 @interface XMPPStreamErrorException: XMPPException
 {
 /// \cond internal
-	OFString *condition;
-	OFString *reason;
+	OFString *_condition;
+	OFString *_reason;
 /// \endcond
 }
 
@@ -122,8 +122,8 @@
 @interface XMPPStringPrepFailedException: XMPPException
 {
 /// \cond internal
-	OFString *profile;
-	OFString *string;
+	OFString *_profile;
+	OFString *_string;
 /// \endcond
 }
 
@@ -172,8 +172,8 @@
 @interface XMPPIDNATranslationFailedException: XMPPException
 {
 /// \cond internal
-	OFString *operation;
-	OFString *string;
+	OFString *_operation;
+	OFString *_string;
 /// \endcond
 }
 
@@ -222,7 +222,7 @@
 @interface XMPPAuthFailedException: XMPPException
 {
 /// \cond internal
-	OFString *reason;
+	OFString *_reason;
 /// \endcond
 }
 

@@ -28,14 +28,14 @@
 #import "XMPPConnection.h"
 
 @implementation XMPPException
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)conn
++ exceptionWithClass: (Class)class
+	  connection: (XMPPConnection*)connection
 {
-	return [[[self alloc] initWithClass: class_
-				 connection: conn] autorelease];
+	return [[[self alloc] initWithClass: class
+				 connection: connection] autorelease];
 }
 
-- initWithClass: (Class)class_
+- initWithClass: (Class)class
 {
 	Class c = [self class];
 	[self release];
@@ -43,13 +43,13 @@
 						    selector: _cmd];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
 {
-	self = [super initWithClass: class_];
+	self = [super initWithClass: class];
 
 	@try {
-		_connection = [conn retain];
+		_connection = [connection retain];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -67,24 +67,24 @@
 
 - (XMPPConnection*)connection
 {
-	return _connection;
+	OF_GETTER(_connection, NO)
 }
 @end
 
 @implementation XMPPStreamErrorException
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)conn
-	   condition: (OFString*)condition_
-	      reason: (OFString*)reason_;
++ exceptionWithClass: (Class)class
+	  connection: (XMPPConnection*)connection
+	   condition: (OFString*)condition
+	      reason: (OFString*)reason;
 {
-	return [[[self alloc] initWithClass: class_
-				 connection: conn
-				  condition: condition_
-				     reason: reason_] autorelease];
+	return [[[self alloc] initWithClass: class
+				 connection: connection
+				  condition: condition
+				     reason: reason] autorelease];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
 {
 	Class c = [self class];
 	[self release];
@@ -92,17 +92,17 @@
 						    selector: _cmd];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
-      condition: (OFString*)condition_
-	 reason: (OFString*)reason_
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
+      condition: (OFString*)condition
+	 reason: (OFString*)reason
 {
-	self = [super initWithClass: class_
-			 connection: conn];
+	self = [super initWithClass: class
+			 connection: connection];
 
 	@try {
-		condition = [condition_ copy];
-		reason = [reason_ copy];
+		_condition = [condition copy];
+		_reason = [reason copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -113,8 +113,8 @@
 
 - (void)dealloc
 {
-	[condition release];
-	[reason release];
+	[_condition release];
+	[_reason release];
 
 	[super dealloc];
 }
@@ -123,34 +123,34 @@
 {
 	return [OFString stringWithFormat:
 	    @"Got stream error in class %@: %@. Reason: %@!", [self inClass],
-	    condition, reason];
+	    _condition, _reason];
 }
 
 - (OFString*)condition
 {
-	return condition;
+	OF_GETTER(_condition, NO)
 }
 
 - (OFString*)reason
 {
-	return reason;
+	OF_GETTER(_reason, NO)
 }
 @end
 
 @implementation XMPPStringPrepFailedException
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)conn
++ exceptionWithClass: (Class)class
+	  connection: (XMPPConnection*)connection
 	     profile: (OFString*)profile
 	      string: (OFString*)string
 {
-	return [[[self alloc] initWithClass: class_
-				 connection: conn
+	return [[[self alloc] initWithClass: class
+				 connection: connection
 				    profile: profile
 				     string: string] autorelease];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
 {
 	Class c = [self class];
 	[self release];
@@ -158,17 +158,17 @@
 						    selector: _cmd];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
-	profile: (OFString*)profile_
-	 string: (OFString*)string_
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
+	profile: (OFString*)profile
+	 string: (OFString*)string
 {
-	self = [super initWithClass: class_
-			 connection: conn];
+	self = [super initWithClass: class
+			 connection: connection];
 
 	@try {
-		profile = [profile_ copy];
-		string = [string_ copy];
+		_profile = [profile copy];
+		_string = [string copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -179,8 +179,8 @@
 
 - (void)dealloc
 {
-	[profile release];
-	[string release];
+	[_profile release];
+	[_string release];
 
 	[super dealloc];
 }
@@ -189,34 +189,34 @@
 {
 	return [OFString stringWithFormat:
 	    @"Stringprep with profile %@ failed in class %@ on string '%@'!",
-	    profile, [self inClass], string];
+	    _profile, [self inClass], _string];
 }
 
 - (OFString*)profile
 {
-	return profile;
+	OF_GETTER(_profile, NO)
 }
 
 - (OFString*)string
 {
-	return string;
+	OF_GETTER(_string, NO)
 }
 @end
 
 @implementation XMPPIDNATranslationFailedException
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)conn
++ exceptionWithClass: (Class)class
+	  connection: (XMPPConnection*)connection
 	   operation: (OFString*)operation
 	      string: (OFString*)string
 {
-	return [[[self alloc] initWithClass: class_
-				 connection: conn
+	return [[[self alloc] initWithClass: class
+				 connection: connection
 				  operation: operation
 				     string: string] autorelease];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
 {
 	Class c = [self class];
 	[self release];
@@ -224,17 +224,17 @@
 						    selector: _cmd];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
-      operation: (OFString*)operation_
-	 string: (OFString*)string_
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
+      operation: (OFString*)operation
+	 string: (OFString*)string
 {
-	self = [super initWithClass: class_
-			 connection: conn];
+	self = [super initWithClass: class
+			 connection: connection];
 
 	@try {
-		operation = [operation_ copy];
-		string = [string_ copy];
+		_operation = [operation copy];
+		_string = [string copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -245,8 +245,8 @@
 
 - (void)dealloc
 {
-	[operation release];
-	[string release];
+	[_operation release];
+	[_string release];
 
 	[super dealloc];
 }
@@ -254,33 +254,33 @@
 - (OFString*)description
 {
 	return [OFString stringWithFormat:
-	    @"IDNA operation %@ failed in class %@ on string '%@'!", operation,
-	    [self inClass], string];
+	    @"IDNA operation %@ failed in class %@ on string '%@'!", _operation,
+	    [self inClass], _string];
 }
 
 - (OFString*)operation
 {
-	return operation;
+	OF_GETTER(_operation, NO)
 }
 
 - (OFString*)string
 {
-	return string;
+	OF_GETTER(_string, NO)
 }
 @end
 
 @implementation XMPPAuthFailedException
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)conn
-	      reason: (OFString*)reason_;
++ exceptionWithClass: (Class)class
+	  connection: (XMPPConnection*)connection
+	      reason: (OFString*)reason;
 {
-	return [[[self alloc] initWithClass: class_
-				 connection: conn
-				     reason: reason_] autorelease];
+	return [[[self alloc] initWithClass: class
+				 connection: connection
+				     reason: reason] autorelease];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
 {
 	Class c = [self class];
 	[self release];
@@ -288,15 +288,15 @@
 						    selector: _cmd];
 }
 
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)conn
-	 reason: (OFString*)reason_
+- initWithClass: (Class)class
+     connection: (XMPPConnection*)connection
+	 reason: (OFString*)reason
 {
-	self = [super initWithClass: class_
-			 connection: conn];
+	self = [super initWithClass: class
+			 connection: connection];
 
 	@try {
-		reason = [reason_ copy];
+		_reason = [reason copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -307,7 +307,7 @@
 
 - (void)dealloc
 {
-	[reason release];
+	[_reason release];
 
 	[super dealloc];
 }
@@ -316,11 +316,11 @@
 {
 	return [OFString stringWithFormat:
 	    @"Authentication failed in class %@. Reason: %@!", [self inClass],
-	    reason];
+	    _reason];
 }
 
 - (OFString*)reason
 {
-	return reason;
+	OF_GETTER(_reason, NO)
 }
 @end
