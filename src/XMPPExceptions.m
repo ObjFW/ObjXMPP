@@ -65,17 +65,6 @@
 	[super dealloc];
 }
 
-- (OFString*)description
-{
-	if (_description != nil)
-		return _description;
-
-	_description = [[OFString alloc] initWithFormat:
-	    @"An exception occurred in class %@!", _inClass];
-
-	return _description;
-}
-
 - (XMPPConnection*)connection
 {
 	return _connection;
@@ -132,13 +121,9 @@
 
 - (OFString*)description
 {
-	if (_description != nil)
-		return _description;
-
-	_description = [[OFString alloc] initWithFormat:
-		@"Got stream error: %@. Reason: %@!", condition, reason];
-
-	return _description;
+	return [OFString stringWithFormat:
+	    @"Got stream error in class %@: %@. Reason: %@!", [self inClass],
+	    condition, reason];
 }
 
 - (OFString*)condition
@@ -202,14 +187,9 @@
 
 - (OFString*)description
 {
-	if (_description != nil)
-		return _description;
-
-	_description = [[OFString alloc] initWithFormat:
-	    @"Stringprep with profile %@ failed on string '%@'!",
-	    profile, string];
-
-	return _description;
+	return [OFString stringWithFormat:
+	    @"Stringprep with profile %@ failed in class %@ on string '%@'!",
+	    profile, [self inClass], string];
 }
 
 - (OFString*)profile
@@ -273,13 +253,9 @@
 
 - (OFString*)description
 {
-	if (_description != nil)
-		return _description;
-
-	_description = [[OFString alloc] initWithFormat:
-	    @"IDNA operation %@ failed on string '%@'!", operation, string];
-
-	return _description;
+	return [OFString stringWithFormat:
+	    @"IDNA operation %@ failed in class %@ on string '%@'!", operation,
+	    [self inClass], string];
 }
 
 - (OFString*)operation
@@ -338,13 +314,9 @@
 
 - (OFString*)description
 {
-	if (_description != nil)
-		return _description;
-
-	_description = [[OFString alloc] initWithFormat:
-	    @"Authentication failed. Reason: %@!", reason];
-
-	return _description;
+	return [OFString stringWithFormat:
+	    @"Authentication failed in class %@. Reason: %@!", [self inClass],
+	    reason];
 }
 
 - (OFString*)reason
