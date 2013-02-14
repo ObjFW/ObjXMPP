@@ -62,7 +62,7 @@
 /**
  * \brief Initializes an already allocated XMPPJID with a string.
  *
- * \param str The string to parse into a JID object
+ * \param string The string to parse into a JID object
  * \return A initialized XMPPJID
  */
 - initWithString: (OFString*)string;
