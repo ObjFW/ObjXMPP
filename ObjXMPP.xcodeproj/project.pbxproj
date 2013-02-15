@@ -10,12 +10,10 @@
 		4B01D020137C7E7D005624EA /* namespaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B01D01F137C7E7D005624EA /* namespaces.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B1295EF1337BD5F00154B25 /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B1295EE1337BD5F00154B25 /* test.m */; };
 		4B1295F11337C37E00154B25 /* ObjXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559911337A65400E345C7 /* ObjXMPP.framework */; };
-		4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
 		4B19F57A14D17082005D52DC /* XMPPCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F57614D17081005D52DC /* XMPPCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F57B14D17082005D52DC /* XMPPCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F57714D17081005D52DC /* XMPPCallback.m */; };
 		4B19F57C14D17082005D52DC /* XMPPEXTERNALAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F57814D17081005D52DC /* XMPPEXTERNALAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F57D14D17082005D52DC /* XMPPEXTERNALAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F57914D17081005D52DC /* XMPPEXTERNALAuth.m */; };
-		4B19F5A314D1779E005D52DC /* ObjOpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */; };
 		4B19F5D114D20B01005D52DC /* XMPPMulticastDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B19F5D214D20B01005D52DC /* XMPPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B19F5D014D20B01005D52DC /* XMPPMulticastDelegate.m */; };
 		4B23D6C114DFF2B3001DBDDD /* XMPPJSONFileStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B23D6BE14DFF2B3001DBDDD /* XMPPJSONFileStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,7 +31,8 @@
 		4B9CFBB216CAC42800E44063 /* XMPPContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CFBAC16CAC42800E44063 /* XMPPContactManager.m */; };
 		4B9CFBB316CAC42800E44063 /* XMPPStreamManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9CFBAD16CAC42800E44063 /* XMPPStreamManagement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B9CFBB416CAC42800E44063 /* XMPPStreamManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CFBAE16CAC42800E44063 /* XMPPStreamManagement.m */; };
-		4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC559D61337ABD300E345C7 /* ObjFW.framework */; };
+		4B9CFBB616CAD76B00E44063 /* ObjFW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9CFBB516CAD76B00E44063 /* ObjFW.framework */; };
+		4B9CFBB816CAD7C000E44063 /* ObjOpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9CFBB716CAD7C000E44063 /* ObjOpenSSL.framework */; };
 		4BC559EC1337AC0900E345C7 /* XMPPAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC559ED1337AC0900E345C7 /* XMPPAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */; };
 		4BC559EE1337AC0900E345C7 /* XMPPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC559DC1337AC0900E345C7 /* XMPPConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -81,7 +80,6 @@
 		4B19F57714D17081005D52DC /* XMPPCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPCallback.m; path = src/XMPPCallback.m; sourceTree = SOURCE_ROOT; };
 		4B19F57814D17081005D52DC /* XMPPEXTERNALAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPEXTERNALAuth.h; path = src/XMPPEXTERNALAuth.h; sourceTree = SOURCE_ROOT; };
 		4B19F57914D17081005D52DC /* XMPPEXTERNALAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPEXTERNALAuth.m; path = src/XMPPEXTERNALAuth.m; sourceTree = SOURCE_ROOT; };
-		4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjOpenSSL.framework; path = /Library/Frameworks/ObjOpenSSL.framework; sourceTree = "<group>"; };
 		4B19F5CF14D20B01005D52DC /* XMPPMulticastDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPMulticastDelegate.h; path = src/XMPPMulticastDelegate.h; sourceTree = SOURCE_ROOT; };
 		4B19F5D014D20B01005D52DC /* XMPPMulticastDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPMulticastDelegate.m; path = src/XMPPMulticastDelegate.m; sourceTree = SOURCE_ROOT; };
 		4B23D6BE14DFF2B3001DBDDD /* XMPPJSONFileStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPJSONFileStorage.h; path = src/XMPPJSONFileStorage.h; sourceTree = SOURCE_ROOT; };
@@ -99,8 +97,9 @@
 		4B9CFBAC16CAC42800E44063 /* XMPPContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPContactManager.m; path = src/XMPPContactManager.m; sourceTree = SOURCE_ROOT; };
 		4B9CFBAD16CAC42800E44063 /* XMPPStreamManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPStreamManagement.h; path = src/XMPPStreamManagement.h; sourceTree = SOURCE_ROOT; };
 		4B9CFBAE16CAC42800E44063 /* XMPPStreamManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPStreamManagement.m; path = src/XMPPStreamManagement.m; sourceTree = SOURCE_ROOT; };
+		4B9CFBB516CAD76B00E44063 /* ObjFW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjFW.framework; path = /Library/Frameworks/ObjFW.framework; sourceTree = "<absolute>"; };
+		4B9CFBB716CAD7C000E44063 /* ObjOpenSSL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjOpenSSL.framework; path = /Library/Frameworks/ObjOpenSSL.framework; sourceTree = "<absolute>"; };
 		4BC559911337A65400E345C7 /* ObjXMPP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjXMPP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BC559D61337ABD300E345C7 /* ObjFW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjFW.framework; path = ../../../../Library/Frameworks/ObjFW.framework; sourceTree = "<group>"; };
 		4BC559DA1337AC0900E345C7 /* XMPPAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPAuthenticator.h; path = src/XMPPAuthenticator.h; sourceTree = SOURCE_ROOT; };
 		4BC559DB1337AC0900E345C7 /* XMPPAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPAuthenticator.m; path = src/XMPPAuthenticator.m; sourceTree = SOURCE_ROOT; };
 		4BC559DC1337AC0900E345C7 /* XMPPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPConnection.h; path = src/XMPPConnection.h; sourceTree = SOURCE_ROOT; };
@@ -134,7 +133,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B1295F11337C37E00154B25 /* ObjXMPP.framework in Frameworks */,
-				4B1295F21337C3CF00154B25 /* ObjFW.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,8 +140,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BC559D71337ABD300E345C7 /* ObjFW.framework in Frameworks */,
-				4B19F5A314D1779E005D52DC /* ObjOpenSSL.framework in Frameworks */,
+				4B9CFBB616CAD76B00E44063 /* ObjFW.framework in Frameworks */,
+				4B9CFBB816CAD7C000E44063 /* ObjOpenSSL.framework in Frameworks */,
 				4B484501138BBEEB00EB48A5 /* libresolv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -190,8 +188,8 @@
 		4BC559931337A65400E345C7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4BC559D61337ABD300E345C7 /* ObjFW.framework */,
-				4B19F5A214D1779E005D52DC /* ObjOpenSSL.framework */,
+				4B9CFBB516CAD76B00E44063 /* ObjFW.framework */,
+				4B9CFBB716CAD7C000E44063 /* ObjOpenSSL.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -336,7 +334,7 @@
 		4BC559871337A65400E345C7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 4BC5598A1337A65400E345C7 /* Build configuration list for PBXProject "ObjXMPP" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -434,14 +432,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -457,11 +458,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = (
 					"-I/opt/local/include",
@@ -486,6 +490,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_RES_NDESTROY;
 				INFOPLIST_FILE = Info.plist;
 				OTHER_LDFLAGS = (
+					"-Wl,-reexport_framework,ObjFW",
 					"-Wl,-reexport_framework,ObjOpenSSL",
 					"-lcrypto",
 					"-lidn",
@@ -509,6 +514,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_RES_NDESTROY;
 				INFOPLIST_FILE = Info.plist;
 				OTHER_LDFLAGS = (
+					"-Wl,-reexport_framework,ObjFW",
 					"-Wl,-reexport_framework,ObjOpenSSL",
 					"-lcrypto",
 					"-lidn",
