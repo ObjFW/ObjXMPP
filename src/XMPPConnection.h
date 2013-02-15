@@ -116,14 +116,14 @@
  */
 - (void)connectionWasClosed: (XMPPConnection*)connection;
 
-/**
- * \brief This callback is called when the connection threw an exception.
+/*!
+ * @brief This callback is called when the connection threw an exception.
  *
- * This is only called for connections on which \ref handleConnection: has been
- * called.
+ * This is only called for connections on which
+ * @ref XMPPConnection::handleConnection has been called.
  *
- * \param connection The connection which threw an exception
- * \param exception The exception the connection threw
+ * @param connection The connection which threw an exception
+ * @param exception The exception the connection threw
  */
 -  (void)connection: (XMPPConnection*)connection
   didThrowException: (OFException*)exception;
@@ -152,7 +152,6 @@
     <OFXMLParserDelegate, OFXMLElementBuilderDelegate>
 #endif
 {
-/// \cond internal
 	id _socket;
 	OFXMLParser *_parser, *_oldParser;
 	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
@@ -172,7 +171,6 @@
 	BOOL _supportsRosterVersioning;
 	BOOL _supportsStreamManagement;
 	unsigned int _lastID;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -314,24 +312,26 @@
  */
 - (void)sendStanza: (OFXMLElement*)element;
 
-/**
- * \brief Sends an XMPPIQ, registering a callback method.
+/*!
+ * @brief Sends an XMPPIQ, registering a callback method.
  *
- * \param target The object that contains the callback method
- * \param selector The selector of the callback method,
+ * @param IQ The IQ to send
+ * @param target The object that contains the callback method
+ * @param selector The selector of the callback method,
  *		   must take exactly one parameter of type XMPPIQ*
  */
--   (void)sendIQ: (XMPPIQ*)iq
+-   (void)sendIQ: (XMPPIQ*)IQ
   callbackTarget: (id)target
 	selector: (SEL)selector;
 
 #ifdef OF_HAVE_BLOCKS
-/**
- * \brief Sends an XMPPIQ, registering a callback block.
+/*!
+ * @brief Sends an XMPPIQ, registering a callback block.
  *
- * \param block The callback block
+ * @param IQ The IQ to send
+ * @param block The callback block
  */
--  (void)sendIQ: (XMPPIQ*)iq
+-  (void)sendIQ: (XMPPIQ*)IQ
   callbackBlock: (xmpp_callback_block_t)block;
 #endif
 
@@ -362,7 +362,6 @@
 - (BOOL)supportsRosterVersioning;
 - (BOOL)supportsStreamManagement;
 
-/// \cond internal
 - (void)XMPP_startStream;
 - (void)XMPP_handleStream: (OFXMLElement*)element;
 - (void)XMPP_handleTLS: (OFXMLElement*)element;
@@ -383,7 +382,6 @@
 				     IQ: (XMPPIQ*)iq;
 - (OFString*)XMPP_IDNAToASCII: (OFString*)domain;
 - (XMPPMulticastDelegate*)XMPP_delegates;
-/// \endcond
 @end
 
 @interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>

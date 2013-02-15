@@ -97,23 +97,23 @@
     <XMPPConnectionDelegate, XMPPRosterDelegate>
 #endif
 {
-/// \cond internal
 	OFMutableDictionary *_contacts;
 	XMPPConnection *_connection;
 	XMPPRoster *_roster;
 	XMPPMulticastDelegate *_delegates;
-/// \endcond
 }
+
 #ifdef OF_HAVE_PROPERTIES
 /// \brief The tracked contacts, with their bare JID as key
 @property (readonly) OFDictionary *contacts;
 #endif
 
-/**
- * \brief Initializes an already allocated XMPPContactManager.
+/*!
+ * @brief Initializes an already allocated XMPPContactManager.
  *
- * \param connection The connection to be used to track contacts
- * \return An initialized XMPPContactManager
+ * @param connection The connection to be used to track contacts
+ * @param roster The roster used by the contact manager
+ * @return An initialized XMPPContactManager
  */
 - initWithConnection: (XMPPConnection*)connection
 	      roster: (XMPPRoster*)roster;

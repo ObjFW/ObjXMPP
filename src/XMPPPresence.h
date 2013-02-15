@@ -28,11 +28,9 @@
  */
 @interface XMPPPresence: XMPPStanza <OFComparing>
 {
-/// \cond internal
 	OFString *_status;
 	OFString *_show;
 	OFNumber *_priority;
-/// \endcond
 }
 #ifdef OF_HAVE_PROPERTIES
 @property (copy) OFString *status;

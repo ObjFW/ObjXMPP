@@ -33,12 +33,11 @@
  */
 @interface XMPPContact: OFObject
 {
-/// \cond internal
 	XMPPRosterItem *_rosterItem;
 	OFMutableDictionary *_presences;
 	XMPPJID *_lockedOnJID;
-/// \endcond
 }
+
 #ifdef OF_HAVE_PROPERTIES
 /// \brief The XMPPRosterItem corresponding to this contact
 @property (readonly) XMPPRosterItem *rosterItem;
@@ -55,11 +54,9 @@
 - (void)sendMessage: (XMPPMessage*)message
 	 connection: (XMPPConnection*)connection;
 
-/// \cond internal
 - (void)XMPP_setRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_setPresence: (XMPPPresence*)presence
 		resource: (OFString*)resource;
 - (void)XMPP_removePresenceForResource: (OFString*)resource;
 - (void)XMPP_setLockedOnJID: (XMPPJID*)JID;
-/// \endcond
 @end

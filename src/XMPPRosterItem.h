@@ -29,12 +29,10 @@
  */
 @interface XMPPRosterItem: OFObject
 {
-/// \cond internal
 	XMPPJID *_JID;
 	OFString *_name;
 	OFString *_subscription;
 	OFArray *_groups;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES

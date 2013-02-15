@@ -30,13 +30,11 @@
  */
 @interface XMPPStanza: OFXMLElement
 {
-/// \cond internal
 	XMPPJID *_from;
 	XMPPJID *_to;
 	OFString *_type;
 	OFString *_ID;
 	OFString *_language;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES

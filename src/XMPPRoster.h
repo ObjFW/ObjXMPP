@@ -68,13 +68,11 @@
     <XMPPConnectionDelegate>
 #endif
 {
-/// \cond internal
 	XMPPConnection *_connection;
 	OFMutableDictionary *_rosterItems;
 	XMPPMulticastDelegate *_delegates;
 	id <XMPPStorage> _dataStorage;
 	BOOL _rosterRequested;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -153,12 +151,10 @@
 - (void)setDataStorage: (id <XMPPStorage>)dataStorage;
 - (id <XMPPStorage>)dataStorage;
 
-/// \cond internal
 - (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection
 					   IQ: (XMPPIQ*)iq;
 - (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element;
-/// \endcond
 @end
 
 @interface OFObject (XMPPRosterDelegate) <XMPPRosterDelegate>

@@ -30,9 +30,7 @@
  */
 @interface XMPPException: OFException
 {
-/// \cond internal
 	XMPPConnection *_connection;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -70,10 +68,8 @@
  */
 @interface XMPPStreamErrorException: XMPPException
 {
-/// \cond internal
 	OFString *_condition;
 	OFString *_reason;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -121,10 +117,8 @@
  */
 @interface XMPPStringPrepFailedException: XMPPException
 {
-/// \cond internal
 	OFString *_profile;
 	OFString *_string;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -171,10 +165,8 @@
  */
 @interface XMPPIDNATranslationFailedException: XMPPException
 {
-/// \cond internal
 	OFString *_operation;
 	OFString *_string;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -221,9 +213,7 @@
  */
 @interface XMPPAuthFailedException: XMPPException
 {
-/// \cond internal
 	OFString *_reason;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES

@@ -29,7 +29,6 @@
  */
 @interface XMPPSCRAMAuth: XMPPAuthenticator
 {
-/// \cond internal
 	Class _hashType;
 	OFString *_cNonce;
 	OFString *_GS2Header;
@@ -38,7 +37,6 @@
 	XMPPConnection *_connection;
 	BOOL _plusAvailable;
 	BOOL _authenticated;
-/// \endcond
 }
 
 /**

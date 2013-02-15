@@ -564,43 +564,43 @@
 	[_socket writeString: [element XMLString]];
 }
 
--   (void)sendIQ: (XMPPIQ*)iq
+-   (void)sendIQ: (XMPPIQ*)IQ
   callbackTarget: (id)target
 	selector: (SEL)selector
 {
 	OFAutoreleasePool *pool;
 	XMPPCallback *callback;
 
-	if (![iq ID])
-		[iq setID: [self generateStanzaID]];
+	if (![IQ ID])
+		[IQ setID: [self generateStanzaID]];
 
 	pool = [[OFAutoreleasePool alloc] init];
 	callback = [XMPPCallback callbackWithTarget: target
 					   selector: selector];
 	[_callbacks setObject: callback
-		       forKey: [iq ID]];
+		       forKey: [IQ ID]];
 	[pool release];
 
-	[self sendStanza: iq];
+	[self sendStanza: IQ];
 }
 
 #ifdef OF_HAVE_BLOCKS
--  (void)sendIQ: (XMPPIQ*)iq
+-  (void)sendIQ: (XMPPIQ*)IQ
   callbackBlock: (xmpp_callback_block_t)block
 {
 	OFAutoreleasePool *pool;
 	XMPPCallback *callback;
 
-	if (![iq ID])
-		[iq setID: [self generateStanzaID]];
+	if (![IQ ID])
+		[IQ setID: [self generateStanzaID]];
 
 	pool = [[OFAutoreleasePool alloc] init];
 	callback = [XMPPCallback callbackWithBlock: block];
 	[_callbacks setObject: callback
-		       forKey: [iq ID]];
+		       forKey: [IQ ID]];
 	[pool release];
 
-	[self sendStanza: iq];
+	[self sendStanza: IQ];
 }
 #endif
 

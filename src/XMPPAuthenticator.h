@@ -27,11 +27,9 @@
  */
 @interface XMPPAuthenticator: OFObject
 {
-/// \cond internal
 	OFString *_authzid;
 	OFString *_authcid;
 	OFString *_password;
-/// \endcond
 }
 
 #ifdef OF_HAVE_PROPERTIES

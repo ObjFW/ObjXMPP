@@ -27,10 +27,8 @@
     <XMPPConnectionDelegate>
 #endif
 {
-/// \cond internal
 	XMPPConnection *_connection;
 	uint32_t receivedCount;
-/// \endcond
 }
 
 - initWithConnection: (XMPPConnection*)connection;

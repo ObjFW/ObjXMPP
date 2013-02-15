@@ -29,9 +29,7 @@
  */
 @interface XMPPMulticastDelegate: OFObject
 {
-/// \cond internal
 	OFDataArray *_delegates;
-/// \endcond
 }
 
 /**

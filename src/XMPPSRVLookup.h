@@ -76,10 +76,9 @@
 
 + lookupWithDomain: (OFString*)domain;
 - initWithDomain: (OFString*)domain;
-/// \cond internal
+
 - (void)XMPP_lookup;
 - (void)XMPP_addEntry: (XMPPSRVEntry*)item;
-/// \endcond
 @end
 
 @interface XMPPSRVEnumerator: OFEnumerator
