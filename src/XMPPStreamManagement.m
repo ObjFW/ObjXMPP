@@ -90,11 +90,11 @@
 }
 */
 
-- (void)connection: (XMPPConnection*)connection_
-     wasBoundToJID: (XMPPJID*)jid
+- (void)connection: (XMPPConnection*)connection
+     wasBoundToJID: (XMPPJID*)JID
 {
-	if ([connection_ supportsStreamManagement])
-		[connection_ sendStanza:
+	if ([connection supportsStreamManagement])
+		[connection sendStanza:
 		    [OFXMLElement elementWithName: @"enable"
 					namespace: XMPP_NS_SM]];
 }

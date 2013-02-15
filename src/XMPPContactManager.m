@@ -58,12 +58,12 @@
 	[super dealloc];
 }
 
-- (void)addDelegate: (id <XMPPConnectionDelegate>)delegate
+- (void)addDelegate: (id <XMPPContactManagerDelegate>)delegate
 {
 	[_delegates addDelegate: delegate];
 }
 
-- (void)removeDelegate: (id <XMPPConnectionDelegate>)delegate
+- (void)removeDelegate: (id <XMPPContactManagerDelegate>)delegate
 {
 	[_delegates removeDelegate: delegate];
 }

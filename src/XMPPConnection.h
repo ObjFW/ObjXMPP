@@ -360,6 +360,7 @@
 - (void)setLanguage: (OFString*)language;
 - (OFString*)language;
 - (BOOL)supportsRosterVersioning;
+- (BOOL)supportsStreamManagement;
 
 /// \cond internal
 - (void)XMPP_startStream;
@@ -383,4 +384,7 @@
 - (OFString*)XMPP_IDNAToASCII: (OFString*)domain;
 - (XMPPMulticastDelegate*)XMPP_delegates;
 /// \endcond
+@end
+
+@interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>
 @end
