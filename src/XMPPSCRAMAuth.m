@@ -202,7 +202,7 @@
 	size_t i;
 	uint8_t *clientKey, *serverKey, *clientSignature;
 	intmax_t iterCount = 0;
-	OFHash *hash;
+	id <OFHash> hash;
 	OFDataArray *ret, *authMessage, *tmpArray, *salt = nil, *saltedPassword;
 	OFString *tmpString, *sNonce = nil;
 	OFEnumerator *enumerator;
@@ -431,7 +431,7 @@
 	OFDataArray *k = [OFDataArray dataArray];
 	size_t i, kSize, blockSize = [_hashType blockSize];
 	uint8_t *kI = NULL, *kO = NULL;
-	OFHash *hashI, *hashO;
+	id <OFHash> hashI, hashO;
 
 	if ([key itemSize] * [key count] > blockSize) {
 		hashI = [[[_hashType alloc] init] autorelease];
