@@ -19,3 +19,4 @@ ObjXMPP.xcodeproj/*.pbxuser
 ObjXMPP.xcodeproj/project.xcworkspace
 ObjXMPP.xcodeproj/xcuserdata
 tests/tests
+tests/storage.binarypack

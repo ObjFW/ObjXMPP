@@ -14,7 +14,7 @@ SRCS = XMPPAuthenticator.m	\
        XMPPEXTERNALAuth.m	\
        XMPPIQ.m			\
        XMPPJID.m		\
-       XMPPJSONFileStorage.m	\
+       XMPPFileStorage.m	\
        XMPPMessage.m		\
        XMPPMulticastDelegate.m	\
        XMPPPLAINAuth.m		\

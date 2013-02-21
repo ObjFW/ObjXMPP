@@ -28,13 +28,14 @@
 #import <ObjFW/OFArray.h>
 #import <ObjFW/OFDictionary.h>
 #import <ObjFW/OFNumber.h>
+#import <ObjFW/OFDataArray.h>
 #import <ObjFW/OFAutoreleasePool.h>
 
 #import <ObjFW/OFNotImplementedException.h>
 
-#import "XMPPJSONFileStorage.h"
+#import "XMPPFileStorage.h"
 
-@implementation XMPPJSONFileStorage
+@implementation XMPPFileStorage
 - init
 {
 	Class c = [self class];
@@ -43,17 +44,17 @@
 						    selector: _cmd];
 }
 
-- initWithFile: (OFString*)file_
+- initWithFile: (OFString*)file
 {
 	self = [super init];
 
 	@try {
 		OFAutoreleasePool *pool = [OFAutoreleasePool new];
 
-		_file = [file_ copy];
+		_file = [file copy];
 		@try {
-			_data = [[[OFString stringWithContentsOfFile:
-			    _file] JSONValue] retain];
+			_data = [[[OFDataArray dataArrayWithContentsOfFile:
+			    file] binaryPackValue] retain];
 		} @catch (id e) {
 			_data = [OFMutableDictionary new];
 		}
@@ -77,7 +78,7 @@
 
 - (void)save
 {
-	[[_data JSONRepresentation] writeToFile: _file];
+	[[_data binaryPackRepresentation] writeToFile: _file];
 }
 
 - (void)XMPP_setObject: (id)object

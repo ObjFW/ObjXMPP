@@ -305,17 +305,17 @@
 	return rosterItem;
 }
 
-- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection_
-					   IQ: (XMPPIQ*)iq
+- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection
+					   IQ: (XMPPIQ*)IQ
 {
 	OFXMLElement *rosterElement;
 	OFEnumerator *enumerator;
 	OFXMLElement *element;
 
-	rosterElement = [iq elementForName: @"query"
+	rosterElement = [IQ elementForName: @"query"
 				 namespace: XMPP_NS_ROSTER];
 
-	if ([_connection supportsRosterVersioning]) {
+	if ([connection supportsRosterVersioning]) {
 		if (rosterElement == nil) {
 			OFDictionary *items = [_dataStorage
 			    dictionaryForPath: @"roster.items"];
@@ -361,7 +361,7 @@
 		[pool release];
 	}
 
-	if ([_connection supportsRosterVersioning] && rosterElement != nil) {
+	if ([connection supportsRosterVersioning] && rosterElement != nil) {
 		OFString *ver =
 		    [[rosterElement attributeForName: @"ver"] stringValue];
 		[_dataStorage setStringValue: ver

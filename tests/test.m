@@ -33,7 +33,7 @@
 #import "XMPPPresence.h"
 #import "XMPPRoster.h"
 #import "XMPPStreamManagement.h"
-#import "XMPPJSONFileStorage.h"
+#import "XMPPFileStorage.h"
 
 @interface AppDelegate: OFObject
 #ifdef OF_HAVE_OPTIONAL_PROTOCOLS
@@ -107,8 +107,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	conn = [[XMPPConnection alloc] init];
 	[conn addDelegate: self];
 
-	XMPPJSONFileStorage *storage =
-	    [[XMPPJSONFileStorage alloc] initWithFile: @"storage.json"];
+	XMPPFileStorage *storage =
+	    [[XMPPFileStorage alloc] initWithFile: @"storage.binarypack"];
 	[conn setDataStorage: storage];
 
 	roster = [[XMPPRoster alloc] initWithConnection: conn];

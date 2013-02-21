@@ -26,7 +26,7 @@
 
 @class OFMutableDictionary;
 
-@interface XMPPJSONFileStorage: OFObject <XMPPStorage>
+@interface XMPPFileStorage: OFObject <XMPPStorage>
 {
 	OFString *_file;
 	OFMutableDictionary *_data;
