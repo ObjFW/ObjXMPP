@@ -241,8 +241,11 @@
 
 	JID = object;
 
-	if ([_node isEqual: JID->_node] && [_domain isEqual: JID->_domain] &&
-	    [_resource isEqual: JID->_resource])
+	// Node and resource may be nil
+	if ((_node == JID->_node || [_node isEqual: JID->_node]) &&
+	    [_domain isEqual: JID->_domain] &&
+	    (_resource == JID->_resource || [_resource isEqual: JID->_resource])
+	   )
 		return YES;
 
 	return NO;
@@ -250,6 +253,16 @@
 
 - (uint32_t) hash
 {
-	return [[self fullJID] hash];
+	uint32_t hash;
+
+	OF_HASH_INIT(hash);
+
+	OF_HASH_ADD_HASH(hash, [_node hash]);
+	OF_HASH_ADD_HASH(hash, [_domain hash]);
+	OF_HASH_ADD_HASH(hash, [_resource hash]);
+
+	OF_HASH_FINALIZE(hash);
+
+	return hash;
 }
 @end
