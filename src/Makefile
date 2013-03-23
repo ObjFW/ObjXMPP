@@ -10,6 +10,9 @@ SRCS = XMPPAuthenticator.m	\
        XMPPConnection.m		\
        XMPPContact.m		\
        XMPPContactManager.m	\
+       XMPPDiscoEntity.m	\
+       XMPPDiscoIdentity.m	\
+       XMPPDiscoNode.m		\
        XMPPExceptions.m		\
        XMPPEXTERNALAuth.m	\
        XMPPIQ.m			\

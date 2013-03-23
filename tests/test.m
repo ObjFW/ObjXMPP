@@ -26,6 +26,8 @@
 #import <ObjFW/ObjFW.h>
 
 #import "XMPPConnection.h"
+#import "XMPPDiscoEntity.h"
+#import "XMPPDiscoIdentity.h"
 #import "XMPPJID.h"
 #import "XMPPStanza.h"
 #import "XMPPIQ.h"
@@ -152,6 +154,49 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	of_log(@"Bound to JID: %@", [jid fullJID]);
 	of_log(@"Supports SM: %@",
 	    [conn_ supportsStreamManagement] ? @"YES" : @"NO");
+
+
+	XMPPDiscoEntity *discoEntity =
+	    [[XMPPDiscoEntity alloc] initWithConnection: conn];
+
+	[discoEntity addIdentity:
+	    [XMPPDiscoIdentity identityWithCategory: @"client"
+					       type: @"pc"
+					       name: @"ObjXMPP"]];
+
+	XMPPDiscoNode *nodeMusic =
+	    [XMPPDiscoNode discoNodeWithJID: jid
+				       node: @"music"
+				       name: @"My music"];
+	[discoEntity addChildNode: nodeMusic];
+
+	XMPPDiscoNode *nodeRHCP =
+	    [XMPPDiscoNode discoNodeWithJID: jid
+				       node: @"fa3b6"
+				       name: @"Red Hot Chili Peppers"];
+	[nodeMusic addChildNode: nodeRHCP];
+
+	XMPPDiscoNode *nodeStop =
+	    [XMPPDiscoNode discoNodeWithJID: jid
+				       node: @"qwe87"
+				       name: @"Can't Stop"];
+	[nodeRHCP addChildNode: nodeStop];
+
+	XMPPDiscoNode *nodeClueso = [XMPPDiscoNode discoNodeWithJID: jid
+							       node: @"ea386"
+							       name: @"Clueso"];
+	[nodeMusic addChildNode: nodeClueso];
+
+	XMPPDiscoNode *nodeChicago = [XMPPDiscoNode discoNodeWithJID: jid
+							      node: @"qwr87"
+							      name: @"Chicago"];
+	[nodeClueso addChildNode: nodeChicago];
+
+	[discoEntity addDiscoNode: nodeMusic];
+	[discoEntity addDiscoNode: nodeRHCP];
+	[discoEntity addDiscoNode: nodeClueso];
+	[discoEntity addDiscoNode: nodeStop];
+	[discoEntity addDiscoNode: nodeChicago];
 
 	[roster requestRoster];
 }

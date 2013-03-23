@@ -229,7 +229,7 @@
 	return [self fullJID];
 }
 
-- (BOOL)isEqual: (id)object
+- (bool)isEqual: (id)object
 {
 	XMPPJID *JID;
 
