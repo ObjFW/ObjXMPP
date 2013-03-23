@@ -21,6 +21,7 @@
  */
 
 #import "XMPPDiscoEntity.h"
+#import "XMPPDiscoIdentity.h"
 #import "XMPPIQ.h"
 #import "namespaces.h"
 
@@ -65,6 +66,25 @@
 {
 	[_discoNodes setObject: node
 			forKey: [node node]];
+}
+
+- (OFString*)capsHash
+{
+	OFMutableString *caps = [OFMutableString string];
+	OFEnumerator *enumerator;
+	XMPPDiscoIdentity *identity;
+	OFString *feature;
+
+	enumerator = [_identities objectEnumerator];
+	while ((identity = [enumerator nextObject]) != nil)
+		[caps appendFormat: @"%@/%@//%@<", [identity category],
+		    [identity type], [identity name]];
+
+	enumerator = [_features objectEnumerator];
+	while ((feature = [enumerator nextObject]) != nil)
+		[caps appendFormat: @"%@<", feature];
+
+	return [caps SHA1Hash];
 }
 
 - (BOOL)connection: (XMPPConnection*)connection

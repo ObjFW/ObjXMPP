@@ -74,5 +74,12 @@
  */
 - (void)addDiscoNode: (XMPPDiscoNode*)node;
 
+/**
+ * \brief Calculates the Entity Capabilities Hash of the entity
+ *
+ * \return A OFString containing the capabilities hash
+ */
+- (OFString*)capsHash;
+
 - (OFDictionary*)discoNodes;
 @end
