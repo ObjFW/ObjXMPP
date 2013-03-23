@@ -90,11 +90,8 @@
 - (BOOL)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)IQ
 {
-	of_log(@"Called connection:didReceiveIQ:... %@ %@", [IQ to], _JID);
 	if (![[IQ to] isEqual: _JID])
 		return NO;
-
-	of_log(@"...that is for us");
 
 	OFXMLElement *query = [IQ elementForName: @"query"
 				       namespace: XMPP_NS_DISCO_ITEMS];

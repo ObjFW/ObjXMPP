@@ -37,3 +37,7 @@
 
 #import "XMPPContact.h"
 #import "XMPPContactManager.h"
+
+#import "XMPPDiscoEntity.h"
+#import "XMPPDiscoNode.h"
+#import "XMPPDiscoIdentity.h"
