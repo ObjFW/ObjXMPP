@@ -35,6 +35,7 @@
 {
 	OFMutableDictionary *_discoNodes;
 	XMPPConnection *_connection;
+	OFString *_capsNode;
 }
 #ifdef OF_HAVE_PROPERTIES
 /**
@@ -45,6 +46,8 @@
  * any number of nodes nested more deeply.
  */
 @property (readonly) OFDictionary *discoNodes;
+/// \brief The node advertised for the entity's capabilites
+@property (readonly) OFString *capsNode;
 #endif
 
 /**
@@ -58,6 +61,18 @@
 + discoEntityWithConnection: (XMPPConnection*)connection;
 
 /**
+ * \brief Creates a new autoreleased XMPPDiscoEntity with the specified
+ *	  connection.
+ *
+ * \param connection The XMPPConnection to serve responses on.
+ *	  This must already be bound to a resource)
+ * \param capsNode The node advertised for the entity's capabilites
+ * \return A new autoreleased XMPPDiscoEntity
+ */
++ discoEntityWithConnection: (XMPPConnection*)connection
+		   capsNode: (OFString*)capsNode;
+
+/**
  * \brief Initializes an already allocated XMPPDiscoEntity with the specified
  *	  connection.
  *
@@ -66,6 +81,18 @@
  * \return An initialized XMPPDiscoEntity
  */
 - initWithConnection: (XMPPConnection*)connection;
+
+/**
+ * \brief Initializes an already allocated XMPPDiscoEntity with the specified
+ *	  connection.
+ *
+ * \param connection The XMPPConnection to serve responses on.
+ *	  This must already be bound to a resource)
+ * \param capsNode The node advertised for the entity's capabilites
+ * \return An initialized XMPPDiscoEntity
+ */
+- initWithConnection: (XMPPConnection*)connection
+	    capsNode: (OFString*)capsNode;
 
 /**
  * \brief Adds a XMPPDiscoNode to provide responses for.
@@ -82,4 +109,5 @@
 - (OFString*)capsHash;
 
 - (OFDictionary*)discoNodes;
+- (OFString*)capsNode;
 @end

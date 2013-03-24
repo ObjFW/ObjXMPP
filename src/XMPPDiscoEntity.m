@@ -31,7 +31,21 @@
 	return [[[self alloc] initWithConnection: connection] autorelease];
 }
 
++ discoEntityWithConnection: (XMPPConnection*)connection
+		   capsNode: (OFString*)capsNode
+{
+	return [[[self alloc] initWithConnection: connection
+					capsNode: capsNode] autorelease];
+}
+
 - initWithConnection: (XMPPConnection*)connection
+{
+	return [self initWithConnection: connection
+			       capsNode: nil];
+}
+
+- initWithConnection: (XMPPConnection*)connection
+	    capsNode: (OFString*)capsNode
 {
 	self = [super initWithJID: [connection JID]
 			     node: nil];
@@ -39,6 +53,7 @@
 	@try {
 		_discoNodes = [OFMutableDictionary new];
 		_connection = connection;
+		_capsNode = [capsNode copy];
 
 		[_connection addDelegate: self];
 	} @catch (id e) {
@@ -66,6 +81,11 @@
 {
 	[_discoNodes setObject: node
 			forKey: [node node]];
+}
+
+- (OFString*)capsNode
+{
+	OF_GETTER(_capsNode, YES);
 }
 
 - (OFString*)capsHash
@@ -117,7 +137,14 @@
 	if (query != nil) {
 		OFString *node =
 		    [[query attributeForName: @"node"] stringValue];
+
 		if (node == nil)
+			return [self XMPP_handleInfoIQ: IQ
+					    connection: connection];
+
+		OFString *capsNode = [_capsNode stringByAppendingFormat: @"#%@",
+					 [self capsHash]];
+		if ([capsNode isEqual: node])
 			return [self XMPP_handleInfoIQ: IQ
 					    connection: connection];
 

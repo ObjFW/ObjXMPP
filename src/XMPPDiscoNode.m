@@ -190,12 +190,6 @@
 	OFEnumerator *enumerator;
 	OFString *feature;
 	XMPPDiscoIdentity *identity;
-	OFXMLElement *query = [IQ elementForName: @"query"
-				       namespace: XMPP_NS_DISCO_INFO];
-	OFString *node = [[query attributeForName: @"node"] stringValue];
-
-	if (!(node == _node) && ![node isEqual: _node])
-		return NO;
 
 	resultIQ = [IQ resultIQ];
 	response = [OFXMLElement elementWithName: @"query"
