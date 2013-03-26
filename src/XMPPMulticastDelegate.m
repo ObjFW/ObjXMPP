@@ -61,28 +61,36 @@
 	size_t i, count = [_delegates count];
 
 	for (i = 0; i < count; i++) {
-		if (items[i] == delegate) {
-			[_delegates removeItemAtIndex: i];
-			return;
-		}
+		if (items[i] != delegate)
+			continue;
+
+		[_delegates removeItemAtIndex: i];
+		if (i <= handlerIndex)
+			handlerIndex--;
+		return;
 	}
 }
 
 - (BOOL)broadcastSelector: (SEL)selector
 	       withObject: (id)object
 {
+	size_t count = [_delegates count];
 	id *items = [_delegates items];
-	size_t i, count = [_delegates count];
 	BOOL handled = NO;
 
-	for (i = 0; i < count; i++) {
-		if (![items[i] respondsToSelector: selector])
+	for (handlerIndex = 0; handlerIndex < count; handlerIndex++) {
+		id responder = items[handlerIndex];
+		if (![responder respondsToSelector: selector])
 			continue;
 
 		BOOL (*imp)(id, SEL, id) = (BOOL(*)(id, SEL, id))
-		    [items[i] methodForSelector: selector];
+		    [responder methodForSelector: selector];
 
-		handled |= imp(items[i], selector, object);
+		handled |= imp(responder, selector, object);
+		// Update count and items, since the handler might have
+		// changed them.
+		count = [_delegates count];
+		items = [_delegates items];
 	}
 
 	return handled;
@@ -92,18 +100,23 @@
 	       withObject: (id)object1
 	       withObject: (id)object2
 {
+	size_t count = [_delegates count];
 	id *items = [_delegates items];
-	size_t i, count = [_delegates count];
 	BOOL handled = NO;
 
-	for (i = 0; i < count; i++) {
-		if (![items[i] respondsToSelector: selector])
+	for (handlerIndex = 0; handlerIndex < count; handlerIndex++) {
+		id responder = items[handlerIndex];
+		if (![responder respondsToSelector: selector])
 			continue;
 
 		BOOL (*imp)(id, SEL, id, id) = (BOOL(*)(id, SEL, id, id))
-		    [items[i] methodForSelector: selector];
+		    [responder methodForSelector: selector];
 
-		handled |= imp(items[i], selector, object1, object2);
+		handled |= imp(responder, selector, object1, object2);
+		// Update count and items, since the handler might have
+		// changed them.
+		count = [_delegates count];
+		items = [_delegates items];
 	}
 
 	return handled;
