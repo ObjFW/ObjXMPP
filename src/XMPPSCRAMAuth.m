@@ -505,9 +505,12 @@
 			result[j] ^= uOld[j];
 
 		for (j = 0; j < i - 1; j++) {
-			tmp = [OFDataArray dataArray];
+			tmp = [OFDataArray new];
 			[tmp addItems: uOld
 				count: digestSize];
+
+			[pool releaseObjects]; // releases uOld and previous tmp
+			[tmp autorelease];
 
 			u = [self XMPP_HMACWithKey: str
 					      data: tmp];
@@ -516,8 +519,6 @@
 				result[k] ^= u[k];
 
 			uOld = u;
-
-			[pool releaseObjects];
 		}
 
 		ret = [OFDataArray dataArray];
