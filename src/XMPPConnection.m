@@ -893,9 +893,11 @@
 						   connectionWillUpgradeToTLS:)
 				   withObject: self];
 
-		newSock = [[SSLSocket alloc] initWithSocket: _socket
-					     privateKeyFile: _privateKeyFile
-					    certificateFile: _certificateFile];
+		newSock = [[SSLSocket alloc] initWithSocket: _socket];
+		[newSock setCertificateFile: _certificateFile];
+		[newSock setPrivateKeyFile: _privateKeyFile];
+		[newSock setPrivateKeyPassphrase: _privateKeyPassphrase];
+		[newSock startTLS];
 		[_socket release];
 		_socket = newSock;
 

@@ -157,6 +157,7 @@
 	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
 	OFString *_username, *_password, *_server, *_resource;
 	OFString *_privateKeyFile, *_certificateFile;
+	const char *_privateKeyPassphrase;
 	OFString *_domain, *_domainToASCII;
 	XMPPJID *_JID;
 	uint16_t _port;
