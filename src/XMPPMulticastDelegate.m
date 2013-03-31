@@ -65,8 +65,10 @@
 			continue;
 
 		[_delegates removeItemAtIndex: i];
-		if (i <= handlerIndex)
-			handlerIndex--;
+
+		if (i <= _handlerIndex)
+			_handlerIndex--;
+
 		return;
 	}
 }
@@ -78,8 +80,9 @@
 	id *items = [_delegates items];
 	BOOL handled = NO;
 
-	for (handlerIndex = 0; handlerIndex < count; handlerIndex++) {
-		id responder = items[handlerIndex];
+	for (_handlerIndex = 0; _handlerIndex < count; _handlerIndex++) {
+		id responder = items[_handlerIndex];
+
 		if (![responder respondsToSelector: selector])
 			continue;
 
@@ -87,8 +90,11 @@
 		    [responder methodForSelector: selector];
 
 		handled |= imp(responder, selector, object);
-		// Update count and items, since the handler might have
-		// changed them.
+
+		/*
+		 * Update count and items, since the handler might have changed
+		 * them.
+		 */
 		count = [_delegates count];
 		items = [_delegates items];
 	}
@@ -104,8 +110,9 @@
 	id *items = [_delegates items];
 	BOOL handled = NO;
 
-	for (handlerIndex = 0; handlerIndex < count; handlerIndex++) {
-		id responder = items[handlerIndex];
+	for (_handlerIndex = 0; _handlerIndex < count; _handlerIndex++) {
+		id responder = items[_handlerIndex];
+
 		if (![responder respondsToSelector: selector])
 			continue;
 
@@ -113,8 +120,11 @@
 		    [responder methodForSelector: selector];
 
 		handled |= imp(responder, selector, object1, object2);
-		// Update count and items, since the handler might have
-		// changed them.
+
+		/*
+		 * Update count and items, since the handler might have changed
+		 * them.
+		 */
 		count = [_delegates count];
 		items = [_delegates items];
 	}

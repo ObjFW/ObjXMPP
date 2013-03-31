@@ -28,7 +28,7 @@
 		  name: (OFString*)name
 {
 	return [[[self alloc] initWithCategory: category
-					  type: type 
+					  type: type
 					  name: name] autorelease];
 }
 

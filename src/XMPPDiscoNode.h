@@ -37,6 +37,7 @@
 	OFSortedList *_features;
 	OFMutableDictionary *_childNodes;
 }
+
 #ifdef OF_HAVE_PROPERTIES
 /// \brief The JID this node lives on
 @property (readonly) XMPPJID *JID;

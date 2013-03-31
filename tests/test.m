@@ -155,7 +155,6 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	of_log(@"Supports SM: %@",
 	    [conn_ supportsStreamManagement] ? @"YES" : @"NO");
 
-
 	XMPPDiscoEntity *discoEntity =
 	    [[XMPPDiscoEntity alloc] initWithConnection: conn];
 

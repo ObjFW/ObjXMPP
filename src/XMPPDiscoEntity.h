@@ -37,6 +37,7 @@
 	XMPPConnection *_connection;
 	OFString *_capsNode;
 }
+
 #ifdef OF_HAVE_PROPERTIES
 /**
  * \brief The XMPPDiscoNodes this entity provides Services Discovery
