@@ -21,6 +21,7 @@
  */
 
 #define XMPP_NS_BIND @"urn:ietf:params:xml:ns:xmpp-bind"
+#define XMPP_NS_CAPS @"http://jabber.org/protocol/caps"
 #define XMPP_NS_CLIENT @"jabber:client"
 #define XMPP_NS_DISCO_INFO @"http://jabber.org/protocol/disco#info"
 #define XMPP_NS_DISCO_ITEMS @"http://jabber.org/protocol/disco#items"
