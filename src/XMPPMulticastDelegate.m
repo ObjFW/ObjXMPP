@@ -24,6 +24,7 @@
 # include "config.h"
 #endif
 
+#import <ObjFW/ObjFW.h>
 #import <ObjFW/OFDataArray.h>
 
 #import "XMPPMulticastDelegate.h"
@@ -65,10 +66,6 @@
 			continue;
 
 		[_delegates removeItemAtIndex: i];
-
-		if (i <= _handlerIndex)
-			_handlerIndex--;
-
 		return;
 	}
 }
@@ -76,12 +73,13 @@
 - (BOOL)broadcastSelector: (SEL)selector
 	       withObject: (id)object
 {
-	size_t count = [_delegates count];
-	id *items = [_delegates items];
+	OFDataArray *currentDelegates = [_delegates copy];
+	id *items = [currentDelegates items];
+	size_t i, count = [currentDelegates count];
 	BOOL handled = NO;
 
-	for (_handlerIndex = 0; _handlerIndex < count; _handlerIndex++) {
-		id responder = items[_handlerIndex];
+	for (i = 0; i < count; i++) {
+		id responder = items[i];
 
 		if (![responder respondsToSelector: selector])
 			continue;
@@ -90,13 +88,6 @@
 		    [responder methodForSelector: selector];
 
 		handled |= imp(responder, selector, object);
-
-		/*
-		 * Update count and items, since the handler might have changed
-		 * them.
-		 */
-		count = [_delegates count];
-		items = [_delegates items];
 	}
 
 	return handled;
@@ -106,12 +97,13 @@
 	       withObject: (id)object1
 	       withObject: (id)object2
 {
-	size_t count = [_delegates count];
-	id *items = [_delegates items];
+	OFDataArray *currentDelegates = [_delegates copy];
+	id *items = [currentDelegates items];
+	size_t i, count = [currentDelegates count];
 	BOOL handled = NO;
 
-	for (_handlerIndex = 0; _handlerIndex < count; _handlerIndex++) {
-		id responder = items[_handlerIndex];
+	for (i = 0; i < count; i++) {
+		id responder = items[i];
 
 		if (![responder respondsToSelector: selector])
 			continue;
@@ -120,13 +112,6 @@
 		    [responder methodForSelector: selector];
 
 		handled |= imp(responder, selector, object1, object2);
-
-		/*
-		 * Update count and items, since the handler might have changed
-		 * them.
-		 */
-		count = [_delegates count];
-		items = [_delegates items];
 	}
 
 	return handled;

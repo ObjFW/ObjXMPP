@@ -30,7 +30,6 @@
 @interface XMPPMulticastDelegate: OFObject
 {
 	OFDataArray *_delegates;
-	size_t _handlerIndex;
 }
 
 /**
