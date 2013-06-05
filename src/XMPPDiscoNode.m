@@ -60,11 +60,6 @@
 	self = [super init];
 
 	@try {
-		if (JID == nil)
-			@throw [OFInvalidArgumentException
-			    exceptionWithClass: [self class]
-				      selector: _cmd];
-
 		_JID = [JID copy];
 		_node= [node copy];
 		_name = [name copy];

@@ -107,6 +107,12 @@
 	return [caps SHA1Hash];
 }
 
+- (void)connection: (XMPPConnection*)connection
+     wasBoundToJID: (XMPPJID*)JID
+{
+	_JID = [JID copy];
+}
+
 - (BOOL)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)IQ
 {

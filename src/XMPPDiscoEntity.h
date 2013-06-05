@@ -56,7 +56,6 @@
  *	  connection.
  *
  * \param connection The XMPPConnection to serve responses on.
- *	  This must already be bound to a resource)
  * \return A new autoreleased XMPPDiscoEntity
  */
 + discoEntityWithConnection: (XMPPConnection*)connection;
@@ -66,7 +65,6 @@
  *	  connection.
  *
  * \param connection The XMPPConnection to serve responses on.
- *	  This must already be bound to a resource)
  * \param capsNode The node advertised for the entity's capabilites
  * \return A new autoreleased XMPPDiscoEntity
  */
