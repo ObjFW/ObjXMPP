@@ -58,6 +58,22 @@
 	[super dealloc];
 }
 
+
+- (void)sendSubscribedToJID: (XMPPJID*)subscriber
+{
+	XMPPPresence *presence = [XMPPPresence presenceWithType: @"subscribed"];
+	[presence setTo: subscriber];
+	[_connection sendStanza: presence];
+}
+
+- (void)sendUnsubscribedToJID: (XMPPJID*)subscriber
+{
+	XMPPPresence *presence =
+	    [XMPPPresence presenceWithType: @"unsubscribed"];
+	[presence setTo: subscriber];
+	[_connection sendStanza: presence];
+}
+
 - (void)addDelegate: (id <XMPPContactManagerDelegate>)delegate
 {
 	[_delegates addDelegate: delegate];
@@ -145,26 +161,43 @@
 -   (void)connection: (XMPPConnection*)connection
   didReceivePresence: (XMPPPresence*)presence
 {
+	XMPPContact *contact;
 	XMPPJID *JID = [presence from];
-	XMPPContact *contact = [_contacts objectForKey: [JID bareJID]];
+	OFString *type = [presence type];
 
+	/* Subscription request */
+	if ([type isEqual: @"subscribe"]) {
+		of_log(@"ObjXMPP: received subscription request");
+		[_delegates broadcastSelector: @selector(contactManager:
+						 didReceiveSubscriptionRequest:)
+				   withObject: self
+				   withObject: presence];
+		return;
+	}
+
+	contact = [_contacts objectForKey: [JID bareJID]];
 	if (contact == nil)
 		return;
 
-	// We only care for available and unavailable here, not subscriptions
-	if ([[presence type] isEqual: @"available"]) {
+	/* Available presence */
+	if ([type isEqual: @"available"]) {
 		[contact XMPP_setPresence: presence
 				 resource: [JID resource]];
 		[_delegates broadcastSelector: @selector(contact:
 						   didSendPresence:)
 				   withObject: contact
 				   withObject: presence];
-	} else if ([[presence type] isEqual: @"unavailable"]) {
+		return;
+	}
+
+	/* Unavailable presence */
+	if ([type isEqual: @"unavailable"]) {
 		[contact XMPP_removePresenceForResource: [JID resource]];
 		[_delegates broadcastSelector: @selector(contact:
 						   didSendPresence:)
 				   withObject: contact
 				   withObject: presence];
+		return;
 	}
 }
 

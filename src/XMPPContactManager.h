@@ -58,6 +58,15 @@
       didRemoveContact: (XMPPContact*)contact;
 
 /**
+ * \brief This callback is called when a subscription request is received
+ *
+ * \param manager The contact manager that received the request
+ * \param presence The type=subscribe presence
+ */
+-          (void)contactManager: (XMPPContactManager*)manager
+  didReceiveSubscriptionRequest: (XMPPPresence*)presence;
+
+/**
  * \brief This callback is called whenever a contact is about to change its
  *	  roster item
  *
@@ -117,6 +126,9 @@
  */
 - initWithConnection: (XMPPConnection*)connection
 	      roster: (XMPPRoster*)roster;
+
+- (void)sendSubscribedToJID: (XMPPJID*)subscriber;
+- (void)sendUnsubscribedToJID: (XMPPJID*)subscriber;
 
 /**
  * \brief Adds the specified delegate.
