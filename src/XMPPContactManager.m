@@ -118,9 +118,9 @@
 		[_contacts removeObjectForKey: bareJID];
 		if (contact != nil)
 			[_delegates broadcastSelector: @selector(contactManager:
-							  didRemoveContact:)
-					  withObject: self
-					  withObject: contact];
+							   didRemoveContact:)
+					   withObject: self
+					   withObject: contact];
 		return;
 	}
 
@@ -130,14 +130,14 @@
 		[_contacts setObject: contact
 			     forKey: bareJID];
 		[_delegates broadcastSelector: @selector(contactManager:
-						  didAddContact:)
-				  withObject: self
-				  withObject: contact];
+						   didAddContact:)
+				   withObject: self
+				   withObject: contact];
 	} else {
 		[_delegates broadcastSelector: @selector(contact:
-						  willUpdateWithRosterItem:)
-				  withObject: contact
-				  withObject: rosterItem];
+						   willUpdateWithRosterItem:)
+				   withObject: contact
+				   withObject: rosterItem];
 		[contact XMPP_setRosterItem: rosterItem];
 	}
 }
@@ -156,13 +156,13 @@
 		[contact XMPP_setPresence: presence
 				 resource: [JID resource]];
 		[_delegates broadcastSelector: @selector(contact:
-						  didSendPresence:)
-				  withObject: contact
-				  withObject: presence];
+						   didSendPresence:)
+				   withObject: contact
+				   withObject: presence];
 	} else if ([[presence type] isEqual: @"unavailable"]) {
 		[contact XMPP_removePresenceForResource: [JID resource]];
 		[_delegates broadcastSelector: @selector(contact:
-						    didSendPresence:)
+						   didSendPresence:)
 				   withObject: contact
 				   withObject: presence];
 	}
