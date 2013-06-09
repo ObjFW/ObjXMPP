@@ -115,12 +115,12 @@
 	contact = [_contacts objectForKey: bareJID];
 
 	if ([[rosterItem subscription] isEqual: @"remove"]) {
-		[_contacts removeObjectForKey: bareJID];
 		if (contact != nil)
 			[_delegates broadcastSelector: @selector(contactManager:
 							   didRemoveContact:)
 					   withObject: self
 					   withObject: contact];
+		[_contacts removeObjectForKey: bareJID];
 		return;
 	}
 
