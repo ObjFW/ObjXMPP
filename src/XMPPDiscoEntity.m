@@ -90,10 +90,12 @@
 
 - (OFString*)capsHash
 {
-	OFMutableString *caps = [OFMutableString string];
 	OFEnumerator *enumerator;
 	XMPPDiscoIdentity *identity;
 	OFString *feature;
+	OFMutableString *caps = [OFMutableString string];
+	OFSHA1Hash *hash = [OFSHA1Hash hash];
+	OFDataArray *digest = [OFDataArray dataArray];
 
 	enumerator = [_identities objectEnumerator];
 	while ((identity = [enumerator nextObject]) != nil)
@@ -104,7 +106,13 @@
 	while ((feature = [enumerator nextObject]) != nil)
 		[caps appendFormat: @"%@<", feature];
 
-	return [caps SHA1Hash];
+	[hash updateWithBuffer: [caps UTF8String]
+			length: [caps UTF8StringLength]];
+
+	[digest addItems: [hash digest]
+		   count: [OFSHA1Hash digestSize]];
+
+	return [digest stringByBase64Encoding];
 }
 
 - (void)connection: (XMPPConnection*)connection
