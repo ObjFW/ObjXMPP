@@ -43,23 +43,23 @@ static int show_to_int(OFString *show)
 }
 
 @implementation XMPPPresence
-+ presence
++ (instancetype)presence
 {
 	return [[[self alloc] init] autorelease];
 }
 
-+ presenceWithID: (OFString*)ID
++ (instancetype)presenceWithID: (OFString*)ID
 {
 	return [[[self alloc] initWithID: ID] autorelease];
 }
 
-+ presenceWithType: (OFString*)type
++ (instancetype)presenceWithType: (OFString*)type
 {
 	return [[[self alloc] initWithType: type] autorelease];
 }
 
-+ presenceWithType: (OFString*)type
-		ID: (OFString*)ID
++ (instancetype)presenceWithType: (OFString*)type
+			      ID: (OFString*)ID
 {
 	return [[[self alloc] initWithType: type
 					ID: ID] autorelease];

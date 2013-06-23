@@ -61,8 +61,8 @@
  * \param node The node's opaque name
  * \return A new autoreleased XMPPDiscoNode
  */
-+ discoNodeWithJID: (XMPPJID*)JID
-	      node: (OFString*)node;
++ (instancetype)discoNodeWithJID: (XMPPJID*)JID
+			    node: (OFString*)node;
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoNode with the specified
@@ -73,8 +73,8 @@
  * \param name The node's human friendly name
  * \return A new autoreleased XMPPDiscoNode
  */
-+ discoNodeWithJID: (XMPPJID*)JID
-	      node: (OFString*)node
++ (instancetype)discoNodeWithJID: (XMPPJID*)JID
+			    node: (OFString*)node
 	      name: (OFString*)name;
 
 /**

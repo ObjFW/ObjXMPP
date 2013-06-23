@@ -27,13 +27,13 @@
 #import "XMPPEXTERNALAuth.h"
 
 @implementation XMPPEXTERNALAuth: XMPPAuthenticator
-+ EXTERNALAuth
++ (instancetype)EXTERNALAuth
 {
 	return [[[self alloc] initWithAuthcid: nil
 				     password: nil] autorelease];
 }
 
-+ EXTERNALAuthWithAuthzid: (OFString*)authzid
++ (instancetype)EXTERNALAuthWithAuthzid: (OFString*)authzid
 {
 	return [[[self alloc] initWithAuthzid: authzid
 				      authcid: nil

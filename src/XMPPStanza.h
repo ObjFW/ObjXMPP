@@ -52,7 +52,7 @@
  * \param name The stanza's name (one of iq, message or presence)
  * \return A new autoreleased XMPPStanza
  */
-+ stanzaWithName: (OFString*)name;
++ (instancetype)stanzaWithName: (OFString*)name;
 
 /**
  * \brief Creates a new autoreleased XMPPStanza with the specified name and
@@ -62,8 +62,8 @@
  * \param type The value for the stanza's type attribute
  * \return A new autoreleased XMPPStanza
  */
-+ stanzaWithName: (OFString*)name
-	    type: (OFString*)type;
++ (instancetype)stanzaWithName: (OFString*)name
+			  type: (OFString*)type;
 
 /**
  * \brief Creates a new autoreleased XMPPStanza with the specified name and ID.
@@ -72,8 +72,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPStanza
  */
-+ stanzaWithName: (OFString*)name
-	      ID: (OFString*)ID;
++ (instancetype)stanzaWithName: (OFString*)name
+			    ID: (OFString*)ID;
 
 /**
  * \brief Creates a new autoreleased XMPPStanza with the specified name, type
@@ -84,9 +84,9 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPStanza
  */
-+ stanzaWithName: (OFString*)name
-	    type: (OFString*)type
-	      ID: (OFString*)ID;
++ (instancetype)stanzaWithName: (OFString*)name
+			  type: (OFString*)type
+			    ID: (OFString*)ID;
 
 /**
  * \brief Creates a new autoreleased XMPPStanza from an OFXMLElement.
@@ -94,7 +94,7 @@
  * \param element The element to base the XMPPStanza on
  * \return A new autoreleased XMPPStanza
  */
-+ stanzaWithElement: (OFXMLElement*)element;
++ (instancetype)stanzaWithElement: (OFXMLElement*)element;
 
 /**
  * \brief Initializes an already allocated XMPPStanza with the specified name.

@@ -28,16 +28,16 @@
 #import "XMPPExceptions.h"
 
 @implementation XMPPPLAINAuth
-+ PLAINAuthWithAuthcid: (OFString*)authcid
-	      password: (OFString*)password
++ (instancetype)PLAINAuthWithAuthcid: (OFString*)authcid
+			    password: (OFString*)password
 {
 	return [[[self alloc] initWithAuthcid: authcid
 				     password: password] autorelease];
 }
 
-+ PLAINAuthWithAuthzid: (OFString*)authzid
-	       authcid: (OFString*)authcid
-	      password: (OFString*)password
++ (instancetype)PLAINAuthWithAuthzid: (OFString*)authzid
+			     authcid: (OFString*)authcid
+			    password: (OFString*)password
 {
 	return [[[self alloc] initWithAuthzid: authzid
 				      authcid: authcid

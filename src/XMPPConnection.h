@@ -218,7 +218,7 @@
  *
  * \return A new autoreleased XMPPConnection
  */
-+ connection;
++ (instancetype)connection;
 
 /**
  * \brief Adds the specified delegate.

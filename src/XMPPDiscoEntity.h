@@ -58,7 +58,7 @@
  * \param connection The XMPPConnection to serve responses on.
  * \return A new autoreleased XMPPDiscoEntity
  */
-+ discoEntityWithConnection: (XMPPConnection*)connection;
++ (instancetype)discoEntityWithConnection: (XMPPConnection*)connection;
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoEntity with the specified
@@ -68,8 +68,8 @@
  * \param capsNode The node advertised for the entity's capabilites
  * \return A new autoreleased XMPPDiscoEntity
  */
-+ discoEntityWithConnection: (XMPPConnection*)connection
-		   capsNode: (OFString*)capsNode;
++ (instancetype)discoEntityWithConnection: (XMPPConnection*)connection
+				 capsNode: (OFString*)capsNode;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoEntity with the specified

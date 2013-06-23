@@ -45,7 +45,7 @@
  *
  * \return A new autoreleased XMPPJID
  */
-+ JID;
++ (instancetype)JID;
 
 /**
  * \brief Creates a new autoreleased XMPPJID from a string.
@@ -53,7 +53,7 @@
  * \param string The string to parse into a JID object
  * \return A new autoreleased XMPPJID
  */
-+ JIDWithString: (OFString*)string;
++ (instancetype)JIDWithString: (OFString*)string;
 
 /**
  * \brief Initializes an already allocated XMPPJID with a string.

@@ -28,17 +28,17 @@
 #import "namespaces.h"
 
 @implementation XMPPDiscoNode
-+ discoNodeWithJID: (XMPPJID*)JID
-	      node: (OFString*)node;
++ (instancetype)discoNodeWithJID: (XMPPJID*)JID
+			    node: (OFString*)node;
 {
 	return [[[self alloc] initWithJID: JID
 				     node: node] autorelease];
 }
 
 
-+ discoNodeWithJID: (XMPPJID*)JID
-	      node: (OFString*)node
-	      name: (OFString*)name
++ (instancetype)discoNodeWithJID: (XMPPJID*)JID
+			    node: (OFString*)node
+			    name: (OFString*)name
 {
 	return [[[self alloc] initWithJID: JID
 				     node: node

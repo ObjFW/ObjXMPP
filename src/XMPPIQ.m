@@ -29,8 +29,8 @@
 #import "XMPPIQ.h"
 
 @implementation XMPPIQ
-+ IQWithType: (OFString*)type
-	  ID: (OFString*)ID
++ (instancetype)IQWithType: (OFString*)type
+			ID: (OFString*)ID
 {
 	return [[[self alloc] initWithType: type
 					ID: ID] autorelease];

@@ -49,11 +49,11 @@
  * \param plusAvailable Whether the PLUS variant was offered
  * \return A new autoreleased XMPPSCRAMAuth
  */
-+ SCRAMAuthWithAuthcid: (OFString*)authcid
-	      password: (OFString*)password
-	    connection: (XMPPConnection*)connection
-		  hash: (Class)hash
-	 plusAvailable: (bool)plusAvailable;
++ (instancetype)SCRAMAuthWithAuthcid: (OFString*)authcid
+			    password: (OFString*)password
+			  connection: (XMPPConnection*)connection
+				hash: (Class)hash
+		       plusAvailable: (bool)plusAvailable;
 
 /**
  * \brief Creates a new autoreleased XMPPSCRAMAuth with an authzid, authcid and
@@ -67,12 +67,12 @@
  * \param plusAvailable Whether the PLUS variant was offered
  * \return A new autoreleased XMPPSCRAMAuth
  */
-+ SCRAMAuthWithAuthzid: (OFString*)authzid
-	       authcid: (OFString*)authcid
-	      password: (OFString*)password
-	    connection: (XMPPConnection*)connection
-		  hash: (Class)hash
-	 plusAvailable: (bool)plusAvailable;
++ (instancetype)SCRAMAuthWithAuthzid: (OFString*)authzid
+			     authcid: (OFString*)authcid
+			    password: (OFString*)password
+			  connection: (XMPPConnection*)connection
+				hash: (Class)hash
+		       plusAvailable: (bool)plusAvailable;
 
 /**
  * \brief Initializes an already allocated XMPPSCRAMAuth with an authcid and

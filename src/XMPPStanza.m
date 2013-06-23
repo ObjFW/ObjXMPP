@@ -30,35 +30,35 @@
 #import "namespaces.h"
 
 @implementation XMPPStanza
-+ stanzaWithName: (OFString*)name
++ (instancetype)stanzaWithName: (OFString*)name
 {
 	return [[[self alloc] initWithName: name] autorelease];
 }
 
-+ stanzaWithName: (OFString*)name
-	    type: (OFString*)type
++ (instancetype)stanzaWithName: (OFString*)name
+			  type: (OFString*)type
 {
 	return [[[self alloc] initWithName: name
 				      type: type] autorelease];
 }
 
-+ stanzaWithName: (OFString*)name
-	      ID: (OFString*)ID
++ (instancetype)stanzaWithName: (OFString*)name
+			    ID: (OFString*)ID
 {
 	return [[[self alloc] initWithName: name
 					ID: ID] autorelease];
 }
 
-+ stanzaWithName: (OFString*)name
-	    type: (OFString*)type
-	      ID: (OFString*)ID
++ (instancetype)stanzaWithName: (OFString*)name
+			  type: (OFString*)type
+			    ID: (OFString*)ID
 {
 	return [[[self alloc] initWithName: name
 				      type: type
 					ID: ID] autorelease];
 }
 
-+ stanzaWithElement: (OFXMLElement*)element
++ (instancetype)stanzaWithElement: (OFXMLElement*)element
 {
 	return [[[self alloc] initWithElement: element] autorelease];
 }

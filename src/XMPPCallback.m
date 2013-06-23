@@ -28,7 +28,7 @@
 
 @implementation XMPPCallback
 #ifdef OF_HAVE_BLOCKS
-+ callbackWithBlock: (xmpp_callback_block_t)block
++ (instancetype)callbackWithBlock: (xmpp_callback_block_t)block
 {
 	return [[(XMPPCallback*)[self alloc] initWithBlock: block] autorelease];
 }
@@ -48,8 +48,8 @@
 }
 #endif
 
-+ callbackWithTarget: (id)target
-	    selector: (SEL)selector
++ (instancetype)callbackWithTarget: (id)target
+			  selector: (SEL)selector
 {
 	return [[[self alloc] initWithTarget: target
 				    selector: selector] autorelease];

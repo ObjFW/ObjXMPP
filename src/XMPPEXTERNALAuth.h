@@ -32,7 +32,7 @@
  *
  * \return A new autoreleased XMPPEXTERNALAuth
  */
-+ EXTERNALAuth;
++ (instancetype)EXTERNALAuth;
 
 /**
  * \brief Creates a new autoreleased XMPPEXTERNALAuth with an authzid.
@@ -40,5 +40,5 @@
  * \param authzid The authzid to get authorization for
  * \return A new autoreleased XMPPEXTERNALAuth
  */
-+ EXTERNALAuthWithAuthzid: (OFString*)authzid;
++ (instancetype)EXTERNALAuthWithAuthzid: (OFString*)authzid;
 @end

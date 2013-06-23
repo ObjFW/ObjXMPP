@@ -51,7 +51,7 @@
  *
  * \return A new autoreleased roster item.
  */
-+ rosterItem;
++ (instancetype)rosterItem;
 
 - (void)setJID: (XMPPJID*)JID;
 - (XMPPJID*)JID;

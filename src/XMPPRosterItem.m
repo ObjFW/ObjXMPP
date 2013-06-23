@@ -30,7 +30,7 @@
 #import <ObjFW/macros.h>
 
 @implementation XMPPRosterItem
-+ rosterItem
++ (instancetype)rosterItem
 {
 	return [[[self alloc] init] autorelease];
 }

@@ -42,7 +42,7 @@
  *
  * \return A new autoreleased XMPPPresence
  */
-+ presence;
++ (instancetype)presence;
 
 /**
  * \brief Creates a new autoreleased XMPPPresence with the specified ID.
@@ -50,7 +50,7 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPPresence
  */
-+ presenceWithID: (OFString*)ID;
++ (instancetype)presenceWithID: (OFString*)ID;
 
 /**
  * \brief Creates a new autoreleased XMPPPresence with the specified type.
@@ -58,7 +58,7 @@
  * \param type The value for the stanza's type attribute
  * \return A new autoreleased XMPPPresence
  */
-+ presenceWithType: (OFString*)type;
++ (instancetype)presenceWithType: (OFString*)type;
 
 /**
  * \brief Creates a new autoreleased XMPPPresence with the specified type and
@@ -68,8 +68,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPPresence
  */
-+ presenceWithType: (OFString*)type
-		ID: (OFString*)ID;
++ (instancetype)presenceWithType: (OFString*)type
+			      ID: (OFString*)ID;
 
 /**
  * \brief Initializes an already allocated XMPPPresence with the specified ID.

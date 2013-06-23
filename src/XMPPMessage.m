@@ -29,22 +29,22 @@
 #import "namespaces.h"
 
 @implementation XMPPMessage
-+ message
++ (instancetype)message
 {
 	return [[[self alloc] init] autorelease];
 }
 
-+ messageWithID: (OFString*)ID
++ (instancetype)messageWithID: (OFString*)ID
 {
 	return [[[self alloc] initWithID: ID] autorelease];
 }
 
-+ messageWithType: (OFString*)type
++ (instancetype)messageWithType: (OFString*)type
 {
 	return [[[self alloc] initWithType: type] autorelease];
 }
 
-+ messageWithType: (OFString*)type
++ (instancetype)messageWithType: (OFString*)type
 	       ID: (OFString*)ID
 {
 	return [[[self alloc] initWithType: type

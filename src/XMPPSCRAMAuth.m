@@ -38,11 +38,11 @@
 #define HMAC_OPAD 0x5c
 
 @implementation XMPPSCRAMAuth
-+ SCRAMAuthWithAuthcid: (OFString*)authcid
-	      password: (OFString*)password
-	    connection: (XMPPConnection*)connection
-		  hash: (Class)hash
-	 plusAvailable: (bool)plusAvailable
++ (instancetype)SCRAMAuthWithAuthcid: (OFString*)authcid
+			    password: (OFString*)password
+			  connection: (XMPPConnection*)connection
+				hash: (Class)hash
+		       plusAvailable: (bool)plusAvailable
 {
 	return [[[self alloc] initWithAuthcid: authcid
 				     password: password
@@ -51,12 +51,12 @@
 				plusAvailable: plusAvailable] autorelease];
 }
 
-+ SCRAMAuthWithAuthzid: (OFString*)authzid
-	       authcid: (OFString*)authcid
-	      password: (OFString*)password
-	    connection: (XMPPConnection*)connection
-		  hash: (Class)hash
-	 plusAvailable: (bool)plusAvailable
++ (instancetype)SCRAMAuthWithAuthzid: (OFString*)authzid
+			     authcid: (OFString*)authcid
+			    password: (OFString*)password
+			  connection: (XMPPConnection*)connection
+				hash: (Class)hash
+		       plusAvailable: (bool)plusAvailable
 {
 	return [[[self alloc] initWithAuthzid: authzid
 				      authcid: authcid

@@ -30,7 +30,7 @@
 #import "XMPPConnection.h"
 
 @implementation XMPPException
-+ exceptionWithConnection: (XMPPConnection*)connection
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
 {
 	return [[[self alloc] initWithConnection: connection] autorelease];
 }
@@ -75,9 +75,9 @@
 @end
 
 @implementation XMPPStreamErrorException
-+ exceptionWithConnection: (XMPPConnection*)connection
-		condition: (OFString*)condition
-		   reason: (OFString*)reason;
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
+			      condition: (OFString*)condition
+				 reason: (OFString*)reason;
 {
 	return [[[self alloc] initWithConnection: connection
 				       condition: condition
@@ -139,9 +139,9 @@
 @end
 
 @implementation XMPPStringPrepFailedException
-+ exceptionWithConnection: (XMPPConnection*)connection
-		  profile: (OFString*)profile
-		   string: (OFString*)string
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
+				profile: (OFString*)profile
+				 string: (OFString*)string
 {
 	return [[[self alloc] initWithConnection: connection
 					 profile: profile
@@ -204,9 +204,9 @@
 @end
 
 @implementation XMPPIDNATranslationFailedException
-+ exceptionWithConnection: (XMPPConnection*)connection
-		operation: (OFString*)operation
-		   string: (OFString*)string
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
+			      operation: (OFString*)operation
+				 string: (OFString*)string
 {
 	return [[[self alloc] initWithConnection: connection
 				       operation: operation
@@ -268,8 +268,8 @@
 @end
 
 @implementation XMPPAuthFailedException
-+ exceptionWithConnection: (XMPPConnection*)connection
-		   reason: (OFString*)reason;
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
+				 reason: (OFString*)reason;
 {
 	return [[[self alloc] initWithConnection: connection
 					  reason: reason] autorelease];

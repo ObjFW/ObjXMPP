@@ -45,7 +45,7 @@
  *	  for this exception
  * \return A new XMPPException
  */
-+ exceptionWithConnection: (XMPPConnection*)connection;
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection;
 
 /**
  * \brief Initializes an already allocated XMPPException.
@@ -82,9 +82,9 @@
  * \param reason The descriptive free-form text specified by the stream error
  * \return A new XMPPStreamErrorException
  */
-+ exceptionWithConnection: (XMPPConnection*)connection
-		condition: (OFString*)condition
-		   reason: (OFString*)reason;
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
+			      condition: (OFString*)condition
+				 reason: (OFString*)reason;
 
 /**
  * \brief Initializes an already allocated XMPPStreamErrorException.
@@ -126,9 +126,9 @@
  * \param string The string that failed the stringprep profile
  * \return A new XMPPStringPrepFailedException
  */
-+ exceptionWithConnection: (XMPPConnection*)connection
-		  profile: (OFString*)profile
-		   string: (OFString*)string;
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
+				profile: (OFString*)profile
+				 string: (OFString*)string;
 
 /**
  * \brief Initializes an already allocated XMPPStringPrepFailedException.
@@ -169,9 +169,9 @@
  * \param string The string that could not be translated
  * \return A new XMPPIDNATranslationFailedException
  */
-+ exceptionWithConnection: (XMPPConnection*)connection
-		operation: (OFString*)operation
-		   string: (OFString*)string;
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
+			      operation: (OFString*)operation
+				 string: (OFString*)string;
 
 /**
  * \brief Initializes an already allocated XMPPIDNATranslationFailedException.
@@ -209,8 +209,8 @@
  * \param reason The reason the authentication failed
  * \return A new XMPPAuthFailedException
  */
-+ exceptionWithConnection: (XMPPConnection*)connection
-		   reason: (OFString*)reason;
++ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
+				 reason: (OFString*)reason;
 
 /**
  * \brief Initializes an already allocated XMPPAuthFailedException.

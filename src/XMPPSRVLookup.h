@@ -43,12 +43,12 @@
 @property (readonly, copy) OFString *target;
 #endif
 
-+ entryWithPriority: (uint16_t)priority
-	     weight: (uint16_t)weight
-	       port: (uint16_t)port
-	     target: (OFString*)target;
-+ entryWithResourceRecord: (ns_rr)resourceRecord
-		   handle: (ns_msg)handle;
++ (instancetype)entryWithPriority: (uint16_t)priority
+			   weight: (uint16_t)weight
+			     port: (uint16_t)port
+			   target: (OFString*)target;
++ (instancetype)entryWithResourceRecord: (ns_rr)resourceRecord
+				 handle: (ns_msg)handle;
 - initWithPriority: (uint16_t)priority
 	    weight: (uint16_t)weight
 	      port: (uint16_t)port
@@ -74,7 +74,7 @@
 @property (readonly, copy) OFString *domain;
 #endif
 
-+ lookupWithDomain: (OFString*)domain;
++ (instancetype)lookupWithDomain: (OFString*)domain;
 - initWithDomain: (OFString*)domain;
 
 - (void)XMPP_lookup;

@@ -47,9 +47,9 @@
  * \param name The name of the identity
  * \return A new autoreleased XMPPDiscoIdentity
  */
-+ identityWithCategory: (OFString*)category
-		  type: (OFString*)type
-		  name: (OFString*)name;
++ (instancetype)identityWithCategory: (OFString*)category
+				type: (OFString*)type
+				name: (OFString*)name;
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoIdentity with the specified
@@ -59,8 +59,8 @@
  * \param type The type of the identity
  * \return A new autoreleased XMPPDiscoIdentity
  */
-+ identityWithCategory: (OFString*)category
-		  type: (OFString*)type;
++ (instancetype)identityWithCategory: (OFString*)category
+				type: (OFString*)type;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoIdentity with the specified

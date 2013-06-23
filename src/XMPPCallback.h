@@ -39,12 +39,12 @@ typedef void (^xmpp_callback_block_t)(XMPPConnection*, XMPPIQ*);
 }
 
 #ifdef OF_HAVE_BLOCKS
-+ callbackWithBlock: (xmpp_callback_block_t)callback;
++ (instancetype)callbackWithBlock: (xmpp_callback_block_t)callback;
 - initWithBlock: (xmpp_callback_block_t)callback;
 #endif
 
-+ callbackWithTarget: (id)target
-	    selector: (SEL)selector;
++ (instancetype)callbackWithTarget: (id)target
+			  selector: (SEL)selector;
 - initWithTarget: (id)target
 	selector: (SEL)selector;
 

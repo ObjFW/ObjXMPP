@@ -37,7 +37,7 @@
  *
  * \return A new autoreleased XMPPMessage
  */
-+ message;
++ (instancetype)message;
 
 /**
  * \brief Creates a new autoreleased XMPPMessage with the specified ID.
@@ -45,7 +45,7 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPMessage
  */
-+ messageWithID: (OFString*)ID;
++ (instancetype)messageWithID: (OFString*)ID;
 
 /**
  * \brief Creates a new autoreleased XMPPMessage with the specified type.
@@ -53,7 +53,7 @@
  * \param type The value for the stanza's type attribute
  * \return A new autoreleased XMPPMessage
  */
-+ messageWithType: (OFString*)type;
++ (instancetype)messageWithType: (OFString*)type;
 
 /**
  * \brief Creates a new autoreleased XMPPMessage with the specified type and ID.
@@ -62,8 +62,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPMessage
  */
-+ messageWithType: (OFString*)type
-	       ID: (OFString*)ID;
++ (instancetype)messageWithType: (OFString*)type
+			     ID: (OFString*)ID;
 
 /**
  * \brief Initializes an already allocated XMPPMessage with the specified ID.

@@ -23,17 +23,17 @@
 #import "XMPPDiscoIdentity.h"
 
 @implementation XMPPDiscoIdentity
-+ identityWithCategory: (OFString*)category
-		  type: (OFString*)type
-		  name: (OFString*)name
++ (instancetype)identityWithCategory: (OFString*)category
+				type: (OFString*)type
+				name: (OFString*)name
 {
 	return [[[self alloc] initWithCategory: category
 					  type: type
 					  name: name] autorelease];
 }
 
-+ identityWithCategory: (OFString*)category
-		  type: (OFString*)type
++ (instancetype)identityWithCategory: (OFString*)category
+				type: (OFString*)type
 {
 	return [[[self alloc] initWithCategory: category
 					  type: type] autorelease];

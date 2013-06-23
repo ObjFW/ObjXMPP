@@ -34,8 +34,8 @@
  * \param password The password to authenticate with
  * \return A new autoreleased XMPPPLAINAuth
  */
-+ PLAINAuthWithAuthcid: (OFString*)authcid
-	      password: (OFString*)password;
++ (instancetype)PLAINAuthWithAuthcid: (OFString*)authcid
+			    password: (OFString*)password;
 
 /**
  * \brief Creates a new autoreleased XMPPPLAINAuth with an authzid, authcid and
@@ -46,7 +46,7 @@
  * \param password The password to authenticate with
  * \return A new autoreleased XMPPPLAINAuth
  */
-+ PLAINAuthWithAuthzid: (OFString*)authzid
-	       authcid: (OFString*)authcid
++ (instancetype)PLAINAuthWithAuthzid: (OFString*)authzid
+			     authcid: (OFString*)authcid
 	      password: (OFString*)password;
 @end

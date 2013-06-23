@@ -117,7 +117,7 @@
 @end
 
 @implementation XMPPConnection
-+ connection
++ (instancetype)connection
 {
 	return [[[self alloc] init] autorelease];
 }

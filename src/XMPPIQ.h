@@ -34,8 +34,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPIQ
  */
-+ IQWithType: (OFString*)type
-	  ID: (OFString*)ID;
++ (instancetype)IQWithType: (OFString*)type
+			ID: (OFString*)ID;
 
 /**
  * \brief Initializes an already allocated XMPPIQ with the specified type and

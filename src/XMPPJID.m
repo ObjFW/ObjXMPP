@@ -33,12 +33,12 @@
 #import "XMPPExceptions.h"
 
 @implementation XMPPJID
-+ JID
++ (instancetype)JID
 {
 	return [[[self alloc] init] autorelease];
 }
 
-+ JIDWithString: (OFString*)string
++ (instancetype)JIDWithString: (OFString*)string
 {
 	return [[[self alloc] initWithString: string] autorelease];
 }

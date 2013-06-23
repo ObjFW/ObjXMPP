@@ -37,10 +37,10 @@
 #import "XMPPSRVLookup.h"
 
 @implementation XMPPSRVEntry
-+ entryWithPriority: (uint16_t)priority
-	     weight: (uint16_t)weight
-	       port: (uint16_t)port
-	     target: (OFString*)target
++ (instancetype)entryWithPriority: (uint16_t)priority
+			   weight: (uint16_t)weight
+			     port: (uint16_t)port
+			   target: (OFString*)target
 {
 	return [[[self alloc] initWithPriority: priority
 					weight: weight
@@ -48,8 +48,8 @@
 					target: target] autorelease];
 }
 
-+ entryWithResourceRecord: (ns_rr)resourceRecord
-		   handle: (ns_msg)handle
++ (instancetype)entryWithResourceRecord: (ns_rr)resourceRecord
+				 handle: (ns_msg)handle
 {
 	return [[[self alloc] initWithResourceRecord: resourceRecord
 					      handle: handle] autorelease];
@@ -163,7 +163,7 @@
 @end
 
 @implementation XMPPSRVLookup
-+ lookupWithDomain: (OFString*)domain
++ (instancetype)lookupWithDomain: (OFString*)domain
 {
 	return [[[self alloc] initWithDomain: domain] autorelease];
 }

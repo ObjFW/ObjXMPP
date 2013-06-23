@@ -26,13 +26,13 @@
 #import "namespaces.h"
 
 @implementation XMPPDiscoEntity
-+ discoEntityWithConnection: (XMPPConnection*)connection
++ (instancetype)discoEntityWithConnection: (XMPPConnection*)connection
 {
 	return [[[self alloc] initWithConnection: connection] autorelease];
 }
 
-+ discoEntityWithConnection: (XMPPConnection*)connection
-		   capsNode: (OFString*)capsNode
++ (instancetype)discoEntityWithConnection: (XMPPConnection*)connection
+				 capsNode: (OFString*)capsNode
 {
 	return [[[self alloc] initWithConnection: connection
 					capsNode: capsNode] autorelease];
