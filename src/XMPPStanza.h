@@ -30,11 +30,8 @@
  */
 @interface XMPPStanza: OFXMLElement
 {
-	XMPPJID *_from;
-	XMPPJID *_to;
-	OFString *_type;
-	OFString *_ID;
-	OFString *_language;
+	XMPPJID *_from, *_to;
+	OFString *_type, *_ID, *_language;
 }
 
 #ifdef OF_HAVE_PROPERTIES

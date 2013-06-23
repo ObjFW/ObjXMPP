@@ -64,8 +64,7 @@
  */
 @interface XMPPStreamErrorException: XMPPException
 {
-	OFString *_condition;
-	OFString *_reason;
+	OFString *_condition, *_reason;
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -109,8 +108,7 @@
  */
 @interface XMPPStringPrepFailedException: XMPPException
 {
-	OFString *_profile;
-	OFString *_string;
+	OFString *_profile, *_string;
 }
 
 #ifdef OF_HAVE_PROPERTIES
@@ -153,8 +151,7 @@
  */
 @interface XMPPIDNATranslationFailedException: XMPPException
 {
-	OFString *_operation;
-	OFString *_string;
+	OFString *_operation, *_string;
 }
 
 #ifdef OF_HAVE_PROPERTIES

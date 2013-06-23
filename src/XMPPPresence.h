@@ -28,10 +28,9 @@
  */
 @interface XMPPPresence: XMPPStanza <OFComparing>
 {
-	OFString *_status;
-	OFString *_show;
-	OFNumber *_priority;
+	OFString *_status, *_show, *_priority;
 }
+
 #ifdef OF_HAVE_PROPERTIES
 @property (copy) OFString *status;
 @property (copy) OFString *show;
@@ -135,7 +134,8 @@
 - (void)setPriority: (OFNumber*)priority;
 
 /**
- * \brief Returns the numeric content of the priority element of the presence stanza.
+ * \brief Returns the numeric content of the priority element of the presence
+ *	  stanza.
  *
  * \return The numeric content of the priority element of the presence stanza.
  */

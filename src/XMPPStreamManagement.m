@@ -24,14 +24,13 @@
 #import "namespaces.h"
 
 @implementation XMPPStreamManagement
-- initWithConnection: (XMPPConnection*)connection_
+- initWithConnection: (XMPPConnection*)connection
 {
 	self = [super init];
 
 	@try {
-		_connection = connection_;
+		_connection = connection;
 		[_connection addDelegate: self];
-		receivedCount = 0;
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -47,7 +46,7 @@
 	[super dealloc];
 }
 
-- (void)connection: (XMPPConnection*)connection_
+- (void)connection: (XMPPConnection*)connection
  didReceiveElement: (OFXMLElement*)element
 {
 	OFString *elementName = [element name];
@@ -55,7 +54,7 @@
 
 	if ([elementNS isEqual: XMPP_NS_SM]) {
 		if ([elementName isEqual: @"enabled"]) {
-			receivedCount = 0;
+			_receivedCount = 0;
 			return;
 		}
 
@@ -68,11 +67,11 @@
 			OFXMLElement *ack =
 			    [OFXMLElement elementWithName: @"a"
 						namespace: XMPP_NS_SM];
+			OFString *stringValue = [OFString
+			    stringWithFormat: @"%" PRIu32, _receivedCount];
 			[ack addAttributeWithName: @"h"
-				      stringValue:
-			    [OFString stringWithFormat: @"%" PRIu32,
-				receivedCount]];
-			[connection_ sendStanza: ack];
+				      stringValue: stringValue];
+			[connection sendStanza: ack];
 		}
 	}
 
@@ -80,11 +79,11 @@
 	    ([elementName isEqual: @"iq"] ||
 	     [elementName isEqual: @"presence"] ||
 	     [elementName isEqual: @"message"]))
-		receivedCount++;
+		_receivedCount++;
 }
 
 /* TODO: Count outgoing stanzas here and cache them, send own ACK requests
-- (void)connection: (XMPPConnection*)connection_
+- (void)connection: (XMPPConnection*)connection
     didSendElement: (OFXMLElement*)element
 {
 }

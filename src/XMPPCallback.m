@@ -33,12 +33,12 @@
 	return [[(XMPPCallback*)[self alloc] initWithBlock: block] autorelease];
 }
 
-- initWithBlock: (xmpp_callback_block_t)block_
+- initWithBlock: (xmpp_callback_block_t)block
 {
 	self = [super init];
 
 	@try {
-		block = [block_ copy];
+		_block = [block copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -70,7 +70,7 @@
 {
 	[_target release];
 #ifdef OF_HAVE_BLOCKS
-	[block release];
+	[_block release];
 #endif
 
 	[super dealloc];
@@ -80,8 +80,8 @@
        connection: (XMPPConnection*)connection
 {
 #ifdef OF_HAVE_BLOCKS
-	if (block != NULL)
-		block(connection, iq);
+	if (_block != NULL)
+		_block(connection, iq);
 	else
 #endif
 		[_target performSelector: _selector

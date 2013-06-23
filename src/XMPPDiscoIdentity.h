@@ -27,9 +27,7 @@
  */
 @interface XMPPDiscoIdentity: OFObject <OFComparing>
 {
-	OFString *_category;
-	OFString *_name;
-	OFString *_type;
+	OFString *_category, *_name, *_type;
 }
 #ifdef OF_HAVE_PROPERTIES
 /// \brief The category of the identity

@@ -303,12 +303,12 @@
 @end
 
 @implementation XMPPSRVEnumerator
-- initWithList: (OFList*)list_
+- initWithList: (OFList*)list
 {
 	self = [super init];
 
 	@try {
-		list = [list_ copy];
+		_list = [list copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -323,50 +323,50 @@
 	of_list_object_t *iter;
 	uint32_t totalWeight = 0;
 
-	if (done)
+	if (_done)
 		return nil;
 
-	if (listIter == NULL)
-		listIter = [list firstListObject];
+	if (_listIter == NULL)
+		_listIter = [_list firstListObject];
 
-	if (listIter == NULL)
+	if (_listIter == NULL)
 		return nil;
 
-	if (subListCopy == nil)
-		subListCopy = [listIter->object copy];
+	if (_subListCopy == nil)
+		_subListCopy = [_listIter->object copy];
 
-	for (iter = [subListCopy firstListObject]; iter != NULL;
+	for (iter = [_subListCopy firstListObject]; iter != NULL;
 	     iter = iter->next) {
 		totalWeight += [iter->object weight];
 		[iter->object setAccumulatedWeight: totalWeight];
 	}
 
-	if ([subListCopy count] > 0)  {
+	if ([_subListCopy count] > 0)  {
 		uint32_t randomWeight;
 
 		RAND_pseudo_bytes((uint8_t*)&randomWeight, sizeof(uint32_t));
 		randomWeight %= (totalWeight + 1);
 
-		for (iter = [subListCopy firstListObject]; iter != NULL;
+		for (iter = [_subListCopy firstListObject]; iter != NULL;
 		     iter = iter->next) {
 			if ([iter->object accumulatedWeight] >= randomWeight) {
 				ret = [[iter->object retain] autorelease];
 
-				[subListCopy removeListObject: iter];
+				[_subListCopy removeListObject: iter];
 
 				break;
 			}
 		}
 	}
 
-	if ([subListCopy count] == 0) {
-		[subListCopy release];
-		subListCopy = nil;
+	if ([_subListCopy count] == 0) {
+		[_subListCopy release];
+		_subListCopy = nil;
 
-		listIter = listIter->next;
+		_listIter = _listIter->next;
 
-		if (listIter == NULL)
-			done = true;
+		if (_listIter == NULL)
+			_done = true;
 	}
 
 	return ret;
@@ -374,9 +374,9 @@
 
 - (void)reset
 {
-	listIter = NULL;
-	[subListCopy release];
-	subListCopy = nil;
-	done = false;
+	_listIter = NULL;
+	[_subListCopy release];
+	_subListCopy = nil;
+	_done = false;
 }
 @end

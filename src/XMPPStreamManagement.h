@@ -28,7 +28,7 @@
 #endif
 {
 	XMPPConnection *_connection;
-	uint32_t receivedCount;
+	uint32_t _receivedCount;
 }
 
 - initWithConnection: (XMPPConnection*)connection;

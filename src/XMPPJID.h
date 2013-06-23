@@ -28,9 +28,7 @@
  */
 @interface XMPPJID: OFObject <OFCopying>
 {
-	OFString *_node;
-	OFString *_domain;
-	OFString *_resource;
+	OFString *_node, *_domain, *_resource;
 }
 
 #ifdef OF_HAVE_PROPERTIES

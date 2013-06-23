@@ -83,10 +83,10 @@
 
 @interface XMPPSRVEnumerator: OFEnumerator
 {
-	OFList *list;
-	of_list_object_t *listIter;
-	OFList *subListCopy;
-	bool done;
+	OFList *_list;
+	of_list_object_t *_listIter;
+	OFList *_subListCopy;
+	bool _done;
 }
 
 - initWithList: (OFList*)list;
