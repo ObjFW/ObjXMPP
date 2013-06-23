@@ -24,29 +24,32 @@
 # include "config.h"
 #endif
 
+#include <stdlib.h>
+
 #import "XMPPExceptions.h"
 #import "XMPPConnection.h"
 
 @implementation XMPPException
-+ exceptionWithClass: (Class)class
-	  connection: (XMPPConnection*)connection
++ exceptionWithConnection: (XMPPConnection*)connection
 {
-	return [[[self alloc] initWithClass: class
-				 connection: connection] autorelease];
+	return [[[self alloc] initWithConnection: connection] autorelease];
 }
 
-- initWithClass: (Class)class
+- init
 {
-	Class c = [self class];
-	[self release];
-	@throw [OFNotImplementedException exceptionWithClass: c
-						    selector: _cmd];
+	@try {
+		[self doesNotRecognizeSelector: _cmd];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	abort();
 }
 
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
+- initWithConnection: (XMPPConnection*)connection
 {
-	self = [super initWithClass: class];
+	self = [super init];
 
 	@try {
 		_connection = [connection retain];
@@ -67,38 +70,37 @@
 
 - (XMPPConnection*)connection
 {
-	OF_GETTER(_connection, NO)
+	OF_GETTER(_connection, false)
 }
 @end
 
 @implementation XMPPStreamErrorException
-+ exceptionWithClass: (Class)class
-	  connection: (XMPPConnection*)connection
++ exceptionWithConnection: (XMPPConnection*)connection
+		condition: (OFString*)condition
+		   reason: (OFString*)reason;
+{
+	return [[[self alloc] initWithConnection: connection
+				       condition: condition
+					  reason: reason] autorelease];
+}
+
+- initWithConnection: (XMPPConnection*)connection
+{
+	@try {
+		[self doesNotRecognizeSelector: _cmd];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	abort();
+}
+
+- initWithConnection: (XMPPConnection*)connection
 	   condition: (OFString*)condition
-	      reason: (OFString*)reason;
+	      reason: (OFString*)reason
 {
-	return [[[self alloc] initWithClass: class
-				 connection: connection
-				  condition: condition
-				     reason: reason] autorelease];
-}
-
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
-{
-	Class c = [self class];
-	[self release];
-	@throw [OFNotImplementedException exceptionWithClass: c
-						    selector: _cmd];
-}
-
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
-      condition: (OFString*)condition
-	 reason: (OFString*)reason
-{
-	self = [super initWithClass: class
-			 connection: connection];
+	self = [super initWithConnection: connection];
 
 	@try {
 		_condition = [condition copy];
@@ -122,49 +124,47 @@
 - (OFString*)description
 {
 	return [OFString stringWithFormat:
-	    @"Got stream error in class %@: %@. Reason: %@!", [self inClass],
-	    _condition, _reason];
+	    @"Got stream error: %@. Reason: %@!", _condition, _reason];
 }
 
 - (OFString*)condition
 {
-	OF_GETTER(_condition, NO)
+	OF_GETTER(_condition, false)
 }
 
 - (OFString*)reason
 {
-	OF_GETTER(_reason, NO)
+	OF_GETTER(_reason, false)
 }
 @end
 
 @implementation XMPPStringPrepFailedException
-+ exceptionWithClass: (Class)class
-	  connection: (XMPPConnection*)connection
++ exceptionWithConnection: (XMPPConnection*)connection
+		  profile: (OFString*)profile
+		   string: (OFString*)string
+{
+	return [[[self alloc] initWithConnection: connection
+					 profile: profile
+					  string: string] autorelease];
+}
+
+- initWithConnection: (XMPPConnection*)connection
+{
+	@try {
+		[self doesNotRecognizeSelector: _cmd];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	abort();
+}
+
+- initWithConnection: (XMPPConnection*)connection
 	     profile: (OFString*)profile
 	      string: (OFString*)string
 {
-	return [[[self alloc] initWithClass: class
-				 connection: connection
-				    profile: profile
-				     string: string] autorelease];
-}
-
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
-{
-	Class c = [self class];
-	[self release];
-	@throw [OFNotImplementedException exceptionWithClass: c
-						    selector: _cmd];
-}
-
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
-	profile: (OFString*)profile
-	 string: (OFString*)string
-{
-	self = [super initWithClass: class
-			 connection: connection];
+	self = [super initWithConnection: connection];
 
 	@try {
 		_profile = [profile copy];
@@ -188,49 +188,48 @@
 - (OFString*)description
 {
 	return [OFString stringWithFormat:
-	    @"Stringprep with profile %@ failed in class %@ on string '%@'!",
-	    _profile, [self inClass], _string];
+	    @"Stringprep with profile %@ failed on string '%@'!",
+	    _profile, _string];
 }
 
 - (OFString*)profile
 {
-	OF_GETTER(_profile, NO)
+	OF_GETTER(_profile, false)
 }
 
 - (OFString*)string
 {
-	OF_GETTER(_string, NO)
+	OF_GETTER(_string, false)
 }
 @end
 
 @implementation XMPPIDNATranslationFailedException
-+ exceptionWithClass: (Class)class
-	  connection: (XMPPConnection*)connection
++ exceptionWithConnection: (XMPPConnection*)connection
+		operation: (OFString*)operation
+		   string: (OFString*)string
+{
+	return [[[self alloc] initWithConnection: connection
+				       operation: operation
+					  string: string] autorelease];
+}
+
+- initWithConnection: (XMPPConnection*)connection
+{
+	@try {
+		[self doesNotRecognizeSelector: _cmd];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	abort();
+}
+
+- initWithConnection: (XMPPConnection*)connection
 	   operation: (OFString*)operation
 	      string: (OFString*)string
 {
-	return [[[self alloc] initWithClass: class
-				 connection: connection
-				  operation: operation
-				     string: string] autorelease];
-}
-
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
-{
-	Class c = [self class];
-	[self release];
-	@throw [OFNotImplementedException exceptionWithClass: c
-						    selector: _cmd];
-}
-
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
-      operation: (OFString*)operation
-	 string: (OFString*)string
-{
-	self = [super initWithClass: class
-			 connection: connection];
+	self = [super initWithConnection: connection];
 
 	@try {
 		_operation = [operation copy];
@@ -254,46 +253,44 @@
 - (OFString*)description
 {
 	return [OFString stringWithFormat:
-	    @"IDNA operation %@ failed in class %@ on string '%@'!", _operation,
-	    [self inClass], _string];
+	    @"IDNA operation %@ failed on string '%@'!", _operation, _string];
 }
 
 - (OFString*)operation
 {
-	OF_GETTER(_operation, NO)
+	OF_GETTER(_operation, false)
 }
 
 - (OFString*)string
 {
-	OF_GETTER(_string, NO)
+	OF_GETTER(_string, false)
 }
 @end
 
 @implementation XMPPAuthFailedException
-+ exceptionWithClass: (Class)class
-	  connection: (XMPPConnection*)connection
-	      reason: (OFString*)reason;
++ exceptionWithConnection: (XMPPConnection*)connection
+		   reason: (OFString*)reason;
 {
-	return [[[self alloc] initWithClass: class
-				 connection: connection
-				     reason: reason] autorelease];
+	return [[[self alloc] initWithConnection: connection
+					  reason: reason] autorelease];
 }
 
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
+- initWithConnection: (XMPPConnection*)connection
 {
-	Class c = [self class];
-	[self release];
-	@throw [OFNotImplementedException exceptionWithClass: c
-						    selector: _cmd];
+	@try {
+		[self doesNotRecognizeSelector: _cmd];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	abort();
 }
 
-- initWithClass: (Class)class
-     connection: (XMPPConnection*)connection
-	 reason: (OFString*)reason
+- initWithConnection: (XMPPConnection*)connection
+	      reason: (OFString*)reason
 {
-	self = [super initWithClass: class
-			 connection: connection];
+	self = [super initWithConnection: connection];
 
 	@try {
 		_reason = [reason copy];
@@ -315,12 +312,11 @@
 - (OFString*)description
 {
 	return [OFString stringWithFormat:
-	    @"Authentication failed in class %@. Reason: %@!", [self inClass],
-	    _reason];
+	    @"Authentication failed. Reason: %@!", _reason];
 }
 
 - (OFString*)reason
 {
-	OF_GETTER(_reason, NO)
+	OF_GETTER(_reason, false)
 }
 @end

@@ -184,9 +184,7 @@ static int show_to_int(OFString *show)
 	intmax_t prio = [priority intMaxValue];
 
 	if ((prio < -128) || (prio > 127))
-		@throw [OFInvalidArgumentException
-		    exceptionWithClass: [self class]
-			      selector: _cmd];
+		@throw [OFInvalidArgumentException exception];
 
 	OFXMLElement *oldPriority = [self elementForName: @"priority"
 					       namespace: XMPP_NS_CLIENT];
@@ -219,9 +217,7 @@ static int show_to_int(OFString *show)
 		return OF_ORDERED_SAME;
 
 	if (![object isKindOfClass: [XMPPPresence class]])
-		@throw [OFInvalidArgumentException
-		    exceptionWithClass: [self class]
-			      selector: _cmd];
+		@throw [OFInvalidArgumentException exception];
 
 	otherPresence = (XMPPPresence*)object;
 	otherPriority = [otherPresence priority];

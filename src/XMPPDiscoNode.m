@@ -60,8 +60,11 @@
 	self = [super init];
 
 	@try {
+		if (JID == nil)
+			@throw [OFInvalidArgumentException exception];
+
 		_JID = [JID copy];
-		_node= [node copy];
+		_node = [node copy];
 		_name = [name copy];
 		_identities = [OFSortedList new];
 		_features = [OFSortedList new];

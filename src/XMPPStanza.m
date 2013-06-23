@@ -96,9 +96,7 @@
 	@try {
 		if (![name isEqual: @"iq"] && ![name isEqual: @"message"] &&
 		    ![name isEqual: @"presence"])
-			@throw [OFInvalidArgumentException
-			    exceptionWithClass: [self class]
-				      selector: _cmd];
+			@throw [OFInvalidArgumentException exception];
 
 		[self setDefaultNamespace: XMPP_NS_CLIENT];
 		[self setPrefix: @"stream"

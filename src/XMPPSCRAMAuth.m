@@ -168,9 +168,8 @@
 
 	[_clientFirstMessageBare release];
 	_clientFirstMessageBare = nil;
-	_clientFirstMessageBare = [[OFString alloc] initWithFormat: @"n=%@,r=%@",
-								   _authcid,
-								   _cNonce];
+	_clientFirstMessageBare = [[OFString alloc]
+	    initWithFormat: @"n=%@,r=%@", _authcid, _cNonce];
 
 	[ret addItems: [_GS2Header UTF8String]
 		count: [_GS2Header UTF8StringLength]];
@@ -230,10 +229,9 @@
 		if ([comp hasPrefix: @"r="]) {
 			if (![entry hasPrefix: _cNonce])
 				@throw [XMPPAuthFailedException
-				    exceptionWithClass: [self class]
-					    connection: nil
-						reason: @"Received wrong "
-							@"nonce"];
+				    exceptionWithConnection: nil
+						     reason: @"Received wrong "
+							     @"nonce"];
 
 			sNonce = entry;
 			got |= GOT_SNONCE;
@@ -248,8 +246,7 @@
 	}
 
 	if (got != (GOT_SNONCE | GOT_SALT | GOT_ITERCOUNT))
-		@throw [OFInvalidServerReplyException
-		    exceptionWithClass: [self class]];
+		@throw [OFInvalidServerReplyException exception];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
 	tmpArray = [OFDataArray dataArray];
@@ -390,15 +387,13 @@
 	if ([mess hasPrefix: @"v="]) {
 		if (![value isEqual: [_serverSignature stringByBase64Encoding]])
 			@throw [XMPPAuthFailedException
-			    exceptionWithClass: [self class]
-				    connection: nil
-					reason: @"Received wrong "
-						@"ServerSignature"];
+			    exceptionWithConnection: nil
+					     reason: @"Received wrong "
+						     @"ServerSignature"];
 		_authenticated = YES;
 	} else
-		@throw [XMPPAuthFailedException exceptionWithClass: [self class]
-							connection: nil
-							    reason: value];
+		@throw [XMPPAuthFailedException exceptionWithConnection: nil
+								 reason: value];
 
 	return nil;
 }

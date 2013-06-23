@@ -41,24 +41,20 @@
 /**
  * \brief Creates a new XMPPException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection that received the data responsible
  *	  for this exception
  * \return A new XMPPException
  */
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)connection;
++ exceptionWithConnection: (XMPPConnection*)connection;
 
 /**
  * \brief Initializes an already allocated XMPPException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection that received the data responsible
  *	  for this exception
  * \return An initialized XMPPException
  */
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)connection;
+- initWithConnection: (XMPPConnection*)connection;
 
 - (XMPPConnection*)connection;
 @end
@@ -82,30 +78,26 @@
 /**
  * \brief Creates a new XMPPStreamErrorException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection that received the stream error
  * \param condition The defined error condition specified by the stream error
  * \param reason The descriptive free-form text specified by the stream error
  * \return A new XMPPStreamErrorException
  */
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)connection
-	   condition: (OFString*)condition
-	      reason: (OFString*)reason;
++ exceptionWithConnection: (XMPPConnection*)connection
+		condition: (OFString*)condition
+		   reason: (OFString*)reason;
 
 /**
  * \brief Initializes an already allocated XMPPStreamErrorException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection that received the stream error
  * \param condition The defined error condition specified by the stream error
  * \param reason The descriptive free-form text specified by the stream error
  * \return An initialized XMPPStreamErrorException
  */
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)connection
-      condition: (OFString*)condition
-	 reason: (OFString*)reason;
+- initWithConnection: (XMPPConnection*)connection
+	   condition: (OFString*)condition
+	      reason: (OFString*)reason;
 
 - (OFString*)condition;
 - (OFString*)reason;
@@ -131,30 +123,26 @@
 /**
  * \brief Creates a new XMPPStringPrepFailedException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection the string relates to
  * \param profile The name of the stringprep profile that did not apply
  * \param string The string that failed the stringprep profile
  * \return A new XMPPStringPrepFailedException
  */
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)connection
-	     profile: (OFString*)profile
-	      string: (OFString*)string;
++ exceptionWithConnection: (XMPPConnection*)connection
+		  profile: (OFString*)profile
+		   string: (OFString*)string;
 
 /**
  * \brief Initializes an already allocated XMPPStringPrepFailedException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection the string relates to
  * \param profile The name of the stringprep profile that did not apply
  * \param string The string that failed the stringprep profile
  * \return An initialized XMPPStringPrepFailedException
  */
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)connection
-	profile: (OFString*)profile
-	 string: (OFString*)string;
+- initWithConnection: (XMPPConnection*)connection
+	     profile: (OFString*)profile
+	      string: (OFString*)string;
 
 - (OFString*)profile;
 - (OFString*)string;
@@ -179,30 +167,26 @@
 /**
  * \brief Creates a new XMPPIDNATranslationFailedException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection the string relates to
  * \param operation The name of the stringprep profile that did not apply
  * \param string The string that could not be translated
  * \return A new XMPPIDNATranslationFailedException
  */
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)connection
-	   operation: (OFString*)operation
-	      string: (OFString*)string;
++ exceptionWithConnection: (XMPPConnection*)connection
+		operation: (OFString*)operation
+		   string: (OFString*)string;
 
 /**
  * \brief Initializes an already allocated XMPPIDNATranslationFailedException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection the string relates to
  * \param operation The name of the stringprep profile that did not apply
  * \param string The string that could not be translated
  * \return An initialized XMPPIDNATranslationFailedException
  */
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)connection
-      operation: (OFString*)operation
-	 string: (OFString*)string;
+- initWithConnection: (XMPPConnection*)connection
+	   operation: (OFString*)operation
+	      string: (OFString*)string;
 
 - (OFString*)operation;
 - (OFString*)string;
@@ -224,26 +208,22 @@
 /**
  * \brief Creates a new XMPPAuthFailedException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection that could not be authenticated
  * \param reason The reason the authentication failed
  * \return A new XMPPAuthFailedException
  */
-+ exceptionWithClass: (Class)class_
-	  connection: (XMPPConnection*)connection
-	      reason: (OFString*)reason;
++ exceptionWithConnection: (XMPPConnection*)connection
+		   reason: (OFString*)reason;
 
 /**
  * \brief Initializes an already allocated XMPPAuthFailedException.
  *
- * \param class_ The class of the object which caused the exception
  * \param connection The connection that could not be authenticated
  * \param reason The reason the authentication failed
  * \return An initialized XMPPAuthFailedException
  */
-- initWithClass: (Class)class_
-     connection: (XMPPConnection*)connection
-	 reason: (OFString*)reason;
+- initWithConnection: (XMPPConnection*)connection
+	      reason: (OFString*)reason;
 
 - (OFString*)reason;
 @end

@@ -25,6 +25,8 @@
 # include "config.h"
 #endif
 
+#include <stdlib.h>
+
 #include <assert.h>
 
 #include <arpa/inet.h>
@@ -55,10 +57,14 @@
 
 - init
 {
-	Class c = [self class];
-	[self release];
-	@throw [OFNotImplementedException exceptionWithClass: c
-						    selector: _cmd];
+	@try {
+		[self doesNotRecognizeSelector: _cmd];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	abort();
 }
 
 - initWithPriority: (uint16_t)priority
@@ -208,9 +214,7 @@
 
 		if (res_ninit(&_resState))
 			@throw [OFAddressTranslationFailedException
-			    exceptionWithClass: [self class]
-					socket: nil
-					  host: _domain];
+			    exceptionWithHost: _domain];
 
 		answer = [self allocMemoryWithSize: pageSize];
 		answerLen = res_nsearch(&_resState,
@@ -221,18 +225,13 @@
 		    (h_errno == NO_DATA)))
 			return;
 
-		if (answerLen < 1 || answerLen > pageSize) {
+		if (answerLen < 1 || answerLen > pageSize)
 			@throw [OFAddressTranslationFailedException
-			    exceptionWithClass: [self class]
-					socket: nil
-					  host: _domain];
-		}
+			    exceptionWithHost: _domain];
 
 		if (ns_initparse(answer, answerLen, &handle))
 			@throw [OFAddressTranslationFailedException
-			    exceptionWithClass: [self class]
-					socket: nil
-					  host: _domain];
+			    exceptionWithHost: _domain];
 
 		resourceRecordCount = ns_msg_count(handle, ns_s_an);
 		for (i = 0; i < resourceRecordCount; i++) {

@@ -171,10 +171,9 @@
 		if ((rc = stringprep_profile([username UTF8String], &node,
 		    "SASLprep", 0)) != STRINGPREP_OK)
 			@throw [XMPPStringPrepFailedException
-			    exceptionWithClass: [self class]
-				    connection: self
-				       profile: @"SASLprep"
-					string: username];
+			    exceptionWithConnection: self
+					    profile: @"SASLprep"
+					     string: username];
 
 		@try {
 			_username = [[OFString alloc] initWithUTF8String: node];
@@ -203,10 +202,9 @@
 		if ((rc = stringprep_profile([resource UTF8String], &res,
 		    "Resourceprep", 0)) != STRINGPREP_OK)
 			@throw [XMPPStringPrepFailedException
-			    exceptionWithClass: [self class]
-				    connection: self
-				       profile: @"Resourceprep"
-					string: resource];
+			    exceptionWithConnection: self
+					    profile: @"Resourceprep"
+					     string: resource];
 
 		@try {
 			_resource = [[OFString alloc] initWithUTF8String: res];
@@ -253,10 +251,9 @@
 		if ((rc = stringprep_profile([domain_ UTF8String], &srv,
 		    "Nameprep", 0)) != STRINGPREP_OK)
 			@throw [XMPPStringPrepFailedException
-			    exceptionWithClass: [self class]
-				    connection: self
-				       profile: @"Nameprep"
-					string: domain_];
+			    exceptionWithConnection: self
+					    profile: @"Nameprep"
+					     string: domain_];
 
 		@try {
 			_domain = [[OFString alloc] initWithUTF8String: srv];
@@ -290,10 +287,9 @@
 		if ((rc = stringprep_profile([password UTF8String], &pass,
 		    "SASLprep", 0)) != STRINGPREP_OK)
 			@throw [XMPPStringPrepFailedException
-			    exceptionWithClass: [self class]
-				    connection: self
-				       profile: @"SASLprep"
-					string: password];
+			    exceptionWithConnection: self
+					    profile: @"SASLprep"
+					     string: password];
 
 		@try {
 			_password = [[OFString alloc] initWithUTF8String: pass];
@@ -339,8 +335,7 @@
 	OFEnumerator *enumerator;
 
 	if (_socket != nil)
-		@throw [OFAlreadyConnectedException
-		    exceptionWithClass: [self class]];
+		@throw [OFAlreadyConnectedException exception];
 
 	_socket = [[OFTCPSocket alloc] init];
 
@@ -691,9 +686,7 @@
 {
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
 	    ![ns isEqual: XMPP_NS_STREAM])
-		@throw [OFMalformedXMLException
-		    exceptionWithClass: [builder class]
-				parser: nil];
+		@throw [OFMalformedXMLException exception];
 	else {
 		[self close];
 	}
@@ -873,10 +866,9 @@
 			 namespace: XMPP_NS_XMPP_STREAM] stringValue];
 
 		@throw [XMPPStreamErrorException
-		    exceptionWithClass: [self class]
-			    connection: self
-			     condition: condition
-				reason: reason];
+		    exceptionWithConnection: self
+				  condition: condition
+				     reason: reason];
 		return;
 	}
 
@@ -915,7 +907,7 @@
 
 	if ([[element name] isEqual: @"failure"])
 		/* TODO: Find/create an exception to throw here */
-		@throw [OFException exceptionWithClass: [self class]];
+		@throw [OFException exception];
 
 	assert(0);
 }
@@ -961,9 +953,8 @@
 		of_log(@"Auth failed!");
 		// FIXME: Do more parsing/handling
 		@throw [XMPPAuthFailedException
-		    exceptionWithClass: [self class]
-			    connection: self
-				reason: [element XMLString]];
+		    exceptionWithConnection: self
+				     reason: [element XMLString]];
 	}
 
 	assert(0);
@@ -1028,7 +1019,7 @@
 
 	if (_encryptionRequired && !_encrypted)
 		/* TODO: Find/create an exception to throw here */
-		@throw [OFException exceptionWithClass: [self class]];
+		@throw [OFException exception];
 
 	if ([element elementForName: @"ver"
 			  namespace: XMPP_NS_ROSTERVER] != nil)
@@ -1221,10 +1212,9 @@
 	if ((rc = idna_to_ascii_8z([domain_ UTF8String],
 	    &cDomain, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
 		@throw [XMPPIDNATranslationFailedException
-		    exceptionWithClass: [self class]
-			    connection: self
-			     operation: @"ToASCII"
-				string: domain_];
+		    exceptionWithConnection: self
+				  operation: @"ToASCII"
+				     string: domain_];
 
 	@try {
 		ret = [[OFString alloc] initWithUTF8String: cDomain];
@@ -1253,8 +1243,8 @@
 - (void)setDataStorage: (id <XMPPStorage>)dataStorage
 {
 	if (_streamOpen)
-		@throw [OFInvalidArgumentException
-		    exceptionWithClass: [self class]];
+		/* FIXME: Find a better exception! */
+		@throw [OFInvalidArgumentException exception];
 
 	_dataStorage = dataStorage;
 }

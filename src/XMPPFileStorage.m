@@ -24,6 +24,8 @@
 # include "config.h"
 #endif
 
+#include <stdlib.h>
+
 #import <ObjFW/OFString.h>
 #import <ObjFW/OFArray.h>
 #import <ObjFW/OFDictionary.h>
@@ -38,10 +40,14 @@
 @implementation XMPPFileStorage
 - init
 {
-	Class c = [self class];
-	[self release];
-	@throw [OFNotImplementedException exceptionWithClass: c
-						    selector: _cmd];
+	@try {
+		[self doesNotRecognizeSelector: _cmd];
+	} @catch (id e) {
+		[self release];
+		@throw e;
+	}
+
+	abort();
 }
 
 - initWithFile: (OFString*)file
@@ -54,7 +60,7 @@
 		_file = [file copy];
 		@try {
 			_data = [[[OFDataArray dataArrayWithContentsOfFile:
-			    file] binaryPackValue] retain];
+			    file] messagePackValue] retain];
 		} @catch (id e) {
 			_data = [OFMutableDictionary new];
 		}
@@ -78,7 +84,7 @@
 
 - (void)save
 {
-	[[_data binaryPackRepresentation] writeToFile: _file];
+	[[_data messagePackRepresentation] writeToFile: _file];
 }
 
 - (void)XMPP_setObject: (id)object

@@ -47,9 +47,7 @@
 
 	@try {
 		if (category == nil || type == nil)
-			@throw [OFInvalidArgumentException
-			    exceptionWithClass: [self class]
-				      selector: _cmd];
+			@throw [OFInvalidArgumentException exception];
 
 		_category = [category copy];
 		_name = [name copy];
@@ -151,9 +149,7 @@
 		return OF_ORDERED_SAME;
 
 	if (![object isKindOfClass: [XMPPDiscoIdentity class]])
-		@throw [OFInvalidArgumentException
-		    exceptionWithClass: [self class]
-			      selector: _cmd];
+		@throw [OFInvalidArgumentException exception];
 
 	identity = (XMPPDiscoIdentity*)object;
 

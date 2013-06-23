@@ -32,12 +32,12 @@
 -		 (void)parser: (OFXMLParser*)parser
   foundProcessingInstructions: (OFString*)pi
 {
-	@throw [OFMalformedXMLException exceptionWithClass: [self class]];
+	@throw [OFMalformedXMLException exception];
 }
 
 - (void)parser: (OFXMLParser*)parser
   foundComment: (OFString*)comment
 {
-	@throw [OFMalformedXMLException exceptionWithClass: [self class]];
+	@throw [OFMalformedXMLException exception];
 }
 @end
