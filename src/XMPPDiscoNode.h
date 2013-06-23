@@ -128,8 +128,8 @@
 - (OFSortedList*)features;
 - (OFDictionary*)childNodes;
 
-- (BOOL)XMPP_handleItemsIQ: (XMPPIQ*)IQ
+- (bool)XMPP_handleItemsIQ: (XMPPIQ*)IQ
 		connection: (XMPPConnection*)connection;
-- (BOOL)XMPP_handleInfoIQ: (XMPPIQ*)IQ
+- (bool)XMPP_handleInfoIQ: (XMPPIQ*)IQ
 	       connection: (XMPPConnection*)connection;
 @end

@@ -231,24 +231,23 @@
 	XMPPJID *JID;
 
 	if (object == self)
-		return YES;
+		return true;
 
 	if (![object isKindOfClass: [XMPPJID class]])
-		return NO;
+		return false;
 
 	JID = object;
 
 	// Node and resource may be nil
 	if ((_node == JID->_node || [_node isEqual: JID->_node]) &&
-	    [_domain isEqual: JID->_domain] &&
-	    (_resource == JID->_resource || [_resource isEqual: JID->_resource])
-	   )
-		return YES;
+	    [_domain isEqual: JID->_domain] && (_resource == JID->_resource ||
+	    [_resource isEqual: JID->_resource]))
+		return true;
 
-	return NO;
+	return false;
 }
 
-- (uint32_t) hash
+- (uint32_t)hash
 {
 	uint32_t hash;
 

@@ -70,13 +70,13 @@
 	}
 }
 
-- (BOOL)broadcastSelector: (SEL)selector
+- (bool)broadcastSelector: (SEL)selector
 	       withObject: (id)object
 {
 	OFDataArray *currentDelegates = [_delegates copy];
 	id *items = [currentDelegates items];
 	size_t i, count = [currentDelegates count];
-	BOOL handled = NO;
+	bool handled = false;
 
 	for (i = 0; i < count; i++) {
 		id responder = items[i];
@@ -84,7 +84,7 @@
 		if (![responder respondsToSelector: selector])
 			continue;
 
-		BOOL (*imp)(id, SEL, id) = (BOOL(*)(id, SEL, id))
+		bool (*imp)(id, SEL, id) = (bool(*)(id, SEL, id))
 		    [responder methodForSelector: selector];
 
 		handled |= imp(responder, selector, object);
@@ -93,14 +93,14 @@
 	return handled;
 }
 
-- (BOOL)broadcastSelector: (SEL)selector
+- (bool)broadcastSelector: (SEL)selector
 	       withObject: (id)object1
 	       withObject: (id)object2
 {
 	OFDataArray *currentDelegates = [_delegates copy];
 	id *items = [currentDelegates items];
 	size_t i, count = [currentDelegates count];
-	BOOL handled = NO;
+	bool handled = false;
 
 	for (i = 0; i < count; i++) {
 		id responder = items[i];
@@ -108,7 +108,7 @@
 		if (![responder respondsToSelector: selector])
 			continue;
 
-		BOOL (*imp)(id, SEL, id, id) = (BOOL(*)(id, SEL, id, id))
+		bool (*imp)(id, SEL, id, id) = (bool(*)(id, SEL, id, id))
 		    [responder methodForSelector: selector];
 
 		handled |= imp(responder, selector, object1, object2);

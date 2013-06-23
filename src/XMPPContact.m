@@ -48,12 +48,12 @@
 
 - (XMPPRosterItem*)rosterItem
 {
-	OF_GETTER(_rosterItem, YES);
+	OF_GETTER(_rosterItem, true)
 }
 
 - (OFDictionary*)presences
 {
-	OF_GETTER(_presences, YES);
+	OF_GETTER(_presences, true)
 }
 
 - (void)sendMessage: (XMPPMessage*)message
@@ -69,7 +69,7 @@
 
 - (void)XMPP_setRosterItem: (XMPPRosterItem*)rosterItem
 {
-	OF_SETTER(_rosterItem, rosterItem, YES, 0);
+	OF_SETTER(_rosterItem, rosterItem, true, 0);
 }
 
 - (void)XMPP_setPresence: (XMPPPresence*)presence
@@ -82,7 +82,7 @@
 		[_presences setObject: presence
 			       forKey: @""];
 
-	OF_SETTER(_lockedOnJID, nil, YES, 0);
+	[self XMPP_setLockedOnJID: nil];
 }
 
 - (void)XMPP_removePresenceForResource: (OFString*)resource
@@ -94,11 +94,11 @@
 		_presences = [[OFMutableDictionary alloc] init];
 	}
 
-	OF_SETTER(_lockedOnJID, nil, YES, 0);
+	[self XMPP_setLockedOnJID: nil];
 }
 
 - (void)XMPP_setLockedOnJID: (XMPPJID*)JID;
 {
-	OF_SETTER(_lockedOnJID, JID, YES, 0);
+	OF_SETTER(_lockedOnJID, JID, true, 0);
 }
 @end

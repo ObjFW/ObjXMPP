@@ -64,32 +64,32 @@
 
 - (void)setAuthzid: (OFString*)authzid
 {
-	OF_SETTER(_authzid, authzid, YES, YES)
+	OF_SETTER(_authzid, authzid, true, 1)
 }
 
 - (OFString*)authzid
 {
-	OF_GETTER(_authzid, YES)
+	OF_GETTER(_authzid, true)
 }
 
 - (void)setAuthcid: (OFString*)authcid
 {
-	OF_SETTER(_authcid, authcid, YES, YES)
+	OF_SETTER(_authcid, authcid, true, 1)
 }
 
 - (OFString*)authcid
 {
-	OF_GETTER(_authcid, YES)
+	OF_GETTER(_authcid, true)
 }
 
 - (void)setPassword: (OFString*)password
 {
-	OF_SETTER(_password, password, YES, YES)
+	OF_SETTER(_password, password, true, 1)
 }
 
 - (OFString*)password
 {
-	OF_GETTER(_password, YES)
+	OF_GETTER(_password, true)
 }
 
 - (OFDataArray*)initialMessage

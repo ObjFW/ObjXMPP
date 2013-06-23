@@ -150,7 +150,7 @@ static int show_to_int(OFString *show)
 						    namespace: XMPP_NS_CLIENT
 						  stringValue: show]];
 
-	OF_SETTER(_show, show, YES, 1);
+	OF_SETTER(_show, show, true, 1)
 }
 
 - (OFString*)show
@@ -171,7 +171,7 @@ static int show_to_int(OFString *show)
 						    namespace: XMPP_NS_CLIENT
 						  stringValue: status]];
 
-	OF_SETTER(_status, status, YES, 1);
+	OF_SETTER(_status, status, true, 1)
 }
 
 - (OFString*)status
@@ -198,7 +198,7 @@ static int show_to_int(OFString *show)
 					    namespace: XMPP_NS_CLIENT
 					  stringValue: priority_s]];
 
-	OF_SETTER(_priority, priority, YES, 1);
+	OF_SETTER(_priority, priority, true, 1)
 }
 
 - (OFNumber*)priority

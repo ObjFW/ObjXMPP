@@ -94,32 +94,32 @@
 
 - (XMPPJID*)JID
 {
-	OF_GETTER(_JID, YES);
+	OF_GETTER(_JID, true)
 }
 
 - (OFString*)node
 {
-	OF_GETTER(_node, YES);
+	OF_GETTER(_node, true)
 }
 
 - (OFString*)name
 {
-	OF_GETTER(_name, YES);
+	OF_GETTER(_name, true)
 }
 
 - (OFSortedList*)identities
 {
-	OF_GETTER(_identities, YES);
+	OF_GETTER(_identities, true)
 }
 
 - (OFSortedList*)features
 {
-	OF_GETTER(_features, YES);
+	OF_GETTER(_features, true)
 }
 
 - (OFDictionary*)childNodes
 {
-	OF_GETTER(_childNodes, YES);
+	OF_GETTER(_childNodes, true)
 }
 
 - (void)addIdentity: (XMPPDiscoIdentity*)identity
@@ -138,7 +138,7 @@
 			forKey: [node node]];
 }
 
-- (BOOL)XMPP_handleItemsIQ: (XMPPIQ*)IQ
+- (bool)XMPP_handleItemsIQ: (XMPPIQ*)IQ
 		connection: (XMPPConnection*)connection
 {
 	XMPPIQ *resultIQ;
@@ -150,7 +150,7 @@
 	OFString *node = [[query attributeForName: @"node"] stringValue];
 
 	if (!(node == _node) && ![node isEqual: _node])
-		return NO;
+		return false;
 
 	resultIQ = [IQ resultIQ];
 	response = [OFXMLElement elementWithName: @"query"
@@ -177,10 +177,10 @@
 
 	[connection sendStanza: resultIQ];
 
-	return YES;
+	return true;
 }
 
-- (BOOL)XMPP_handleInfoIQ: (XMPPIQ*)IQ
+- (bool)XMPP_handleInfoIQ: (XMPPIQ*)IQ
 	       connection: (XMPPConnection*)connection
 {
 	XMPPIQ *resultIQ;
@@ -223,6 +223,6 @@
 
 	[connection sendStanza: resultIQ];
 
-	return YES;
+	return true;
 }
 @end

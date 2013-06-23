@@ -154,7 +154,7 @@
 	return string;
 }
 
-- (void)setBooleanValue: (BOOL)boolean
+- (void)setBooleanValue: (bool)boolean
 		forPath: (OFString*)path
 {
 	OFAutoreleasePool *pool = [OFAutoreleasePool new];
@@ -165,10 +165,10 @@
 	[pool release];
 }
 
-- (BOOL)booleanValueForPath: (OFString*)path
+- (bool)booleanValueForPath: (OFString*)path
 {
 	OFAutoreleasePool *pool = [OFAutoreleasePool new];
-	BOOL boolean;
+	bool boolean;
 
 	boolean = [[self XMPP_objectForPath: path] boolValue];
 

@@ -42,7 +42,7 @@
 	      password: (OFString*)password
 	    connection: (XMPPConnection*)connection
 		  hash: (Class)hash
-	 plusAvailable: (BOOL)plusAvailable
+	 plusAvailable: (bool)plusAvailable
 {
 	return [[[self alloc] initWithAuthcid: authcid
 				     password: password
@@ -56,7 +56,7 @@
 	      password: (OFString*)password
 	    connection: (XMPPConnection*)connection
 		  hash: (Class)hash
-	 plusAvailable: (BOOL)plusAvailable
+	 plusAvailable: (bool)plusAvailable
 {
 	return [[[self alloc] initWithAuthzid: authzid
 				      authcid: authcid
@@ -70,7 +70,7 @@
 	 password: (OFString*)password
        connection: (XMPPConnection*)connection
 	     hash: (Class)hash
-    plusAvailable: (BOOL)plusAvailable
+    plusAvailable: (bool)plusAvailable
 {
 	return [self initWithAuthzid: nil
 			     authcid: authcid
@@ -85,7 +85,7 @@
 	 password: (OFString*)password
        connection: (XMPPConnection*)connection
 	     hash: (Class)hash
-    plusAvailable: (BOOL)plusAvailable
+    plusAvailable: (bool)plusAvailable
 {
 	self = [super initWithAuthzid: authzid
 			      authcid: authcid
@@ -154,7 +154,7 @@
 	_GS2Header = nil;
 	[_serverSignature release];
 	_serverSignature = nil;
-	_authenticated = NO;
+	_authenticated = false;
 
 	if (_authzid)
 		_GS2Header = [[OFString alloc]
@@ -390,7 +390,7 @@
 			    exceptionWithConnection: nil
 					     reason: @"Received wrong "
 						     @"ServerSignature"];
-		_authenticated = YES;
+		_authenticated = true;
 	} else
 		@throw [XMPPAuthFailedException exceptionWithConnection: nil
 								 reason: value];

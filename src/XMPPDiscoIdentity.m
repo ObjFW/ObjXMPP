@@ -91,17 +91,17 @@
 
 - (OFString*)category
 {
-	OF_GETTER(_category, YES);
+	OF_GETTER(_category, true)
 }
 
 - (OFString*)name
 {
-	OF_GETTER(_name, YES);
+	OF_GETTER(_name, true)
 }
 
 - (OFString*)type
 {
-	OF_GETTER(_type, YES);
+	OF_GETTER(_type, true)
 }
 
 - (bool)isEqual: (id)object
@@ -109,22 +109,22 @@
 	XMPPDiscoIdentity *identity;
 
 	if (object == self)
-		return YES;
+		return true;
 
 	if (![object isKindOfClass: [XMPPDiscoIdentity class]])
-		return NO;
+		return false;
 
 	identity = object;
 
 	if ([_category isEqual: identity->_category] &&
 	    (_name == identity->_name || [_name isEqual: identity->_name]) &&
 	    [_type isEqual: identity->_type])
-		return YES;
+		return true;
 
-	return NO;
+	return false;
 }
 
-- (uint32_t) hash
+- (uint32_t)hash
 {
 	uint32_t hash;
 

@@ -86,7 +86,7 @@
 	OFList *list;
 	of_list_object_t *listIter;
 	OFList *subListCopy;
-	BOOL done;
+	bool done;
 }
 
 - initWithList: (OFList*)list;

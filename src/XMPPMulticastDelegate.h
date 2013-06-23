@@ -52,7 +52,7 @@
  * \param selector The selector to broadcast
  * \param object The object to broadcast
  */
-- (BOOL)broadcastSelector: (SEL)selector
+- (bool)broadcastSelector: (SEL)selector
 	       withObject: (id)object;
 
 /**
@@ -62,7 +62,7 @@
  * \param object1 The first object to broadcast
  * \param object2 The second object to broadcast
  */
-- (BOOL)broadcastSelector: (SEL)selector
+- (bool)broadcastSelector: (SEL)selector
 	       withObject: (id)object1
 	       withObject: (id)object2;
 @end

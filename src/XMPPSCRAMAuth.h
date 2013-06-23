@@ -35,8 +35,8 @@
 	OFString *_clientFirstMessageBare;
 	OFDataArray *_serverSignature;
 	XMPPConnection *_connection;
-	BOOL _plusAvailable;
-	BOOL _authenticated;
+	bool _plusAvailable;
+	bool _authenticated;
 }
 
 /**
@@ -53,7 +53,7 @@
 	      password: (OFString*)password
 	    connection: (XMPPConnection*)connection
 		  hash: (Class)hash
-	 plusAvailable: (BOOL)plusAvailable;
+	 plusAvailable: (bool)plusAvailable;
 
 /**
  * \brief Creates a new autoreleased XMPPSCRAMAuth with an authzid, authcid and
@@ -72,7 +72,7 @@
 	      password: (OFString*)password
 	    connection: (XMPPConnection*)connection
 		  hash: (Class)hash
-	 plusAvailable: (BOOL)plusAvailable;
+	 plusAvailable: (bool)plusAvailable;
 
 /**
  * \brief Initializes an already allocated XMPPSCRAMAuth with an authcid and
@@ -89,7 +89,7 @@
 	 password: (OFString*)password
        connection: (XMPPConnection*)connection
 	     hash: (Class)hash
-    plusAvailable: (BOOL)plusAvailable;
+    plusAvailable: (bool)plusAvailable;
 
 /**
  * \brief Initializes an already allocated XMPPSCRAMAuth with a authzid,
@@ -108,7 +108,7 @@
 	 password: (OFString*)password
        connection: (XMPPConnection*)connection
 	     hash: (Class)hash
-    plusAvailable: (BOOL)plusAvailable;
+    plusAvailable: (bool)plusAvailable;
 
 /// \cond internal
 - (OFString*)XMPP_genNonce;

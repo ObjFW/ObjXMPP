@@ -20,7 +20,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdint.h>
+#import <ObjFW/OFObject.h>
 
 @class OFString;
 @class OFArray;
@@ -31,9 +31,9 @@
 - (void)setStringValue: (OFString*)string
 	       forPath: (OFString*)path;
 - (OFString*)stringValueForPath: (OFString*)path;
-- (void)setBooleanValue: (BOOL)boolean
+- (void)setBooleanValue: (bool)boolean
 		forPath: (OFString*)path;
-- (BOOL)booleanValueForPath: (OFString*)path;
+- (bool)booleanValueForPath: (OFString*)path;
 - (void)setIntegerValue: (intmax_t)integer
 		forPath: (OFString*)path;
 - (intmax_t)integerValueForPath: (OFString*)path;

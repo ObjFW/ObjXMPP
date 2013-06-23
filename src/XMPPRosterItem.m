@@ -71,41 +71,41 @@
 
 - (void)setJID: (XMPPJID*)JID
 {
-	OF_SETTER(_JID, JID, YES, YES)
+	OF_SETTER(_JID, JID, true, 1)
 }
 
 - (XMPPJID*)JID
 {
-	OF_GETTER(_JID, YES)
+	OF_GETTER(_JID, true)
 }
 
 - (void)setName: (OFString*)name
 {
-	OF_SETTER(_name, name, YES, YES)
+	OF_SETTER(_name, name, true, 1)
 }
 
 - (OFString*)name
 {
-	OF_GETTER(_name, YES)
+	OF_GETTER(_name, true)
 }
 
 - (void)setSubscription: (OFString*)subscription
 {
-	OF_SETTER(_subscription, subscription, YES, YES)
+	OF_SETTER(_subscription, subscription, true, 1)
 }
 
 - (OFString*)subscription
 {
-	OF_GETTER(_subscription, YES)
+	OF_GETTER(_subscription, true)
 }
 
 - (void)setGroups: (OFArray*)groups
 {
-	OF_SETTER(_groups, groups, YES, YES)
+	OF_SETTER(_groups, groups, true, 1)
 }
 
 - (OFArray*)groups
 {
-	OF_GETTER(_groups, YES)
+	OF_GETTER(_groups, true)
 }
 @end

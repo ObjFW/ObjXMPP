@@ -86,7 +86,7 @@
 
 - (OFDictionary*)contacts
 {
-	OF_GETTER(_contacts, YES);
+	OF_GETTER(_contacts, true)
 }
 
 - (void)rosterWasReceived: (XMPPRoster*)roster_

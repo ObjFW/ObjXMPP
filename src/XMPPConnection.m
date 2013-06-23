@@ -108,7 +108,7 @@
 
 	[self performSelector: @selector(didConnect)
 		     onThread: sourceThread
-		waitUntilDone: NO];
+		waitUntilDone: false];
 
 	[pool release];
 
@@ -128,8 +128,6 @@
 
 	@try {
 		_port = 5222;
-		_encrypted = NO;
-		_streamOpen = NO;
 		_delegates = [[XMPPMulticastDelegate alloc] init];
 		_callbacks = [[OFMutableDictionary alloc] init];
 	} @catch (id e) {
@@ -309,22 +307,22 @@
 
 - (void)setPrivateKeyFile: (OFString*)privateKeyFile
 {
-	OF_SETTER(_privateKeyFile, privateKeyFile, YES, YES)
+	OF_SETTER(_privateKeyFile, privateKeyFile, true, 1)
 }
 
 - (OFString*)privateKeyFile
 {
-	OF_GETTER(_privateKeyFile, YES)
+	OF_GETTER(_privateKeyFile, true)
 }
 
 - (void)setCertificateFile: (OFString*)certificateFile
 {
-	OF_SETTER(_certificateFile, certificateFile, YES, YES)
+	OF_SETTER(_certificateFile, certificateFile, true, 1)
 }
 
 - (OFString*)certificateFile
 {
-	OF_GETTER(_certificateFile, YES)
+	OF_GETTER(_certificateFile, true)
 }
 
 - (void)connect
@@ -397,13 +395,13 @@
 	[pool release];
 }
 
--  (BOOL)XMPP_parseBuffer: (const void*)buffer
+-  (bool)XMPP_parseBuffer: (const void*)buffer
 		   length: (size_t)length
 {
 	if ([_socket isAtEndOfStream]) {
 		[_delegates broadcastSelector: @selector(connectionWasClosed:)
 				   withObject: self];
-		return NO;
+		return false;
 	}
 
 	@try {
@@ -413,10 +411,10 @@
 		[self XMPP_sendStreamError: @"bad-format"
 				      text: nil];
 		[self close];
-		return NO;
+		return false;
 	}
 
-	return YES;
+	return true;
 }
 
 - (void)parseBuffer: (const void*)buffer
@@ -432,7 +430,7 @@
 	_oldElementBuilder = nil;
 }
 
--      (BOOL)stream: (OFStream*)stream
+-      (bool)stream: (OFStream*)stream
   didReadIntoBuffer: (char*)buffer
 	     length: (size_t)length
 	  exception: (OFException*)exception
@@ -443,20 +441,20 @@
 				   withObject: self
 				   withObject: exception];
 		[self close];
-		return NO;
+		return false;
 	}
 
 	@try {
 		if (![self XMPP_parseBuffer: buffer
 				     length: length])
-			return NO;
+			return false;
 	} @catch (id e) {
 		[_delegates broadcastSelector: @selector(connection:
 						   didThrowException:)
 				   withObject: self
 				   withObject: e];
 		[self close];
-		return NO;
+		return false;
 	}
 
 	if (_oldParser != nil || _oldElementBuilder != nil) {
@@ -473,10 +471,10 @@
 						  didReadIntoBuffer:length:
 						  exception:)];
 
-		return NO;
+		return false;
 	}
 
-	return YES;
+	return true;
 }
 
 - (OFTCPSocket*)socket
@@ -484,41 +482,41 @@
 	return [[_socket retain] autorelease];
 }
 
-- (BOOL)encryptionRequired
+- (bool)encryptionRequired
 {
 	return _encryptionRequired;
 }
 
-- (void)setEncryptionRequired: (BOOL)encryptionRequired
+- (void)setEncryptionRequired: (bool)encryptionRequired
 {
 	_encryptionRequired = encryptionRequired;
 }
 
-- (BOOL)encrypted
+- (bool)encrypted
 {
 	return _encrypted;
 }
 
-- (BOOL)streamOpen
+- (bool)streamOpen
 {
 	return _streamOpen;
 }
 
-- (BOOL)supportsRosterVersioning
+- (bool)supportsRosterVersioning
 {
 	return _supportsRosterVersioning;
 }
 
-- (BOOL)supportsStreamManagement
+- (bool)supportsStreamManagement
 {
 	return _supportsStreamManagement;
 }
 
-- (BOOL)checkCertificateAndGetReason: (OFString**)reason
+- (bool)checkCertificateAndGetReason: (OFString**)reason
 {
 	X509Certificate *cert;
 	OFDictionary *SANs;
-	BOOL serviceSpecific = NO;
+	bool serviceSpecific = false;
 
 	@try {
 		[_socket verifyPeerCertificate];
@@ -526,7 +524,7 @@
 		if (reason != NULL)
 			*reason = [[[e reason] copy] autorelease];
 
-		return NO;
+		return false;
 	}
 
 	cert = [_socket peerCertificate];
@@ -536,18 +534,18 @@
 		objectForKey: OID_SRVName] != nil ||
 	     [SANs objectForKey: @"dNSName"] != nil ||
 	     [SANs objectForKey: @"uniformResourceIdentifier"] != nil)
-		serviceSpecific = YES;
+		serviceSpecific = true;
 
 	if ([cert hasSRVNameMatchingDomain: _domainToASCII
 				   service: @"xmpp-client"] ||
 	    [cert hasDNSNameMatchingDomain: _domainToASCII])
-		return YES;
+		return true;
 
 	if (!serviceSpecific &&
 	    [cert hasCommonNameMatchingDomain: _domainToASCII])
-		return YES;
+		return true;
 
-	return NO;
+	return false;
 }
 
 - (void)sendStanza: (OFXMLElement*)element
@@ -723,7 +721,7 @@
 			      @"xmlns:stream='" XMPP_NS_STREAM @"' %@"
 			      @"version='1.0'>", _domain, langString];
 
-	_streamOpen = YES;
+	_streamOpen = true;
 }
 
 - (void)close
@@ -742,8 +740,8 @@
 	_socket = nil;
 	[_JID release];
 	_JID = nil;
-	_streamOpen = _needsSession = _encrypted = NO;
-	_supportsRosterVersioning = _supportsStreamManagement = NO;
+	_streamOpen = _needsSession = _encrypted = false;
+	_supportsRosterVersioning = _supportsStreamManagement = false;
 	_lastID = 0;
 }
 
@@ -893,7 +891,7 @@
 		[_socket release];
 		_socket = newSock;
 
-		_encrypted = YES;
+		_encrypted = true;
 
 		[_delegates broadcastSelector: @selector(
 						   connectionDidUpgradeToTLS:)
@@ -962,7 +960,7 @@
 
 - (void)XMPP_handleIQ: (XMPPIQ*)iq
 {
-	BOOL handled = NO;
+	bool handled = false;
 	XMPPCallback *callback;
 
 	if ((callback = [_callbacks objectForKey: [iq ID]])) {
@@ -1023,11 +1021,11 @@
 
 	if ([element elementForName: @"ver"
 			  namespace: XMPP_NS_ROSTERVER] != nil)
-		_supportsRosterVersioning = YES;
+		_supportsRosterVersioning = true;
 
 	if ([element elementForName: @"sm"
 			  namespace: XMPP_NS_SM] != nil)
-		_supportsStreamManagement = YES;
+		_supportsStreamManagement = true;
 
 	if (mechs != nil) {
 		OFEnumerator *enumerator;
@@ -1050,7 +1048,7 @@
 				   password: _password
 				 connection: self
 				       hash: [OFSHA1Hash class]
-			      plusAvailable: YES];
+			      plusAvailable: true];
 			[self XMPP_sendAuth: @"SCRAM-SHA-1-PLUS"];
 			return;
 		}
@@ -1061,7 +1059,7 @@
 				   password: _password
 				 connection: self
 				       hash: [OFSHA1Hash class]
-			      plusAvailable: NO];
+			      plusAvailable: false];
 			[self XMPP_sendAuth: @"SCRAM-SHA-1"];
 			return;
 		}
@@ -1078,7 +1076,7 @@
 	}
 
 	if (session != nil)
-		_needsSession = YES;
+		_needsSession = true;
 
 	if (bind != nil) {
 		[self XMPP_sendResourceBind];
@@ -1256,12 +1254,12 @@
 
 - (void)setLanguage: (OFString*)language
 {
-	OF_SETTER(_language, language, YES, YES)
+	OF_SETTER(_language, language, true, 1)
 }
 
 - (OFString*)language
 {
-	OF_GETTER(_language, YES)
+	OF_GETTER(_language, true)
 }
 
 - (void)addDelegate: (id <XMPPConnectionDelegate>)delegate

@@ -87,7 +87,7 @@
  * \param connection The connection that received the stanza
  * \param iq The IQ stanza that was received
  */
-- (BOOL)connection: (XMPPConnection*)connection
+- (bool)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)iq;
 
 /**
@@ -166,11 +166,11 @@
 	XMPPMulticastDelegate *_delegates;
 	OFMutableDictionary *_callbacks;
 	XMPPAuthenticator *_authModule;
-	BOOL _streamOpen;
-	BOOL _needsSession;
-	BOOL _encryptionRequired, _encrypted;
-	BOOL _supportsRosterVersioning;
-	BOOL _supportsStreamManagement;
+	bool _streamOpen;
+	bool _needsSession;
+	bool _encryptionRequired, _encrypted;
+	bool _supportsRosterVersioning;
+	bool _supportsStreamManagement;
 	unsigned int _lastID;
 }
 
@@ -204,13 +204,13 @@
 /// \brief The socket used for the connection
 @property (readonly, retain) OFTCPSocket *socket;
 /// \brief Whether encryption is required
-@property BOOL encryptionRequired;
+@property bool encryptionRequired;
 /// \brief Whether the connection is encrypted
-@property (readonly) BOOL encrypted;
+@property (readonly) bool encrypted;
 /// \brief Whether roster versioning is supported
-@property (readonly) BOOL supportsRosterVersioning;
+@property (readonly) bool supportsRosterVersioning;
 /// \brief Whether stream management is supported
-@property (readonly) BOOL supportsStreamManagement;
+@property (readonly) bool supportsStreamManagement;
 #endif
 
 /**
@@ -253,7 +253,7 @@
  *		 Passing NULL means the reason is not stored anywhere.
  * \return Whether the certificate is valid
  */
-- (BOOL)checkCertificateAndGetReason: (OFString**)reason;
+- (bool)checkCertificateAndGetReason: (OFString**)reason;
 
 /**
  * \brief Adds the connection to the run loop.
@@ -290,21 +290,21 @@
  *
  * \return Whether encryption is encrypted
  */
-- (BOOL)encryptionRequired;
+- (bool)encryptionRequired;
 
 /**
  * \brief Sets whether encryption is required.
  *
  * \param required Whether encryption is required
  */
-- (void)setEncryptionRequired: (BOOL)required;
+- (void)setEncryptionRequired: (bool)required;
 
 /**
  * \brief Returns whether the connection is encrypted.
  *
  * \return Whether the connection is encrypted
  */
-- (BOOL)encrypted;
+- (bool)encrypted;
 
 /**
  * \brief Sends an OFXMLElement, usually an XMPPStanza.
@@ -360,8 +360,8 @@
 - (id <XMPPStorage>)dataStorage;
 - (void)setLanguage: (OFString*)language;
 - (OFString*)language;
-- (BOOL)supportsRosterVersioning;
-- (BOOL)supportsStreamManagement;
+- (bool)supportsRosterVersioning;
+- (bool)supportsStreamManagement;
 
 - (void)XMPP_startStream;
 - (void)XMPP_handleStream: (OFXMLElement*)element;

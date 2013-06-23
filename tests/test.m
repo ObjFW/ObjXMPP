@@ -153,7 +153,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 {
 	of_log(@"Bound to JID: %@", [jid fullJID]);
 	of_log(@"Supports SM: %@",
-	    [conn_ supportsStreamManagement] ? @"YES" : @"NO");
+	    [conn_ supportsStreamManagement] ? @"true" : @"false");
 
 	XMPPDiscoEntity *discoEntity =
 	    [[XMPPDiscoEntity alloc] initWithConnection: conn];
@@ -244,7 +244,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	of_log(@"Got roster push: %@", rosterItem);
 }
 
-- (BOOL)connection: (XMPPConnection*)conn
+- (bool)connection: (XMPPConnection*)conn
       didReceiveIQ: (XMPPIQ*)iq
 {
 	of_log(@"IQ: %@", iq);

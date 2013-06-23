@@ -74,7 +74,7 @@
 
 - (OFDictionary*)discoNodes;
 {
-	OF_GETTER(_discoNodes, YES);
+	OF_GETTER(_discoNodes, true)
 }
 
 - (void)addDiscoNode: (XMPPDiscoNode*)node
@@ -85,7 +85,7 @@
 
 - (OFString*)capsNode
 {
-	OF_GETTER(_capsNode, YES);
+	OF_GETTER(_capsNode, true)
 }
 
 - (OFString*)capsHash
@@ -121,11 +121,11 @@
 	_JID = [JID copy];
 }
 
-- (BOOL)connection: (XMPPConnection*)connection
+- (bool)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)IQ
 {
 	if (![[IQ to] isEqual: _JID])
-		return NO;
+		return false;
 
 	OFXMLElement *query = [IQ elementForName: @"query"
 				       namespace: XMPP_NS_DISCO_ITEMS];
@@ -142,7 +142,7 @@
 			return [responder XMPP_handleItemsIQ: IQ
 						  connection: connection];
 
-		return NO;
+		return false;
 	}
 
 	query = [IQ elementForName: @"query"
@@ -167,9 +167,9 @@
 			return [responder XMPP_handleInfoIQ: IQ
 						 connection: connection];
 
-		return NO;
+		return false;
 	}
 
-	return NO;
+	return false;
 }
 @end

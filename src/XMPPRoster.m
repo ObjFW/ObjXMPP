@@ -77,7 +77,7 @@
 	XMPPIQ *iq;
 	OFXMLElement *query;
 
-	_rosterRequested = YES;
+	_rosterRequested = true;
 
 	iq = [XMPPIQ IQWithType: @"get"
 			     ID: [_connection generateStanzaID]];
@@ -86,7 +86,8 @@
 				    namespace: XMPP_NS_ROSTER];
 
 	if ([_connection supportsRosterVersioning]) {
-		OFString *ver = [_dataStorage stringValueForPath: @"roster.ver"];
+		OFString *ver =
+		    [_dataStorage stringValueForPath: @"roster.ver"];
 
 		if (ver == nil)
 			ver = @"";
@@ -103,7 +104,7 @@
 				IQ:)];
 }
 
-- (BOOL)connection: (XMPPConnection*)connection
+- (bool)connection: (XMPPConnection*)connection
       didReceiveIQ: (XMPPIQ*)iq
 {
 	OFXMLElement *rosterElement;
@@ -114,10 +115,10 @@
 				 namespace: XMPP_NS_ROSTER];
 
 	if (rosterElement == nil)
-		return NO;
+		return false;
 
 	if (![[iq type] isEqual: @"set"])
-		return NO;
+		return false;
 
 	element = [rosterElement elementForName: @"item"
 				      namespace: XMPP_NS_ROSTER];
@@ -143,7 +144,7 @@
 
 	[connection sendStanza: [iq resultIQ]];
 
-	return YES;
+	return true;
 }
 
 - (void)addRosterItem: (XMPPRosterItem*)rosterItem

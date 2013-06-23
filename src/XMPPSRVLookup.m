@@ -158,7 +158,7 @@
 
 - (OFString*)target
 {
-	OF_GETTER(_target, YES)
+	OF_GETTER(_target, true)
 }
 @end
 
@@ -195,7 +195,7 @@
 
 - (OFString*)domain;
 {
-	OF_GETTER(_domain, YES)
+	OF_GETTER(_domain, true)
 }
 
 - (void)XMPP_lookup
@@ -366,7 +366,7 @@
 		listIter = listIter->next;
 
 		if (listIter == NULL)
-			done = YES;
+			done = true;
 	}
 
 	return ret;
@@ -377,6 +377,6 @@
 	listIter = NULL;
 	[subListCopy release];
 	subListCopy = nil;
-	done = NO;
+	done = false;
 }
 @end

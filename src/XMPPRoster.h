@@ -72,7 +72,7 @@
 	OFMutableDictionary *_rosterItems;
 	XMPPMulticastDelegate *_delegates;
 	id <XMPPStorage> _dataStorage;
-	BOOL _rosterRequested;
+	bool _rosterRequested;
 }
 
 #ifdef OF_HAVE_PROPERTIES
