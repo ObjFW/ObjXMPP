@@ -23,6 +23,7 @@
 #import "XMPPConnection.h"
 #import "XMPPIQ.h"
 #import "XMPPJID.h"
+#import "XMPPDiscoEntity.h"
 #import "XMPPDiscoNode.h"
 #import "XMPPDiscoIdentity.h"
 #import "namespaces.h"
@@ -60,7 +61,8 @@
 	self = [super init];
 
 	@try {
-		if (JID == nil)
+		if ((JID == nil) &&
+		    ![self isKindOfClass: [XMPPDiscoEntity class]])
 			@throw [OFInvalidArgumentException exception];
 
 		_JID = [JID copy];

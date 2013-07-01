@@ -75,7 +75,7 @@
  */
 + (instancetype)discoNodeWithJID: (XMPPJID*)JID
 			    node: (OFString*)node
-	      name: (OFString*)name;
+			    name: (OFString*)name;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoNode with the specified
