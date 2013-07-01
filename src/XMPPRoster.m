@@ -40,13 +40,13 @@
 #import "namespaces.h"
 
 @implementation XMPPRoster
-- initWithConnection: (XMPPConnection*)connection_
+- initWithConnection: (XMPPConnection*)connection
 {
 	self = [super init];
 
 	@try {
 		_rosterItems = [[OFMutableDictionary alloc] init];
-		_connection = connection_;
+		_connection = connection;
 		[_connection addDelegate: self];
 		_delegates = [[XMPPMulticastDelegate alloc] init];
 		_dataStorage = [_connection dataStorage];
@@ -355,7 +355,7 @@
 		    ![[element namespace] isEqual: XMPP_NS_ROSTER])
 			continue;
 
-		pool = [OFAutoreleasePool new];
+		pool = [[OFAutoreleasePool alloc] init];
 		rosterItem = [self XMPP_rosterItemWithXMLElement: element];
 
 		[self XMPP_updateRosterItem: rosterItem];

@@ -60,8 +60,8 @@
 
 @interface XMPPConnection_ConnectThread: OFThread
 {
-	OFThread *sourceThread;
-	XMPPConnection *connection;
+	OFThread *_sourceThread;
+	XMPPConnection *_connection;
 }
 
 - initWithSourceThread: (OFThread*)sourceThread
@@ -69,14 +69,14 @@
 @end
 
 @implementation XMPPConnection_ConnectThread
-- initWithSourceThread: (OFThread*)sourceThread_
-	    connection: (XMPPConnection*)connection_
+- initWithSourceThread: (OFThread*)sourceThread
+	    connection: (XMPPConnection*)connection
 {
 	self = [super init];
 
 	@try {
-		sourceThread = [sourceThread_ retain];
-		connection = [connection_ retain];
+		_sourceThread = [sourceThread retain];
+		_connection = [connection retain];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -87,8 +87,8 @@
 
 - (void)dealloc
 {
-	[sourceThread release];
-	[connection release];
+	[_sourceThread release];
+	[_connection release];
 
 	[super dealloc];
 }
@@ -97,17 +97,17 @@
 {
 	[self join];
 
-	[connection handleConnection];
+	[_connection handleConnection];
 }
 
 - (id)main
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
-	[connection connect];
+	[_connection connect];
 
 	[self performSelector: @selector(didConnect)
-		     onThread: sourceThread
+		     onThread: _sourceThread
 		waitUntilDone: false];
 
 	[pool release];
@@ -237,21 +237,21 @@
 	return [[_server copy] autorelease];
 }
 
-- (void)setDomain: (OFString*)domain_
+- (void)setDomain: (OFString*)domain
 {
 	OFString *oldDomain = _domain;
 	OFString *oldDomainToASCII = _domainToASCII;
 
-	if (domain_ != nil) {
+	if (domain != nil) {
 		char *srv;
 		Stringprep_rc rc;
 
-		if ((rc = stringprep_profile([domain_ UTF8String], &srv,
+		if ((rc = stringprep_profile([domain UTF8String], &srv,
 		    "Nameprep", 0)) != STRINGPREP_OK)
 			@throw [XMPPStringPrepFailedException
 			    exceptionWithConnection: self
 					    profile: @"Nameprep"
-					     string: domain_];
+					     string: domain];
 
 		@try {
 			_domain = [[OFString alloc] initWithUTF8String: srv];
@@ -1201,18 +1201,18 @@
 			   withObject: _JID];
 }
 
-- (OFString*)XMPP_IDNAToASCII: (OFString*)domain_
+- (OFString*)XMPP_IDNAToASCII: (OFString*)domain
 {
 	OFString *ret;
 	char *cDomain;
 	Idna_rc rc;
 
-	if ((rc = idna_to_ascii_8z([domain_ UTF8String],
+	if ((rc = idna_to_ascii_8z([domain UTF8String],
 	    &cDomain, IDNA_USE_STD3_ASCII_RULES)) != IDNA_SUCCESS)
 		@throw [XMPPIDNATranslationFailedException
 		    exceptionWithConnection: self
 				  operation: @"ToASCII"
-				     string: domain_];
+				     string: domain];
 
 	@try {
 		ret = [[OFString alloc] initWithUTF8String: cDomain];

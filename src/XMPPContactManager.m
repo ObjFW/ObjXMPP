@@ -28,15 +28,15 @@
 #import "XMPPRosterItem.h"
 
 @implementation XMPPContactManager
-- initWithConnection: (XMPPConnection*)connection_
-	      roster: (XMPPRoster*)roster_
+- initWithConnection: (XMPPConnection*)connection
+	      roster: (XMPPRoster*)roster
 {
 	self = [super init];
 
 	@try {
-		_connection = connection_;
+		_connection = connection;
 		[_connection addDelegate: self];
-		_roster = roster_;
+		_roster = roster;
 		[_roster addDelegate: self];
 		_contacts = [[OFMutableDictionary alloc] init];
 		_delegates = [[XMPPMulticastDelegate alloc] init];
@@ -89,7 +89,7 @@
 	OF_GETTER(_contacts, true)
 }
 
-- (void)rosterWasReceived: (XMPPRoster*)roster_
+- (void)rosterWasReceived: (XMPPRoster*)roster
 {
 	OFEnumerator *contactEnumerator;
 	XMPPContact *contact;
@@ -107,10 +107,10 @@
 	[_contacts release];
 
 	_contacts = [[OFMutableDictionary alloc] init];
-	rosterItems = [roster_ rosterItems];
+	rosterItems = [roster rosterItems];
 	rosterItemEnumerator = [rosterItems keyEnumerator];
 	while ((bareJID = [rosterItemEnumerator nextObject]) != nil) {
-		contact = [[XMPPContact new] autorelease];
+		contact = [[[XMPPContact alloc] init] autorelease];
 		[contact XMPP_setRosterItem:
 		    [rosterItems objectForKey: bareJID]];
 		[_contacts setObject: contact
@@ -141,7 +141,7 @@
 	}
 
 	if (contact == nil) {
-		contact = [[XMPPContact new] autorelease];
+		contact = [[[XMPPContact alloc] init] autorelease];
 		[contact XMPP_setRosterItem: rosterItem];
 		[_contacts setObject: contact
 			     forKey: bareJID];

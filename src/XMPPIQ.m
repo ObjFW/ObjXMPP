@@ -64,7 +64,7 @@
 	return ret;
 }
 
-- (XMPPIQ*)errorIQWithType: (OFString*)type_
+- (XMPPIQ*)errorIQWithType: (OFString*)type
 		 condition: (OFString*)condition
 		      text: (OFString*)text
 {
@@ -75,7 +75,7 @@
 						  namespace: XMPP_NS_CLIENT];
 
 	[error addAttributeWithName: @"type"
-			stringValue: type_];
+			stringValue: type];
 	[error addChild: [OFXMLElement elementWithName: condition
 					     namespace: XMPP_NS_STANZAS]];
 	if (text)
@@ -91,10 +91,10 @@
 	return ret;
 }
 
-- (XMPPIQ*)errorIQWithType: (OFString*)type_
+- (XMPPIQ*)errorIQWithType: (OFString*)type
 		 condition: (OFString*)condition
 {
-	return [self errorIQWithType: type_
+	return [self errorIQWithType: type
 			   condition: condition
 				text: nil];
 }

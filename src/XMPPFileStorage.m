@@ -55,14 +55,14 @@
 	self = [super init];
 
 	@try {
-		OFAutoreleasePool *pool = [OFAutoreleasePool new];
+		OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
 		_file = [file copy];
 		@try {
 			_data = [[[OFDataArray dataArrayWithContentsOfFile:
 			    file] messagePackValue] retain];
 		} @catch (id e) {
-			_data = [OFMutableDictionary new];
+			_data = [[OFMutableDictionary alloc] init];
 		}
 
 		[pool release];
@@ -134,7 +134,7 @@
 - (void)setStringValue: (OFString*)string
 	       forPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
 	[self XMPP_setObject: string
 		     forPath: path];
@@ -144,7 +144,7 @@
 
 - (OFString*)stringValueForPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFString *string;
 
 	string = [self XMPP_objectForPath: path];
@@ -157,7 +157,7 @@
 - (void)setBooleanValue: (bool)boolean
 		forPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
 	[self XMPP_setObject: [OFNumber numberWithBool: boolean]
 		     forPath: path];
@@ -167,7 +167,7 @@
 
 - (bool)booleanValueForPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	bool boolean;
 
 	boolean = [[self XMPP_objectForPath: path] boolValue];
@@ -180,7 +180,7 @@
 - (void)setIntegerValue: (intmax_t)integer
 		forPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
 	[self XMPP_setObject: [OFNumber numberWithIntMax: integer]
 		     forPath: path];
@@ -190,7 +190,7 @@
 
 - (intmax_t)integerValueForPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	intmax_t integer;
 
 	integer = [[self XMPP_objectForPath: path] intMaxValue];
@@ -203,7 +203,7 @@
 - (void)setArray: (OFArray*)array
 	 forPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
 	[self XMPP_setObject: array
 		     forPath: path];
@@ -213,7 +213,7 @@
 
 - (OFArray*)arrayForPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFArray *array;
 
 	array = [self XMPP_objectForPath: path];
@@ -226,7 +226,7 @@
 - (void)setDictionary: (OFDictionary*)dictionary
 	      forPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
 	[self XMPP_setObject: dictionary
 		     forPath: path];
@@ -236,7 +236,7 @@
 
 - (OFDictionary*)dictionaryForPath: (OFString*)path
 {
-	OFAutoreleasePool *pool = [OFAutoreleasePool new];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFDictionary *dictionary;
 
 	dictionary = [self XMPP_objectForPath: path];

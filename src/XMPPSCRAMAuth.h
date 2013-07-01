@@ -114,8 +114,8 @@
 - (OFString*)XMPP_genNonce;
 - (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
 			data: (OFDataArray*)data;
-- (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
-			   salt: (OFDataArray *)salt_
+- (OFDataArray*)XMPP_hiWithData: (OFDataArray*)str
+			   salt: (OFDataArray*)salt
 		 iterationCount: (intmax_t)i;
 - (OFDataArray*)XMPP_parseServerFirstMessage: (OFDataArray*)data;
 - (OFDataArray*)XMPP_parseServerFinalMessage: (OFDataArray*)data;

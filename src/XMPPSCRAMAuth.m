@@ -474,8 +474,8 @@
 	return [[hashO autorelease] digest];
 }
 
-- (OFDataArray*)XMPP_hiWithData: (OFDataArray *)str
-			   salt: (OFDataArray *)salt_
+- (OFDataArray*)XMPP_hiWithData: (OFDataArray*)str
+			   salt: (OFDataArray*)salt
 		 iterationCount: (intmax_t)i
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
@@ -489,7 +489,7 @@
 	@try {
 		memset(result, 0, digestSize);
 
-		salty = [[salt_ copy] autorelease];
+		salty = [[salt copy] autorelease];
 		[salty addItems: "\0\0\0\1"
 			  count: 4];
 
@@ -500,7 +500,7 @@
 			result[j] ^= uOld[j];
 
 		for (j = 0; j < i - 1; j++) {
-			tmp = [OFDataArray new];
+			tmp = [[OFDataArray alloc] init];
 			[tmp addItems: uOld
 				count: digestSize];
 

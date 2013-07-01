@@ -61,16 +61,16 @@
 	self = [super init];
 
 	@try {
-		if ((JID == nil) &&
+		if (JID == nil &&
 		    ![self isKindOfClass: [XMPPDiscoEntity class]])
 			@throw [OFInvalidArgumentException exception];
 
 		_JID = [JID copy];
 		_node = [node copy];
 		_name = [name copy];
-		_identities = [OFSortedList new];
-		_features = [OFSortedList new];
-		_childNodes = [OFMutableDictionary new];
+		_identities = [[OFSortedList alloc] init];
+		_features = [[OFSortedList alloc] init];
+		_childNodes = [[OFMutableDictionary alloc] init];
 
 		[self addFeature: XMPP_NS_DISCO_ITEMS];
 		[self addFeature: XMPP_NS_DISCO_INFO];

@@ -51,7 +51,7 @@
 			     node: nil];
 
 	@try {
-		_discoNodes = [OFMutableDictionary new];
+		_discoNodes = [[OFMutableDictionary alloc] init];
 		_connection = connection;
 		_capsNode = [capsNode copy];
 

@@ -55,13 +55,13 @@
 				    selector: selector] autorelease];
 }
 
-- initWithTarget: (id)target_
-	selector: (SEL)selector_
+- initWithTarget: (id)target
+	selector: (SEL)selector
 {
 	self = [super init];
 
-	_target = [target_ retain];
-	_selector = selector_;
+	_target = [target retain];
+	_selector = selector;
 
 	return self;
 }
