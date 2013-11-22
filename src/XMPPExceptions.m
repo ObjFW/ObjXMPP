@@ -70,7 +70,7 @@
 
 - (XMPPConnection*)connection
 {
-	OF_GETTER(_connection, false)
+	OF_GETTER(_connection, true)
 }
 @end
 
@@ -129,12 +129,12 @@
 
 - (OFString*)condition
 {
-	OF_GETTER(_condition, false)
+	OF_GETTER(_condition, true)
 }
 
 - (OFString*)reason
 {
-	OF_GETTER(_reason, false)
+	OF_GETTER(_reason, true)
 }
 @end
 
@@ -194,12 +194,12 @@
 
 - (OFString*)profile
 {
-	OF_GETTER(_profile, false)
+	OF_GETTER(_profile, true)
 }
 
 - (OFString*)string
 {
-	OF_GETTER(_string, false)
+	OF_GETTER(_string, true)
 }
 @end
 
@@ -258,12 +258,12 @@
 
 - (OFString*)operation
 {
-	OF_GETTER(_operation, false)
+	OF_GETTER(_operation, true)
 }
 
 - (OFString*)string
 {
-	OF_GETTER(_string, false)
+	OF_GETTER(_string, true)
 }
 @end
 
@@ -317,6 +317,6 @@
 
 - (OFString*)reason
 {
-	OF_GETTER(_reason, false)
+	OF_GETTER(_reason, true)
 }
 @end
