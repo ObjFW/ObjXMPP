@@ -563,15 +563,25 @@
 {
 	OFAutoreleasePool *pool;
 	XMPPCallback *callback;
-
-	if (![IQ ID])
-		[IQ setID: [self generateStanzaID]];
+	OFString *ID, *key;
 
 	pool = [[OFAutoreleasePool alloc] init];
+
+	if ((ID = [IQ ID]) == nil) {
+		ID = [self generateStanzaID];
+		[IQ setID: ID];
+	}
+
+	if ((key = [[IQ to] fullJID]) == nil)
+		key = [_JID bareJID];
+	if (key == nil) // Only happens for resource bind
+		key = @"bind";
+	key = [key stringByAppendingString: ID];
+
 	callback = [XMPPCallback callbackWithTarget: target
 					   selector: selector];
 	[_callbacks setObject: callback
-		       forKey: [IQ ID]];
+		       forKey: key];
 	[pool release];
 
 	[self sendStanza: IQ];
@@ -583,14 +593,24 @@
 {
 	OFAutoreleasePool *pool;
 	XMPPCallback *callback;
-
-	if (![IQ ID])
-		[IQ setID: [self generateStanzaID]];
+	OFString *ID, *key;
 
 	pool = [[OFAutoreleasePool alloc] init];
+
+	if ((ID = [IQ ID]) == nil) {
+		ID = [self generateStanzaID];
+		[IQ setID: ID];
+	}
+
+	if ((key = [[IQ to] fullJID]) == nil)
+		key = [_JID bareJID];
+	if (key == nil) // Connection not yet bound, can't send stanzas
+		@throw [OFInvalidArgumentException exception];
+	key = [key stringByAppendingString: ID];
+
 	callback = [XMPPCallback callbackWithBlock: block];
 	[_callbacks setObject: callback
-		       forKey: [IQ ID]];
+		       forKey: key];
 	[pool release];
 
 	[self sendStanza: IQ];
@@ -958,26 +978,33 @@
 	assert(0);
 }
 
-- (void)XMPP_handleIQ: (XMPPIQ*)iq
+- (void)XMPP_handleIQ: (XMPPIQ*)IQ
 {
 	bool handled = false;
 	XMPPCallback *callback;
+	OFString *key;
 
-	if ((callback = [_callbacks objectForKey: [iq ID]])) {
-		[callback runWithIQ: iq
+	if ((key = [[IQ from] fullJID]) == nil)
+		key = [_JID bareJID];
+	if (key == nil) // Only happens for resource bind
+		key = @"bind";
+	key = [key stringByAppendingString: [IQ ID]];
+
+	if ((callback = [_callbacks objectForKey: key])) {
+		[callback runWithIQ: IQ
 			 connection: self];
-		[_callbacks removeObjectForKey: [iq ID]];
+		[_callbacks removeObjectForKey: key];
 		return;
 	}
 
 	handled = [_delegates broadcastSelector: @selector(
 						     connection:didReceiveIQ:)
 				     withObject: self
-				     withObject: iq];
+				     withObject: IQ];
 
-	if (!handled && ![[iq type] isEqual: @"error"] &&
-	    ![[iq type] isEqual: @"result"]) {
-		[self sendStanza: [iq errorIQWithType: @"cancel"
+	if (!handled && ![[IQ type] isEqual: @"error"] &&
+	    ![[IQ type] isEqual: @"result"]) {
+		[self sendStanza: [IQ errorIQWithType: @"cancel"
 					    condition: @"service-unavailable"]];
 	}
 }
