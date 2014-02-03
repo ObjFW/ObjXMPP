@@ -110,6 +110,7 @@
 	OFXMLElement *rosterElement;
 	OFXMLElement *element;
 	XMPPRosterItem *rosterItem;
+	OFString *origin;
 
 	rosterElement = [iq elementForName: @"query"
 				 namespace: XMPP_NS_ROSTER];
@@ -118,6 +119,11 @@
 		return false;
 
 	if (![[iq type] isEqual: @"set"])
+		return false;
+
+	// Ensure the roster push has been sent by the server
+	origin = [[iq from] fullJID];
+	if (origin != nil && ![origin isEqual: [[connection JID] bareJID]])
 		return false;
 
 	element = [rosterElement elementForName: @"item"
