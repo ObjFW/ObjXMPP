@@ -112,7 +112,7 @@
 
 /// \cond internal
 - (OFString*)XMPP_genNonce;
-- (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
+- (const uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
 			data: (OFDataArray*)data;
 - (OFDataArray*)XMPP_hiWithData: (OFDataArray*)str
 			   salt: (OFDataArray*)salt

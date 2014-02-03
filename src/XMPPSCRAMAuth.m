@@ -199,7 +199,7 @@
 - (OFDataArray*)XMPP_parseServerFirstMessage: (OFDataArray*)data
 {
 	size_t i;
-	uint8_t *clientKey, *serverKey, *clientSignature;
+	const uint8_t *clientKey, *serverKey, *clientSignature;
 	intmax_t iterCount = 0;
 	id <OFHash> hash;
 	OFDataArray *ret, *authMessage, *tmpArray, *salt = nil, *saltedPassword;
@@ -419,7 +419,7 @@
 				    length: 64];
 }
 
-- (uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
+- (const uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
 			data: (OFDataArray*)data
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
@@ -480,7 +480,8 @@
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	size_t digestSize = [_hashType digestSize];
-	uint8_t *result = NULL, *u, *uOld;
+	uint8_t *result = NULL;
+	const uint8_t *u, *uOld;
 	intmax_t j, k;
 	OFDataArray *salty, *tmp, *ret;
 

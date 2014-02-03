@@ -108,7 +108,7 @@
 
 		_target = [[OFString alloc]
 		    initWithCString: buffer
-			   encoding: OF_STRING_ENCODING_NATIVE];
+			   encoding: [OFString nativeOSEncoding]];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -218,7 +218,7 @@
 
 		answer = [self allocMemoryWithSize: pageSize];
 		answerLen = res_nsearch(&_resState,
-		    [request cStringWithEncoding: OF_STRING_ENCODING_NATIVE],
+		    [request cStringWithEncoding: [OFString nativeOSEncoding]],
 		    ns_c_in, ns_t_srv, answer, (int)pageSize);
 
 		if ((answerLen == -1) && ((h_errno == HOST_NOT_FOUND) ||
