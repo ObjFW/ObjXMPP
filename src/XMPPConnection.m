@@ -1102,7 +1102,8 @@
 		assert(0);
 	}
 
-	if (session != nil)
+	if (session != nil && ![session elementForName: @"optional"
+					     namespace: XMPP_NS_SESSION])
 		_needsSession = true;
 
 	if (bind != nil) {
