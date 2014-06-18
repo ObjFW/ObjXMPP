@@ -1,4 +1,5 @@
 AC_INIT(ObjXMPP, 0.1, js@webkeks.org)
+BUILDSYS_INIT
 AC_CONFIG_SRCDIR(src)
 
 AC_CHECK_TOOL(OBJFW_CONFIG, objfw-config)
@@ -89,7 +90,7 @@ PKG_CHECK_MODULES(libidn, [libidn >= 0.25], [
 	CPPFLAGS="$CPPFLAGS $libidn_CFLAGS"
 	LIBS="$LIBS $libidn_LIBS"
 ], [
-	AC_MSG_ERROR(You need at least libidn 2.5 installed!)
+	AC_MSG_ERROR(You need libidn >= 2.5 installed!)
 ])
 
 AS_IF([test x"$GOBJC" = x"yes"], [
