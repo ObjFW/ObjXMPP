@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2014, 2015
+ *     Jonathan Schleifer <js@webkeks.org>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://webkeks.org/git/?p=objxmpp.git
@@ -35,6 +36,8 @@
 #include <openssl/rand.h>
 
 #import "XMPPSRVLookup.h"
+
+#import <ObjFW/OFSystemInfo.h>
 
 @implementation XMPPSRVEntry
 + (instancetype)entryWithPriority: (uint16_t)priority
@@ -108,7 +111,7 @@
 
 		_target = [[OFString alloc]
 		    initWithCString: buffer
-			   encoding: [OFString nativeOSEncoding]];
+			   encoding: [OFSystemInfo native8BitEncoding]];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -217,8 +220,8 @@
 			    exceptionWithHost: _domain];
 
 		answer = [self allocMemoryWithSize: pageSize];
-		answerLen = res_nsearch(&_resState,
-		    [request cStringWithEncoding: [OFString nativeOSEncoding]],
+		answerLen = res_nsearch(&_resState, [request
+		    cStringWithEncoding: [OFSystemInfo native8BitEncoding]],
 		    ns_c_in, ns_t_srv, answer, (int)pageSize);
 
 		if ((answerLen == -1) && ((h_errno == HOST_NOT_FOUND) ||
@@ -264,7 +267,9 @@
 
 	/* Look if there already is a list with the priority */
 	for (iter = [_list firstListObject]; iter != NULL; iter = iter->next) {
-		if ([[iter->object firstObject] priority] == [entry priority]) {
+		XMPPSRVEntry *first = [iter->object firstObject];
+
+		if ([first priority] == [entry priority]) {
 			/*
 			 * RFC 2782 says those with weight 0 should be at the
 			 * beginning of the list.
@@ -278,7 +283,7 @@
 		}
 
 		/* We can't have one if the priority is already bigger */
-		if ([[iter->object firstObject] priority] > [entry priority])
+		if ([first priority] > [entry priority])
 			break;
 	}
 
