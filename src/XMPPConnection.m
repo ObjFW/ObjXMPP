@@ -904,10 +904,14 @@
 				   withObject: self];
 
 		newSock = [[SSLSocket alloc] initWithSocket: _socket];
+		[newSock setCertificateVerificationEnabled: false];
+#if 0
+		/* FIXME: Not yet implemented by ObjOpenSSL */
 		[newSock setCertificateFile: _certificateFile];
 		[newSock setPrivateKeyFile: _privateKeyFile];
 		[newSock setPrivateKeyPassphrase: _privateKeyPassphrase];
-		[newSock startTLS];
+#endif
+		[newSock startTLSWithExpectedHost: nil];
 		[_socket release];
 		_socket = newSock;
 
