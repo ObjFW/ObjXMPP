@@ -1,6 +1,8 @@
 AC_INIT(ObjXMPP, 0.1, js@webkeks.org)
 BUILDSYS_INIT
+
 AC_CONFIG_SRCDIR(src)
+AC_CONFIG_AUX_DIR(build-aux)
 
 AC_CHECK_TOOL(OBJFW_CONFIG, objfw-config)
 AS_IF([test x"$OBJFW_CONFIG" = x""], [
