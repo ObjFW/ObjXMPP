@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -38,7 +39,6 @@
 	OFMutableDictionary *_childNodes;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The JID this node lives on
 @property (readonly) XMPPJID *JID;
 /// \brief The node's opaque name of the node
@@ -51,7 +51,6 @@
 @property (readonly) OFSortedList *features;
 /// \brief The node's children
 @property (readonly) OFDictionary *childNodes;
-#endif
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoNode with the specified
@@ -121,12 +120,6 @@
   * \param node The XMPPDiscoNode to add as child
   */
 - (void)addChildNode: (XMPPDiscoNode*)node;
-
-- (XMPPJID*)JID;
-- (OFString*)node;
-- (OFSortedList*)identities;
-- (OFSortedList*)features;
-- (OFDictionary*)childNodes;
 
 - (bool)XMPP_handleItemsIQ: (XMPPIQ*)IQ
 		connection: (XMPPConnection*)connection;

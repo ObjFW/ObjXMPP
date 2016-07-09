@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -35,13 +36,11 @@
 	OFString *_target;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 @property (readonly) uint16_t priority;
 @property (readonly) uint16_t weight;
 @property uint32_t accumulatedWeight;
 @property (readonly) uint16_t port;
 @property (readonly, copy) OFString *target;
-#endif
 
 + (instancetype)entryWithPriority: (uint16_t)priority
 			   weight: (uint16_t)weight
@@ -55,12 +54,6 @@
 	    target: (OFString*)target;
 - initWithResourceRecord: (ns_rr)resourceRecord
 		  handle: (ns_msg)handle;
-- (uint16_t)priority;
-- (uint16_t)weight;
-- (uint32_t)accumulatedWeight;
-- (void)setAccumulatedWeight: (uint32_t)accumulatedWeight;
-- (uint16_t)port;
-- (OFString*)target;
 @end
 
 @interface XMPPSRVLookup: OFObject <OFEnumerating>
@@ -70,9 +63,7 @@
 	OFList *_list;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 @property (readonly, copy) OFString *domain;
-#endif
 
 + (instancetype)lookupWithDomain: (OFString*)domain;
 - initWithDomain: (OFString*)domain;

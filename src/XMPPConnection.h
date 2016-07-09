@@ -1,8 +1,9 @@
 /*
- * Copyright (c) 2010, 2011, 2012, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2010, 2011, 2012, 2013, 2016
+ *   Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -43,10 +44,7 @@
 #ifndef XMPP_CONNECTION_M
     <OFObject>
 #endif
-#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
 @optional
-#endif
-
 /**
  * \brief This callback is called when the connection received an element.
  *
@@ -147,10 +145,8 @@
 /**
  * \brief A class which abstracts a connection to an XMPP service.
  */
-@interface XMPPConnection: OFObject
-#ifdef OF_HAVE_OPTONAL_PROTOCOLS
-    <OFXMLParserDelegate, OFXMLElementBuilderDelegate>
-#endif
+@interface XMPPConnection: OFObject <OFXMLParserDelegate,
+    OFXMLElementBuilderDelegate>
 {
 	id _socket;
 	OFXMLParser *_parser, *_oldParser;
@@ -174,7 +170,6 @@
 	unsigned int _lastID;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The username to use for authentication
 @property (copy) OFString *username;
 /// \brief The password to use for authentication
@@ -211,7 +206,6 @@
 @property (readonly) bool supportsRosterVersioning;
 /// \brief Whether stream management is supported
 @property (readonly) bool supportsStreamManagement;
-#endif
 
 /**
  * \brief Creates a new autoreleased XMPPConnection.

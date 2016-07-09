@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2014, 2015
- *     Jonathan Schleifer <js@webkeks.org>
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016
+ *     Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2014, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -40,6 +40,10 @@
 #import <ObjFW/OFSystemInfo.h>
 
 @implementation XMPPSRVEntry
+@synthesize priority = _priority, weight = _weight;
+@synthesize accumulatedWeight = _accumulatedWeight, port = _port;
+@synthesize target = _target;
+
 + (instancetype)entryWithPriority: (uint16_t)priority
 			   weight: (uint16_t)weight
 			     port: (uint16_t)port
@@ -133,39 +137,11 @@
 	    @"<%@ priority: %" PRIu16 @", weight: %" PRIu16 @", target: %@:%"
 	    PRIu16 @">", [self class], _priority, _weight, _target, _port];
 }
-
-- (uint16_t)priority
-{
-	return _priority;
-}
-
-- (uint16_t)weight
-{
-	return _weight;
-}
-
-- (void)setAccumulatedWeight: (uint32_t)accumulatedWeight
-{
-	_accumulatedWeight = accumulatedWeight;
-}
-
-- (uint32_t)accumulatedWeight
-{
-	return _accumulatedWeight;
-}
-
-- (uint16_t)port
-{
-	return _port;
-}
-
-- (OFString*)target
-{
-	OF_GETTER(_target, true)
-}
 @end
 
 @implementation XMPPSRVLookup
+@synthesize domain = _domain;
+
 + (instancetype)lookupWithDomain: (OFString*)domain
 {
 	return [[[self alloc] initWithDomain: domain] autorelease];
@@ -194,11 +170,6 @@
 	[_domain release];
 
 	[super dealloc];
-}
-
-- (OFString*)domain;
-{
-	OF_GETTER(_domain, true)
 }
 
 - (void)XMPP_lookup

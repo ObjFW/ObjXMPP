@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,6 +31,8 @@
 #import "XMPPConnection.h"
 
 @implementation XMPPException
+@synthesize connection = _connection;
+
 + (instancetype)exceptionWithConnection: (XMPPConnection*)connection
 {
 	return [[[self alloc] initWithConnection: connection] autorelease];
@@ -37,14 +40,7 @@
 
 - init
 {
-	@try {
-		[self doesNotRecognizeSelector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	abort();
+	OF_INVALID_INIT_METHOD
 }
 
 - initWithConnection: (XMPPConnection*)connection
@@ -67,14 +63,11 @@
 
 	[super dealloc];
 }
-
-- (XMPPConnection*)connection
-{
-	OF_GETTER(_connection, true)
-}
 @end
 
 @implementation XMPPStreamErrorException
+@synthesize condition = _condition, reason = _reason;
+
 + (instancetype)exceptionWithConnection: (XMPPConnection*)connection
 			      condition: (OFString*)condition
 				 reason: (OFString*)reason;
@@ -86,14 +79,7 @@
 
 - initWithConnection: (XMPPConnection*)connection
 {
-	@try {
-		[self doesNotRecognizeSelector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	abort();
+	OF_INVALID_INIT_METHOD
 }
 
 - initWithConnection: (XMPPConnection*)connection
@@ -126,19 +112,11 @@
 	return [OFString stringWithFormat:
 	    @"Got stream error: %@. Reason: %@!", _condition, _reason];
 }
-
-- (OFString*)condition
-{
-	OF_GETTER(_condition, true)
-}
-
-- (OFString*)reason
-{
-	OF_GETTER(_reason, true)
-}
 @end
 
 @implementation XMPPStringPrepFailedException
+@synthesize profile = _profile, string = _string;
+
 + (instancetype)exceptionWithConnection: (XMPPConnection*)connection
 				profile: (OFString*)profile
 				 string: (OFString*)string
@@ -150,14 +128,7 @@
 
 - initWithConnection: (XMPPConnection*)connection
 {
-	@try {
-		[self doesNotRecognizeSelector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	abort();
+	OF_INVALID_INIT_METHOD
 }
 
 - initWithConnection: (XMPPConnection*)connection
@@ -191,19 +162,11 @@
 	    @"Stringprep with profile %@ failed on string '%@'!",
 	    _profile, _string];
 }
-
-- (OFString*)profile
-{
-	OF_GETTER(_profile, true)
-}
-
-- (OFString*)string
-{
-	OF_GETTER(_string, true)
-}
 @end
 
 @implementation XMPPIDNATranslationFailedException
+@synthesize operation = _operation, string = _string;
+
 + (instancetype)exceptionWithConnection: (XMPPConnection*)connection
 			      operation: (OFString*)operation
 				 string: (OFString*)string
@@ -215,14 +178,7 @@
 
 - initWithConnection: (XMPPConnection*)connection
 {
-	@try {
-		[self doesNotRecognizeSelector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	abort();
+	OF_INVALID_INIT_METHOD
 }
 
 - initWithConnection: (XMPPConnection*)connection
@@ -255,19 +211,11 @@
 	return [OFString stringWithFormat:
 	    @"IDNA operation %@ failed on string '%@'!", _operation, _string];
 }
-
-- (OFString*)operation
-{
-	OF_GETTER(_operation, true)
-}
-
-- (OFString*)string
-{
-	OF_GETTER(_string, true)
-}
 @end
 
 @implementation XMPPAuthFailedException
+@synthesize reason = _reason;
+
 + (instancetype)exceptionWithConnection: (XMPPConnection*)connection
 				 reason: (OFString*)reason;
 {
@@ -277,14 +225,7 @@
 
 - initWithConnection: (XMPPConnection*)connection
 {
-	@try {
-		[self doesNotRecognizeSelector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	abort();
+	OF_INVALID_INIT_METHOD
 }
 
 - initWithConnection: (XMPPConnection*)connection
@@ -313,10 +254,5 @@
 {
 	return [OFString stringWithFormat:
 	    @"Authentication failed. Reason: %@!", _reason];
-}
-
-- (OFString*)reason
-{
-	OF_GETTER(_reason, true)
 }
 @end

@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2013, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -28,14 +28,24 @@
  */
 @interface XMPPPresence: XMPPStanza <OFComparing>
 {
-	OFString *_status, *_show, *_priority;
+	OFString *_status, *_show;
+	OFNumber *_priority;
 }
 
-#ifdef OF_HAVE_PROPERTIES
+/**
+ * The text content of the status element.
+ */
 @property (copy) OFString *status;
+
+/**
+ * The text content of the show element of the presence stanza.
+ */
 @property (copy) OFString *show;
+
+/**
+ * The numeric content of the priority element.
+ */
 @property (copy) OFNumber *priority;
-#endif
 
 /**
  * \brief Creates a new autoreleased XMPPPresence.
@@ -97,47 +107,4 @@
  */
 - initWithType: (OFString*)type
 	    ID: (OFString*)ID;
-
-/**
- * \brief Sets/Adds the show element of the presence stanza.
- *
- * \param show The text content of the show element
- */
-- (void)setShow: (OFString*)show;
-
-/**
- * \brief Returns the text content of the show element of the presence stanza.
- *
- * \return The text content of the show element of the presence stanza.
- */
-- (OFString*)show;
-
-/**
- * \brief Sets/Adds the status element of the presence stanza.
- *
- * \param status The text content of the status element
- */
-- (void)setStatus: (OFString*)status;
-
-/**
- * \brief Returns the text content of the status element of the presence stanza.
- *
- * \return The text content of the status element of the presence stanza.
- */
-- (OFString*)status;
-
-/**
- * \brief Sets/Adds the priority element of the presence stanza.
- *
- * \param priority The numeric content of the priority element
- */
-- (void)setPriority: (OFNumber*)priority;
-
-/**
- * \brief Returns the numeric content of the priority element of the presence
- *	  stanza.
- *
- * \return The numeric content of the priority element of the presence stanza.
- */
-- (OFNumber*)priority;
 @end

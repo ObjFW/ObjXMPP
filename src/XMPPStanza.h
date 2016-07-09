@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -34,7 +34,6 @@
 	OFString *_type, *_ID, *_language;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The value of the stanza's from attribute
 @property (copy) XMPPJID *from;
 /// \brief The value of the stanza's to attribute
@@ -44,7 +43,7 @@
 /// \brief The value of the stanza's id attribute
 @property (copy) OFString *ID;
 /// \brief The stanza's xml:lang
-#endif
+@property (copy) OFString *language;
 
 /**
  * \brief Creates a new autoreleased XMPPStanza with the specified name.
@@ -146,15 +145,4 @@
  * \return A initialized XMPPStanza
  */
 - initWithElement: (OFXMLElement*)element;
-
-- (void)setFrom: (XMPPJID*)from;
-- (XMPPJID*)from;
-- (void)setTo: (XMPPJID*)to;
-- (XMPPJID*)to;
-- (void)setType: (OFString*)type;
-- (OFString*)type;
-- (void)setID: (OFString*)ID;
-- (OFString*)ID;
-- (void)setLanguage: (OFString*)language;
-- (OFString*)language;
 @end

@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,14 +31,12 @@
 	OFString *_authzid, *_authcid, *_password;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The authzid to get authorization for
 @property (copy) OFString *authzid;
 /// \brief The authcid to authenticate with
 @property (copy) OFString *authcid;
 /// \brief The password to authenticate with
 @property (copy) OFString *password;
-#endif
 
 /**
  * \brief Initializes an already allocated XMPPAuthenticator with an authcid
@@ -77,11 +76,4 @@
  * \return The appropriate response if the data was a challenge, nil otherwise
  */
 - (OFDataArray*)continueWithData: (OFDataArray*)data;
-
-- (void)setAuthzid: (OFString*)authzid;
-- (OFString*)authzid;
-- (void)setAuthcid: (OFString*)authcid;
-- (OFString*)authcid;
-- (void)setPassword: (OFString*)password;
-- (OFString*)password;
 @end

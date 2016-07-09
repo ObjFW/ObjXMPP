@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -29,13 +30,16 @@
 #import "namespaces.h"
 
 @implementation XMPPDiscoNode
+
+@synthesize JID = _JID, node = _node, name = _name, identities = _identities;
+@synthesize features = _features, childNodes = _childNodes;
+
 + (instancetype)discoNodeWithJID: (XMPPJID*)JID
 			    node: (OFString*)node;
 {
 	return [[[self alloc] initWithJID: JID
 				     node: node] autorelease];
 }
-
 
 + (instancetype)discoNodeWithJID: (XMPPJID*)JID
 			    node: (OFString*)node
@@ -92,36 +96,6 @@
 	[_childNodes release];
 
 	[super dealloc];
-}
-
-- (XMPPJID*)JID
-{
-	OF_GETTER(_JID, true)
-}
-
-- (OFString*)node
-{
-	OF_GETTER(_node, true)
-}
-
-- (OFString*)name
-{
-	OF_GETTER(_name, true)
-}
-
-- (OFSortedList*)identities
-{
-	OF_GETTER(_identities, true)
-}
-
-- (OFSortedList*)features
-{
-	OF_GETTER(_features, true)
-}
-
-- (OFDictionary*)childNodes
-{
-	OF_GETTER(_childNodes, true)
 }
 
 - (void)addIdentity: (XMPPDiscoIdentity*)identity

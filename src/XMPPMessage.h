@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -27,10 +27,8 @@
  * \brief A class describing a message stanza.
  */
 @interface XMPPMessage: XMPPStanza
-#ifdef OF_HAVE_PROPERTIES
-/// \brief The text content of the body of the message
+/** The text content of the body of the message. */
 @property (copy) OFString *body;
-#endif
 
 /**
  * \brief Creates a new autoreleased XMPPMessage.
@@ -91,18 +89,4 @@
  */
 - initWithType: (OFString*)type
 	    ID: (OFString*)ID;
-
-/**
- * \brief Sets the text content of the body of the XMPPMessage.
- *
- * \param body The text content of the body element or nil to remove the body
- */
-- (void)setBody: (OFString*)body;
-
-/**
- * \brief Returns the text content of the body element of the XMPPMessage.
- *
- * \return The text content of the body element of the XMPPMessage.
- */
-- (OFString*)body;
 @end

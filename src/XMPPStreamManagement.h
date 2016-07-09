@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -22,10 +23,7 @@
 
 #import "XMPPConnection.h"
 
-@interface XMPPStreamManagement: OFObject
-#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
-    <XMPPConnectionDelegate>
-#endif
+@interface XMPPStreamManagement: OFObject <XMPPConnectionDelegate>
 {
 	XMPPConnection *_connection;
 	uint32_t _receivedCount;

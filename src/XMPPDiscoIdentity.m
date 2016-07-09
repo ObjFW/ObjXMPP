@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -23,6 +24,8 @@
 #import "XMPPDiscoIdentity.h"
 
 @implementation XMPPDiscoIdentity
+@synthesize category = _category, name = _name, type = _type;
+
 + (instancetype)identityWithCategory: (OFString*)category
 				type: (OFString*)type
 				name: (OFString*)name
@@ -87,21 +90,6 @@
 	[_type release];
 
 	[super dealloc];
-}
-
-- (OFString*)category
-{
-	OF_GETTER(_category, true)
-}
-
-- (OFString*)name
-{
-	OF_GETTER(_name, true)
-}
-
-- (OFString*)type
-{
-	OF_GETTER(_type, true)
 }
 
 - (bool)isEqual: (id)object

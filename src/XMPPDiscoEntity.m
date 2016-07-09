@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -26,6 +27,8 @@
 #import "namespaces.h"
 
 @implementation XMPPDiscoEntity
+@synthesize discoNodes = _discoNodes, capsNode = _capsNode;
+
 + (instancetype)discoEntityWithConnection: (XMPPConnection*)connection
 {
 	return [[[self alloc] initWithConnection: connection] autorelease];
@@ -72,20 +75,10 @@
 	[super dealloc];
 }
 
-- (OFDictionary*)discoNodes;
-{
-	OF_GETTER(_discoNodes, true)
-}
-
 - (void)addDiscoNode: (XMPPDiscoNode*)node
 {
 	[_discoNodes setObject: node
 			forKey: [node node]];
-}
-
-- (OFString*)capsNode
-{
-	OF_GETTER(_capsNode, true)
 }
 
 - (OFString*)capsHash

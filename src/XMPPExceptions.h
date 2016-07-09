@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -33,10 +34,8 @@
 	XMPPConnection *_connection;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The connection the exception relates to
 @property (readonly, retain) XMPPConnection *connection;
-#endif
 
 /**
  * \brief Creates a new XMPPException.
@@ -55,8 +54,6 @@
  * \return An initialized XMPPException
  */
 - initWithConnection: (XMPPConnection*)connection;
-
-- (XMPPConnection*)connection;
 @end
 
 /**
@@ -67,12 +64,10 @@
 	OFString *_condition, *_reason;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The defined error condition specified by the stream error
 @property (readonly, copy) OFString *condition;
 /// \brief The descriptive free-form text specified by the stream error
 @property (readonly, copy) OFString *reason;
-#endif
 
 /**
  * \brief Creates a new XMPPStreamErrorException.
@@ -97,9 +92,6 @@
 - initWithConnection: (XMPPConnection*)connection
 	   condition: (OFString*)condition
 	      reason: (OFString*)reason;
-
-- (OFString*)condition;
-- (OFString*)reason;
 @end
 
 /**
@@ -111,12 +103,10 @@
 	OFString *_profile, *_string;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The name of the stringprep profile that did not apply
 @property (readonly, copy) OFString *profile;
 /// \brief The string that failed the stringprep profile
 @property (readonly, copy) OFString *string;
-#endif
 
 /**
  * \brief Creates a new XMPPStringPrepFailedException.
@@ -141,9 +131,6 @@
 - initWithConnection: (XMPPConnection*)connection
 	     profile: (OFString*)profile
 	      string: (OFString*)string;
-
-- (OFString*)profile;
-- (OFString*)string;
 @end
 
 /**
@@ -154,12 +141,10 @@
 	OFString *_operation, *_string;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The IDNA translation operation which failed
 @property (readonly, copy) OFString *operation;
 /// \brief The string that could not be translated
 @property (readonly, copy) OFString *string;
-#endif
 
 /**
  * \brief Creates a new XMPPIDNATranslationFailedException.
@@ -184,9 +169,6 @@
 - initWithConnection: (XMPPConnection*)connection
 	   operation: (OFString*)operation
 	      string: (OFString*)string;
-
-- (OFString*)operation;
-- (OFString*)string;
 @end
 
 /**
@@ -197,10 +179,8 @@
 	OFString *_reason;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The reason the authentication failed
 @property (readonly, copy) OFString *reason;
-#endif
 
 /**
  * \brief Creates a new XMPPAuthFailedException.
@@ -221,6 +201,4 @@
  */
 - initWithConnection: (XMPPConnection*)connection
 	      reason: (OFString*)reason;
-
-- (OFString*)reason;
 @end

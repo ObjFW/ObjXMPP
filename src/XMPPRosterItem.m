@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,6 +31,9 @@
 #import <ObjFW/macros.h>
 
 @implementation XMPPRosterItem
+@synthesize JID = _JID, name = _name, subscription = _subscription;
+@synthesize groups = _groups;
+
 + (instancetype)rosterItem
 {
 	return [[[self alloc] init] autorelease];
@@ -67,45 +71,5 @@
 	return [OFString stringWithFormat: @"<XMPPRosterItem, JID=%@, name=%@, "
 					   @"subscription=%@, groups=%@>",
 					   _JID, _name, _subscription, _groups];
-}
-
-- (void)setJID: (XMPPJID*)JID
-{
-	OF_SETTER(_JID, JID, true, 1)
-}
-
-- (XMPPJID*)JID
-{
-	OF_GETTER(_JID, true)
-}
-
-- (void)setName: (OFString*)name
-{
-	OF_SETTER(_name, name, true, 1)
-}
-
-- (OFString*)name
-{
-	OF_GETTER(_name, true)
-}
-
-- (void)setSubscription: (OFString*)subscription
-{
-	OF_SETTER(_subscription, subscription, true, 1)
-}
-
-- (OFString*)subscription
-{
-	OF_GETTER(_subscription, true)
-}
-
-- (void)setGroups: (OFArray*)groups
-{
-	OF_SETTER(_groups, groups, true, 1)
-}
-
-- (OFArray*)groups
-{
-	OF_GETTER(_groups, true)
 }
 @end

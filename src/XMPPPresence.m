@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
- * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -25,21 +25,25 @@
 # include "config.h"
 #endif
 
-#include <assert.h>
-
 #import "XMPPPresence.h"
 #import "namespaces.h"
 
-// This provides us with sortable values for show values
-static int show_to_int(OFString *show)
+/* This provides us with sortable values for show values */
+static int
+show_to_int(OFString *show)
 {
-	if ([show isEqual: @"chat"]) return 0;
-	if (show == nil) return 1; // available
-	if ([show isEqual: @"away"]) return 2;
-	if ([show isEqual: @"dnd"]) return 3;
-	if ([show isEqual: @"xa"]) return 4;
+	if ([show isEqual: @"chat"])
+		return 0;
+	if (show == nil)
+		return 1;	/* available */
+	if ([show isEqual: @"away"])
+		return 2;
+	if ([show isEqual: @"dnd"])
+		return 3;
+	if ([show isEqual: @"xa"])
+		return 4;
 
-	assert(0);
+	OF_ENSURE(0);
 }
 
 @implementation XMPPPresence
@@ -141,6 +145,7 @@ static int show_to_int(OFString *show)
 {
 	OFXMLElement *oldShow = [self elementForName: @"show"
 					   namespace: XMPP_NS_CLIENT];
+	OFString *old;
 
 	if (oldShow != nil)
 		[self removeChild: oldShow];
@@ -150,7 +155,9 @@ static int show_to_int(OFString *show)
 						    namespace: XMPP_NS_CLIENT
 						  stringValue: show]];
 
-	OF_SETTER(_show, show, true, 1)
+	old = _show;
+	_show = [show copy];
+	[old release];
 }
 
 - (OFString*)show
@@ -162,6 +169,7 @@ static int show_to_int(OFString *show)
 {
 	OFXMLElement *oldStatus = [self elementForName: @"status"
 					     namespace: XMPP_NS_CLIENT];
+	OFString *old;
 
 	if (oldStatus != nil)
 		[self removeChild: oldStatus];
@@ -171,7 +179,9 @@ static int show_to_int(OFString *show)
 						    namespace: XMPP_NS_CLIENT
 						  stringValue: status]];
 
-	OF_SETTER(_status, status, true, 1)
+	old = _status;
+	_status = [status copy];
+	[old release];
 }
 
 - (OFString*)status
@@ -182,6 +192,7 @@ static int show_to_int(OFString *show)
 - (void)setPriority: (OFNumber*)priority
 {
 	intmax_t prio = [priority intMaxValue];
+	OFNumber *old;
 
 	if ((prio < -128) || (prio > 127))
 		@throw [OFInvalidArgumentException exception];
@@ -198,7 +209,9 @@ static int show_to_int(OFString *show)
 					    namespace: XMPP_NS_CLIENT
 					  stringValue: priority_s]];
 
-	OF_SETTER(_priority, priority, true, 1)
+	old = _priority;
+	_priority = [priority copy];
+	[old release];
 }
 
 - (OFNumber*)priority

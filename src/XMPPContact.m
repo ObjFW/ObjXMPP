@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -25,6 +26,9 @@
 #import "XMPPConnection.h"
 
 @implementation XMPPContact
+@synthesize rosterItem = _rosterItem;
+@synthesize presences = _presences;
+
 - init
 {
 	self = [super init];
@@ -46,16 +50,6 @@
 	[super dealloc];
 }
 
-- (XMPPRosterItem*)rosterItem
-{
-	OF_GETTER(_rosterItem, true)
-}
-
-- (OFDictionary*)presences
-{
-	OF_GETTER(_presences, true)
-}
-
 - (void)sendMessage: (XMPPMessage*)message
 	 connection: (XMPPConnection*)connection
 {
@@ -69,7 +63,9 @@
 
 - (void)XMPP_setRosterItem: (XMPPRosterItem*)rosterItem
 {
-	OF_SETTER(_rosterItem, rosterItem, true, 0);
+	XMPPRosterItem *old = _rosterItem;
+	_rosterItem = [rosterItem retain];
+	[old release];
 }
 
 - (void)XMPP_setPresence: (XMPPPresence*)presence
@@ -99,6 +95,8 @@
 
 - (void)XMPP_setLockedOnJID: (XMPPJID*)JID;
 {
-	OF_SETTER(_lockedOnJID, JID, true, 0);
+	XMPPJID *old = _lockedOnJID;
+	_lockedOnJID = [JID retain];
+	[old release];
 }
 @end

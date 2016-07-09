@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -27,6 +28,8 @@
 #import "XMPPAuthenticator.h"
 
 @implementation XMPPAuthenticator
+@synthesize authzid = _authzid, authcid = _authcid, password = _password;
+
 - initWithAuthcid: (OFString*)authcid
 	 password: (OFString*)password
 {
@@ -60,36 +63,6 @@
 	[_password release];
 
 	[super dealloc];
-}
-
-- (void)setAuthzid: (OFString*)authzid
-{
-	OF_SETTER(_authzid, authzid, true, 1)
-}
-
-- (OFString*)authzid
-{
-	OF_GETTER(_authzid, true)
-}
-
-- (void)setAuthcid: (OFString*)authcid
-{
-	OF_SETTER(_authcid, authcid, true, 1)
-}
-
-- (OFString*)authcid
-{
-	OF_GETTER(_authcid, true)
-}
-
-- (void)setPassword: (OFString*)password
-{
-	OF_SETTER(_password, password, true, 1)
-}
-
-- (OFString*)password
-{
-	OF_GETTER(_password, true)
 }
 
 - (OFDataArray*)initialMessage

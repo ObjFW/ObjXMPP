@@ -1,8 +1,9 @@
 /*
- * Copyright (c) 2010, 2011, 2012, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2010, 2011, 2012, 2013, 2015, 2016
+ *   Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -117,6 +118,12 @@
 @end
 
 @implementation XMPPConnection
+@synthesize language = _language, privateKeyFile = _privateKeyFile;
+@synthesize certificateFile = _certificateFile, socket = _socket;
+@synthesize encryptionRequired = _encryptionRequired, encrypted = _encrypted;
+@synthesize supportsRosterVersioning = _supportsRosterVersioning;
+@synthesize supportsStreamManagement = _supportsStreamManagement;
+
 + (instancetype)connection
 {
 	return [[[self alloc] init] autorelease];
@@ -305,26 +312,6 @@
 	return [[_password copy] autorelease];
 }
 
-- (void)setPrivateKeyFile: (OFString*)privateKeyFile
-{
-	OF_SETTER(_privateKeyFile, privateKeyFile, true, 1)
-}
-
-- (OFString*)privateKeyFile
-{
-	OF_GETTER(_privateKeyFile, true)
-}
-
-- (void)setCertificateFile: (OFString*)certificateFile
-{
-	OF_SETTER(_certificateFile, certificateFile, true, 1)
-}
-
-- (OFString*)certificateFile
-{
-	OF_GETTER(_certificateFile, true)
-}
-
 - (void)connect
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
@@ -477,39 +464,9 @@
 	return true;
 }
 
-- (OFTCPSocket*)socket
-{
-	return [[_socket retain] autorelease];
-}
-
-- (bool)encryptionRequired
-{
-	return _encryptionRequired;
-}
-
-- (void)setEncryptionRequired: (bool)encryptionRequired
-{
-	_encryptionRequired = encryptionRequired;
-}
-
-- (bool)encrypted
-{
-	return _encrypted;
-}
-
 - (bool)streamOpen
 {
 	return _streamOpen;
-}
-
-- (bool)supportsRosterVersioning
-{
-	return _supportsRosterVersioning;
-}
-
-- (bool)supportsStreamManagement
-{
-	return _supportsStreamManagement;
 }
 
 - (bool)checkCertificateAndGetReason: (OFString**)reason
@@ -1255,21 +1212,6 @@
 	return ret;
 }
 
-- (XMPPJID*)JID
-{
-	return [[_JID copy] autorelease];
-}
-
-- (void)setPort: (uint16_t)port
-{
-	_port = port;
-}
-
-- (uint16_t)port
-{
-	return _port;
-}
-
 - (void)setDataStorage: (id <XMPPStorage>)dataStorage
 {
 	if (_streamOpen)
@@ -1282,16 +1224,6 @@
 - (id <XMPPStorage>)dataStorage
 {
 	return _dataStorage;
-}
-
-- (void)setLanguage: (OFString*)language
-{
-	OF_SETTER(_language, language, true, 1)
-}
-
-- (OFString*)language
-{
-	OF_GETTER(_language, true)
 }
 
 - (void)addDelegate: (id <XMPPConnectionDelegate>)delegate

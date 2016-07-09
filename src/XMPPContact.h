@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -38,12 +39,10 @@
 	XMPPJID *_lockedOnJID;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The XMPPRosterItem corresponding to this contact
 @property (readonly) XMPPRosterItem *rosterItem;
 /// \brief The XMPPPresences of this contact with the resources as keys
 @property (readonly) OFDictionary *presences;
-#endif
 
 /**
  * \brief Sends a message to the contact honoring resource locking

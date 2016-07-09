@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -40,6 +40,9 @@
 #import "namespaces.h"
 
 @implementation XMPPRoster
+@synthesize connection = _connection, dataStorage = _dataStorage;
+@synthesize rosterItems = _rosterItems;
+
 - initWithConnection: (XMPPConnection*)connection
 {
 	self = [super init];
@@ -65,11 +68,6 @@
 	[_rosterItems release];
 
 	[super dealloc];
-}
-
-- (OFDictionary*)rosterItems
-{
-	return [[_rosterItems copy] autorelease];
 }
 
 - (void)requestRoster

@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -38,7 +39,6 @@
 	OFString *_capsNode;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /**
  * \brief The XMPPDiscoNodes this entity provides Services Discovery
  *	  responses for
@@ -47,9 +47,11 @@
  * any number of nodes nested more deeply.
  */
 @property (readonly) OFDictionary *discoNodes;
-/// \brief The node advertised for the entity's capabilites
+
+/**
+ * The node advertised for the entity's capabilites.
+ */
 @property (readonly) OFString *capsNode;
-#endif
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoEntity with the specified
@@ -106,7 +108,4 @@
  * \return A OFString containing the capabilities hash
  */
 - (OFString*)capsHash;
-
-- (OFDictionary*)discoNodes;
-- (OFString*)capsNode;
 @end

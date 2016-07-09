@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -39,9 +39,7 @@
 #ifndef XMPP_ROSTER_M
     <OFObject>
 #endif
-#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
 @optional
-#endif
 /**
  * \brief This callback is called after the roster was received (as a result of
  *	  calling -requestRoster).
@@ -63,10 +61,7 @@
 /**
  * \brief A class implementing roster related functionality.
  */
-@interface XMPPRoster: OFObject
-#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
-    <XMPPConnectionDelegate>
-#endif
+@interface XMPPRoster: OFObject <XMPPConnectionDelegate>
 {
 	XMPPConnection *_connection;
 	OFMutableDictionary *_rosterItems;
@@ -75,7 +70,6 @@
 	bool _rosterRequested;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /**
  * \brief The connection to which the roster belongs
  */
@@ -93,7 +87,6 @@
  *	  as key.
  */
 @property (readonly, copy) OFDictionary *rosterItems;
-#endif
 
 /**
  * \brief Initializes an already allocated XMPPRoster.
@@ -103,8 +96,6 @@
  * \return An initialized XMPPRoster
  */
 - initWithConnection: (XMPPConnection*)connection;
-
-- (OFDictionary*)rosterItems;
 
 /**
  * \brief Requests the roster from the server.
@@ -145,11 +136,6 @@
  * \param delegate The delegate to remove
  */
 - (void)removeDelegate: (id <XMPPRosterDelegate>)delegate;
-
-- (XMPPConnection*)connection;
-
-- (void)setDataStorage: (id <XMPPStorage>)dataStorage;
-- (id <XMPPStorage>)dataStorage;
 
 - (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
 - (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection

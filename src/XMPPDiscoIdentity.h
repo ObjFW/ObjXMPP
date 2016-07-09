@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -29,14 +30,13 @@
 {
 	OFString *_category, *_name, *_type;
 }
-#ifdef OF_HAVE_PROPERTIES
+
 /// \brief The category of the identity
 @property (readonly) OFString *category;
 /// \brief The name of the identity, might be unset
 @property (readonly) OFString *name;
 /// \brief The type of the identity
 @property (readonly) OFString *type;
-#endif
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoIdentity with the specified
@@ -85,8 +85,4 @@
  */
 - initWithCategory: (OFString*)category
 	      type: (OFString*)type;
-
-- (OFString*)category;
-- (OFString*)name;
-- (OFString*)type;
 @end

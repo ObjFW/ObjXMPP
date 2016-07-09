@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -31,14 +31,12 @@
 	OFString *_node, *_domain, *_resource;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The JID's localpart
 @property (copy) OFString *node;
 /// \brief The JID's domainpart
 @property (copy) OFString *domain;
 /// \brief The JID's resourcepart
 @property (copy) OFString *resource;
-#endif
 
 /**
  * \brief Creates a new autoreleased XMPPJID.
@@ -76,11 +74,4 @@
  * \return An OFString containing the full JID
  */
 - (OFString*)fullJID;
-
-- (void)setNode: (OFString*)node;
-- (OFString*)node;
-- (void)setDomain: (OFString*)domain;
-- (OFString*)domain;
-- (void)setResource: (OFString*)resource;
-- (OFString*)resource;
 @end

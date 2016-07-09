@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://webkeks.org/git/?p=objxmpp.git
+ * https://heap.zone/git/?p=objxmpp.git
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -35,9 +36,7 @@
  *	  of a XMPPContactManager
  */
 @protocol XMPPContactManagerDelegate <OFObject>
-#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
 @optional
-#endif
 /**
  * \brief This callback is called whenever a new contact enters the users roster
  *
@@ -101,10 +100,8 @@
  * This class delegates to a XMPPConnection and a XMPPRoster, thereby tracking
  * each contacts presences and the current XMPPRosterItem.
  */
-@interface XMPPContactManager: OFObject
-#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
-    <XMPPConnectionDelegate, XMPPRosterDelegate>
-#endif
+@interface XMPPContactManager: OFObject <XMPPConnectionDelegate,
+    XMPPRosterDelegate>
 {
 	OFMutableDictionary *_contacts;
 	XMPPConnection *_connection;
@@ -112,10 +109,8 @@
 	XMPPMulticastDelegate *_delegates;
 }
 
-#ifdef OF_HAVE_PROPERTIES
 /// \brief The tracked contacts, with their bare JID as key
 @property (readonly) OFDictionary *contacts;
-#endif
 
 /*!
  * @brief Initializes an already allocated XMPPContactManager.
