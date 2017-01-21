@@ -26,6 +26,7 @@
 # include "config.h"
 #endif
 
+#include <inttypes.h>
 #include <stdlib.h>
 
 #include <assert.h>
@@ -37,7 +38,7 @@
 
 #import "XMPPSRVLookup.h"
 
-#import <ObjFW/OFSystemInfo.h>
+#import <ObjFW/OFLocalization.h>
 
 @implementation XMPPSRVEntry
 @synthesize priority = _priority, weight = _weight;
@@ -115,7 +116,7 @@
 
 		_target = [[OFString alloc]
 		    initWithCString: buffer
-			   encoding: [OFSystemInfo native8BitEncoding]];
+			   encoding: [OFLocalization encoding]];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -192,7 +193,7 @@
 
 		answer = [self allocMemoryWithSize: pageSize];
 		answerLen = res_nsearch(&_resState, [request
-		    cStringWithEncoding: [OFSystemInfo native8BitEncoding]],
+		    cStringWithEncoding: [OFLocalization encoding]],
 		    ns_c_in, ns_t_srv, answer, (int)pageSize);
 
 		if ((answerLen == -1) && ((h_errno == HOST_NOT_FOUND) ||

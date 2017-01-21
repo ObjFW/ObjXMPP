@@ -87,7 +87,7 @@
 	XMPPDiscoIdentity *identity;
 	OFString *feature;
 	OFMutableString *caps = [OFMutableString string];
-	OFSHA1Hash *hash = [OFSHA1Hash hash];
+	OFSHA1Hash *hash = [OFSHA1Hash cryptoHash];
 	OFDataArray *digest = [OFDataArray dataArray];
 
 	enumerator = [_identities objectEnumerator];

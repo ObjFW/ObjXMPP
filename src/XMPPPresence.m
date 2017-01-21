@@ -25,6 +25,8 @@
 # include "config.h"
 #endif
 
+#include <inttypes.h>
+
 #import "XMPPPresence.h"
 #import "namespaces.h"
 

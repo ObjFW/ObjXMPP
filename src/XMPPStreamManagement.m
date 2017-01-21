@@ -20,6 +20,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <inttypes.h>
+
 #import "XMPPStreamManagement.h"
 #import "namespaces.h"
 
