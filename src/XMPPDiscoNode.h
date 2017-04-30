@@ -2,7 +2,7 @@
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
  * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
  *
- * https://heap.zone/git/?p=objxmpp.git
+ * https://heap.zone/objxmpp/
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
