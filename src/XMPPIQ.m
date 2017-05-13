@@ -29,15 +29,15 @@
 #import "XMPPIQ.h"
 
 @implementation XMPPIQ
-+ (instancetype)IQWithType: (OFString*)type
-			ID: (OFString*)ID
++ (instancetype)IQWithType: (OFString *)type
+			ID: (OFString *)ID
 {
 	return [[[self alloc] initWithType: type
 					ID: ID] autorelease];
 }
 
-- initWithType: (OFString*)type
-	    ID: (OFString*)ID
+- initWithType: (OFString *)type
+	    ID: (OFString *)ID
 {
 	self = [super initWithName: @"iq"
 			      type: type
@@ -55,7 +55,7 @@
 	return self;
 }
 
-- (XMPPIQ*)resultIQ
+- (XMPPIQ *)resultIQ
 {
 	XMPPIQ *ret = [XMPPIQ IQWithType: @"result"
 				      ID: [self ID]];
@@ -64,9 +64,9 @@
 	return ret;
 }
 
-- (XMPPIQ*)errorIQWithType: (OFString*)type
-		 condition: (OFString*)condition
-		      text: (OFString*)text
+- (XMPPIQ *)errorIQWithType: (OFString *)type
+		  condition: (OFString *)condition
+		       text: (OFString *)text
 {
 	XMPPIQ *ret = [XMPPIQ IQWithType: @"error"
 				      ID: [self ID]];
@@ -91,8 +91,8 @@
 	return ret;
 }
 
-- (XMPPIQ*)errorIQWithType: (OFString*)type
-		 condition: (OFString*)condition
+- (XMPPIQ *)errorIQWithType: (OFString *)type
+		  condition: (OFString *)condition
 {
 	return [self errorIQWithType: type
 			   condition: condition

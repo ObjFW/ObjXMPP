@@ -38,9 +38,7 @@
 #import "XMPPFileStorage.h"
 
 @interface AppDelegate: OFObject
-#ifdef OF_HAVE_OPTIONAL_PROTOCOLS
     <OFApplicationDelegate, XMPPConnectionDelegate, XMPPRosterDelegate>
-#endif
 {
 	XMPPConnection *conn;
 	XMPPRoster *roster;
@@ -131,25 +129,25 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn asyncConnectAndHandle];
 }
 
--  (void)connection: (XMPPConnection*)conn
-  didReceiveElement: (OFXMLElement*)element
+-  (void)connection: (XMPPConnection *)conn
+  didReceiveElement: (OFXMLElement *)element
 {
 	of_log(@"In:  %@", element);
 }
 
-- (void)connection: (XMPPConnection*)conn
-    didSendElement: (OFXMLElement*)element
+- (void)connection: (XMPPConnection *)conn
+    didSendElement: (OFXMLElement *)element
 {
 	of_log(@"Out: %@", element);
 }
 
-- (void)connectionWasAuthenticated: (XMPPConnection*)conn
+- (void)connectionWasAuthenticated: (XMPPConnection *)conn
 {
 	of_log(@"Auth successful");
 }
 
-- (void)connection: (XMPPConnection*)conn_
-     wasBoundToJID: (XMPPJID*)jid
+- (void)connection: (XMPPConnection *)conn_
+     wasBoundToJID: (XMPPJID *)jid
 {
 	of_log(@"Bound to JID: %@", [jid fullJID]);
 	of_log(@"Supports SM: %@",
@@ -200,7 +198,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[roster requestRoster];
 }
 
-- (void)rosterWasReceived: (XMPPRoster*)roster_
+- (void)rosterWasReceived: (XMPPRoster *)roster_
 {
 	XMPPPresence *pres;
 
@@ -224,7 +222,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 #endif
 }
 
-- (void)connectionDidUpgradeToTLS: (XMPPConnection*)conn_
+- (void)connectionDidUpgradeToTLS: (XMPPConnection *)conn_
 {
 	OFString *reason;
 
@@ -238,39 +236,39 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	}
 }
 
--         (void)roster: (XMPPRoster*)roster_
-  didReceiveRosterItem: (XMPPRosterItem*)rosterItem
+-         (void)roster: (XMPPRoster *)roster_
+  didReceiveRosterItem: (XMPPRosterItem *)rosterItem
 {
 	of_log(@"Got roster push: %@", rosterItem);
 }
 
-- (bool)connection: (XMPPConnection*)conn
-      didReceiveIQ: (XMPPIQ*)iq
+- (bool)connection: (XMPPConnection *)conn
+      didReceiveIQ: (XMPPIQ *)iq
 {
 	of_log(@"IQ: %@", iq);
 
 	return NO;
 }
 
--  (void)connection: (XMPPConnection*)conn
-  didReceiveMessage: (XMPPMessage*)msg
+-  (void)connection: (XMPPConnection *)conn
+  didReceiveMessage: (XMPPMessage *)msg
 {
 	of_log(@"Message: %@", msg);
 }
 
--   (void)connection: (XMPPConnection*)conn
-  didReceivePresence: (XMPPPresence*)pres
+-   (void)connection: (XMPPConnection *)conn
+  didReceivePresence: (XMPPPresence *)pres
 {
 	of_log(@"Presence: %@", pres);
 }
 
--  (void)connection: (XMPPConnection*)conn
+-  (void)connection: (XMPPConnection *)conn
   didThrowException: (id)e
 {
 	@throw e;
 }
 
-- (void)connectionWasClosed: (XMPPConnection*)conn
+- (void)connectionWasClosed: (XMPPConnection *)conn
 {
 	of_log(@"Connection was closed!");
 }

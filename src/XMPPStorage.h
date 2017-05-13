@@ -22,25 +22,29 @@
 
 #import <ObjFW/OFObject.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class OFString;
 @class OFArray;
 @class OFDictionary;
 
 @protocol XMPPStorage <OFObject>
 - (void)save;
-- (void)setStringValue: (OFString*)string
-	       forPath: (OFString*)path;
-- (OFString*)stringValueForPath: (OFString*)path;
+- (void)setStringValue: (nullable OFString *)string
+	       forPath: (OFString *)path;
+- (nullable OFString *)stringValueForPath: (OFString *)path;
 - (void)setBooleanValue: (bool)boolean
-		forPath: (OFString*)path;
-- (bool)booleanValueForPath: (OFString*)path;
+		forPath: (OFString *)path;
+- (bool)booleanValueForPath: (OFString *)path;
 - (void)setIntegerValue: (intmax_t)integer
-		forPath: (OFString*)path;
-- (intmax_t)integerValueForPath: (OFString*)path;
-- (void)setArray: (OFArray*)array
-	 forPath: (OFString*)path;
-- (OFArray*)arrayForPath: (OFString*)path;
-- (void)setDictionary: (OFDictionary*)dictionary
-	      forPath: (OFString*)path;
-- (OFDictionary*)dictionaryForPath: (OFString*)path;
+		forPath: (OFString *)path;
+- (intmax_t)integerValueForPath: (OFString *)path;
+- (void)setArray: (nullable OFArray *)array
+	 forPath: (OFString *)path;
+- (nullable OFArray *)arrayForPath: (OFString *)path;
+- (void)setDictionary: (nullable OFDictionary *)dictionary
+	      forPath: (OFString *)path;
+- (nullable OFDictionary *)dictionaryForPath: (OFString *)path;
 @end
+
+OF_ASSUME_NONNULL_END

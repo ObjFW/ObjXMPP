@@ -39,11 +39,27 @@
 #import "XMPPMulticastDelegate.h"
 #import "namespaces.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
+@interface XMPPRoster ()
+- (void)XMPP_updateRosterItem: (XMPPRosterItem *)rosterItem;
+- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection *)connection
+					   IQ: (XMPPIQ *)IQ;
+- (XMPPRosterItem *)XMPP_rosterItemWithXMLElement: (OFXMLElement *)element;
+@end
+
+OF_ASSUME_NONNULL_END
+
 @implementation XMPPRoster
 @synthesize connection = _connection, dataStorage = _dataStorage;
 @synthesize rosterItems = _rosterItems;
 
-- initWithConnection: (XMPPConnection*)connection
+- init
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- initWithConnection: (XMPPConnection *)connection
 {
 	self = [super init];
 
@@ -102,25 +118,25 @@
 				IQ:)];
 }
 
-- (bool)connection: (XMPPConnection*)connection
-      didReceiveIQ: (XMPPIQ*)iq
+- (bool)connection: (XMPPConnection *)connection
+      didReceiveIQ: (XMPPIQ *)IQ
 {
 	OFXMLElement *rosterElement;
 	OFXMLElement *element;
 	XMPPRosterItem *rosterItem;
 	OFString *origin;
 
-	rosterElement = [iq elementForName: @"query"
+	rosterElement = [IQ elementForName: @"query"
 				 namespace: XMPP_NS_ROSTER];
 
 	if (rosterElement == nil)
 		return false;
 
-	if (![[iq type] isEqual: @"set"])
+	if (![[IQ type] isEqual: @"set"])
 		return false;
 
 	// Ensure the roster push has been sent by the server
-	origin = [[iq from] fullJID];
+	origin = [[IQ from] fullJID];
 	if (origin != nil && ![origin isEqual: [[connection JID] bareJID]])
 		return false;
 
@@ -146,17 +162,17 @@
 		[_dataStorage save];
 	}
 
-	[connection sendStanza: [iq resultIQ]];
+	[connection sendStanza: [IQ resultIQ]];
 
 	return true;
 }
 
-- (void)addRosterItem: (XMPPRosterItem*)rosterItem
+- (void)addRosterItem: (XMPPRosterItem *)rosterItem
 {
 	[self updateRosterItem: rosterItem];
 }
 
-- (void)updateRosterItem: (XMPPRosterItem*)rosterItem
+- (void)updateRosterItem: (XMPPRosterItem *)rosterItem
 {
 	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
 				     ID: [_connection generateStanzaID]];
@@ -185,7 +201,7 @@
 	[_connection sendStanza: IQ];
 }
 
-- (void)deleteRosterItem: (XMPPRosterItem*)rosterItem
+- (void)deleteRosterItem: (XMPPRosterItem *)rosterItem
 {
 	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
 				     ID: [_connection generateStanzaID]];
@@ -224,17 +240,7 @@
 	_dataStorage = dataStorage;
 }
 
-- (XMPPConnection*)connection
-{
-	return _connection;
-}
-
-- (id <XMPPStorage>)dataStorage
-{
-	return _dataStorage;
-}
-
-- (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem
+- (void)XMPP_updateRosterItem: (XMPPRosterItem *)rosterItem
 {
 	if ([_connection supportsRosterVersioning]) {
 		OFMutableDictionary *items = [[[_dataStorage dictionaryForPath:
@@ -274,7 +280,7 @@
 		[_rosterItems removeObjectForKey: [[rosterItem JID] bareJID]];
 }
 
-- (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element
+- (XMPPRosterItem *)XMPP_rosterItemWithXMLElement: (OFXMLElement *)element
 {
 	OFString *subscription;
 	OFEnumerator *groupEnumerator;
@@ -310,15 +316,11 @@
 	return rosterItem;
 }
 
-- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection
-					   IQ: (XMPPIQ*)IQ
+- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection *)connection
+					   IQ: (XMPPIQ *)IQ
 {
-	OFXMLElement *rosterElement;
-	OFEnumerator *enumerator;
-	OFXMLElement *element;
-
-	rosterElement = [IQ elementForName: @"query"
-				 namespace: XMPP_NS_ROSTER];
+	OFXMLElement *rosterElement = [IQ elementForName: @"query"
+					       namespace: XMPP_NS_ROSTER];
 
 	if ([connection supportsRosterVersioning]) {
 		if (rosterElement == nil) {
@@ -350,8 +352,7 @@
 					    forPath: @"roster.items"];
 	}
 
-	enumerator = [[rosterElement children] objectEnumerator];
-	while ((element = [enumerator nextObject]) != nil) {
+	for (OFXMLElement *element in [rosterElement children]) {
 		OFAutoreleasePool *pool;
 		XMPPRosterItem *rosterItem;
 

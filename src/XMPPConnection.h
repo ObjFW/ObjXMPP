@@ -27,6 +27,8 @@
 #import "XMPPCallback.h"
 #import "XMPPStorage.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class XMPPConnection;
 @class XMPPJID;
 @class XMPPIQ;
@@ -37,13 +39,10 @@
 @class XMPPMulticastDelegate;
 
 /**
- * \brief A protocol that should be (partially) implemented
- *	  by delegates of a XMPPConnection
+ * \brief A protocol that should be (partially) implemented by delegates of a
+ *	  @ref XMPPConnection
  */
 @protocol XMPPConnectionDelegate
-#ifndef XMPP_CONNECTION_M
-    <OFObject>
-#endif
 @optional
 /**
  * \brief This callback is called when the connection received an element.
@@ -51,8 +50,8 @@
  * \param connection The connection that received the element
  * \param element The element that was received
  */
--  (void)connection: (XMPPConnection*)connection
-  didReceiveElement: (OFXMLElement*)element;
+-  (void)connection: (XMPPConnection *)connection
+  didReceiveElement: (OFXMLElement *)element;
 
 /**
  * \brief This callback is called when the connection sent an element.
@@ -60,15 +59,15 @@
  * \param connection The connection that sent the element
  * \param element The element that was sent
  */
-- (void)connection: (XMPPConnection*)connection
-    didSendElement: (OFXMLElement*)element;
+- (void)connection: (XMPPConnection *)connection
+    didSendElement: (OFXMLElement *)element;
 
 /**
  * \brief This callback is called when the connection sucessfully authenticated.
  *
  * \param connection The connection that was authenticated
  */
-- (void)connectionWasAuthenticated: (XMPPConnection*)connection;
+- (void)connectionWasAuthenticated: (XMPPConnection *)connection;
 
 /**
  * \brief This callback is called when the connection was bound to a JID.
@@ -76,8 +75,8 @@
  * \param connection The connection that was bound to a JID
  * \param JID The JID the conecction was bound to
  */
-- (void)connection: (XMPPConnection*)connection
-     wasBoundToJID: (XMPPJID*)JID;
+- (void)connection: (XMPPConnection *)connection
+     wasBoundToJID: (XMPPJID *)JID;
 
 /**
  * \brief This callback is called when the connection received an IQ stanza.
@@ -85,8 +84,8 @@
  * \param connection The connection that received the stanza
  * \param iq The IQ stanza that was received
  */
-- (bool)connection: (XMPPConnection*)connection
-      didReceiveIQ: (XMPPIQ*)iq;
+- (bool)connection: (XMPPConnection *)connection
+      didReceiveIQ: (XMPPIQ *)iq;
 
 /**
  * \brief This callback is called when the connection received a presence
@@ -95,8 +94,8 @@
  * \param connection The connection that received the stanza
  * \param presence The presence stanza that was received
  */
--   (void)connection: (XMPPConnection*)connection
-  didReceivePresence: (XMPPPresence*)presence;
+-   (void)connection: (XMPPConnection *)connection
+  didReceivePresence: (XMPPPresence *)presence;
 
 /**
  * \brief This callback is called when the connection received a message stanza.
@@ -104,15 +103,15 @@
  * \param connection The connection that received the stanza
  * \param message The message stanza that was received
  */
--  (void)connection: (XMPPConnection*)connection
-  didReceiveMessage: (XMPPMessage*)message;
+-  (void)connection: (XMPPConnection *)connection
+  didReceiveMessage: (XMPPMessage *)message;
 
 /**
  * \brief This callback is called when the connection was closed.
  *
  * \param connection The connection that was closed
  */
-- (void)connectionWasClosed: (XMPPConnection*)connection;
+- (void)connectionWasClosed: (XMPPConnection *)connection;
 
 /*!
  * @brief This callback is called when the connection threw an exception.
@@ -123,8 +122,8 @@
  * @param connection The connection which threw an exception
  * @param exception The exception the connection threw
  */
--  (void)connection: (XMPPConnection*)connection
-  didThrowException: (OFException*)exception;
+-  (void)connection: (XMPPConnection *)connection
+  didThrowException: (OFException *)exception;
 
 /**
  * \brief This callback is called when the connection is about to upgrade to
@@ -132,14 +131,14 @@
  *
  * \param connection The connection that will upgraded to TLS
  */
-- (void)connectionWillUpgradeToTLS: (XMPPConnection*)connection;
+- (void)connectionWillUpgradeToTLS: (XMPPConnection *)connection;
 
 /**
  * \brief This callback is called when the connection was upgraded to use TLS.
  *
  * \param connection The connection that was upgraded to TLS
  */
-- (void)connectionDidUpgradeToTLS: (XMPPConnection*)connection;
+- (void)connectionDidUpgradeToTLS: (XMPPConnection *)connection;
 @end
 
 /**
@@ -160,7 +159,7 @@
 	id <XMPPStorage> _dataStorage;
 	OFString *_language;
 	XMPPMulticastDelegate *_delegates;
-	OFMutableDictionary *_callbacks;
+	OFMutableDictionary OF_GENERIC(OFString *, XMPPCallback *) *_callbacks;
 	XMPPAuthenticator *_authModule;
 	bool _streamOpen;
 	bool _needsSession;
@@ -171,33 +170,33 @@
 }
 
 /// \brief The username to use for authentication
-@property (copy) OFString *username;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *username;
 /// \brief The password to use for authentication
-@property (copy) OFString *password;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *password;
 /**
  * \brief The server to use for the connection
  *
  * This is useful if the address of the server is different from the domain.
  */
-@property (copy) OFString *server;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *server;
 /// \brief The domain to connect to
-@property (copy) OFString *domain;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *domain;
 /// \brief The resource to request for the connection
-@property (copy) OFString *resource;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *resource;
 /// \brief The language to request for the connection
-@property (copy) OFString *language;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *language;
 /// \brief A private key file to use for authentication
-@property (copy) OFString *privateKeyFile;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *privateKeyFile;
 /// \brief A certificate file to use for authentication
-@property (copy) OFString *certificateFile;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *certificateFile;
 /// \brief The JID the server assigned to the connection after binding
-@property (copy, readonly) XMPPJID *JID;
+@property (readonly, nonatomic) XMPPJID *JID;
 /// \brief The port to connect to
 @property uint16_t port;
 /// \brief An object for data storage, conforming to the XMPPStorage protocol
-@property (assign) id <XMPPStorage> dataStorage;
+@property OF_NULLABLE_PROPERTY (assign) id <XMPPStorage> dataStorage;
 /// \brief The socket used for the connection
-@property (readonly, retain) OFTCPSocket *socket;
+@property (readonly, nonatomic) OFTCPSocket *socket;
 /// \brief Whether encryption is required
 @property bool encryptionRequired;
 /// \brief Whether the connection is encrypted
@@ -247,7 +246,8 @@
  *		 Passing NULL means the reason is not stored anywhere.
  * \return Whether the certificate is valid
  */
-- (bool)checkCertificateAndGetReason: (OFString**)reason;
+- (bool)checkCertificateAndGetReason:
+    (OFString *__autoreleasing _Nonnull *_Nullable)reason;
 
 /**
  * \brief Adds the connection to the run loop.
@@ -269,43 +269,15 @@
  * \param length The length of the buffer. If length is 0, it is assumed that
  *		 the connection was closed.
  */
-- (void)parseBuffer: (const void*)buffer
+- (void)parseBuffer: (const void *)buffer
 	     length: (size_t)length;
-
-/**
- * \brief Returns the socket used by the XMPPConnection.
- *
- * \return The socket used by the XMPPConnection
- */
-- (OFTCPSocket*)socket;
-
-/**
- * \brief Returns whether encryption is encrypted.
- *
- * \return Whether encryption is encrypted
- */
-- (bool)encryptionRequired;
-
-/**
- * \brief Sets whether encryption is required.
- *
- * \param required Whether encryption is required
- */
-- (void)setEncryptionRequired: (bool)required;
-
-/**
- * \brief Returns whether the connection is encrypted.
- *
- * \return Whether the connection is encrypted
- */
-- (bool)encrypted;
 
 /**
  * \brief Sends an OFXMLElement, usually an XMPPStanza.
  *
  * \param element The element to send
  */
-- (void)sendStanza: (OFXMLElement*)element;
+- (void)sendStanza: (OFXMLElement *)element;
 
 /*!
  * @brief Sends an XMPPIQ, registering a callback method.
@@ -313,9 +285,9 @@
  * @param IQ The IQ to send
  * @param target The object that contains the callback method
  * @param selector The selector of the callback method,
- *		   must take exactly one parameter of type XMPPIQ*
+ *		   must take exactly one parameter of type `XMPPIQ *`
  */
--   (void)sendIQ: (XMPPIQ*)IQ
+-   (void)sendIQ: (XMPPIQ *)IQ
   callbackTarget: (id)target
 	selector: (SEL)selector;
 
@@ -326,7 +298,7 @@
  * @param IQ The IQ to send
  * @param block The callback block
  */
--  (void)sendIQ: (XMPPIQ*)IQ
+-  (void)sendIQ: (XMPPIQ *)IQ
   callbackBlock: (xmpp_callback_block_t)block;
 #endif
 
@@ -335,49 +307,7 @@
  *
  * \return A new, generated, unique stanza ID.
  */
-- (OFString*)generateStanzaID;
-
-- (void)setUsername: (OFString*)username;
-- (OFString*)username;
-- (void)setPassword: (OFString*)password;
-- (OFString*)password;
-- (void)setServer: (OFString*)server;
-- (OFString*)server;
-- (void)setDomain: (OFString*)domain;
-- (OFString*)domain;
-- (void)setResource: (OFString*)resource;
-- (OFString*)resource;
-- (XMPPJID*)JID;
-- (void)setPort: (uint16_t)port;
-- (uint16_t)port;
-- (void)setDataStorage: (id <XMPPStorage>)dataStorage;
-- (id <XMPPStorage>)dataStorage;
-- (void)setLanguage: (OFString*)language;
-- (OFString*)language;
-- (bool)supportsRosterVersioning;
-- (bool)supportsStreamManagement;
-
-- (void)XMPP_startStream;
-- (void)XMPP_handleStream: (OFXMLElement*)element;
-- (void)XMPP_handleTLS: (OFXMLElement*)element;
-- (void)XMPP_handleSASL: (OFXMLElement*)element;
-- (void)XMPP_handleStanza: (OFXMLElement*)element;
-- (void)XMPP_sendAuth: (OFString*)authName;
-- (void)XMPP_sendResourceBind;
-- (void)XMPP_sendStreamError: (OFString*)condition
-			text: (OFString*)text;
-- (void)XMPP_handleIQ: (XMPPIQ*)iq;
-- (void)XMPP_handleMessage: (XMPPMessage*)message;
-- (void)XMPP_handlePresence: (XMPPPresence*)presence;
-- (void)XMPP_handleFeatures: (OFXMLElement*)element;
-- (void)XMPP_handleResourceBindForConnection: (XMPPConnection*)connection
-					  IQ: (XMPPIQ*)iq;
-- (void)XMPP_sendSession;
-- (void)XMPP_handleSessionForConnection: (XMPPConnection*)connection
-				     IQ: (XMPPIQ*)iq;
-- (OFString*)XMPP_IDNAToASCII: (OFString*)domain;
-- (XMPPMulticastDelegate*)XMPP_delegates;
+- (OFString *)generateStanzaID;
 @end
 
-@interface OFObject (XMPPConnectionDelegate) <XMPPConnectionDelegate>
-@end
+OF_ASSUME_NONNULL_END

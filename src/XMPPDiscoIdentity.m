@@ -26,25 +26,25 @@
 @implementation XMPPDiscoIdentity
 @synthesize category = _category, name = _name, type = _type;
 
-+ (instancetype)identityWithCategory: (OFString*)category
-				type: (OFString*)type
-				name: (OFString*)name
++ (instancetype)identityWithCategory: (OFString *)category
+				type: (OFString *)type
+				name: (OFString *)name
 {
 	return [[[self alloc] initWithCategory: category
 					  type: type
 					  name: name] autorelease];
 }
 
-+ (instancetype)identityWithCategory: (OFString*)category
-				type: (OFString*)type
++ (instancetype)identityWithCategory: (OFString *)category
+				type: (OFString *)type
 {
 	return [[[self alloc] initWithCategory: category
 					  type: type] autorelease];
 }
 
-- initWithCategory: (OFString*)category
-	      type: (OFString*)type
-	      name: (OFString*)name
+- initWithCategory: (OFString *)category
+	      type: (OFString *)type
+	      name: (OFString *)name
 {
 	self = [super init];
 
@@ -63,8 +63,8 @@
 	return self;
 }
 
-- initWithCategory: (OFString*)category
-	      type: (OFString*)type
+- initWithCategory: (OFString *)category
+	      type: (OFString *)type
 {
 	return [self initWithCategory: category
 				 type: type
@@ -73,14 +73,7 @@
 
 - init
 {
-	@try {
-		[self doesNotRecognizeSelector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	abort();
+	OF_INVALID_INIT_METHOD
 }
 
 - (void)dealloc
@@ -139,7 +132,7 @@
 	if (![object isKindOfClass: [XMPPDiscoIdentity class]])
 		@throw [OFInvalidArgumentException exception];
 
-	identity = (XMPPDiscoIdentity*)object;
+	identity = (XMPPDiscoIdentity *)object;
 
 	categoryResult = [_category compare: identity->_category];
 	if (categoryResult != OF_ORDERED_SAME)

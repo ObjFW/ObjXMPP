@@ -23,6 +23,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class XMPPDiscoIdentity;
 @class XMPPJID;
 
@@ -40,17 +42,17 @@
 }
 
 /// \brief The JID this node lives on
-@property (readonly) XMPPJID *JID;
+@property (readonly, nonatomic) XMPPJID *JID;
 /// \brief The node's opaque name of the node
-@property (readonly) OFString *node;
+@property (readonly, nonatomic) OFString *node;
 /// \brief The node's human friendly name (may be unspecified)
-@property (readonly) OFString *name;
+@property OF_NULLABLE_PROPERTY (readonly, nonatomic) OFString *name;
 /// \brief The node's list of identities
-@property (readonly) OFSortedList *identities;
+@property (readonly, nonatomic) OFSortedList *identities;
 /// \brief The node's list of features
-@property (readonly) OFSortedList *features;
+@property (readonly, nonatomic) OFSortedList *features;
 /// \brief The node's children
-@property (readonly) OFDictionary *childNodes;
+@property (readonly, nonatomic) OFDictionary *childNodes;
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoNode with the specified
@@ -60,8 +62,8 @@
  * \param node The node's opaque name
  * \return A new autoreleased XMPPDiscoNode
  */
-+ (instancetype)discoNodeWithJID: (XMPPJID*)JID
-			    node: (OFString*)node;
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID
+			    node: (nullable OFString *)node;
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoNode with the specified
@@ -72,9 +74,9 @@
  * \param name The node's human friendly name
  * \return A new autoreleased XMPPDiscoNode
  */
-+ (instancetype)discoNodeWithJID: (XMPPJID*)JID
-			    node: (OFString*)node
-			    name: (OFString*)name;
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID
+			    node: (nullable OFString *)node
+			    name: (nullable OFString *)name;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoNode with the specified
@@ -84,8 +86,8 @@
  * \param node The node's opaque name
  * \return An initialized XMPPDiscoNode
  */
-- initWithJID: (XMPPJID*)JID
-	 node: (OFString*)node;
+- initWithJID: (XMPPJID *)JID
+	 node: (nullable OFString *)node;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoNode with the specified
@@ -96,33 +98,30 @@
  * \param name The node's human friendly name
  * \return An initialized XMPPDiscoNode
  */
-- initWithJID: (XMPPJID*)JID
-	 node: (OFString*)node
-	 name: (OFString*)name;
+- initWithJID: (XMPPJID *)JID
+	 node: (nullable OFString *)node
+	 name: (nullable OFString *)name OF_DESIGNATED_INITIALIZER;
 
  /**
   * \brief Adds an XMPPDiscoIdentity to the node
   *
   * \param identity The XMPPDiscoIdentity to add
   */
-- (void)addIdentity: (XMPPDiscoIdentity*)identity;
+- (void)addIdentity: (XMPPDiscoIdentity *)identity;
 
  /**
   * \brief Adds a feature to the node
   *
   * \param feature The feature to add
   */
-- (void)addFeature: (OFString*)feature;
+- (void)addFeature: (OFString *)feature;
 
  /**
   * \brief Adds a XMPPDiscoNode as child of the node
   *
   * \param node The XMPPDiscoNode to add as child
   */
-- (void)addChildNode: (XMPPDiscoNode*)node;
-
-- (bool)XMPP_handleItemsIQ: (XMPPIQ*)IQ
-		connection: (XMPPConnection*)connection;
-- (bool)XMPP_handleInfoIQ: (XMPPIQ*)IQ
-	       connection: (XMPPConnection*)connection;
+- (void)addChildNode: (XMPPDiscoNode *)node;
 @end
+
+OF_ASSUME_NONNULL_END

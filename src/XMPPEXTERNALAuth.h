@@ -23,6 +23,8 @@
 #import <ObjFW/ObjFW.h>
 #import "XMPPAuthenticator.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A class to authenticate using SASL EXTERNAL
  */
@@ -40,5 +42,7 @@
  * \param authzid The authzid to get authorization for
  * \return A new autoreleased XMPPEXTERNALAuth
  */
-+ (instancetype)EXTERNALAuthWithAuthzid: (OFString*)authzid;
++ (instancetype)EXTERNALAuthWithAuthzid: (nullable OFString *)authzid;
 @end
+
+OF_ASSUME_NONNULL_END

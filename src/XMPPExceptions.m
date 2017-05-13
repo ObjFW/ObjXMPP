@@ -33,7 +33,7 @@
 @implementation XMPPException
 @synthesize connection = _connection;
 
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
++ (instancetype)exceptionWithConnection: (XMPPConnection *)connection
 {
 	return [[[self alloc] initWithConnection: connection] autorelease];
 }
@@ -43,7 +43,7 @@
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection*)connection
+- initWithConnection: (XMPPConnection *)connection
 {
 	self = [super init];
 
@@ -68,23 +68,23 @@
 @implementation XMPPStreamErrorException
 @synthesize condition = _condition, reason = _reason;
 
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
-			      condition: (OFString*)condition
-				 reason: (OFString*)reason;
++ (instancetype)exceptionWithConnection: (XMPPConnection *)connection
+			      condition: (OFString *)condition
+				 reason: (OFString *)reason;
 {
 	return [[[self alloc] initWithConnection: connection
 				       condition: condition
 					  reason: reason] autorelease];
 }
 
-- initWithConnection: (XMPPConnection*)connection
+- initWithConnection: (XMPPConnection *)connection
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection*)connection
-	   condition: (OFString*)condition
-	      reason: (OFString*)reason
+- initWithConnection: (XMPPConnection *)connection
+	   condition: (OFString *)condition
+	      reason: (OFString *)reason
 {
 	self = [super initWithConnection: connection];
 
@@ -107,7 +107,7 @@
 	[super dealloc];
 }
 
-- (OFString*)description
+- (OFString *)description
 {
 	return [OFString stringWithFormat:
 	    @"Got stream error: %@. Reason: %@!", _condition, _reason];
@@ -117,23 +117,23 @@
 @implementation XMPPStringPrepFailedException
 @synthesize profile = _profile, string = _string;
 
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
-				profile: (OFString*)profile
-				 string: (OFString*)string
++ (instancetype)exceptionWithConnection: (XMPPConnection *)connection
+				profile: (OFString *)profile
+				 string: (OFString *)string
 {
 	return [[[self alloc] initWithConnection: connection
 					 profile: profile
 					  string: string] autorelease];
 }
 
-- initWithConnection: (XMPPConnection*)connection
+- initWithConnection: (XMPPConnection *)connection
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection*)connection
-	     profile: (OFString*)profile
-	      string: (OFString*)string
+- initWithConnection: (XMPPConnection *)connection
+	     profile: (OFString *)profile
+	      string: (OFString *)string
 {
 	self = [super initWithConnection: connection];
 
@@ -156,7 +156,7 @@
 	[super dealloc];
 }
 
-- (OFString*)description
+- (OFString *)description
 {
 	return [OFString stringWithFormat:
 	    @"Stringprep with profile %@ failed on string '%@'!",
@@ -167,23 +167,23 @@
 @implementation XMPPIDNATranslationFailedException
 @synthesize operation = _operation, string = _string;
 
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
-			      operation: (OFString*)operation
-				 string: (OFString*)string
++ (instancetype)exceptionWithConnection: (XMPPConnection *)connection
+			      operation: (OFString *)operation
+				 string: (OFString *)string
 {
 	return [[[self alloc] initWithConnection: connection
 				       operation: operation
 					  string: string] autorelease];
 }
 
-- initWithConnection: (XMPPConnection*)connection
+- initWithConnection: (XMPPConnection *)connection
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection*)connection
-	   operation: (OFString*)operation
-	      string: (OFString*)string
+- initWithConnection: (XMPPConnection *)connection
+	   operation: (OFString *)operation
+	      string: (OFString *)string
 {
 	self = [super initWithConnection: connection];
 
@@ -206,7 +206,7 @@
 	[super dealloc];
 }
 
-- (OFString*)description
+- (OFString *)description
 {
 	return [OFString stringWithFormat:
 	    @"IDNA operation %@ failed on string '%@'!", _operation, _string];
@@ -216,20 +216,20 @@
 @implementation XMPPAuthFailedException
 @synthesize reason = _reason;
 
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
-				 reason: (OFString*)reason;
++ (instancetype)exceptionWithConnection: (XMPPConnection *)connection
+				 reason: (OFString *)reason;
 {
 	return [[[self alloc] initWithConnection: connection
 					  reason: reason] autorelease];
 }
 
-- initWithConnection: (XMPPConnection*)connection
+- initWithConnection: (XMPPConnection *)connection
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection*)connection
-	      reason: (OFString*)reason
+- initWithConnection: (XMPPConnection *)connection
+	      reason: (OFString *)reason
 {
 	self = [super initWithConnection: connection];
 
@@ -250,7 +250,7 @@
 	[super dealloc];
 }
 
-- (OFString*)description
+- (OFString *)description
 {
 	return [OFString stringWithFormat:
 	    @"Authentication failed. Reason: %@!", _reason];

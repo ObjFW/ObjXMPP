@@ -23,6 +23,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A class for easy handling of JIDs.
  */
@@ -32,11 +34,11 @@
 }
 
 /// \brief The JID's localpart
-@property (copy) OFString *node;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *node;
 /// \brief The JID's domainpart
-@property (copy) OFString *domain;
+@property (nonatomic, copy) OFString *domain;
 /// \brief The JID's resourcepart
-@property (copy) OFString *resource;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *resource;
 
 /**
  * \brief Creates a new autoreleased XMPPJID.
@@ -51,7 +53,7 @@
  * \param string The string to parse into a JID object
  * \return A new autoreleased XMPPJID
  */
-+ (instancetype)JIDWithString: (OFString*)string;
++ (instancetype)JIDWithString: (OFString *)string;
 
 /**
  * \brief Initializes an already allocated XMPPJID with a string.
@@ -59,19 +61,21 @@
  * \param string The string to parse into a JID object
  * \return A initialized XMPPJID
  */
-- initWithString: (OFString*)string;
+- initWithString: (OFString *)string;
 
 /**
  * \brief Returns the bare JID.
  *
  * \return An OFString containing the bare JID
  */
-- (OFString*)bareJID;
+- (OFString *)bareJID;
 
 /**
  * \brief Returns the full JID.
  *
  * \return An OFString containing the full JID
  */
-- (OFString*)fullJID;
+- (OFString *)fullJID;
 @end
+
+OF_ASSUME_NONNULL_END

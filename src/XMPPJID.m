@@ -33,17 +33,19 @@
 #import "XMPPExceptions.h"
 
 @implementation XMPPJID
+@synthesize node = _node, domain = _domain, resource = _resource;
+
 + (instancetype)JID
 {
 	return [[[self alloc] init] autorelease];
 }
 
-+ (instancetype)JIDWithString: (OFString*)string
++ (instancetype)JIDWithString: (OFString *)string
 {
 	return [[[self alloc] initWithString: string] autorelease];
 }
 
-- initWithString: (OFString*)string
+- initWithString: (OFString *)string
 {
 	size_t nodesep, resourcesep;
 
@@ -103,7 +105,7 @@
 	return new;
 }
 
-- (void)setNode: (OFString*)node
+- (void)setNode: (OFString *)node
 {
 	OFString *old = _node;
 	char *nodepart;
@@ -132,12 +134,7 @@
 	[old release];
 }
 
-- (OFString*)node
-{
-	return [[_node copy] autorelease];
-}
-
-- (void)setDomain: (OFString*)domain
+- (void)setDomain: (OFString *)domain
 {
 	OFString *old = _domain;
 	char *srv;
@@ -160,12 +157,7 @@
 	[old release];
 }
 
-- (OFString*)domain
-{
-	return [[_domain copy] autorelease];
-}
-
-- (void)setResource: (OFString*)resource
+- (void)setResource: (OFString *)resource
 {
 	OFString *old = _resource;
 	char *res;
@@ -194,12 +186,7 @@
 	[old release];
 }
 
-- (OFString*)resource
-{
-	return [[_resource copy] autorelease];
-}
-
-- (OFString*)bareJID
+- (OFString *)bareJID
 {
 	if (_node != nil)
 		return [OFString stringWithFormat: @"%@@%@", _node, _domain];
@@ -207,7 +194,7 @@
 		return [OFString stringWithFormat: @"%@", _domain];
 }
 
-- (OFString*)fullJID
+- (OFString *)fullJID
 {
 	/* If we don't have a resource, the full JID is equal to the bare JID */
 	if (_resource == nil)
@@ -221,7 +208,7 @@
 		       _domain, _resource];
 }
 
-- (OFString*)description
+- (OFString *)description
 {
 	return [self fullJID];
 }

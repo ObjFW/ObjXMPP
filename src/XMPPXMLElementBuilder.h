@@ -22,5 +22,9 @@
 
 #import <ObjFW/OFXMLElementBuilder.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 @interface XMPPXMLElementBuilder: OFXMLElementBuilder
 @end
+
+OF_ASSUME_NONNULL_END

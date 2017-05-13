@@ -49,23 +49,25 @@ show_to_int(OFString *show)
 }
 
 @implementation XMPPPresence
+@dynamic type;
+
 + (instancetype)presence
 {
 	return [[[self alloc] init] autorelease];
 }
 
-+ (instancetype)presenceWithID: (OFString*)ID
++ (instancetype)presenceWithID: (OFString *)ID
 {
 	return [[[self alloc] initWithID: ID] autorelease];
 }
 
-+ (instancetype)presenceWithType: (OFString*)type
++ (instancetype)presenceWithType: (OFString *)type
 {
 	return [[[self alloc] initWithType: type] autorelease];
 }
 
-+ (instancetype)presenceWithType: (OFString*)type
-			      ID: (OFString*)ID
++ (instancetype)presenceWithType: (OFString *)type
+			      ID: (OFString *)ID
 {
 	return [[[self alloc] initWithType: type
 					ID: ID] autorelease];
@@ -77,27 +79,27 @@ show_to_int(OFString *show)
 			       ID: nil];
 }
 
-- initWithID: (OFString*)ID
+- initWithID: (OFString *)ID
 {
 	return [self initWithType: nil
 			       ID: ID];
 }
 
-- initWithType: (OFString*)type
+- initWithType: (OFString *)type
 {
 	return [self initWithType: type
 			       ID: nil];
 }
 
-- initWithType: (OFString*)type
-	    ID: (OFString*)ID
+- initWithType: (OFString *)type
+	    ID: (OFString *)ID
 {
 	return [super initWithName: @"presence"
 			      type: type
 				ID: ID];
 }
 
-- initWithElement: (OFXMLElement*)element
+- initWithElement: (OFXMLElement *)element
 {
 	self = [super initWithElement: element];
 
@@ -135,15 +137,15 @@ show_to_int(OFString *show)
 	[super dealloc];
 }
 
-- (OFString*)type
+- (void)setType: (OFString *)type
 {
-	if (_type == nil)
-		return @"available";
+	if (type == nil)
+		type = @"available";
 
-	return [[_type copy] autorelease];
+	[super setType: type];
 }
 
-- (void)setShow: (OFString*)show
+- (void)setShow: (OFString *)show
 {
 	OFXMLElement *oldShow = [self elementForName: @"show"
 					   namespace: XMPP_NS_CLIENT];
@@ -162,12 +164,7 @@ show_to_int(OFString *show)
 	[old release];
 }
 
-- (OFString*)show
-{
-	return [[_show copy] autorelease];
-}
-
-- (void)setStatus: (OFString*)status
+- (void)setStatus: (OFString *)status
 {
 	OFXMLElement *oldStatus = [self elementForName: @"status"
 					     namespace: XMPP_NS_CLIENT];
@@ -186,12 +183,7 @@ show_to_int(OFString *show)
 	[old release];
 }
 
-- (OFString*)status
-{
-	return [[_status copy] autorelease];
-}
-
-- (void)setPriority: (OFNumber*)priority
+- (void)setPriority: (OFNumber *)priority
 {
 	intmax_t prio = [priority intMaxValue];
 	OFNumber *old;
@@ -205,7 +197,7 @@ show_to_int(OFString *show)
 	if (oldPriority != nil)
 		[self removeChild: oldPriority];
 
-	OFString* priority_s =
+	OFString *priority_s =
 	    [OFString stringWithFormat: @"%" @PRId8, [priority int8Value]];
 	[self addChild: [OFXMLElement elementWithName: @"priority"
 					    namespace: XMPP_NS_CLIENT
@@ -214,11 +206,6 @@ show_to_int(OFString *show)
 	old = _priority;
 	_priority = [priority copy];
 	[old release];
-}
-
-- (OFNumber*)priority
-{
-	return [[_priority copy] autorelease];
 }
 
 - (of_comparison_result_t)compare: (id <OFComparing>)object
@@ -234,7 +221,7 @@ show_to_int(OFString *show)
 	if (![object isKindOfClass: [XMPPPresence class]])
 		@throw [OFInvalidArgumentException exception];
 
-	otherPresence = (XMPPPresence*)object;
+	otherPresence = (XMPPPresence *)object;
 	otherPriority = [otherPresence priority];
 	if (otherPriority == nil)
 		otherPriority = [OFNumber numberWithInt8: 0];

@@ -24,6 +24,8 @@
 
 #import "XMPPStorage.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class OFMutableDictionary;
 
 @interface XMPPFileStorage: OFObject <XMPPStorage>
@@ -32,5 +34,8 @@
 	OFMutableDictionary *_data;
 }
 
-- initWithFile: (OFString*)file;
+- init OF_UNAVAILABLE;
+- initWithFile: (OFString *)file;
 @end
+
+OF_ASSUME_NONNULL_END

@@ -40,6 +40,15 @@
 
 #import <ObjFW/OFLocalization.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
+@interface XMPPSRVLookup ()
+- (void)XMPP_lookup;
+- (void)XMPP_addEntry: (XMPPSRVEntry *)item;
+@end
+
+OF_ASSUME_NONNULL_END
+
 @implementation XMPPSRVEntry
 @synthesize priority = _priority, weight = _weight;
 @synthesize accumulatedWeight = _accumulatedWeight, port = _port;
@@ -48,7 +57,7 @@
 + (instancetype)entryWithPriority: (uint16_t)priority
 			   weight: (uint16_t)weight
 			     port: (uint16_t)port
-			   target: (OFString*)target
+			   target: (OFString *)target
 {
 	return [[[self alloc] initWithPriority: priority
 					weight: weight
@@ -65,20 +74,13 @@
 
 - init
 {
-	@try {
-		[self doesNotRecognizeSelector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	abort();
+	OF_INVALID_INIT_METHOD
 }
 
 - initWithPriority: (uint16_t)priority
 	    weight: (uint16_t)weight
 	      port: (uint16_t)port
-	    target: (OFString*)target
+	    target: (OFString *)target
 {
 	self = [super init];
 
@@ -104,13 +106,13 @@
 		const uint16_t *rdata;
 		char buffer[NS_MAXDNAME];
 
-		rdata = (const uint16_t*)(void*)ns_rr_rdata(resourceRecord);
+		rdata = (const uint16_t *)(void *)ns_rr_rdata(resourceRecord);
 		_priority = ntohs(rdata[0]);
 		_weight = ntohs(rdata[1]);
 		_port = ntohs(rdata[2]);
 
 		if (dn_expand(ns_msg_base(handle), ns_msg_end(handle),
-		    (uint8_t*)&rdata[3], buffer, NS_MAXDNAME) < 1)
+		    (uint8_t *)&rdata[3], buffer, NS_MAXDNAME) < 1)
 			@throw [OFInitializationFailedException
 			    exceptionWithClass: [self class]];
 
@@ -132,7 +134,7 @@
 	[super dealloc];
 }
 
-- (OFString*)description
+- (OFString *)description
 {
 	return [OFString stringWithFormat:
 	    @"<%@ priority: %" PRIu16 @", weight: %" PRIu16 @", target: %@:%"
@@ -143,12 +145,17 @@
 @implementation XMPPSRVLookup
 @synthesize domain = _domain;
 
-+ (instancetype)lookupWithDomain: (OFString*)domain
++ (instancetype)lookupWithDomain: (OFString *)domain
 {
 	return [[[self alloc] initWithDomain: domain] autorelease];
 }
 
-- initWithDomain: (OFString*)domain
+- init
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- initWithDomain: (OFString *)domain
 {
 	self = [super init];
 
@@ -231,7 +238,7 @@
 	[pool release];
 }
 
-- (void)XMPP_addEntry: (XMPPSRVEntry*)entry
+- (void)XMPP_addEntry: (XMPPSRVEntry *)entry
 {
 	OFAutoreleasePool *pool;
 	OFList *subList;
@@ -273,14 +280,19 @@
 	[pool release];
 }
 
-- (OFEnumerator*)objectEnumerator
+- (OFEnumerator *)objectEnumerator
 {
 	return [[[XMPPSRVEnumerator alloc] initWithList: _list] autorelease];
 }
 @end
 
 @implementation XMPPSRVEnumerator
-- initWithList: (OFList*)list
+- init
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- initWithList: (OFList *)list
 {
 	self = [super init];
 
@@ -321,7 +333,7 @@
 	if ([_subListCopy count] > 0)  {
 		uint32_t randomWeight;
 
-		RAND_pseudo_bytes((uint8_t*)&randomWeight, sizeof(uint32_t));
+		RAND_pseudo_bytes((uint8_t *)&randomWeight, sizeof(uint32_t));
 		randomWeight %= (totalWeight + 1);
 
 		for (iter = [_subListCopy firstListObject]; iter != NULL;

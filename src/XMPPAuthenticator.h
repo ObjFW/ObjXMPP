@@ -23,6 +23,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A base class for classes implementing authentication mechanisms
  */
@@ -32,11 +34,11 @@
 }
 
 /// \brief The authzid to get authorization for
-@property (copy) OFString *authzid;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *authzid;
 /// \brief The authcid to authenticate with
-@property (copy) OFString *authcid;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *authcid;
 /// \brief The password to authenticate with
-@property (copy) OFString *password;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *password;
 
 /**
  * \brief Initializes an already allocated XMPPAuthenticator with an authcid
@@ -46,8 +48,8 @@
  * \param password The password to authenticate with
  * \return A initialized XMPPAuthenticator
  */
-- initWithAuthcid: (OFString*)authcid
-	 password: (OFString*)password;
+- initWithAuthcid: (nullable OFString *)authcid
+	 password: (nullable OFString *)password;
 
 /**
  * \brief Initializes an already allocated XMPPSCRAMAuthenticator with an
@@ -58,16 +60,16 @@
  * \param password The password to authenticate with
  * \return A initialized XMPPAuthenticator
  */
-- initWithAuthzid: (OFString*)authzid
-	  authcid: (OFString*)authcid
-	 password: (OFString*)password;
+- initWithAuthzid: (nullable OFString *)authzid
+	  authcid: (nullable OFString *)authcid
+	 password: (nullable OFString *)password OF_DESIGNATED_INITIALIZER;
 
 /**
  * \brief Returns an OFDataArray containing the initial authentication message.
  *
  * \return An OFDataAray containing the initial authentication message
  */
-- (OFDataArray*)initialMessage;
+- (OFDataArray *)initialMessage;
 
 /**
  * \brief Continue authentication with the specified data.
@@ -75,5 +77,7 @@
  * \param data The continuation data send by the server
  * \return The appropriate response if the data was a challenge, nil otherwise
  */
-- (OFDataArray*)continueWithData: (OFDataArray*)data;
+- (nullable OFDataArray *)continueWithData: (OFDataArray *)data;
 @end
+
+OF_ASSUME_NONNULL_END

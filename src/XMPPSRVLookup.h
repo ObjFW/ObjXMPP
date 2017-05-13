@@ -27,6 +27,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 @interface XMPPSRVEntry: OFObject
 {
 	uint16_t _priority;
@@ -40,18 +42,19 @@
 @property (readonly) uint16_t weight;
 @property uint32_t accumulatedWeight;
 @property (readonly) uint16_t port;
-@property (readonly, copy) OFString *target;
+@property (readonly, nonatomic) OFString *target;
 
 + (instancetype)entryWithPriority: (uint16_t)priority
 			   weight: (uint16_t)weight
 			     port: (uint16_t)port
-			   target: (OFString*)target;
+			   target: (OFString *)target;
 + (instancetype)entryWithResourceRecord: (ns_rr)resourceRecord
 				 handle: (ns_msg)handle;
+- init OF_UNAVAILABLE;
 - initWithPriority: (uint16_t)priority
 	    weight: (uint16_t)weight
 	      port: (uint16_t)port
-	    target: (OFString*)target;
+	    target: (OFString *)target;
 - initWithResourceRecord: (ns_rr)resourceRecord
 		  handle: (ns_msg)handle;
 @end
@@ -63,13 +66,11 @@
 	OFList *_list;
 }
 
-@property (readonly, copy) OFString *domain;
+@property (readonly, nonatomic) OFString *domain;
 
-+ (instancetype)lookupWithDomain: (OFString*)domain;
-- initWithDomain: (OFString*)domain;
-
-- (void)XMPP_lookup;
-- (void)XMPP_addEntry: (XMPPSRVEntry*)item;
++ (instancetype)lookupWithDomain: (OFString *)domain;
+- init OF_UNAVAILABLE;
+- initWithDomain: (OFString *)domain;
 @end
 
 @interface XMPPSRVEnumerator: OFEnumerator
@@ -80,5 +81,8 @@
 	bool _done;
 }
 
-- initWithList: (OFList*)list;
+- init OF_UNAVAILABLE;
+- initWithList: (OFList *)list;
 @end
+
+OF_ASSUME_NONNULL_END

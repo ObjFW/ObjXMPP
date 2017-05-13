@@ -23,6 +23,8 @@
 #import <ObjFW/ObjFW.h>
 #import "XMPPAuthenticator.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A class to authenticate using SASL PLAIN
  */
@@ -34,8 +36,8 @@
  * \param password The password to authenticate with
  * \return A new autoreleased XMPPPLAINAuth
  */
-+ (instancetype)PLAINAuthWithAuthcid: (OFString*)authcid
-			    password: (OFString*)password;
++ (instancetype)PLAINAuthWithAuthcid: (nullable OFString *)authcid
+			    password: (nullable OFString *)password;
 
 /**
  * \brief Creates a new autoreleased XMPPPLAINAuth with an authzid, authcid and
@@ -46,7 +48,9 @@
  * \param password The password to authenticate with
  * \return A new autoreleased XMPPPLAINAuth
  */
-+ (instancetype)PLAINAuthWithAuthzid: (OFString*)authzid
-			     authcid: (OFString*)authcid
-	      password: (OFString*)password;
++ (instancetype)PLAINAuthWithAuthzid: (nullable OFString *)authzid
+			     authcid: (nullable OFString *)authcid
+			    password: (nullable OFString *)password;
 @end
+
+OF_ASSUME_NONNULL_END

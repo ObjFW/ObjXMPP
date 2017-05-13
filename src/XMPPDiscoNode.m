@@ -21,11 +21,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import "XMPPDiscoNode.h"
+#import "XMPPDiscoNode+Private.h"
 #import "XMPPConnection.h"
 #import "XMPPIQ.h"
 #import "XMPPJID.h"
 #import "XMPPDiscoEntity.h"
-#import "XMPPDiscoNode.h"
 #import "XMPPDiscoIdentity.h"
 #import "namespaces.h"
 
@@ -34,33 +35,33 @@
 @synthesize JID = _JID, node = _node, name = _name, identities = _identities;
 @synthesize features = _features, childNodes = _childNodes;
 
-+ (instancetype)discoNodeWithJID: (XMPPJID*)JID
-			    node: (OFString*)node;
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID
+			    node: (OFString *)node;
 {
 	return [[[self alloc] initWithJID: JID
 				     node: node] autorelease];
 }
 
-+ (instancetype)discoNodeWithJID: (XMPPJID*)JID
-			    node: (OFString*)node
-			    name: (OFString*)name
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID
+			    node: (OFString *)node
+			    name: (OFString *)name
 {
 	return [[[self alloc] initWithJID: JID
 				     node: node
 				     name: name] autorelease];
 }
 
-- initWithJID: (XMPPJID*)JID
-	 node: (OFString*)node
+- initWithJID: (XMPPJID *)JID
+	 node: (OFString *)node
 {
 	return [self initWithJID: JID
 			    node: node
 			    name: nil];
 }
 
-- initWithJID: (XMPPJID*)JID
-	 node: (OFString*)node
-	 name: (OFString*)name
+- initWithJID: (XMPPJID *)JID
+	 node: (OFString *)node
+	 name: (OFString *)name
 {
 	self = [super init];
 
@@ -98,24 +99,29 @@
 	[super dealloc];
 }
 
-- (void)addIdentity: (XMPPDiscoIdentity*)identity
+- (OFDictionary *)childNodes
+{
+	return [[_childNodes copy] autorelease];
+}
+
+- (void)addIdentity: (XMPPDiscoIdentity *)identity
 {
 	[_identities insertObject: identity];
 }
 
-- (void)addFeature: (OFString*)feature
+- (void)addFeature: (OFString *)feature
 {
 	[_features insertObject: feature];
 }
 
-- (void)addChildNode: (XMPPDiscoNode*)node
+- (void)addChildNode: (XMPPDiscoNode *)node
 {
 	[_childNodes setObject: node
 			forKey: [node node]];
 }
 
-- (bool)XMPP_handleItemsIQ: (XMPPIQ*)IQ
-		connection: (XMPPConnection*)connection
+- (bool)XMPP_handleItemsIQ: (XMPPIQ *)IQ
+		connection: (XMPPConnection *)connection
 {
 	XMPPIQ *resultIQ;
 	OFXMLElement *response;
@@ -156,8 +162,8 @@
 	return true;
 }
 
-- (bool)XMPP_handleInfoIQ: (XMPPIQ*)IQ
-	       connection: (XMPPConnection*)connection
+- (bool)XMPP_handleInfoIQ: (XMPPIQ *)IQ
+	       connection: (XMPPConnection *)connection
 {
 	XMPPIQ *resultIQ;
 	OFXMLElement *response;

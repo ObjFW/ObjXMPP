@@ -59,19 +59,46 @@
 
 #define BUFFER_LENGTH 512
 
+OF_ASSUME_NONNULL_BEGIN
+
+@interface XMPPConnection ()
+- (void)XMPP_startStream;
+- (void)XMPP_handleStream: (OFXMLElement *)element;
+- (void)XMPP_handleTLS: (OFXMLElement *)element;
+- (void)XMPP_handleSASL: (OFXMLElement *)element;
+- (void)XMPP_handleStanza: (OFXMLElement *)element;
+- (void)XMPP_sendAuth: (OFString *)authName;
+- (void)XMPP_sendResourceBind;
+- (void)XMPP_sendStreamError: (OFString *)condition
+			text: (nullable OFString *)text;
+- (void)XMPP_handleIQ: (XMPPIQ *)IQ;
+- (void)XMPP_handleMessage: (XMPPMessage *)message;
+- (void)XMPP_handlePresence: (XMPPPresence *)presence;
+- (void)XMPP_handleFeatures: (OFXMLElement *)element;
+- (void)XMPP_handleResourceBindForConnection: (XMPPConnection *)connection
+					  IQ: (XMPPIQ *)IQ;
+- (void)XMPP_sendSession;
+- (void)XMPP_handleSessionForConnection: (XMPPConnection *)connection
+				     IQ: (XMPPIQ *)IQ;
+- (OFString *)XMPP_IDNAToASCII: (OFString *)domain;
+- (XMPPMulticastDelegate *)XMPP_delegates;
+@end
+
 @interface XMPPConnection_ConnectThread: OFThread
 {
 	OFThread *_sourceThread;
 	XMPPConnection *_connection;
 }
 
-- initWithSourceThread: (OFThread*)sourceThread
-	    connection: (XMPPConnection*)connection;
+- initWithSourceThread: (OFThread *)sourceThread
+	    connection: (XMPPConnection *)connection;
 @end
 
+OF_ASSUME_NONNULL_END
+
 @implementation XMPPConnection_ConnectThread
-- initWithSourceThread: (OFThread*)sourceThread
-	    connection: (XMPPConnection*)connection
+- initWithSourceThread: (OFThread *)sourceThread
+	    connection: (XMPPConnection *)connection
 {
 	self = [super init];
 
@@ -118,7 +145,9 @@
 @end
 
 @implementation XMPPConnection
-@synthesize language = _language, privateKeyFile = _privateKeyFile;
+@synthesize username = _username, resource = _resource, server = _server;
+@synthesize domain = _domain, password = _password, language = _language;
+@synthesize privateKeyFile = _privateKeyFile;
 @synthesize certificateFile = _certificateFile, socket = _socket;
 @synthesize encryptionRequired = _encryptionRequired, encrypted = _encrypted;
 @synthesize supportsRosterVersioning = _supportsRosterVersioning;
@@ -165,7 +194,7 @@
 	[super dealloc];
 }
 
-- (void)setUsername: (OFString*)username
+- (void)setUsername: (OFString *)username
 {
 	OFString *old = _username;
 
@@ -191,12 +220,7 @@
 	[old release];
 }
 
-- (OFString*)username
-{
-	return [[_username copy] autorelease];
-}
-
-- (void)setResource: (OFString*)resource
+- (void)setResource: (OFString *)resource
 {
 	OFString *old = _resource;
 
@@ -222,12 +246,7 @@
 	[old release];
 }
 
-- (OFString*)resource
-{
-	return [[_resource copy] autorelease];
-}
-
-- (void)setServer: (OFString*)server
+- (void)setServer: (OFString *)server
 {
 	OFString *old = _server;
 
@@ -239,12 +258,7 @@
 	[old release];
 }
 
-- (OFString*)server
-{
-	return [[_server copy] autorelease];
-}
-
-- (void)setDomain: (OFString*)domain
+- (void)setDomain: (OFString *)domain
 {
 	OFString *oldDomain = _domain;
 	OFString *oldDomainToASCII = _domainToASCII;
@@ -276,12 +290,7 @@
 	[oldDomainToASCII release];
 }
 
-- (OFString*)domain
-{
-	return [[_domain copy] autorelease];
-}
-
-- (void)setPassword: (OFString*)password
+- (void)setPassword: (OFString *)password
 {
 	OFString *old = _password;
 
@@ -305,11 +314,6 @@
 		_password = nil;
 
 	[old release];
-}
-
-- (OFString*)password
-{
-	return [[_password copy] autorelease];
 }
 
 - (void)connect
@@ -382,7 +386,7 @@
 	[pool release];
 }
 
--  (bool)XMPP_parseBuffer: (const void*)buffer
+-  (bool)XMPP_parseBuffer: (const void *)buffer
 		   length: (size_t)length
 {
 	if ([_socket isAtEndOfStream]) {
@@ -404,7 +408,7 @@
 	return true;
 }
 
-- (void)parseBuffer: (const void*)buffer
+- (void)parseBuffer: (const void *)buffer
 	     length: (size_t)length
 {
 	[self XMPP_parseBuffer: buffer
@@ -417,10 +421,10 @@
 	_oldElementBuilder = nil;
 }
 
--      (bool)stream: (OFStream*)stream
-  didReadIntoBuffer: (char*)buffer
+-      (bool)stream: (OFStream *)stream
+  didReadIntoBuffer: (char *)buffer
 	     length: (size_t)length
-	  exception: (OFException*)exception
+	  exception: (OFException *)exception
 {
 	if (exception != nil) {
 		[_delegates broadcastSelector: @selector(connection:
@@ -469,7 +473,7 @@
 	return _streamOpen;
 }
 
-- (bool)checkCertificateAndGetReason: (OFString**)reason
+- (bool)checkCertificateAndGetReason: (OFString **)reason
 {
 	X509Certificate *cert;
 	OFDictionary *SANs;
@@ -505,7 +509,7 @@
 	return false;
 }
 
-- (void)sendStanza: (OFXMLElement*)element
+- (void)sendStanza: (OFXMLElement *)element
 {
 	[_delegates broadcastSelector: @selector(connection:didSendElement:)
 			   withObject: self
@@ -514,7 +518,7 @@
 	[_socket writeString: [element XMLString]];
 }
 
--   (void)sendIQ: (XMPPIQ*)IQ
+-   (void)sendIQ: (XMPPIQ *)IQ
   callbackTarget: (id)target
 	selector: (SEL)selector
 {
@@ -545,7 +549,7 @@
 }
 
 #ifdef OF_HAVE_BLOCKS
--  (void)sendIQ: (XMPPIQ*)IQ
+-  (void)sendIQ: (XMPPIQ *)IQ
   callbackBlock: (xmpp_callback_block_t)block
 {
 	OFAutoreleasePool *pool;
@@ -574,20 +578,17 @@
 }
 #endif
 
-- (OFString*)generateStanzaID
+- (OFString *)generateStanzaID
 {
 	return [OFString stringWithFormat: @"objxmpp_%u", _lastID++];
 }
 
--    (void)parser: (OFXMLParser*)p
-  didStartElement: (OFString*)name
-	   prefix: (OFString*)prefix
-	namespace: (OFString*)ns
-       attributes: (OFArray*)attributes
+-    (void)parser: (OFXMLParser *)parser
+  didStartElement: (OFString *)name
+	   prefix: (OFString *)prefix
+	namespace: (OFString *)NS
+       attributes: (OFArray *)attributes
 {
-	OFEnumerator *enumerator;
-	OFXMLAttribute *attribute;
-
 	if (![name isEqual: @"stream"]) {
 		// No dedicated stream error for this, may not even be XMPP
 		[self close];
@@ -601,14 +602,13 @@
 		return;
 	}
 
-	if (![ns isEqual: XMPP_NS_STREAM]) {
+	if (![NS isEqual: XMPP_NS_STREAM]) {
 		[self XMPP_sendStreamError: @"invalid-namespace"
 				      text: nil];
 		return;
 	}
 
-	enumerator = [attributes objectEnumerator];
-	while ((attribute = [enumerator nextObject]) != nil) {
+	for (OFXMLAttribute *attribute in attributes) {
 		if ([[attribute name] isEqual: @"from"] &&
 		    ![[attribute stringValue] isEqual: _domain]) {
 			[self XMPP_sendStreamError: @"invalid-from"
@@ -623,11 +623,11 @@
 		}
 	}
 
-	[_parser setDelegate: _elementBuilder];
+	[parser setDelegate: _elementBuilder];
 }
 
-- (void)elementBuilder: (OFXMLElementBuilder*)builder
-       didBuildElement: (OFXMLElement*)element
+- (void)elementBuilder: (OFXMLElementBuilder *)builder
+       didBuildElement: (OFXMLElement *)element
 {
 	/* Ignore whitespace elements */
 	if ([element name] == nil)
@@ -654,10 +654,10 @@
 		[self XMPP_handleSASL: element];
 }
 
-- (void)elementBuilder: (OFXMLElementBuilder*)builder
-  didNotExpectCloseTag: (OFString*)name
-		prefix: (OFString*)prefix
-	     namespace: (OFString*)ns
+- (void)elementBuilder: (OFXMLElementBuilder *)builder
+  didNotExpectCloseTag: (OFString *)name
+		prefix: (OFString *)prefix
+	     namespace: (OFString *)ns
 {
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
 	    ![ns isEqual: XMPP_NS_STREAM])
@@ -722,7 +722,7 @@
 	_lastID = 0;
 }
 
-- (void)XMPP_handleStanza: (OFXMLElement*)element
+- (void)XMPP_handleStanza: (OFXMLElement *)element
 {
 	if ([[element name] isEqual: @"iq"]) {
 		[self XMPP_handleIQ: [XMPPIQ stanzaWithElement: element]];
@@ -746,7 +746,7 @@
 }
 
 
-- (void)XMPP_handleStream: (OFXMLElement*)element
+- (void)XMPP_handleStream: (OFXMLElement *)element
 {
 	if ([[element name] isEqual: @"features"]) {
 		[self XMPP_handleFeatures: element];
@@ -850,7 +850,7 @@
 	assert(0);
 }
 
-- (void)XMPP_handleTLS: (OFXMLElement*)element
+- (void)XMPP_handleTLS: (OFXMLElement *)element
 {
 	if ([[element name] isEqual: @"proceed"]) {
 		/* FIXME: Catch errors here */
@@ -891,7 +891,7 @@
 	assert(0);
 }
 
-- (void)XMPP_handleSASL: (OFXMLElement*)element
+- (void)XMPP_handleSASL: (OFXMLElement *)element
 {
 	if ([[element name] isEqual: @"challenge"]) {
 		OFXMLElement *responseTag;
@@ -939,7 +939,7 @@
 	assert(0);
 }
 
-- (void)XMPP_handleIQ: (XMPPIQ*)IQ
+- (void)XMPP_handleIQ: (XMPPIQ *)IQ
 {
 	bool handled = false;
 	XMPPCallback *callback;
@@ -970,21 +970,21 @@
 	}
 }
 
-- (void)XMPP_handleMessage: (XMPPMessage*)message
+- (void)XMPP_handleMessage: (XMPPMessage *)message
 {
 	[_delegates broadcastSelector: @selector(connection:didReceiveMessage:)
 			   withObject: self
 			   withObject: message];
 }
 
-- (void)XMPP_handlePresence: (XMPPPresence*)presence
+- (void)XMPP_handlePresence: (XMPPPresence *)presence
 {
 	[_delegates broadcastSelector: @selector(connection:didReceivePresence:)
 			   withObject: self
 			   withObject: presence];
 }
 
-- (void)XMPP_handleFeatures: (OFXMLElement*)element
+- (void)XMPP_handleFeatures: (OFXMLElement *)element
 {
 	OFXMLElement *startTLS = [element elementForName: @"starttls"
 					       namespace: XMPP_NS_STARTTLS];
@@ -1023,7 +1023,7 @@
 		while ((mech = [enumerator nextObject]) != nil)
 			[mechanisms addObject: [mech stringValue]];
 
-		if (_privateKeyFile && _certificateFile &&
+		if (_privateKeyFile != nil && _certificateFile != nil &&
 		    [mechanisms containsObject: @"EXTERNAL"]) {
 			_authModule = [[XMPPEXTERNALAuth alloc] init];
 			[self XMPP_sendAuth: @"EXTERNAL"];
@@ -1063,8 +1063,8 @@
 		assert(0);
 	}
 
-	if (session != nil && ![session elementForName: @"optional"
-					     namespace: XMPP_NS_SESSION])
+	if (session != nil && [session elementForName: @"optional"
+					    namespace: XMPP_NS_SESSION] == nil)
 		_needsSession = true;
 
 	if (bind != nil) {
@@ -1075,7 +1075,7 @@
 	assert(0);
 }
 
-- (void)XMPP_sendAuth: (OFString*)authName
+- (void)XMPP_sendAuth: (OFString *)authName
 {
 	OFXMLElement *authTag;
 	OFDataArray *initialMessage = [_authModule initialMessage];
@@ -1119,8 +1119,8 @@
 				IQ:)];
 }
 
-- (void)XMPP_sendStreamError: (OFString*)condition
-			text: (OFString*)text
+- (void)XMPP_sendStreamError: (OFString *)condition
+			text: (OFString *)text
 {
 	OFXMLElement *error = [OFXMLElement
 	    elementWithName: @"error"
@@ -1139,22 +1139,21 @@
 	[self close];
 }
 
-- (void)XMPP_handleResourceBindForConnection: (XMPPConnection*)connection
-					  IQ: (XMPPIQ*)iq
+- (void)XMPP_handleResourceBindForConnection: (XMPPConnection *)connection
+					  IQ: (XMPPIQ *)IQ
 {
-	OFXMLElement *bindElement;
-	OFXMLElement *jidElement;
+	OFXMLElement *bindElement, *JIDElement;
 
-	assert([[iq type] isEqual: @"result"]);
+	assert([[IQ type] isEqual: @"result"]);
 
-	bindElement = [iq elementForName: @"bind"
+	bindElement = [IQ elementForName: @"bind"
 			       namespace: XMPP_NS_BIND];
 
 	assert(bindElement != nil);
 
-	jidElement = [bindElement elementForName: @"jid"
+	JIDElement = [bindElement elementForName: @"jid"
 				       namespace: XMPP_NS_BIND];
-	_JID = [[XMPPJID alloc] initWithString: [jidElement stringValue]];
+	_JID = [[XMPPJID alloc] initWithString: [JIDElement stringValue]];
 
 	if (_needsSession) {
 		[self XMPP_sendSession];
@@ -1168,29 +1167,29 @@
 
 - (void)XMPP_sendSession
 {
-	XMPPIQ *iq;
+	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
+				     ID: [self generateStanzaID]];
 
-	iq = [XMPPIQ IQWithType: @"set"
-			     ID: [self generateStanzaID]];
-	[iq addChild: [OFXMLElement elementWithName: @"session"
+	[IQ addChild: [OFXMLElement elementWithName: @"session"
 					  namespace: XMPP_NS_SESSION]];
-	[self	    sendIQ: iq
+
+	[self	    sendIQ: IQ
 	    callbackTarget: self
 		  selector: @selector(XMPP_handleSessionForConnection:IQ:)];
 }
 
-- (void)XMPP_handleSessionForConnection: (XMPPConnection*)connection
-				     IQ: (XMPPIQ*)iq
+- (void)XMPP_handleSessionForConnection: (XMPPConnection *)connection
+				     IQ: (XMPPIQ *)IQ
 {
-	if (![[iq type] isEqual: @"result"])
-		assert(0);
+	if (![[IQ type] isEqual: @"result"])
+		OF_ENSURE(0);
 
 	[_delegates broadcastSelector: @selector(connection:wasBoundToJID:)
 			   withObject: self
 			   withObject: _JID];
 }
 
-- (OFString*)XMPP_IDNAToASCII: (OFString*)domain
+- (OFString *)XMPP_IDNAToASCII: (OFString *)domain
 {
 	OFString *ret;
 	char *cDomain;
@@ -1236,7 +1235,7 @@
 	[_delegates removeDelegate: delegate];
 }
 
-- (XMPPMulticastDelegate*)XMPP_delegates
+- (XMPPMulticastDelegate *)XMPP_delegates
 {
 	return _delegates;
 }

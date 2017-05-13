@@ -23,6 +23,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A class describing a Service Discovery Identity
  */
@@ -32,11 +34,11 @@
 }
 
 /// \brief The category of the identity
-@property (readonly) OFString *category;
+@property (readonly, nonatomic) OFString *category;
 /// \brief The name of the identity, might be unset
-@property (readonly) OFString *name;
+@property (readonly, nonatomic) OFString *name;
 /// \brief The type of the identity
-@property (readonly) OFString *type;
+@property (readonly, nonatomic) OFString *type;
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoIdentity with the specified
@@ -47,9 +49,9 @@
  * \param name The name of the identity
  * \return A new autoreleased XMPPDiscoIdentity
  */
-+ (instancetype)identityWithCategory: (OFString*)category
-				type: (OFString*)type
-				name: (OFString*)name;
++ (instancetype)identityWithCategory: (OFString *)category
+				type: (OFString *)type
+				name: (nullable OFString *)name;
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoIdentity with the specified
@@ -59,8 +61,10 @@
  * \param type The type of the identity
  * \return A new autoreleased XMPPDiscoIdentity
  */
-+ (instancetype)identityWithCategory: (OFString*)category
-				type: (OFString*)type;
++ (instancetype)identityWithCategory: (OFString *)category
+				type: (OFString *)type;
+
+- init OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoIdentity with the specified
@@ -71,9 +75,9 @@
  * \param name The name of the identity
  * \return An initialized XMPPDiscoIdentity
  */
-- initWithCategory: (OFString*)category
-	      type: (OFString*)type
-	      name: (OFString*)name;
+- initWithCategory: (OFString *)category
+	      type: (OFString *)type
+	      name: (nullable OFString *)name OF_DESIGNATED_INITIALIZER;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoIdentity with the specified
@@ -83,6 +87,8 @@
  * \param type The type of the identity
  * \return An initialized XMPPDiscoIdentity
  */
-- initWithCategory: (OFString*)category
-	      type: (OFString*)type;
+- initWithCategory: (OFString *)category
+	      type: (OFString *)type;
 @end
+
+OF_ASSUME_NONNULL_END

@@ -21,8 +21,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "XMPPContact.h"
 #import "XMPPContactManager.h"
+#import "XMPPContact.h"
+#import "XMPPContact+Private.h"
 #import "XMPPJID.h"
 #import "XMPPMulticastDelegate.h"
 #import "XMPPPresence.h"
@@ -31,8 +32,8 @@
 @implementation XMPPContactManager
 @synthesize contacts = _contacts;
 
-- initWithConnection: (XMPPConnection*)connection
-	      roster: (XMPPRoster*)roster
+- initWithConnection: (XMPPConnection *)connection
+	      roster: (XMPPRoster *)roster
 {
 	self = [super init];
 
@@ -62,14 +63,14 @@
 }
 
 
-- (void)sendSubscribedToJID: (XMPPJID*)subscriber
+- (void)sendSubscribedToJID: (XMPPJID *)subscriber
 {
 	XMPPPresence *presence = [XMPPPresence presenceWithType: @"subscribed"];
 	[presence setTo: subscriber];
 	[_connection sendStanza: presence];
 }
 
-- (void)sendUnsubscribedToJID: (XMPPJID*)subscriber
+- (void)sendUnsubscribedToJID: (XMPPJID *)subscriber
 {
 	XMPPPresence *presence =
 	    [XMPPPresence presenceWithType: @"unsubscribed"];
@@ -87,7 +88,7 @@
 	[_delegates removeDelegate: delegate];
 }
 
-- (void)rosterWasReceived: (XMPPRoster*)roster
+- (void)rosterWasReceived: (XMPPRoster *)roster
 {
 	OFEnumerator *contactEnumerator;
 	XMPPContact *contact;
@@ -120,8 +121,8 @@
 	}
 }
 
--         (void)roster: (XMPPRoster*)roster
-  didReceiveRosterItem: (XMPPRosterItem*)rosterItem
+-         (void)roster: (XMPPRoster *)roster
+  didReceiveRosterItem: (XMPPRosterItem *)rosterItem
 {
 	XMPPContact *contact;
 	OFString *bareJID = [[rosterItem JID] bareJID];
@@ -156,8 +157,8 @@
 	}
 }
 
--   (void)connection: (XMPPConnection*)connection
-  didReceivePresence: (XMPPPresence*)presence
+-   (void)connection: (XMPPConnection *)connection
+  didReceivePresence: (XMPPPresence *)presence
 {
 	XMPPContact *contact;
 	XMPPJID *JID = [presence from];
@@ -199,8 +200,8 @@
 	}
 }
 
--  (void)connection: (XMPPConnection*)connection
-  didReceiveMessage: (XMPPMessage*)message
+-  (void)connection: (XMPPConnection *)connection
+  didReceiveMessage: (XMPPMessage *)message
 {
 	XMPPJID *JID = [message from];
 	XMPPContact *contact = [_contacts objectForKey: [JID bareJID]];

@@ -22,6 +22,7 @@
  */
 
 #import "XMPPContact.h"
+#import "XMPPContact+Private.h"
 #import "XMPPMessage.h"
 #import "XMPPConnection.h"
 
@@ -50,8 +51,8 @@
 	[super dealloc];
 }
 
-- (void)sendMessage: (XMPPMessage*)message
-	 connection: (XMPPConnection*)connection
+- (void)sendMessage: (XMPPMessage *)message
+	 connection: (XMPPConnection *)connection
 {
 	if (_lockedOnJID == nil)
 		[message setTo: [_rosterItem JID]];
@@ -61,15 +62,15 @@
 	[connection sendStanza: message];
 }
 
-- (void)XMPP_setRosterItem: (XMPPRosterItem*)rosterItem
+- (void)XMPP_setRosterItem: (XMPPRosterItem *)rosterItem
 {
 	XMPPRosterItem *old = _rosterItem;
 	_rosterItem = [rosterItem retain];
 	[old release];
 }
 
-- (void)XMPP_setPresence: (XMPPPresence*)presence
-		resource: (OFString*)resource
+- (void)XMPP_setPresence: (XMPPPresence *)presence
+		resource: (OFString *)resource
 {
 	if (resource != nil)
 		[_presences setObject: presence
@@ -81,7 +82,7 @@
 	[self XMPP_setLockedOnJID: nil];
 }
 
-- (void)XMPP_removePresenceForResource: (OFString*)resource
+- (void)XMPP_removePresenceForResource: (OFString *)resource
 {
 	if (resource != nil) {
 		[_presences removeObjectForKey: resource];
@@ -93,7 +94,7 @@
 	[self XMPP_setLockedOnJID: nil];
 }
 
-- (void)XMPP_setLockedOnJID: (XMPPJID*)JID;
+- (void)XMPP_setLockedOnJID: (XMPPJID *)JID;
 {
 	XMPPJID *old = _lockedOnJID;
 	_lockedOnJID = [JID retain];

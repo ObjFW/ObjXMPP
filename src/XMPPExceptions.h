@@ -23,6 +23,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class XMPPConnection;
 @class XMPPAuthenticator;
 
@@ -35,7 +37,7 @@
 }
 
 /// \brief The connection the exception relates to
-@property (readonly, retain) XMPPConnection *connection;
+@property OF_NULLABLE_PROPERTY (readonly, nonatomic) XMPPConnection *connection;
 
 /**
  * \brief Creates a new XMPPException.
@@ -44,7 +46,9 @@
  *	  for this exception
  * \return A new XMPPException
  */
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection;
++ (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection;
+
+- init OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPException.
@@ -53,7 +57,8 @@
  *	  for this exception
  * \return An initialized XMPPException
  */
-- initWithConnection: (XMPPConnection*)connection;
+- initWithConnection: (nullable XMPPConnection *)connection
+    OF_DESIGNATED_INITIALIZER;
 @end
 
 /**
@@ -65,9 +70,9 @@
 }
 
 /// \brief The defined error condition specified by the stream error
-@property (readonly, copy) OFString *condition;
+@property (readonly, nonatomic) OFString *condition;
 /// \brief The descriptive free-form text specified by the stream error
-@property (readonly, copy) OFString *reason;
+@property (readonly, nonatomic) OFString *reason;
 
 /**
  * \brief Creates a new XMPPStreamErrorException.
@@ -77,9 +82,11 @@
  * \param reason The descriptive free-form text specified by the stream error
  * \return A new XMPPStreamErrorException
  */
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
-			      condition: (OFString*)condition
-				 reason: (OFString*)reason;
++ (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
+			      condition: (OFString *)condition
+				 reason: (OFString *)reason;
+
+- initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPStreamErrorException.
@@ -89,9 +96,9 @@
  * \param reason The descriptive free-form text specified by the stream error
  * \return An initialized XMPPStreamErrorException
  */
-- initWithConnection: (XMPPConnection*)connection
-	   condition: (OFString*)condition
-	      reason: (OFString*)reason;
+- initWithConnection: (nullable XMPPConnection *)connection
+	   condition: (OFString *)condition
+	      reason: (OFString *)reason OF_DESIGNATED_INITIALIZER;
 @end
 
 /**
@@ -104,9 +111,9 @@
 }
 
 /// \brief The name of the stringprep profile that did not apply
-@property (readonly, copy) OFString *profile;
+@property (readonly, nonatomic) OFString *profile;
 /// \brief The string that failed the stringprep profile
-@property (readonly, copy) OFString *string;
+@property (readonly, nonatomic) OFString *string;
 
 /**
  * \brief Creates a new XMPPStringPrepFailedException.
@@ -116,9 +123,11 @@
  * \param string The string that failed the stringprep profile
  * \return A new XMPPStringPrepFailedException
  */
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
-				profile: (OFString*)profile
-				 string: (OFString*)string;
++ (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
+				profile: (OFString *)profile
+				 string: (OFString *)string;
+
+- initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPStringPrepFailedException.
@@ -128,9 +137,9 @@
  * \param string The string that failed the stringprep profile
  * \return An initialized XMPPStringPrepFailedException
  */
-- initWithConnection: (XMPPConnection*)connection
-	     profile: (OFString*)profile
-	      string: (OFString*)string;
+- initWithConnection: (nullable XMPPConnection *)connection
+	     profile: (OFString *)profile
+	      string: (OFString *)string OF_DESIGNATED_INITIALIZER;
 @end
 
 /**
@@ -142,9 +151,9 @@
 }
 
 /// \brief The IDNA translation operation which failed
-@property (readonly, copy) OFString *operation;
+@property (readonly, nonatomic) OFString *operation;
 /// \brief The string that could not be translated
-@property (readonly, copy) OFString *string;
+@property (readonly, nonatomic) OFString *string;
 
 /**
  * \brief Creates a new XMPPIDNATranslationFailedException.
@@ -154,9 +163,11 @@
  * \param string The string that could not be translated
  * \return A new XMPPIDNATranslationFailedException
  */
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
-			      operation: (OFString*)operation
-				 string: (OFString*)string;
++ (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
+			      operation: (OFString *)operation
+				 string: (OFString *)string;
+
+- initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPIDNATranslationFailedException.
@@ -166,9 +177,9 @@
  * \param string The string that could not be translated
  * \return An initialized XMPPIDNATranslationFailedException
  */
-- initWithConnection: (XMPPConnection*)connection
-	   operation: (OFString*)operation
-	      string: (OFString*)string;
+- initWithConnection: (nullable XMPPConnection *)connection
+	   operation: (OFString *)operation
+	      string: (OFString *)string;
 @end
 
 /**
@@ -180,7 +191,7 @@
 }
 
 /// \brief The reason the authentication failed
-@property (readonly, copy) OFString *reason;
+@property (readonly, nonatomic) OFString *reason;
 
 /**
  * \brief Creates a new XMPPAuthFailedException.
@@ -189,8 +200,10 @@
  * \param reason The reason the authentication failed
  * \return A new XMPPAuthFailedException
  */
-+ (instancetype)exceptionWithConnection: (XMPPConnection*)connection
-				 reason: (OFString*)reason;
++ (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
+				 reason: (OFString *)reason;
+
+- initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPAuthFailedException.
@@ -199,6 +212,8 @@
  * \param reason The reason the authentication failed
  * \return An initialized XMPPAuthFailedException
  */
-- initWithConnection: (XMPPConnection*)connection
-	      reason: (OFString*)reason;
+- initWithConnection: (nullable XMPPConnection *)connection
+	      reason: (OFString *)reason OF_DESIGNATED_INITIALIZER;
 @end
+
+OF_ASSUME_NONNULL_END

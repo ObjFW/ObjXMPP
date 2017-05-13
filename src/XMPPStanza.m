@@ -30,65 +30,85 @@
 #import "namespaces.h"
 
 @implementation XMPPStanza
-+ (instancetype)stanzaWithName: (OFString*)name
+@synthesize from = _from, to = _to, type = _type, ID = _ID;
+@synthesize language = _language;
+
++ (instancetype)stanzaWithName: (OFString *)name
 {
 	return [[[self alloc] initWithName: name] autorelease];
 }
 
-+ (instancetype)stanzaWithName: (OFString*)name
-			  type: (OFString*)type
++ (instancetype)stanzaWithName: (OFString *)name
+			  type: (OFString *)type
 {
 	return [[[self alloc] initWithName: name
 				      type: type] autorelease];
 }
 
-+ (instancetype)stanzaWithName: (OFString*)name
-			    ID: (OFString*)ID
++ (instancetype)stanzaWithName: (OFString *)name
+			    ID: (OFString *)ID
 {
 	return [[[self alloc] initWithName: name
 					ID: ID] autorelease];
 }
 
-+ (instancetype)stanzaWithName: (OFString*)name
-			  type: (OFString*)type
-			    ID: (OFString*)ID
++ (instancetype)stanzaWithName: (OFString *)name
+			  type: (OFString *)type
+			    ID: (OFString *)ID
 {
 	return [[[self alloc] initWithName: name
 				      type: type
 					ID: ID] autorelease];
 }
 
-+ (instancetype)stanzaWithElement: (OFXMLElement*)element
++ (instancetype)stanzaWithElement: (OFXMLElement *)element
 {
 	return [[[self alloc] initWithElement: element] autorelease];
 }
 
-- initWithName: (OFString*)name
+- initWithName: (OFString *)name
+     namespace: (nullable OFString *)namespace
+   stringValue: (nullable OFString *)stringValue
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- initWithXMLString: (OFString *)string
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- initWithFile: (OFString *)path
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- initWithName: (OFString *)name
 {
 	return [self initWithName: name
 			     type: nil
 			       ID: nil];
 }
 
-- initWithName: (OFString*)name
-	  type: (OFString*)type
+- initWithName: (OFString *)name
+	  type: (OFString *)type
 {
 	return [self initWithName: name
 			     type: type
 			       ID: nil];
 }
 
-- initWithName: (OFString*)name
-	    ID: (OFString*)ID
+- initWithName: (OFString *)name
+	    ID: (OFString *)ID
 {
 	return [self initWithName: name
 			     type: nil
 			       ID: ID];
 }
 
-- initWithName: (OFString*)name
-	  type: (OFString*)type
-	    ID: (OFString*)ID
+- initWithName: (OFString *)name
+	  type: (OFString *)type
+	    ID: (OFString *)ID
 {
 	self = [super initWithName: name
 			 namespace: XMPP_NS_CLIENT];
@@ -115,7 +135,7 @@
 	return self;
 }
 
-- initWithElement: (OFXMLElement*)element
+- initWithElement: (OFXMLElement *)element
 {
 	self = [super initWithElement: element];
 
@@ -153,7 +173,7 @@
 	[super dealloc];
 }
 
-- (void)setFrom: (XMPPJID*)from
+- (void)setFrom: (XMPPJID *)from
 {
 	XMPPJID *old = _from;
 	_from = [from copy];
@@ -166,12 +186,7 @@
 			       stringValue: [from fullJID]];
 }
 
-- (XMPPJID*)from
-{
-	return [[_from copy] autorelease];
-}
-
-- (void)setTo: (XMPPJID*)to
+- (void)setTo: (XMPPJID *)to
 {
 	XMPPJID *old = _to;
 	_to = [to copy];
@@ -184,12 +199,7 @@
 			       stringValue: [to fullJID]];
 }
 
-- (XMPPJID*)to
-{
-	return [[_to copy] autorelease];
-}
-
-- (void)setType: (OFString*)type
+- (void)setType: (OFString *)type
 {
 	OFString *old = _type;
 	_type = [type copy];
@@ -202,12 +212,7 @@
 			       stringValue: type];
 }
 
-- (OFString*)type
-{
-	return [[_type copy] autorelease];
-}
-
-- (void)setID: (OFString*)ID
+- (void)setID: (OFString *)ID
 {
 	OFString *old = _ID;
 	_ID = [ID copy];
@@ -220,12 +225,7 @@
 			       stringValue: ID];
 }
 
-- (OFString*)ID
-{
-	return [[_ID copy] autorelease];
-}
-
-- (void)setLanguage: (OFString*)language
+- (void)setLanguage: (OFString *)language
 {
 	OFString *old = _language;
 	_language = [language copy];
@@ -239,10 +239,5 @@
 				 namespace: @"http://www.w3.org/XML/1998/"
 					    @"namespace"
 			       stringValue: language];
-}
-
-- (OFString*)language
-{
-	return [[_language copy] autorelease];
 }
 @end

@@ -66,7 +66,7 @@
 	return new;
 }
 
-- (OFString*)description
+- (OFString *)description
 {
 	return [OFString stringWithFormat: @"<XMPPRosterItem, JID=%@, name=%@, "
 					   @"subscription=%@, groups=%@>",

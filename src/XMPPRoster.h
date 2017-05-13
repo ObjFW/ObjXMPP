@@ -26,6 +26,8 @@
 #import "XMPPConnection.h"
 #import "XMPPStorage.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class XMPPRosterItem;
 @class XMPPIQ;
 @class XMPPRoster;
@@ -36,9 +38,6 @@
  *	  of a XMPPRoster
  */
 @protocol XMPPRosterDelegate
-#ifndef XMPP_ROSTER_M
-    <OFObject>
-#endif
 @optional
 /**
  * \brief This callback is called after the roster was received (as a result of
@@ -46,7 +45,7 @@
  *
  * \param roster The roster that was received
  */
-- (void)rosterWasReceived: (XMPPRoster*)roster;
+- (void)rosterWasReceived: (XMPPRoster *)roster;
 
 /**
  * \brief This callback is called whenever a roster push was received.
@@ -54,8 +53,8 @@
  * \param roster The roster that was updated by the roster push
  * \param rosterItem The roster item received in the push
  */
--         (void)roster: (XMPPRoster*)roster
-  didReceiveRosterItem: (XMPPRosterItem*)rosterItem;
+-         (void)roster: (XMPPRoster *)roster
+  didReceiveRosterItem: (XMPPRosterItem *)rosterItem;
 @end
 
 /**
@@ -80,22 +79,25 @@
  *
  * Inherited from the connection if not overridden.
  */
-@property (assign) id <XMPPStorage> dataStorage;
+@property (nonatomic, assign) id <XMPPStorage> dataStorage;
 
 /**
  * \brief The list of contacts as an OFDictionary with the bare JID as a string
  *	  as key.
  */
-@property (readonly, copy) OFDictionary *rosterItems;
+@property (readonly, nonatomic)
+    OFDictionary OF_GENERIC(OFString *, XMPPRosterItem *) *rosterItems;
+
+- init OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPRoster.
  *
- * \param connection The connection roster related stanzas
- *	  are send and received over
+ * \param connection The connection roster related stanzas are send and
+ *		     received over
  * \return An initialized XMPPRoster
  */
-- initWithConnection: (XMPPConnection*)connection;
+- initWithConnection: (XMPPConnection *)connection OF_DESIGNATED_INITIALIZER;
 
 /**
  * \brief Requests the roster from the server.
@@ -107,21 +109,21 @@
  *
  * \param rosterItem The roster item to add to the roster
  */
-- (void)addRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)addRosterItem: (XMPPRosterItem *)rosterItem;
 
 /**
  * \brief Updates an already existing contact in the roster.
  *
  * \param rosterItem The roster item to update
  */
-- (void)updateRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)updateRosterItem: (XMPPRosterItem *)rosterItem;
 
 /**
  * \brief Delete a contact from the roster.
  *
  * \param rosterItem The roster item to delete
  */
-- (void)deleteRosterItem: (XMPPRosterItem*)rosterItem;
+- (void)deleteRosterItem: (XMPPRosterItem *)rosterItem;
 
 /**
  * \brief Adds the specified delegate.
@@ -136,12 +138,6 @@
  * \param delegate The delegate to remove
  */
 - (void)removeDelegate: (id <XMPPRosterDelegate>)delegate;
-
-- (void)XMPP_updateRosterItem: (XMPPRosterItem*)rosterItem;
-- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection*)connection
-					   IQ: (XMPPIQ*)iq;
-- (XMPPRosterItem*)XMPP_rosterItemWithXMLElement: (OFXMLElement*)element;
 @end
 
-@interface OFObject (XMPPRosterDelegate) <XMPPRosterDelegate>
-@end
+OF_ASSUME_NONNULL_END

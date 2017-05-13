@@ -23,6 +23,8 @@
 
 #import "XMPPStanza.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A class describing an IQ stanza.
  */
@@ -34,8 +36,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPIQ
  */
-+ (instancetype)IQWithType: (OFString*)type
-			ID: (OFString*)ID;
++ (instancetype)IQWithType: (OFString *)type
+			ID: (OFString *)ID;
 
 /**
  * \brief Initializes an already allocated XMPPIQ with the specified type and
@@ -45,15 +47,15 @@
  * \param ID The value for the stanza's id attribute
  * \return An initialized XMPPIQ
  */
-- initWithType: (OFString*)type
-	    ID: (OFString*)ID;
+- initWithType: (OFString *)type
+	    ID: (OFString *)ID;
 
 /**
  * \brief Generates a result IQ for the receiving object.
  *
  * \return A new autoreleased XMPPIQ
  */
-- (XMPPIQ*)resultIQ;
+- (XMPPIQ *)resultIQ;
 
 /**
  * \brief Generates an error IQ for the receiving object.
@@ -63,9 +65,9 @@
  * \param text A descriptive text
  * \return A new autoreleased XMPPIQ
  */
-- (XMPPIQ*)errorIQWithType: (OFString*)type
-		 condition: (OFString*)condition
-		      text: (OFString*)text;
+- (XMPPIQ *)errorIQWithType: (OFString *)type
+		  condition: (OFString *)condition
+		       text: (nullable OFString *)text;
 
 /**
  * \brief Generates an error IQ for the receiving object.
@@ -74,6 +76,8 @@
  * \param condition A defined conditions from RFC 6120
  * \return A new autoreleased XMPPIQ
  */
-- (XMPPIQ*)errorIQWithType: (OFString*)type
-		 condition: (OFString*)condition;
+- (XMPPIQ *)errorIQWithType: (OFString *)type
+		  condition: (OFString *)condition;
 @end
+
+OF_ASSUME_NONNULL_END

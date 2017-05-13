@@ -40,17 +40,10 @@
 @implementation XMPPFileStorage
 - init
 {
-	@try {
-		[self doesNotRecognizeSelector: _cmd];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	abort();
+	OF_INVALID_INIT_METHOD
 }
 
-- initWithFile: (OFString*)file
+- initWithFile: (OFString *)file
 {
 	self = [super init];
 
@@ -88,7 +81,7 @@
 }
 
 - (void)XMPP_setObject: (id)object
-	       forPath: (OFString*)path
+	       forPath: (OFString *)path
 {
 	OFArray *pathComponents = [path componentsSeparatedByString: @"."];
 	OFMutableDictionary *iter = _data;
@@ -118,21 +111,18 @@
 		[iter removeObjectForKey: [pathComponents lastObject]];
 }
 
-- (id)XMPP_objectForPath: (OFString*)path
+- (id)XMPP_objectForPath: (OFString *)path
 {
-	OFArray *pathComponents = [path componentsSeparatedByString: @"."];
-	OFEnumerator *enumerator = [pathComponents objectEnumerator];
-	OFString *component;
 	id object = _data;
 
-	while ((component = [enumerator nextObject]) != nil)
+	for (OFString *component in [path componentsSeparatedByString: @"."])
 		object = [object objectForKey: component];
 
 	return object;
 }
 
-- (void)setStringValue: (OFString*)string
-	       forPath: (OFString*)path
+- (void)setStringValue: (OFString *)string
+	       forPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
@@ -142,7 +132,7 @@
 	[pool release];
 }
 
-- (OFString*)stringValueForPath: (OFString*)path
+- (OFString *)stringValueForPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFString *string;
@@ -155,7 +145,7 @@
 }
 
 - (void)setBooleanValue: (bool)boolean
-		forPath: (OFString*)path
+		forPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
@@ -165,7 +155,7 @@
 	[pool release];
 }
 
-- (bool)booleanValueForPath: (OFString*)path
+- (bool)booleanValueForPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	bool boolean;
@@ -178,7 +168,7 @@
 }
 
 - (void)setIntegerValue: (intmax_t)integer
-		forPath: (OFString*)path
+		forPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
@@ -188,7 +178,7 @@
 	[pool release];
 }
 
-- (intmax_t)integerValueForPath: (OFString*)path
+- (intmax_t)integerValueForPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	intmax_t integer;
@@ -200,8 +190,8 @@
 	return integer;
 }
 
-- (void)setArray: (OFArray*)array
-	 forPath: (OFString*)path
+- (void)setArray: (OFArray *)array
+	 forPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
@@ -211,7 +201,7 @@
 	[pool release];
 }
 
-- (OFArray*)arrayForPath: (OFString*)path
+- (OFArray *)arrayForPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFArray *array;
@@ -223,8 +213,8 @@
 	return array;
 }
 
-- (void)setDictionary: (OFDictionary*)dictionary
-	      forPath: (OFString*)path
+- (void)setDictionary: (OFDictionary *)dictionary
+	      forPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 
@@ -234,7 +224,7 @@
 	[pool release];
 }
 
-- (OFDictionary*)dictionaryForPath: (OFString*)path
+- (OFDictionary *)dictionaryForPath: (OFString *)path
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	OFDictionary *dictionary;

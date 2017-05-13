@@ -34,18 +34,18 @@
 	return [[[self alloc] init] autorelease];
 }
 
-+ (instancetype)messageWithID: (OFString*)ID
++ (instancetype)messageWithID: (OFString *)ID
 {
 	return [[[self alloc] initWithID: ID] autorelease];
 }
 
-+ (instancetype)messageWithType: (OFString*)type
++ (instancetype)messageWithType: (OFString *)type
 {
 	return [[[self alloc] initWithType: type] autorelease];
 }
 
-+ (instancetype)messageWithType: (OFString*)type
-	       ID: (OFString*)ID
++ (instancetype)messageWithType: (OFString *)type
+			     ID: (OFString *)ID
 {
 	return [[[self alloc] initWithType: type
 					ID: ID] autorelease];
@@ -57,27 +57,27 @@
 			       ID: nil];
 }
 
-- initWithID: (OFString*)ID
+- initWithID: (OFString *)ID
 {
 	return [self initWithType: nil
 			       ID: ID];
 }
 
-- initWithType: (OFString*)type
+- initWithType: (OFString *)type
 {
 	return [self initWithType: type
 			       ID: nil];
 }
 
-- initWithType: (OFString*)type
-	    ID: (OFString*)ID
+- initWithType: (OFString *)type
+	    ID: (OFString *)ID
 {
 	return [super initWithName: @"message"
 			      type: type
 				ID: ID];
 }
 
-- (void)setBody: (OFString*)body
+- (void)setBody: (OFString *)body
 {
 	OFXMLElement *oldBody = [self elementForName: @"body"
 					   namespace: XMPP_NS_CLIENT];
@@ -91,7 +91,7 @@
 						  stringValue: body]];
 }
 
-- (OFString*)body
+- (OFString *)body
 {
 	return [[self elementForName: @"body"
 			   namespace: XMPP_NS_CLIENT] stringValue];

@@ -23,6 +23,8 @@
 
 #import "XMPPStanza.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A class describing a message stanza.
  */
@@ -43,7 +45,7 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPMessage
  */
-+ (instancetype)messageWithID: (OFString*)ID;
++ (instancetype)messageWithID: (nullable OFString *)ID;
 
 /**
  * \brief Creates a new autoreleased XMPPMessage with the specified type.
@@ -51,7 +53,7 @@
  * \param type The value for the stanza's type attribute
  * \return A new autoreleased XMPPMessage
  */
-+ (instancetype)messageWithType: (OFString*)type;
++ (instancetype)messageWithType: (nullable OFString *)type;
 
 /**
  * \brief Creates a new autoreleased XMPPMessage with the specified type and ID.
@@ -60,8 +62,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPMessage
  */
-+ (instancetype)messageWithType: (OFString*)type
-			     ID: (OFString*)ID;
++ (instancetype)messageWithType: (nullable OFString *)type
+			     ID: (nullable OFString *)ID;
 
 /**
  * \brief Initializes an already allocated XMPPMessage with the specified ID.
@@ -69,7 +71,7 @@
  * \param ID The value for the stanza's id attribute
  * \return A initialized XMPPMessage
  */
-- initWithID: (OFString*)ID;
+- initWithID: (nullable OFString *)ID;
 
 /**
  * \brief Initializes an already allocated XMPPMessage with the specified type.
@@ -77,7 +79,7 @@
  * \param type The value for the stanza's type attribute
  * \return A initialized XMPPMessage
  */
-- initWithType: (OFString*)type;
+- initWithType: (nullable OFString *)type;
 
 /**
  * \brief Initializes an already allocated XMPPMessage with the specified type
@@ -87,6 +89,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A initialized XMPPMessage
  */
-- initWithType: (OFString*)type
-	    ID: (OFString*)ID;
+- initWithType: (nullable OFString *)type
+	    ID: (nullable OFString *)ID OF_DESIGNATED_INITIALIZER;
 @end
+
+OF_ASSUME_NONNULL_END

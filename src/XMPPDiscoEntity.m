@@ -22,6 +22,8 @@
  */
 
 #import "XMPPDiscoEntity.h"
+#import "XMPPDiscoNode.h"
+#import "XMPPDiscoNode+Private.h"
 #import "XMPPDiscoIdentity.h"
 #import "XMPPIQ.h"
 #import "namespaces.h"
@@ -29,29 +31,37 @@
 @implementation XMPPDiscoEntity
 @synthesize discoNodes = _discoNodes, capsNode = _capsNode;
 
-+ (instancetype)discoEntityWithConnection: (XMPPConnection*)connection
++ (instancetype)discoEntityWithConnection: (XMPPConnection *)connection
 {
 	return [[[self alloc] initWithConnection: connection] autorelease];
 }
 
-+ (instancetype)discoEntityWithConnection: (XMPPConnection*)connection
-				 capsNode: (OFString*)capsNode
++ (instancetype)discoEntityWithConnection: (XMPPConnection *)connection
+				 capsNode: (OFString *)capsNode
 {
 	return [[[self alloc] initWithConnection: connection
 					capsNode: capsNode] autorelease];
 }
 
-- initWithConnection: (XMPPConnection*)connection
+- initWithConnection: (XMPPConnection *)connection
 {
 	return [self initWithConnection: connection
 			       capsNode: nil];
 }
 
-- initWithConnection: (XMPPConnection*)connection
-	    capsNode: (OFString*)capsNode
+- initWithJID: (XMPPJID *)JID
+	 node: (nullable OFString *)node
+	 name: (nullable OFString *)name
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- initWithConnection: (XMPPConnection *)connection
+	    capsNode: (OFString *)capsNode
 {
 	self = [super initWithJID: [connection JID]
-			     node: nil];
+			     node: nil
+			     name: nil];
 
 	@try {
 		_discoNodes = [[OFMutableDictionary alloc] init];
@@ -75,13 +85,13 @@
 	[super dealloc];
 }
 
-- (void)addDiscoNode: (XMPPDiscoNode*)node
+- (void)addDiscoNode: (XMPPDiscoNode *)node
 {
 	[_discoNodes setObject: node
 			forKey: [node node]];
 }
 
-- (OFString*)capsHash
+- (OFString *)capsHash
 {
 	OFEnumerator *enumerator;
 	XMPPDiscoIdentity *identity;
@@ -108,14 +118,14 @@
 	return [digest stringByBase64Encoding];
 }
 
-- (void)connection: (XMPPConnection*)connection
-     wasBoundToJID: (XMPPJID*)JID
+- (void)connection: (XMPPConnection *)connection
+     wasBoundToJID: (XMPPJID *)JID
 {
 	_JID = [JID copy];
 }
 
-- (bool)connection: (XMPPConnection*)connection
-      didReceiveIQ: (XMPPIQ*)IQ
+- (bool)connection: (XMPPConnection *)connection
+      didReceiveIQ: (XMPPIQ *)IQ
 {
 	if (![[IQ to] isEqual: _JID])
 		return false;

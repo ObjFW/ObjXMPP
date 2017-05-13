@@ -26,6 +26,8 @@
 #import "XMPPConnection.h"
 #import "XMPPDiscoNode.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class XMPPJID;
 
 /**
@@ -53,6 +55,12 @@
  */
 @property (readonly) OFString *capsNode;
 
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID
+			    node: (nullable OFString *)node OF_UNAVAILABLE;
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID
+			    node: (nullable OFString *)node
+			    name: (nullable OFString *)name OF_UNAVAILABLE;
+
 /**
  * \brief Creates a new autoreleased XMPPDiscoEntity with the specified
  *	  connection.
@@ -60,7 +68,7 @@
  * \param connection The XMPPConnection to serve responses on.
  * \return A new autoreleased XMPPDiscoEntity
  */
-+ (instancetype)discoEntityWithConnection: (XMPPConnection*)connection;
++ (instancetype)discoEntityWithConnection: (XMPPConnection *)connection;
 
 /**
  * \brief Creates a new autoreleased XMPPDiscoEntity with the specified
@@ -70,8 +78,14 @@
  * \param capsNode The node advertised for the entity's capabilites
  * \return A new autoreleased XMPPDiscoEntity
  */
-+ (instancetype)discoEntityWithConnection: (XMPPConnection*)connection
-				 capsNode: (OFString*)capsNode;
++ (instancetype)discoEntityWithConnection: (XMPPConnection *)connection
+				 capsNode: (OFString *)capsNode;
+
+- initWithJID: (XMPPJID *)JID
+	 node: (nullable OFString *)node OF_UNAVAILABLE;
+- initWithJID: (XMPPJID *)JID
+	 node: (nullable OFString *)node
+	 name: (nullable OFString *)name OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoEntity with the specified
@@ -81,7 +95,7 @@
  *	  This must already be bound to a resource)
  * \return An initialized XMPPDiscoEntity
  */
-- initWithConnection: (XMPPConnection*)connection;
+- initWithConnection: (XMPPConnection *)connection;
 
 /**
  * \brief Initializes an already allocated XMPPDiscoEntity with the specified
@@ -92,20 +106,22 @@
  * \param capsNode The node advertised for the entity's capabilites
  * \return An initialized XMPPDiscoEntity
  */
-- initWithConnection: (XMPPConnection*)connection
-	    capsNode: (OFString*)capsNode;
+- initWithConnection: (XMPPConnection *)connection
+	    capsNode: (nullable OFString *)capsNode OF_DESIGNATED_INITIALIZER;
 
 /**
  * \brief Adds a XMPPDiscoNode to provide responses for.
  *
  * \param node The XMPPDiscoNode to provide responses for
  */
-- (void)addDiscoNode: (XMPPDiscoNode*)node;
+- (void)addDiscoNode: (XMPPDiscoNode *)node;
 
 /**
  * \brief Calculates the Entity Capabilities Hash of the entity
  *
  * \return A OFString containing the capabilities hash
  */
-- (OFString*)capsHash;
+- (OFString *)capsHash;
 @end
+
+OF_ASSUME_NONNULL_END

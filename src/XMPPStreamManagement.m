@@ -26,7 +26,12 @@
 #import "namespaces.h"
 
 @implementation XMPPStreamManagement
-- initWithConnection: (XMPPConnection*)connection
+- init
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- initWithConnection: (XMPPConnection *)connection
 {
 	self = [super init];
 
@@ -48,8 +53,8 @@
 	[super dealloc];
 }
 
-- (void)connection: (XMPPConnection*)connection
- didReceiveElement: (OFXMLElement*)element
+- (void)connection: (XMPPConnection *)connection
+ didReceiveElement: (OFXMLElement *)element
 {
 	OFString *elementName = [element name];
 	OFString *elementNS = [element namespace];
@@ -85,14 +90,14 @@
 }
 
 /* TODO: Count outgoing stanzas here and cache them, send own ACK requests
-- (void)connection: (XMPPConnection*)connection
-    didSendElement: (OFXMLElement*)element
+- (void)connection: (XMPPConnection *)connection
+    didSendElement: (OFXMLElement *)element
 {
 }
 */
 
-- (void)connection: (XMPPConnection*)connection
-     wasBoundToJID: (XMPPJID*)JID
+- (void)connection: (XMPPConnection *)connection
+     wasBoundToJID: (XMPPJID *)JID
 {
 	if ([connection supportsStreamManagement])
 		[connection sendStanza:

@@ -23,11 +23,16 @@
 
 #import "XMPPConnection.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 @interface XMPPStreamManagement: OFObject <XMPPConnectionDelegate>
 {
 	XMPPConnection *_connection;
 	uint32_t _receivedCount;
 }
 
-- initWithConnection: (XMPPConnection*)connection;
+- init OF_UNAVAILABLE;
+- initWithConnection: (XMPPConnection *)connection;
 @end
+
+OF_ASSUME_NONNULL_END

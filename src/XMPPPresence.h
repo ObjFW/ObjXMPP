@@ -23,6 +23,8 @@
 
 #import "XMPPStanza.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A class describing a presence stanza.
  */
@@ -33,19 +35,24 @@
 }
 
 /**
+ * The value of the stanza's type attribute.
+ */
+@property OF_NULL_RESETTABLE_PROPERTY (nonatomic, copy) OFString *type;
+
+/**
  * The text content of the status element.
  */
-@property (copy) OFString *status;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *status;
 
 /**
  * The text content of the show element of the presence stanza.
  */
-@property (copy) OFString *show;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *show;
 
 /**
  * The numeric content of the priority element.
  */
-@property (copy) OFNumber *priority;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFNumber *priority;
 
 /**
  * \brief Creates a new autoreleased XMPPPresence.
@@ -60,7 +67,7 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPPresence
  */
-+ (instancetype)presenceWithID: (OFString*)ID;
++ (instancetype)presenceWithID: (nullable OFString *)ID;
 
 /**
  * \brief Creates a new autoreleased XMPPPresence with the specified type.
@@ -68,7 +75,7 @@
  * \param type The value for the stanza's type attribute
  * \return A new autoreleased XMPPPresence
  */
-+ (instancetype)presenceWithType: (OFString*)type;
++ (instancetype)presenceWithType: (nullable OFString *)type;
 
 /**
  * \brief Creates a new autoreleased XMPPPresence with the specified type and
@@ -78,8 +85,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A new autoreleased XMPPPresence
  */
-+ (instancetype)presenceWithType: (OFString*)type
-			      ID: (OFString*)ID;
++ (instancetype)presenceWithType: (nullable OFString *)type
+			      ID: (nullable OFString *)ID;
 
 /**
  * \brief Initializes an already allocated XMPPPresence with the specified ID.
@@ -87,7 +94,7 @@
  * \param ID The value for the stanza's id attribute
  * \return A initialized XMPPPresence
  */
-- initWithID: (OFString*)ID;
+- initWithID: (nullable OFString *)ID;
 
 /**
  * \brief Initializes an already allocated XMPPPresence with the specified type.
@@ -95,7 +102,7 @@
  * \param type The value for the stanza's type attribute
  * \return A initialized XMPPPresence
  */
-- initWithType: (OFString*)type;
+- initWithType: (nullable OFString *)type;
 
 /**
  * \brief Initializes an already allocated XMPPPresence with the specified type
@@ -105,6 +112,8 @@
  * \param ID The value for the stanza's id attribute
  * \return A initialized XMPPPresence
  */
-- initWithType: (OFString*)type
-	    ID: (OFString*)ID;
+- initWithType: (nullable OFString *)type
+	    ID: (nullable OFString *)ID;
 @end
+
+OF_ASSUME_NONNULL_END

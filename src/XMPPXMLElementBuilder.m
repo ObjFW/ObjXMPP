@@ -29,14 +29,14 @@
 #import <ObjFW/OFMalformedXMLException.h>
 
 @implementation XMPPXMLElementBuilder
--		 (void)parser: (OFXMLParser*)parser
-  foundProcessingInstructions: (OFString*)pi
+-		 (void)parser: (OFXMLParser *)parser
+  foundProcessingInstructions: (OFString *)pi
 {
 	@throw [OFMalformedXMLException exception];
 }
 
-- (void)parser: (OFXMLParser*)parser
-  foundComment: (OFString*)comment
+- (void)parser: (OFXMLParser *)parser
+  foundComment: (OFString *)comment
 {
 	@throw [OFMalformedXMLException exception];
 }

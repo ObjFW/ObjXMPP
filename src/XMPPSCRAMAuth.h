@@ -24,6 +24,8 @@
 #import "XMPPAuthenticator.h"
 #import "XMPPConnection.h"
 
+OF_ASSUME_NONNULL_BEGIN
+
 /**
  * \brief A class to authenticate using SCRAM
  */
@@ -49,9 +51,9 @@
  * \param plusAvailable Whether the PLUS variant was offered
  * \return A new autoreleased XMPPSCRAMAuth
  */
-+ (instancetype)SCRAMAuthWithAuthcid: (OFString*)authcid
-			    password: (OFString*)password
-			  connection: (XMPPConnection*)connection
++ (instancetype)SCRAMAuthWithAuthcid: (nullable OFString *)authcid
+			    password: (nullable OFString *)password
+			  connection: (XMPPConnection *)connection
 				hash: (Class)hash
 		       plusAvailable: (bool)plusAvailable;
 
@@ -67,12 +69,18 @@
  * \param plusAvailable Whether the PLUS variant was offered
  * \return A new autoreleased XMPPSCRAMAuth
  */
-+ (instancetype)SCRAMAuthWithAuthzid: (OFString*)authzid
-			     authcid: (OFString*)authcid
-			    password: (OFString*)password
-			  connection: (XMPPConnection*)connection
++ (instancetype)SCRAMAuthWithAuthzid: (nullable OFString *)authzid
+			     authcid: (nullable OFString *)authcid
+			    password: (nullable OFString *)password
+			  connection: (XMPPConnection *)connection
 				hash: (Class)hash
 		       plusAvailable: (bool)plusAvailable;
+
+- initWithAuthcid: (nullable OFString *)authcid
+	 password: (nullable OFString *)password OF_UNAVAILABLE;
+- initWithAuthzid: (nullable OFString *)authzid
+	  authcid: (nullable OFString *)authcid
+	 password: (nullable OFString *)password OF_UNAVAILABLE;
 
 /**
  * \brief Initializes an already allocated XMPPSCRAMAuth with an authcid and
@@ -85,9 +93,9 @@
  * \param plusAvailable Whether the PLUS variant was offered
  * \return A initialized XMPPSCRAMAuth
  */
-- initWithAuthcid: (OFString*)authcid
-	 password: (OFString*)password
-       connection: (XMPPConnection*)connection
+- initWithAuthcid: (nullable OFString *)authcid
+	 password: (nullable OFString *)password
+       connection: (XMPPConnection *)connection
 	     hash: (Class)hash
     plusAvailable: (bool)plusAvailable;
 
@@ -103,21 +111,12 @@
  * \param plusAvailable Whether the PLUS variant was offered
  * \return A initialized XMPPSCRAMAuth
  */
-- initWithAuthzid: (OFString*)authzid
-	  authcid: (OFString*)authcid
-	 password: (OFString*)password
-       connection: (XMPPConnection*)connection
+- initWithAuthzid: (nullable OFString *)authzid
+	  authcid: (nullable OFString *)authcid
+	 password: (nullable OFString *)password
+       connection: (XMPPConnection *)connection
 	     hash: (Class)hash
-    plusAvailable: (bool)plusAvailable;
-
-/// \cond internal
-- (OFString*)XMPP_genNonce;
-- (const uint8_t*)XMPP_HMACWithKey: (OFDataArray*)key
-			data: (OFDataArray*)data;
-- (OFDataArray*)XMPP_hiWithData: (OFDataArray*)str
-			   salt: (OFDataArray*)salt
-		 iterationCount: (intmax_t)i;
-- (OFDataArray*)XMPP_parseServerFirstMessage: (OFDataArray*)data;
-- (OFDataArray*)XMPP_parseServerFinalMessage: (OFDataArray*)data;
-/// \endcond
+    plusAvailable: (bool)plusAvailable OF_DESIGNATED_INITIALIZER;
 @end
+
+OF_ASSUME_NONNULL_END

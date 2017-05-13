@@ -23,6 +23,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class XMPPConnection;
 @class XMPPJID;
 @class XMPPRosterItem;
@@ -40,9 +42,9 @@
 }
 
 /// \brief The XMPPRosterItem corresponding to this contact
-@property (readonly) XMPPRosterItem *rosterItem;
+@property (readonly, nonatomic) XMPPRosterItem *rosterItem;
 /// \brief The XMPPPresences of this contact with the resources as keys
-@property (readonly) OFDictionary *presences;
+@property (readonly, nonatomic) OFDictionary *presences;
 
 /**
  * \brief Sends a message to the contact honoring resource locking
@@ -50,12 +52,8 @@
  * \param message The message to send
  * \param connection The connection to use for sending the message
  */
-- (void)sendMessage: (XMPPMessage*)message
-	 connection: (XMPPConnection*)connection;
-
-- (void)XMPP_setRosterItem: (XMPPRosterItem*)rosterItem;
-- (void)XMPP_setPresence: (XMPPPresence*)presence
-		resource: (OFString*)resource;
-- (void)XMPP_removePresenceForResource: (OFString*)resource;
-- (void)XMPP_setLockedOnJID: (XMPPJID*)JID;
+- (void)sendMessage: (XMPPMessage *)message
+	 connection: (XMPPConnection *)connection;
 @end
+
+OF_ASSUME_NONNULL_END

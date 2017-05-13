@@ -22,6 +22,8 @@
 
 #import <ObjFW/OFObject.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class OFDataArray;
 
 /**
@@ -53,7 +55,7 @@
  * \param object The object to broadcast
  */
 - (bool)broadcastSelector: (SEL)selector
-	       withObject: (id)object;
+	       withObject: (nullable id)object;
 
 /**
  * \brief Broadcasts a selector with two objects to all registered delegates.
@@ -63,6 +65,8 @@
  * \param object2 The second object to broadcast
  */
 - (bool)broadcastSelector: (SEL)selector
-	       withObject: (id)object1
-	       withObject: (id)object2;
+	       withObject: (nullable id)object1
+	       withObject: (nullable id)object2;
 @end
+
+OF_ASSUME_NONNULL_END

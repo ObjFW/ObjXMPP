@@ -30,7 +30,8 @@
 #ifdef OF_HAVE_BLOCKS
 + (instancetype)callbackWithBlock: (xmpp_callback_block_t)block
 {
-	return [[(XMPPCallback*)[self alloc] initWithBlock: block] autorelease];
+	return [[(XMPPCallback *)[self alloc]
+	    initWithBlock: block] autorelease];
 }
 
 - initWithBlock: (xmpp_callback_block_t)block
@@ -76,16 +77,16 @@
 	[super dealloc];
 }
 
-- (void)runWithIQ: (XMPPIQ*)iq
-       connection: (XMPPConnection*)connection
+- (void)runWithIQ: (XMPPIQ *)IQ
+       connection: (XMPPConnection *)connection
 {
 #ifdef OF_HAVE_BLOCKS
 	if (_block != NULL)
-		_block(connection, iq);
+		_block(connection, IQ);
 	else
 #endif
 		[_target performSelector: _selector
 			      withObject: connection
-			      withObject: iq];
+			      withObject: IQ];
 }
 @end

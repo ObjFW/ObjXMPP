@@ -33,14 +33,14 @@
 				     password: nil] autorelease];
 }
 
-+ (instancetype)EXTERNALAuthWithAuthzid: (OFString*)authzid
++ (instancetype)EXTERNALAuthWithAuthzid: (OFString *)authzid
 {
 	return [[[self alloc] initWithAuthzid: authzid
 				      authcid: nil
 				     password: nil] autorelease];
 }
 
-- (OFDataArray*)initialMessage
+- (OFDataArray *)initialMessage
 {
 	OFDataArray *message = [OFDataArray dataArray];
 

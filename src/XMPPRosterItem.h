@@ -23,6 +23,8 @@
 
 #import <ObjFW/ObjFW.h>
 
+OF_ASSUME_NONNULL_BEGIN
+
 @class XMPPJID;
 
 /**
@@ -37,13 +39,13 @@
 }
 
 /// \brief The JID of the roster item
-@property (copy) XMPPJID *JID;
+@property (nonatomic, copy) XMPPJID *JID;
 /// \brief The name of the roster item to show to the user
-@property (copy) OFString *name;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *name;
 /// \brief The subscription for the roster item
-@property (copy) OFString *subscription;
+@property (nonatomic, copy) OFString *subscription;
 /// \brief An array of groups in which the roster item is
-@property (copy) OFArray *groups;
+@property (nonatomic, copy) OFArray OF_GENERIC(OFString *) *groups;
 
 /**
  * \brief Creates a new autoreleased roster item.
@@ -52,3 +54,5 @@
  */
 + (instancetype)rosterItem;
 @end
+
+OF_ASSUME_NONNULL_END
