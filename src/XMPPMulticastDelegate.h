@@ -24,14 +24,14 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-@class OFDataArray;
+@class OFMutableData;
 
 /**
  * \brief A class to provide multiple delegates in a single class
  */
 @interface XMPPMulticastDelegate: OFObject
 {
-	OFDataArray *_delegates;
+	OFMutableData *_delegates;
 }
 
 /**

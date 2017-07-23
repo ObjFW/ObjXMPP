@@ -41,13 +41,13 @@ OF_ASSUME_NONNULL_BEGIN
 
 @interface XMPPSCRAMAuth ()
 - (OFString *)XMPP_genNonce;
-- (const uint8_t *)XMPP_HMACWithKey: (OFDataArray *)key
-			data: (OFDataArray *)data;
-- (OFDataArray *)XMPP_hiWithData: (OFDataArray *)str
-			   salt: (OFDataArray *)salt
-		 iterationCount: (intmax_t)i;
-- (OFDataArray *)XMPP_parseServerFirstMessage: (OFDataArray *)data;
-- (OFDataArray *)XMPP_parseServerFinalMessage: (OFDataArray *)data;
+- (const uint8_t *)XMPP_HMACWithKey: (OFData *)key
+			data: (OFData *)data;
+- (OFData *)XMPP_hiWithData: (OFData *)str
+		       salt: (OFData *)salt
+	     iterationCount: (intmax_t)i;
+- (OFData *)XMPP_parseServerFirstMessage: (OFData *)data;
+- (OFData *)XMPP_parseServerFinalMessage: (OFData *)data;
 @end
 
 OF_ASSUME_NONNULL_END
@@ -158,9 +158,9 @@ OF_ASSUME_NONNULL_END
 	[old release];
 }
 
-- (OFDataArray *)initialMessage
+- (OFData *)initialMessage
 {
-	OFDataArray *ret = [OFDataArray dataArray];
+	OFMutableData *ret = [OFMutableData data];
 
 	/* New authentication attempt, reset status */
 	[_cNonce release];
@@ -171,7 +171,7 @@ OF_ASSUME_NONNULL_END
 	_serverSignature = nil;
 	_authenticated = false;
 
-	if (_authzid)
+	if (_authzid != nil)
 		_GS2Header = [[OFString alloc]
 		    initWithFormat: @"%@,a=%@,",
 				    (_plusAvailable ? @"p=tls-unique" : @"y"),
@@ -192,13 +192,15 @@ OF_ASSUME_NONNULL_END
 	[ret addItems: [_clientFirstMessageBare UTF8String]
 		count: [_clientFirstMessageBare UTF8StringLength]];
 
+	[ret makeImmutable];
+
 	return ret;
 }
 
-- (OFDataArray *)continueWithData: (OFDataArray *)data
+- (OFData *)continueWithData: (OFData *)data
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	OFDataArray *ret;
+	OFData *ret;
 
 	if (!_serverSignature)
 		ret = [self XMPP_parseServerFirstMessage: data];
@@ -211,13 +213,14 @@ OF_ASSUME_NONNULL_END
 	return [ret autorelease];
 }
 
-- (OFDataArray *)XMPP_parseServerFirstMessage: (OFDataArray *)data
+- (OFData *)XMPP_parseServerFirstMessage: (OFData *)data
 {
 	size_t i;
 	const uint8_t *clientKey, *serverKey, *clientSignature;
 	intmax_t iterCount = 0;
 	id <OFCryptoHash> hash;
-	OFDataArray *ret, *authMessage, *tmpArray, *salt = nil, *saltedPassword;
+	OFMutableData *ret, *authMessage, *tmpArray;
+	OFData *salt = nil, *saltedPassword;
 	OFString *tmpString, *sNonce = nil;
 	OFEnumerator *enumerator;
 	OFString *comp;
@@ -228,8 +231,8 @@ OF_ASSUME_NONNULL_END
 	} got = 0;
 
 	hash = [[[_hashType alloc] init] autorelease];
-	ret = [OFDataArray dataArray];
-	authMessage = [OFDataArray dataArray];
+	ret = [OFMutableData data];
+	authMessage = [OFMutableData data];
 
 	OFString *chal = [OFString stringWithUTF8String: [data items]
 						 length: [data count] *
@@ -251,8 +254,7 @@ OF_ASSUME_NONNULL_END
 			sNonce = entry;
 			got |= GOT_SNONCE;
 		} else if ([comp hasPrefix: @"s="]) {
-			salt = [OFDataArray
-			    dataArrayWithBase64EncodedString: entry];
+			salt = [OFData dataWithBase64EncodedString: entry];
 			got |= GOT_SALT;
 		} else if ([comp hasPrefix: @"i="]) {
 			iterCount = [entry decimalValue];
@@ -264,12 +266,11 @@ OF_ASSUME_NONNULL_END
 		@throw [OFInvalidServerReplyException exception];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
-	tmpArray = [OFDataArray dataArray];
+	tmpArray = [OFMutableData data];
 	[tmpArray addItems: [_GS2Header UTF8String]
 		     count: [_GS2Header UTF8StringLength]];
 	if (_plusAvailable && [_connection encrypted]) {
-		OFDataArray *channelBinding =
-		    [((SSLSocket *)[_connection socket])
+		OFData *channelBinding = [((SSLSocket *)[_connection socket])
 		    channelBindingDataWithType: @"tls-unique"];
 		[tmpArray addItems: [channelBinding items]
 			     count: [channelBinding count]];
@@ -291,10 +292,8 @@ OF_ASSUME_NONNULL_END
 	 * IETF RFC 5802:
 	 * SaltedPassword := Hi(Normalize(password), salt, i)
 	 */
-	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItems: [_password UTF8String]
-		     count: [_password UTF8StringLength]];
-
+	tmpArray = [OFMutableData dataWithItems: [_password UTF8String]
+					  count: [_password UTF8StringLength]];
 	saltedPassword = [self XMPP_hiWithData: tmpArray
 					  salt: salt
 				iterationCount: iterCount];
@@ -318,11 +317,9 @@ OF_ASSUME_NONNULL_END
 	 * IETF RFC 5802:
 	 * ClientKey := HMAC(SaltedPassword, "Client Key")
 	 */
-	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItems: "Client Key"
-		     count: 10];
 	clientKey = [self XMPP_HMACWithKey: saltedPassword
-				      data: tmpArray];
+				      data: [OFData dataWithItems: @"Client key"
+							    count: 10]];
 
 	/*
 	 * IETF RFC 5802:
@@ -330,9 +327,8 @@ OF_ASSUME_NONNULL_END
 	 */
 	[hash updateWithBuffer: (void *)clientKey
 			length: [_hashType digestSize]];
-	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItems: [hash digest]
-		     count: [_hashType digestSize]];
+	tmpArray = [OFMutableData dataWithItems: [hash digest]
+					  count: [_hashType digestSize]];
 
 	/*
 	 * IETF RFC 5802:
@@ -345,9 +341,8 @@ OF_ASSUME_NONNULL_END
 	 * IETF RFC 5802:
 	 * ServerKey := HMAC(SaltedPassword, "Server Key")
 	 */
-	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItems: "Server Key"
-		     count: 10];
+	tmpArray = [OFMutableData dataWithItems: "Server Key"
+					  count: 10];
 	serverKey = [self XMPP_HMACWithKey: saltedPassword
 				      data: tmpArray];
 
@@ -355,19 +350,20 @@ OF_ASSUME_NONNULL_END
 	 * IETF RFC 5802:
 	 * ServerSignature := HMAC(ServerKey, AuthMessage)
 	 */
-	tmpArray = [OFDataArray dataArray];
-	[tmpArray addItems: serverKey
-		     count: [_hashType digestSize]];
-	_serverSignature = [[OFDataArray alloc] init];
-	[_serverSignature addItems: [self XMPP_HMACWithKey: tmpArray
-						     data: authMessage]
-			    count: [_hashType digestSize]];
+	tmpArray = [OFMutableData dataWithItems: serverKey
+					  count: [_hashType digestSize]];
+
+	[_serverSignature release];
+	_serverSignature = [[OFMutableData alloc]
+	    initWithItems: [self XMPP_HMACWithKey: tmpArray
+					     data: authMessage]
+		    count: [_hashType digestSize]];
 
 	/*
 	 * IETF RFC 5802:
 	 * ClientProof := ClientKey XOR ClientSignature
 	 */
-	tmpArray = [OFDataArray dataArray];
+	tmpArray = [OFMutableData data];
 	for (i = 0; i < [_hashType digestSize]; i++) {
 		uint8_t c = clientKey[i] ^ clientSignature[i];
 		[tmpArray addItem: &c];
@@ -384,7 +380,7 @@ OF_ASSUME_NONNULL_END
 	return ret;
 }
 
-- (OFDataArray *)XMPP_parseServerFinalMessage: (OFDataArray *)data
+- (OFData *)XMPP_parseServerFinalMessage: (OFData *)data
 {
 	OFString *mess, *value;
 
@@ -396,8 +392,7 @@ OF_ASSUME_NONNULL_END
 		return nil;
 
 	mess = [OFString stringWithUTF8String: [data items]
-				       length: [data count] *
-					       [data itemSize]];
+				       length: [data count] * [data itemSize]];
 	value = [mess substringWithRange: of_range(2, [mess length] - 2)];
 
 	if ([mess hasPrefix: @"v="]) {
@@ -435,11 +430,11 @@ OF_ASSUME_NONNULL_END
 				    length: 64];
 }
 
-- (const uint8_t *)XMPP_HMACWithKey: (OFDataArray *)key
-			       data: (OFDataArray *)data
+- (const uint8_t *)XMPP_HMACWithKey: (OFData *)key
+			       data: (OFData *)data
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
-	OFDataArray *k = [OFDataArray dataArray];
+	OFMutableData *k = [OFMutableData data];
 	size_t i, kSize, blockSize = [_hashType blockSize];
 	uint8_t *kI = NULL, *kO = NULL;
 	id <OFCryptoHash> hashI, hashO;
@@ -490,16 +485,16 @@ OF_ASSUME_NONNULL_END
 	return [[hashO autorelease] digest];
 }
 
-- (OFDataArray *)XMPP_hiWithData: (OFDataArray *)str
-			    salt: (OFDataArray *)salt
-		  iterationCount: (intmax_t)i
+- (OFData *)XMPP_hiWithData: (OFData *)str
+		       salt: (OFData *)salt
+	     iterationCount: (intmax_t)i
 {
 	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
 	size_t digestSize = [_hashType digestSize];
 	uint8_t *result = NULL;
 	const uint8_t *u, *uOld;
 	intmax_t j, k;
-	OFDataArray *salty, *tmp, *ret;
+	OFMutableData *salty, *tmp, *ret;
 
 	result = [self allocMemoryWithSize: digestSize];
 
@@ -517,7 +512,7 @@ OF_ASSUME_NONNULL_END
 			result[j] ^= uOld[j];
 
 		for (j = 0; j < i - 1; j++) {
-			tmp = [[OFDataArray alloc] init];
+			tmp = [[OFMutableData alloc] init];
 			[tmp addItems: uOld
 				count: digestSize];
 
@@ -533,9 +528,8 @@ OF_ASSUME_NONNULL_END
 			uOld = u;
 		}
 
-		ret = [OFDataArray dataArray];
-		[ret addItems: result
-			count: digestSize];
+		ret = [OFMutableData dataWithItems: result
+					     count: digestSize];
 	} @finally {
 		[self freeMemory: result];
 	}

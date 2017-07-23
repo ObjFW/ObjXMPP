@@ -44,13 +44,14 @@
 				     password: password] autorelease];
 }
 
-- (OFDataArray *)initialMessage
+- (OFData *)initialMessage
 {
-	OFDataArray *message = [OFDataArray dataArray];
+	OFMutableData *message = [OFMutableData data];
 
 	/* authzid */
-	if (_authzid)
-		[message addItem: _authzid];
+	if (_authzid != nil)
+		[message addItems: [_authzid UTF8String]
+			    count: [_authzid UTF8StringLength]];
 
 	/* separator */
 	[message addItem: ""];
@@ -65,6 +66,8 @@
 	/* passwd */
 	[message addItems: [_password UTF8String]
 		    count: [_password UTF8StringLength]];
+
+	[message makeImmutable];
 
 	return message;
 }

@@ -895,10 +895,9 @@ OF_ASSUME_NONNULL_END
 {
 	if ([[element name] isEqual: @"challenge"]) {
 		OFXMLElement *responseTag;
-		OFDataArray *challenge = [OFDataArray
-		    dataArrayWithBase64EncodedString: [element stringValue]];
-		OFDataArray *response = [_authModule
-		    continueWithData: challenge];
+		OFData *challenge =
+		    [OFData dataWithBase64EncodedString: [element stringValue]];
+		OFData *response = [_authModule continueWithData: challenge];
 
 		responseTag = [OFXMLElement elementWithName: @"response"
 						  namespace: XMPP_NS_SASL];
@@ -915,8 +914,8 @@ OF_ASSUME_NONNULL_END
 	}
 
 	if ([[element name] isEqual: @"success"]) {
-		[_authModule continueWithData: [OFDataArray
-		    dataArrayWithBase64EncodedString: [element stringValue]]];
+		[_authModule continueWithData: [OFData
+		    dataWithBase64EncodedString: [element stringValue]]];
 
 		[_delegates broadcastSelector: @selector(
 						   connectionWasAuthenticated:)
@@ -1078,7 +1077,7 @@ OF_ASSUME_NONNULL_END
 - (void)XMPP_sendAuth: (OFString *)authName
 {
 	OFXMLElement *authTag;
-	OFDataArray *initialMessage = [_authModule initialMessage];
+	OFData *initialMessage = [_authModule initialMessage];
 
 	authTag = [OFXMLElement elementWithName: @"auth"
 				      namespace: XMPP_NS_SASL];

@@ -35,7 +35,7 @@ OF_ASSUME_NONNULL_BEGIN
 	OFString *_cNonce;
 	OFString *_GS2Header;
 	OFString *_clientFirstMessageBare;
-	OFDataArray *_serverSignature;
+	OFData *_serverSignature;
 	XMPPConnection *_connection;
 	bool _plusAvailable;
 	bool _authenticated;

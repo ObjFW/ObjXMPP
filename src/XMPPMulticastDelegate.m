@@ -25,7 +25,7 @@
 #endif
 
 #import <ObjFW/ObjFW.h>
-#import <ObjFW/OFDataArray.h>
+#import <ObjFW/OFData.h>
 
 #import "XMPPMulticastDelegate.h"
 
@@ -35,7 +35,8 @@
 	self = [super init];
 
 	@try {
-		_delegates = [[OFDataArray alloc] initWithItemSize: sizeof(id)];
+		_delegates = [[OFMutableData alloc]
+		    initWithItemSize: sizeof(id)];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -73,7 +74,8 @@
 - (bool)broadcastSelector: (SEL)selector
 	       withObject: (id)object
 {
-	OFDataArray *currentDelegates = [_delegates copy];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	OFMutableData *currentDelegates = [[_delegates copy] autorelease];
 	id *items = [currentDelegates items];
 	size_t i, count = [currentDelegates count];
 	bool handled = false;
@@ -90,6 +92,8 @@
 		handled |= imp(responder, selector, object);
 	}
 
+	[pool release];
+
 	return handled;
 }
 
@@ -97,7 +101,8 @@
 	       withObject: (id)object1
 	       withObject: (id)object2
 {
-	OFDataArray *currentDelegates = [_delegates copy];
+	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	OFMutableData *currentDelegates = [[_delegates copy] autorelease];
 	id *items = [currentDelegates items];
 	size_t i, count = [currentDelegates count];
 	bool handled = false;
@@ -113,6 +118,8 @@
 
 		handled |= imp(responder, selector, object1, object2);
 	}
+
+	[pool release];
 
 	return handled;
 }

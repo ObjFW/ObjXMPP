@@ -65,12 +65,12 @@
 	[super dealloc];
 }
 
-- (OFDataArray *)initialMessage
+- (OFData *)initialMessage
 {
 	return nil;
 }
 
-- (OFDataArray *)continueWithData: (OFDataArray *)challenge
+- (OFData *)continueWithData: (OFData *)challenge
 {
 	return nil;
 }

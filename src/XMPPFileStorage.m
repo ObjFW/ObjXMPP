@@ -30,7 +30,7 @@
 #import <ObjFW/OFArray.h>
 #import <ObjFW/OFDictionary.h>
 #import <ObjFW/OFNumber.h>
-#import <ObjFW/OFDataArray.h>
+#import <ObjFW/OFData.h>
 #import <ObjFW/OFAutoreleasePool.h>
 
 #import <ObjFW/OFNotImplementedException.h>
@@ -52,8 +52,8 @@
 
 		_file = [file copy];
 		@try {
-			_data = [[[OFDataArray dataArrayWithContentsOfFile:
-			    file] messagePackValue] retain];
+			_data = [[[OFData dataWithContentsOfFile: file]
+			    messagePackValue] retain];
 		} @catch (id e) {
 			_data = [[OFMutableDictionary alloc] init];
 		}

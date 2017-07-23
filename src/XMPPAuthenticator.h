@@ -65,11 +65,11 @@ OF_ASSUME_NONNULL_BEGIN
 	 password: (nullable OFString *)password OF_DESIGNATED_INITIALIZER;
 
 /**
- * \brief Returns an OFDataArray containing the initial authentication message.
+ * \brief Returns OFData containing the initial authentication message.
  *
  * \return An OFDataAray containing the initial authentication message
  */
-- (OFDataArray *)initialMessage;
+- (nullable OFData *)initialMessage;
 
 /**
  * \brief Continue authentication with the specified data.
@@ -77,7 +77,7 @@ OF_ASSUME_NONNULL_BEGIN
  * \param data The continuation data send by the server
  * \return The appropriate response if the data was a challenge, nil otherwise
  */
-- (nullable OFDataArray *)continueWithData: (OFDataArray *)data;
+- (nullable OFData *)continueWithData: (OFData *)data;
 @end
 
 OF_ASSUME_NONNULL_END

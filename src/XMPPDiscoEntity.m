@@ -98,7 +98,7 @@
 	OFString *feature;
 	OFMutableString *caps = [OFMutableString string];
 	OFSHA1Hash *hash = [OFSHA1Hash cryptoHash];
-	OFDataArray *digest = [OFDataArray dataArray];
+	OFData *digest;
 
 	enumerator = [_identities objectEnumerator];
 	while ((identity = [enumerator nextObject]) != nil)
@@ -112,8 +112,8 @@
 	[hash updateWithBuffer: [caps UTF8String]
 			length: [caps UTF8StringLength]];
 
-	[digest addItems: [hash digest]
-		   count: [OFSHA1Hash digestSize]];
+	digest = [OFData dataWithItems: [hash digest]
+				 count: [[hash class] digestSize]];
 
 	return [digest stringByBase64Encoding];
 }
