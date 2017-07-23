@@ -25,69 +25,69 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A class describing a message stanza.
+/*!
+ * @brief A class describing a message stanza.
  */
 @interface XMPPMessage: XMPPStanza
-/** The text content of the body of the message. */
+/*! The text content of the body of the message. */
 @property (copy) OFString *body;
 
-/**
- * \brief Creates a new autoreleased XMPPMessage.
+/*!
+ * @brief Creates a new autoreleased XMPPMessage.
  *
- * \return A new autoreleased XMPPMessage
+ * @return A new autoreleased XMPPMessage
  */
 + (instancetype)message;
 
-/**
- * \brief Creates a new autoreleased XMPPMessage with the specified ID.
+/*!
+ * @brief Creates a new autoreleased XMPPMessage with the specified ID.
  *
- * \param ID The value for the stanza's id attribute
- * \return A new autoreleased XMPPMessage
+ * @param ID The value for the stanza's id attribute
+ * @return A new autoreleased XMPPMessage
  */
 + (instancetype)messageWithID: (nullable OFString *)ID;
 
-/**
- * \brief Creates a new autoreleased XMPPMessage with the specified type.
+/*!
+ * @brief Creates a new autoreleased XMPPMessage with the specified type.
  *
- * \param type The value for the stanza's type attribute
- * \return A new autoreleased XMPPMessage
+ * @param type The value for the stanza's type attribute
+ * @return A new autoreleased XMPPMessage
  */
 + (instancetype)messageWithType: (nullable OFString *)type;
 
-/**
- * \brief Creates a new autoreleased XMPPMessage with the specified type and ID.
+/*!
+ * @brief Creates a new autoreleased XMPPMessage with the specified type and ID.
  *
- * \param type The value for the stanza's type attribute
- * \param ID The value for the stanza's id attribute
- * \return A new autoreleased XMPPMessage
+ * @param type The value for the stanza's type attribute
+ * @param ID The value for the stanza's id attribute
+ * @return A new autoreleased XMPPMessage
  */
 + (instancetype)messageWithType: (nullable OFString *)type
 			     ID: (nullable OFString *)ID;
 
-/**
- * \brief Initializes an already allocated XMPPMessage with the specified ID.
+/*!
+ * @brief Initializes an already allocated XMPPMessage with the specified ID.
  *
- * \param ID The value for the stanza's id attribute
- * \return A initialized XMPPMessage
+ * @param ID The value for the stanza's id attribute
+ * @return A initialized XMPPMessage
  */
 - initWithID: (nullable OFString *)ID;
 
-/**
- * \brief Initializes an already allocated XMPPMessage with the specified type.
+/*!
+ * @brief Initializes an already allocated XMPPMessage with the specified type.
  *
- * \param type The value for the stanza's type attribute
- * \return A initialized XMPPMessage
+ * @param type The value for the stanza's type attribute
+ * @return A initialized XMPPMessage
  */
 - initWithType: (nullable OFString *)type;
 
-/**
- * \brief Initializes an already allocated XMPPMessage with the specified type
+/*!
+ * @brief Initializes an already allocated XMPPMessage with the specified type
  *	  and ID.
  *
- * \param type The value for the stanza's type attribute
- * \param ID The value for the stanza's id attribute
- * \return A initialized XMPPMessage
+ * @param type The value for the stanza's type attribute
+ * @param ID The value for the stanza's id attribute
+ * @return A initialized XMPPMessage
  */
 - initWithType: (nullable OFString *)type
 	    ID: (nullable OFString *)ID OF_DESIGNATED_INITIALIZER;

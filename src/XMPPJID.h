@@ -25,55 +25,63 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A class for easy handling of JIDs.
+/*!
+ * @brief A class for easy handling of JIDs.
  */
 @interface XMPPJID: OFObject <OFCopying>
 {
 	OFString *_node, *_domain, *_resource;
 }
 
-/// \brief The JID's localpart
+/*!
+ * The JID's localpart.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *node;
-/// \brief The JID's domainpart
+
+/*!
+ * The JID's domainpart.
+ */
 @property (nonatomic, copy) OFString *domain;
-/// \brief The JID's resourcepart
+
+/*!
+ * The JID's resourcepart.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *resource;
 
-/**
- * \brief Creates a new autoreleased XMPPJID.
+/*!
+ * @brief Creates a new autoreleased XMPPJID.
  *
- * \return A new autoreleased XMPPJID
+ * @return A new autoreleased XMPPJID
  */
 + (instancetype)JID;
 
-/**
- * \brief Creates a new autoreleased XMPPJID from a string.
+/*!
+ * @brief Creates a new autoreleased XMPPJID from a string.
  *
- * \param string The string to parse into a JID object
- * \return A new autoreleased XMPPJID
+ * @param string The string to parse into a JID object
+ * @return A new autoreleased XMPPJID
  */
 + (instancetype)JIDWithString: (OFString *)string;
 
-/**
- * \brief Initializes an already allocated XMPPJID with a string.
+/*!
+ * @brief Initializes an already allocated XMPPJID with a string.
  *
- * \param string The string to parse into a JID object
- * \return A initialized XMPPJID
+ * @param string The string to parse into a JID object
+ * @return A initialized XMPPJID
  */
 - initWithString: (OFString *)string;
 
-/**
- * \brief Returns the bare JID.
+/*!
+ * @brief Returns the bare JID.
  *
- * \return An OFString containing the bare JID
+ * @return An OFString containing the bare JID
  */
 - (OFString *)bareJID;
 
-/**
- * \brief Returns the full JID.
+/*!
+ * @brief Returns the full JID.
  *
- * \return An OFString containing the full JID
+ * @return An OFString containing the full JID
  */
 - (OFString *)fullJID;
 @end

@@ -27,8 +27,8 @@ OF_ASSUME_NONNULL_BEGIN
 
 @class XMPPJID;
 
-/**
- * \brief A class for representing an item in the roster.
+/*!
+ * @brief A class for representing an item in the roster.
  */
 @interface XMPPRosterItem: OFObject
 {
@@ -38,19 +38,30 @@ OF_ASSUME_NONNULL_BEGIN
 	OFArray *_groups;
 }
 
-/// \brief The JID of the roster item
+/*!
+ * The JID of the roster item.
+ */
 @property (nonatomic, copy) XMPPJID *JID;
-/// \brief The name of the roster item to show to the user
+
+/*!
+ * The name of the roster item to show to the user.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *name;
-/// \brief The subscription for the roster item
+
+/*!
+ * The subscription for the roster item.
+ */
 @property (nonatomic, copy) OFString *subscription;
-/// \brief An array of groups in which the roster item is
+
+/*!
+ * An array of groups in which the roster item is.
+ */
 @property (nonatomic, copy) OFArray OF_GENERIC(OFString *) *groups;
 
-/**
- * \brief Creates a new autoreleased roster item.
+/*!
+ * @brief Creates a new autoreleased roster item.
  *
- * \return A new autoreleased roster item.
+ * @return A new autoreleased roster item.
  */
 + (instancetype)rosterItem;
 @end

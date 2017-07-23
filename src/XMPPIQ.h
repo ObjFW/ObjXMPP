@@ -25,56 +25,56 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A class describing an IQ stanza.
+/*!
+ * @brief A class describing an IQ stanza.
  */
 @interface XMPPIQ: XMPPStanza
-/**
- * \brief Creates a new XMPPIQ with the specified type and ID.
+/*!
+ * @brief Creates a new XMPPIQ with the specified type and ID.
  *
- * \param type The value for the stanza's type attribute
- * \param ID The value for the stanza's id attribute
- * \return A new autoreleased XMPPIQ
+ * @param type The value for the stanza's type attribute
+ * @param ID The value for the stanza's id attribute
+ * @return A new autoreleased XMPPIQ
  */
 + (instancetype)IQWithType: (OFString *)type
 			ID: (OFString *)ID;
 
-/**
- * \brief Initializes an already allocated XMPPIQ with the specified type and
+/*!
+ * @brief Initializes an already allocated XMPPIQ with the specified type and
  *	  ID.
  *
- * \param type The value for the stanza's type attribute
- * \param ID The value for the stanza's id attribute
- * \return An initialized XMPPIQ
+ * @param type The value for the stanza's type attribute
+ * @param ID The value for the stanza's id attribute
+ * @return An initialized XMPPIQ
  */
 - initWithType: (OFString *)type
 	    ID: (OFString *)ID;
 
-/**
- * \brief Generates a result IQ for the receiving object.
+/*!
+ * @brief Generates a result IQ for the receiving object.
  *
- * \return A new autoreleased XMPPIQ
+ * @return A new autoreleased XMPPIQ
  */
 - (XMPPIQ *)resultIQ;
 
-/**
- * \brief Generates an error IQ for the receiving object.
+/*!
+ * @brief Generates an error IQ for the receiving object.
  *
- * \param type An error type as defined by RFC 6120
- * \param condition An error condition as defined by RFC 6120
- * \param text A descriptive text
- * \return A new autoreleased XMPPIQ
+ * @param type An error type as defined by RFC 6120
+ * @param condition An error condition as defined by RFC 6120
+ * @param text A descriptive text
+ * @return A new autoreleased XMPPIQ
  */
 - (XMPPIQ *)errorIQWithType: (OFString *)type
 		  condition: (OFString *)condition
 		       text: (nullable OFString *)text;
 
-/**
- * \brief Generates an error IQ for the receiving object.
+/*!
+ * @brief Generates an error IQ for the receiving object.
  *
- * \param type An error type as defined by RFC 6120
- * \param condition A defined conditions from RFC 6120
- * \return A new autoreleased XMPPIQ
+ * @param type An error type as defined by RFC 6120
+ * @param condition A defined conditions from RFC 6120
+ * @return A new autoreleased XMPPIQ
  */
 - (XMPPIQ *)errorIQWithType: (OFString *)type
 		  condition: (OFString *)condition;

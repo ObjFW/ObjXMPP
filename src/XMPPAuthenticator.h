@@ -25,57 +25,65 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A base class for classes implementing authentication mechanisms
+/*!
+ * @brief A base class for classes implementing authentication mechanisms
  */
 @interface XMPPAuthenticator: OFObject
 {
 	OFString *_authzid, *_authcid, *_password;
 }
 
-/// \brief The authzid to get authorization for
+/*!
+ * The authzid to get authorization for.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *authzid;
-/// \brief The authcid to authenticate with
+
+/*!
+ * The authcid to authenticate with.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *authcid;
-/// \brief The password to authenticate with
+
+/*!
+ * The password to authenticate with.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *password;
 
-/**
- * \brief Initializes an already allocated XMPPAuthenticator with an authcid
+/*!
+ * @brief Initializes an already allocated XMPPAuthenticator with an authcid
  *	  and password.
  *
- * \param authcid The authcid to authenticate with
- * \param password The password to authenticate with
- * \return A initialized XMPPAuthenticator
+ * @param authcid The authcid to authenticate with
+ * @param password The password to authenticate with
+ * @return A initialized XMPPAuthenticator
  */
 - initWithAuthcid: (nullable OFString *)authcid
 	 password: (nullable OFString *)password;
 
-/**
- * \brief Initializes an already allocated XMPPSCRAMAuthenticator with an
+/*!
+ * @brief Initializes an already allocated XMPPSCRAMAuthenticator with an
  *	  authzid, authcid and password.
  *
- * \param authzid The authzid to get authorization for
- * \param authcid The authcid to authenticate with
- * \param password The password to authenticate with
- * \return A initialized XMPPAuthenticator
+ * @param authzid The authzid to get authorization for
+ * @param authcid The authcid to authenticate with
+ * @param password The password to authenticate with
+ * @return A initialized XMPPAuthenticator
  */
 - initWithAuthzid: (nullable OFString *)authzid
 	  authcid: (nullable OFString *)authcid
 	 password: (nullable OFString *)password OF_DESIGNATED_INITIALIZER;
 
-/**
- * \brief Returns OFData containing the initial authentication message.
+/*!
+ * @brief Returns OFData containing the initial authentication message.
  *
- * \return An OFDataAray containing the initial authentication message
+ * @return An OFDataAray containing the initial authentication message
  */
 - (nullable OFData *)initialMessage;
 
-/**
- * \brief Continue authentication with the specified data.
+/*!
+ * @brief Continue authentication with the specified data.
  *
- * \param data The continuation data send by the server
- * \return The appropriate response if the data was a challenge, nil otherwise
+ * @param data The continuation data send by the server
+ * @return The appropriate response if the data was a challenge, nil otherwise
  */
 - (nullable OFData *)continueWithData: (OFData *)data;
 @end

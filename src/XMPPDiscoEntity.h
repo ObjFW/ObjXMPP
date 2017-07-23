@@ -30,8 +30,8 @@ OF_ASSUME_NONNULL_BEGIN
 
 @class XMPPJID;
 
-/**
- * \brief A class representing an entity responding to Service Discovery
+/*!
+ * @brief A class representing an entity responding to Service Discovery
  *	  queries
  */
 @interface XMPPDiscoEntity: XMPPDiscoNode <XMPPConnectionDelegate>
@@ -41,8 +41,8 @@ OF_ASSUME_NONNULL_BEGIN
 	OFString *_capsNode;
 }
 
-/**
- * \brief The XMPPDiscoNodes this entity provides Services Discovery
+/*!
+ * @brief The XMPPDiscoNodes this entity provides Services Discovery
  *	  responses for
  *
  * This usually contains at least all immediate child nodes, but may contain
@@ -50,7 +50,7 @@ OF_ASSUME_NONNULL_BEGIN
  */
 @property (readonly) OFDictionary *discoNodes;
 
-/**
+/*!
  * The node advertised for the entity's capabilites.
  */
 @property (readonly) OFString *capsNode;
@@ -61,22 +61,22 @@ OF_ASSUME_NONNULL_BEGIN
 			    node: (nullable OFString *)node
 			    name: (nullable OFString *)name OF_UNAVAILABLE;
 
-/**
- * \brief Creates a new autoreleased XMPPDiscoEntity with the specified
+/*!
+ * @brief Creates a new autoreleased XMPPDiscoEntity with the specified
  *	  connection.
  *
- * \param connection The XMPPConnection to serve responses on.
- * \return A new autoreleased XMPPDiscoEntity
+ * @param connection The XMPPConnection to serve responses on.
+ * @return A new autoreleased XMPPDiscoEntity
  */
 + (instancetype)discoEntityWithConnection: (XMPPConnection *)connection;
 
-/**
- * \brief Creates a new autoreleased XMPPDiscoEntity with the specified
+/*!
+ * @brief Creates a new autoreleased XMPPDiscoEntity with the specified
  *	  connection.
  *
- * \param connection The XMPPConnection to serve responses on.
- * \param capsNode The node advertised for the entity's capabilites
- * \return A new autoreleased XMPPDiscoEntity
+ * @param connection The XMPPConnection to serve responses on.
+ * @param capsNode The node advertised for the entity's capabilites
+ * @return A new autoreleased XMPPDiscoEntity
  */
 + (instancetype)discoEntityWithConnection: (XMPPConnection *)connection
 				 capsNode: (OFString *)capsNode;
@@ -87,39 +87,39 @@ OF_ASSUME_NONNULL_BEGIN
 	 node: (nullable OFString *)node
 	 name: (nullable OFString *)name OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPDiscoEntity with the specified
+/*!
+ * @brief Initializes an already allocated XMPPDiscoEntity with the specified
  *	  connection.
  *
- * \param connection The XMPPConnection to serve responses on.
+ * @param connection The XMPPConnection to serve responses on.
  *	  This must already be bound to a resource)
- * \return An initialized XMPPDiscoEntity
+ * @return An initialized XMPPDiscoEntity
  */
 - initWithConnection: (XMPPConnection *)connection;
 
-/**
- * \brief Initializes an already allocated XMPPDiscoEntity with the specified
+/*!
+ * @brief Initializes an already allocated XMPPDiscoEntity with the specified
  *	  connection.
  *
- * \param connection The XMPPConnection to serve responses on.
+ * @param connection The XMPPConnection to serve responses on.
  *	  This must already be bound to a resource)
- * \param capsNode The node advertised for the entity's capabilites
- * \return An initialized XMPPDiscoEntity
+ * @param capsNode The node advertised for the entity's capabilites
+ * @return An initialized XMPPDiscoEntity
  */
 - initWithConnection: (XMPPConnection *)connection
 	    capsNode: (nullable OFString *)capsNode OF_DESIGNATED_INITIALIZER;
 
-/**
- * \brief Adds a XMPPDiscoNode to provide responses for.
+/*!
+ * @brief Adds a XMPPDiscoNode to provide responses for.
  *
- * \param node The XMPPDiscoNode to provide responses for
+ * @param node The XMPPDiscoNode to provide responses for
  */
 - (void)addDiscoNode: (XMPPDiscoNode *)node;
 
-/**
- * \brief Calculates the Entity Capabilities Hash of the entity
+/*!
+ * @brief Calculates the Entity Capabilities Hash of the entity
  *
- * \return A OFString containing the capabilities hash
+ * @return A OFString containing the capabilities hash
  */
 - (OFString *)capsHash;
 @end

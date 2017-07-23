@@ -33,32 +33,32 @@ OF_ASSUME_NONNULL_BEGIN
 @class XMPPRoster;
 @class XMPPMulticastDelegate;
 
-/**
- * \brief A protocol that should be (partially) implemented by delegates
+/*!
+ * @brief A protocol that should be (partially) implemented by delegates
  *	  of a XMPPRoster
  */
 @protocol XMPPRosterDelegate
 @optional
-/**
- * \brief This callback is called after the roster was received (as a result of
+/*!
+ * @brief This callback is called after the roster was received (as a result of
  *	  calling -requestRoster).
  *
- * \param roster The roster that was received
+ * @param roster The roster that was received
  */
 - (void)rosterWasReceived: (XMPPRoster *)roster;
 
-/**
- * \brief This callback is called whenever a roster push was received.
+/*!
+ * @brief This callback is called whenever a roster push was received.
  *
- * \param roster The roster that was updated by the roster push
- * \param rosterItem The roster item received in the push
+ * @param roster The roster that was updated by the roster push
+ * @param rosterItem The roster item received in the push
  */
 -         (void)roster: (XMPPRoster *)roster
   didReceiveRosterItem: (XMPPRosterItem *)rosterItem;
 @end
 
-/**
- * \brief A class implementing roster related functionality.
+/*!
+ * @brief A class implementing roster related functionality.
  */
 @interface XMPPRoster: OFObject <XMPPConnectionDelegate>
 {
@@ -69,20 +69,20 @@ OF_ASSUME_NONNULL_BEGIN
 	bool _rosterRequested;
 }
 
-/**
- * \brief The connection to which the roster belongs
+/*!
+ * @brief The connection to which the roster belongs
  */
 @property (readonly, assign) XMPPConnection *connection;
 
-/**
- * \brief An object for data storage, conforming to the XMPPStorage protocol.
+/*!
+ * @brief An object for data storage, conforming to the XMPPStorage protocol.
  *
  * Inherited from the connection if not overridden.
  */
 @property (nonatomic, assign) id <XMPPStorage> dataStorage;
 
-/**
- * \brief The list of contacts as an OFDictionary with the bare JID as a string
+/*!
+ * @brief The list of contacts as an OFDictionary with the bare JID as a string
  *	  as key.
  */
 @property (readonly, nonatomic)
@@ -90,52 +90,52 @@ OF_ASSUME_NONNULL_BEGIN
 
 - init OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPRoster.
+/*!
+ * @brief Initializes an already allocated XMPPRoster.
  *
- * \param connection The connection roster related stanzas are send and
+ * @param connection The connection roster related stanzas are send and
  *		     received over
- * \return An initialized XMPPRoster
+ * @return An initialized XMPPRoster
  */
 - initWithConnection: (XMPPConnection *)connection OF_DESIGNATED_INITIALIZER;
 
-/**
- * \brief Requests the roster from the server.
+/*!
+ * @brief Requests the roster from the server.
  */
 - (void)requestRoster;
 
-/**
- * \brief Adds a new contact to the roster.
+/*!
+ * @brief Adds a new contact to the roster.
  *
- * \param rosterItem The roster item to add to the roster
+ * @param rosterItem The roster item to add to the roster
  */
 - (void)addRosterItem: (XMPPRosterItem *)rosterItem;
 
-/**
- * \brief Updates an already existing contact in the roster.
+/*!
+ * @brief Updates an already existing contact in the roster.
  *
- * \param rosterItem The roster item to update
+ * @param rosterItem The roster item to update
  */
 - (void)updateRosterItem: (XMPPRosterItem *)rosterItem;
 
-/**
- * \brief Delete a contact from the roster.
+/*!
+ * @brief Delete a contact from the roster.
  *
- * \param rosterItem The roster item to delete
+ * @param rosterItem The roster item to delete
  */
 - (void)deleteRosterItem: (XMPPRosterItem *)rosterItem;
 
-/**
- * \brief Adds the specified delegate.
+/*!
+ * @brief Adds the specified delegate.
  *
- * \param delegate The delegate to add
+ * @param delegate The delegate to add
  */
 - (void)addDelegate: (id <XMPPRosterDelegate>)delegate;
 
-/**
- * \brief Removes the specified delegate.
+/*!
+ * @brief Removes the specified delegate.
  *
- * \param delegate The delegate to remove
+ * @param delegate The delegate to remove
  */
 - (void)removeDelegate: (id <XMPPRosterDelegate>)delegate;
 @end

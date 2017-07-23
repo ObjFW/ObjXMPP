@@ -26,43 +26,43 @@ OF_ASSUME_NONNULL_BEGIN
 
 @class OFMutableData;
 
-/**
- * \brief A class to provide multiple delegates in a single class
+/*!
+ * @brief A class to provide multiple delegates in a single class
  */
 @interface XMPPMulticastDelegate: OFObject
 {
 	OFMutableData *_delegates;
 }
 
-/**
- * \brief Adds a delegate which should receive the broadcasts.
+/*!
+ * @brief Adds a delegate which should receive the broadcasts.
  *
- * \param delegate The delegate to add
+ * @param delegate The delegate to add
  */
 - (void)addDelegate: (id)delegate;
 
-/**
- * \brief Removes a delegate so it does not receive the broadcasts anymore.
+/*!
+ * @brief Removes a delegate so it does not receive the broadcasts anymore.
  *
- * \param delegate The delegate to remove
+ * @param delegate The delegate to remove
  */
 - (void)removeDelegate: (id)delegate;
 
-/**
- * \brief Broadcasts a selector with an object to all registered delegates.
+/*!
+ * @brief Broadcasts a selector with an object to all registered delegates.
  *
- * \param selector The selector to broadcast
- * \param object The object to broadcast
+ * @param selector The selector to broadcast
+ * @param object The object to broadcast
  */
 - (bool)broadcastSelector: (SEL)selector
 	       withObject: (nullable id)object;
 
-/**
- * \brief Broadcasts a selector with two objects to all registered delegates.
+/*!
+ * @brief Broadcasts a selector with two objects to all registered delegates.
  *
- * \param selector The selector to broadcast
- * \param object1 The first object to broadcast
- * \param object2 The second object to broadcast
+ * @param selector The selector to broadcast
+ * @param object1 The first object to broadcast
+ * @param object2 The second object to broadcast
  */
 - (bool)broadcastSelector: (SEL)selector
 	       withObject: (nullable id)object1

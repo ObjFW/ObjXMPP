@@ -33,71 +33,71 @@ OF_ASSUME_NONNULL_BEGIN
 @class XMPPMulticastDelegate;
 @class XMPPPresence;
 
-/**
- * \brief A protocol that should be (partially) implemented by delegates
+/*!
+ * @brief A protocol that should be (partially) implemented by delegates
  *	  of a XMPPContactManager
  */
 @protocol XMPPContactManagerDelegate <OFObject>
 @optional
-/**
- * \brief This callback is called whenever a new contact enters the users roster
+/*!
+ * @brief This callback is called whenever a new contact enters the users roster
  *
- * \param manager The contact manager that added the contact
- * \param contact The contact that was added
+ * @param manager The contact manager that added the contact
+ * @param contact The contact that was added
  */
 - (void)contactManager: (XMPPContactManager *)manager
 	 didAddContact: (XMPPContact *)contact;
 
-/**
- * \brief This callback is called whenever a contact is no longer present in
+/*!
+ * @brief This callback is called whenever a contact is no longer present in
  *	  the users roster
  *
- * \param manager The contact manager that removed the contact
- * \param contact The contact that was removed
+ * @param manager The contact manager that removed the contact
+ * @param contact The contact that was removed
  */
 - (void)contactManager: (XMPPContactManager *)manager
       didRemoveContact: (XMPPContact *)contact;
 
-/**
- * \brief This callback is called when a subscription request is received
+/*!
+ * @brief This callback is called when a subscription request is received
  *
- * \param manager The contact manager that received the request
- * \param presence The type=subscribe presence
+ * @param manager The contact manager that received the request
+ * @param presence The type=subscribe presence
  */
 -          (void)contactManager: (XMPPContactManager *)manager
   didReceiveSubscriptionRequest: (XMPPPresence *)presence;
 
-/**
- * \brief This callback is called whenever a contact is about to change its
+/*!
+ * @brief This callback is called whenever a contact is about to change its
  *	  roster item
  *
- * \param contact The contact about to updated its roster item
- * \param rosterItem The roster item the contact is going to update with
+ * @param contact The contact about to updated its roster item
+ * @param rosterItem The roster item the contact is going to update with
  */
 -	     (void)contact: (XMPPContact *)contact
   willUpdateWithRosterItem: (XMPPRosterItem *)rosterItem;
 
-/**
- * \brief This callback is called whenever a contact send a presence stanza
+/*!
+ * @brief This callback is called whenever a contact send a presence stanza
  *
- * \param contact The contact that send the presence
- * \param presence The presence which was send by the contact
+ * @param contact The contact that send the presence
+ * @param presence The presence which was send by the contact
  */
 -   (void)contact: (XMPPContact *)contact
   didSendPresence: (XMPPPresence *)presence;
 
-/**
- * \brief This callback is called whenever a contact send a message stanza
+/*!
+ * @brief This callback is called whenever a contact send a message stanza
  *
- * \param contact The contact that send the message
- * \param message The message which was send by the contact
+ * @param contact The contact that send the message
+ * @param message The message which was send by the contact
  */
 -  (void)contact: (XMPPContact *)contact
   didSendMessage: (XMPPMessage *)message;
 @end
 
-/**
- * \brief A class tracking a XMPPContact instance for each contact in the roster
+/*!
+ * @brief A class tracking a XMPPContact instance for each contact in the roster
  *
  * This class delegates to a XMPPConnection and a XMPPRoster, thereby tracking
  * each contacts presences and the current XMPPRosterItem.
@@ -111,7 +111,9 @@ OF_ASSUME_NONNULL_BEGIN
 	XMPPMulticastDelegate *_delegates;
 }
 
-/// \brief The tracked contacts, with their bare JID as key
+/*!
+ * The tracked contacts, with their bare JID as key.
+ */
 @property (readonly, nonatomic)
     OFDictionary OF_GENERIC(OFString *, XMPPContact *) *contacts;
 
@@ -128,17 +130,17 @@ OF_ASSUME_NONNULL_BEGIN
 - (void)sendSubscribedToJID: (XMPPJID *)subscriber;
 - (void)sendUnsubscribedToJID: (XMPPJID *)subscriber;
 
-/**
- * \brief Adds the specified delegate.
+/*!
+ * @brief Adds the specified delegate.
  *
- * \param delegate The delegate to add
+ * @param delegate The delegate to add
  */
 - (void)addDelegate: (id <XMPPContactManagerDelegate>)delegate;
 
-/**
- * \brief Removes the specified delegate.
+/*!
+ * @brief Removes the specified delegate.
  *
- * \param delegate The delegate to remove
+ * @param delegate The delegate to remove
  */
 - (void)removeDelegate: (id <XMPPContactManagerDelegate>)delegate;
 @end

@@ -27,8 +27,8 @@ OF_ASSUME_NONNULL_BEGIN
 
 @class XMPPJID;
 
-/**
- * \brief A class describing an XMPP Stanza.
+/*!
+ * @brief A class describing an XMPP Stanza.
  */
 @interface XMPPStanza: OFXMLElement
 {
@@ -36,64 +36,78 @@ OF_ASSUME_NONNULL_BEGIN
 	OFString *_type, *_ID, *_language;
 }
 
-/// \brief The value of the stanza's from attribute
+/*!
+ * The value of the stanza's from attribute.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) XMPPJID *from;
-/// \brief The value of the stanza's to attribute
+
+/*!
+ * The value of the stanza's to attribute.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) XMPPJID *to;
-/// \brief The value of the stanza's type attribute
+
+/*!
+ * The value of the stanza's type attribute.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *type;
-/// \brief The value of the stanza's id attribute
+
+/*!
+ * The value of the stanza's id attribute.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *ID;
-/// \brief The stanza's xml:lang
+
+/*!
+ * The stanza's xml:lang.
+ */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *language;
 
-/**
- * \brief Creates a new autoreleased XMPPStanza with the specified name.
+/*!
+ * @brief Creates a new autoreleased XMPPStanza with the specified name.
  *
- * \param name The stanza's name (one of iq, message or presence)
- * \return A new autoreleased XMPPStanza
+ * @param name The stanza's name (one of iq, message or presence)
+ * @return A new autoreleased XMPPStanza
  */
 + (instancetype)stanzaWithName: (OFString *)name;
 
-/**
- * \brief Creates a new autoreleased XMPPStanza with the specified name and
+/*!
+ * @brief Creates a new autoreleased XMPPStanza with the specified name and
  *	  type.
  *
- * \param name The stanza's name (one of iq, message or presence)
- * \param type The value for the stanza's type attribute
- * \return A new autoreleased XMPPStanza
+ * @param name The stanza's name (one of iq, message or presence)
+ * @param type The value for the stanza's type attribute
+ * @return A new autoreleased XMPPStanza
  */
 + (instancetype)stanzaWithName: (OFString *)name
 			  type: (nullable OFString *)type;
 
-/**
- * \brief Creates a new autoreleased XMPPStanza with the specified name and ID.
+/*!
+ * @brief Creates a new autoreleased XMPPStanza with the specified name and ID.
  *
- * \param name The stanza's name (one of iq, message or presence)
- * \param ID The value for the stanza's id attribute
- * \return A new autoreleased XMPPStanza
+ * @param name The stanza's name (one of iq, message or presence)
+ * @param ID The value for the stanza's id attribute
+ * @return A new autoreleased XMPPStanza
  */
 + (instancetype)stanzaWithName: (OFString *)name
 			    ID: (nullable OFString *)ID;
 
-/**
- * \brief Creates a new autoreleased XMPPStanza with the specified name, type
+/*!
+ * @brief Creates a new autoreleased XMPPStanza with the specified name, type
  *	  and ID.
  *
- * \param name The stanza's name (one of iq, message or presence)
- * \param type The value for the stanza's type attribute
- * \param ID The value for the stanza's id attribute
- * \return A new autoreleased XMPPStanza
+ * @param name The stanza's name (one of iq, message or presence)
+ * @param type The value for the stanza's type attribute
+ * @param ID The value for the stanza's id attribute
+ * @return A new autoreleased XMPPStanza
  */
 + (instancetype)stanzaWithName: (OFString *)name
 			  type: (nullable OFString *)type
 			    ID: (nullable OFString *)ID;
 
-/**
- * \brief Creates a new autoreleased XMPPStanza from an OFXMLElement.
+/*!
+ * @brief Creates a new autoreleased XMPPStanza from an OFXMLElement.
  *
- * \param element The element to base the XMPPStanza on
- * \return A new autoreleased XMPPStanza
+ * @param element The element to base the XMPPStanza on
+ * @return A new autoreleased XMPPStanza
  */
 + (instancetype)stanzaWithElement: (OFXMLElement *)element;
 
@@ -107,54 +121,54 @@ OF_ASSUME_NONNULL_BEGIN
 - initWithXMLString: (OFString *)string OF_UNAVAILABLE;
 - initWithFile: (OFString *)path OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPStanza with the specified name.
+/*!
+ * @brief Initializes an already allocated XMPPStanza with the specified name.
  *
- * \param name The stanza's name (one of iq, message or presence)
- * \return A initialized XMPPStanza
+ * @param name The stanza's name (one of iq, message or presence)
+ * @return A initialized XMPPStanza
  */
 - initWithName: (OFString *)name;
 
-/**
- * \brief Initializes an already allocated XMPPStanza with the specified name
+/*!
+ * @brief Initializes an already allocated XMPPStanza with the specified name
  *	  and type.
  *
- * \param name The stanza's name (one of iq, message or presence)
- * \param type The value for the stanza's type attribute
- * \return A initialized XMPPStanza
+ * @param name The stanza's name (one of iq, message or presence)
+ * @param type The value for the stanza's type attribute
+ * @return A initialized XMPPStanza
  */
 - initWithName: (OFString *)name
 	  type: (nullable OFString *)type;
 
-/**
- * \brief Initializes an already allocated XMPPStanza with the specified name
+/*!
+ * @brief Initializes an already allocated XMPPStanza with the specified name
  *	  and ID.
  *
- * \param name The stanza's name (one of iq, message or presence)
- * \param ID The value for the stanza's id attribute
- * \return A initialized XMPPStanza
+ * @param name The stanza's name (one of iq, message or presence)
+ * @param ID The value for the stanza's id attribute
+ * @return A initialized XMPPStanza
  */
 - initWithName: (OFString *)name
 	    ID: (nullable OFString *)ID;
 
-/**
- * \brief Initializes an already allocated XMPPStanza with the specified name,
+/*!
+ * @brief Initializes an already allocated XMPPStanza with the specified name,
  *	  type and ID.
  *
- * \param name The stanza's name (one of iq, message or presence)
- * \param type The value for the stanza's type attribute
- * \param ID The value for the stanza's id attribute
- * \return A initialized XMPPStanza
+ * @param name The stanza's name (one of iq, message or presence)
+ * @param type The value for the stanza's type attribute
+ * @param ID The value for the stanza's id attribute
+ * @return A initialized XMPPStanza
  */
 - initWithName: (OFString *)name
 	  type: (nullable OFString *)type
 	    ID: (nullable OFString *)ID;
 
-/**
- * \brief Initializes an already allocated XMPPStanza based on a OFXMLElement.
+/*!
+ * @brief Initializes an already allocated XMPPStanza based on a OFXMLElement.
  *
- * \param element The element to base the XMPPStanza on
- * \return A initialized XMPPStanza
+ * @param element The element to base the XMPPStanza on
+ * @return A initialized XMPPStanza
  */
 - initWithElement: (OFXMLElement *)element;
 @end

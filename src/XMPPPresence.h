@@ -25,8 +25,8 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A class describing a presence stanza.
+/*!
+ * @brief A class describing a presence stanza.
  */
 @interface XMPPPresence: XMPPStanza <OFComparing>
 {
@@ -34,83 +34,83 @@ OF_ASSUME_NONNULL_BEGIN
 	OFNumber *_priority;
 }
 
-/**
+/*!
  * The value of the stanza's type attribute.
  */
 @property OF_NULL_RESETTABLE_PROPERTY (nonatomic, copy) OFString *type;
 
-/**
+/*!
  * The text content of the status element.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *status;
 
-/**
+/*!
  * The text content of the show element of the presence stanza.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *show;
 
-/**
+/*!
  * The numeric content of the priority element.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFNumber *priority;
 
-/**
- * \brief Creates a new autoreleased XMPPPresence.
+/*!
+ * @brief Creates a new autoreleased XMPPPresence.
  *
- * \return A new autoreleased XMPPPresence
+ * @return A new autoreleased XMPPPresence
  */
 + (instancetype)presence;
 
-/**
- * \brief Creates a new autoreleased XMPPPresence with the specified ID.
+/*!
+ * @brief Creates a new autoreleased XMPPPresence with the specified ID.
  *
- * \param ID The value for the stanza's id attribute
- * \return A new autoreleased XMPPPresence
+ * @param ID The value for the stanza's id attribute
+ * @return A new autoreleased XMPPPresence
  */
 + (instancetype)presenceWithID: (nullable OFString *)ID;
 
-/**
- * \brief Creates a new autoreleased XMPPPresence with the specified type.
+/*!
+ * @brief Creates a new autoreleased XMPPPresence with the specified type.
  *
- * \param type The value for the stanza's type attribute
- * \return A new autoreleased XMPPPresence
+ * @param type The value for the stanza's type attribute
+ * @return A new autoreleased XMPPPresence
  */
 + (instancetype)presenceWithType: (nullable OFString *)type;
 
-/**
- * \brief Creates a new autoreleased XMPPPresence with the specified type and
+/*!
+ * @brief Creates a new autoreleased XMPPPresence with the specified type and
  *	  ID.
  *
- * \param type The value for the stanza's type attribute
- * \param ID The value for the stanza's id attribute
- * \return A new autoreleased XMPPPresence
+ * @param type The value for the stanza's type attribute
+ * @param ID The value for the stanza's id attribute
+ * @return A new autoreleased XMPPPresence
  */
 + (instancetype)presenceWithType: (nullable OFString *)type
 			      ID: (nullable OFString *)ID;
 
-/**
- * \brief Initializes an already allocated XMPPPresence with the specified ID.
+/*!
+ * @brief Initializes an already allocated XMPPPresence with the specified ID.
  *
- * \param ID The value for the stanza's id attribute
- * \return A initialized XMPPPresence
+ * @param ID The value for the stanza's id attribute
+ * @return A initialized XMPPPresence
  */
 - initWithID: (nullable OFString *)ID;
 
-/**
- * \brief Initializes an already allocated XMPPPresence with the specified type.
+/*!
+ * @brief Initializes an already allocated XMPPPresence with the specified type.
  *
- * \param type The value for the stanza's type attribute
- * \return A initialized XMPPPresence
+ * @param type The value for the stanza's type attribute
+ * @return A initialized XMPPPresence
  */
 - initWithType: (nullable OFString *)type;
 
-/**
- * \brief Initializes an already allocated XMPPPresence with the specified type
+/*!
+ * @brief Initializes an already allocated XMPPPresence with the specified type
  *	  and ID.
  *
- * \param type The value for the stanza's type attribute
- * \param ID The value for the stanza's id attribute
- * \return A initialized XMPPPresence
+ * @param type The value for the stanza's type attribute
+ * @param ID The value for the stanza's id attribute
+ * @return A initialized XMPPPresence
  */
 - initWithType: (nullable OFString *)type
 	    ID: (nullable OFString *)ID;

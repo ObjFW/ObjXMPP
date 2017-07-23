@@ -25,28 +25,28 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A class to authenticate using SASL PLAIN
+/*!
+ * @brief A class to authenticate using SASL PLAIN
  */
 @interface XMPPPLAINAuth: XMPPAuthenticator
-/**
- * \brief Creates a new autoreleased XMPPPLAINAuth with an authcid and password.
+/*!
+ * @brief Creates a new autoreleased XMPPPLAINAuth with an authcid and password.
  *
- * \param authcid The authcid to authenticate with
- * \param password The password to authenticate with
- * \return A new autoreleased XMPPPLAINAuth
+ * @param authcid The authcid to authenticate with
+ * @param password The password to authenticate with
+ * @return A new autoreleased XMPPPLAINAuth
  */
 + (instancetype)PLAINAuthWithAuthcid: (nullable OFString *)authcid
 			    password: (nullable OFString *)password;
 
-/**
- * \brief Creates a new autoreleased XMPPPLAINAuth with an authzid, authcid and
+/*!
+ * @brief Creates a new autoreleased XMPPPLAINAuth with an authzid, authcid and
  *	  password.
  *
- * \param authzid The authzid to get authorization for
- * \param authcid The authcid to authenticate with
- * \param password The password to authenticate with
- * \return A new autoreleased XMPPPLAINAuth
+ * @param authzid The authzid to get authorization for
+ * @param authcid The authcid to authenticate with
+ * @param password The password to authenticate with
+ * @return A new autoreleased XMPPPLAINAuth
  */
 + (instancetype)PLAINAuthWithAuthzid: (nullable OFString *)authzid
 			     authcid: (nullable OFString *)authcid

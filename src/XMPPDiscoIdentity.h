@@ -25,67 +25,75 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A class describing a Service Discovery Identity
+/*!
+ * @brief A class describing a Service Discovery Identity
  */
 @interface XMPPDiscoIdentity: OFObject <OFComparing>
 {
 	OFString *_category, *_name, *_type;
 }
 
-/// \brief The category of the identity
+/*!
+ * The category of the identity.
+ */
 @property (readonly, nonatomic) OFString *category;
-/// \brief The name of the identity, might be unset
+
+/*!
+ * The name of the identity, might be unset.
+ */
 @property (readonly, nonatomic) OFString *name;
-/// \brief The type of the identity
+
+/*!
+ * The type of the identity.
+ */
 @property (readonly, nonatomic) OFString *type;
 
-/**
- * \brief Creates a new autoreleased XMPPDiscoIdentity with the specified
+/*!
+ * @brief Creates a new autoreleased XMPPDiscoIdentity with the specified
  *	  category, type and name.
  *
- * \param category The category of the identity
- * \param type The type of the identity
- * \param name The name of the identity
- * \return A new autoreleased XMPPDiscoIdentity
+ * @param category The category of the identity
+ * @param type The type of the identity
+ * @param name The name of the identity
+ * @return A new autoreleased XMPPDiscoIdentity
  */
 + (instancetype)identityWithCategory: (OFString *)category
 				type: (OFString *)type
 				name: (nullable OFString *)name;
 
-/**
- * \brief Creates a new autoreleased XMPPDiscoIdentity with the specified
+/*!
+ * @brief Creates a new autoreleased XMPPDiscoIdentity with the specified
  *	  category and type.
  *
- * \param category The category of the identity
- * \param type The type of the identity
- * \return A new autoreleased XMPPDiscoIdentity
+ * @param category The category of the identity
+ * @param type The type of the identity
+ * @return A new autoreleased XMPPDiscoIdentity
  */
 + (instancetype)identityWithCategory: (OFString *)category
 				type: (OFString *)type;
 
 - init OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPDiscoIdentity with the specified
+/*!
+ * @brief Initializes an already allocated XMPPDiscoIdentity with the specified
  *	  category, type and name.
  *
- * \param category The category of the identity
- * \param type The type of the identity
- * \param name The name of the identity
- * \return An initialized XMPPDiscoIdentity
+ * @param category The category of the identity
+ * @param type The type of the identity
+ * @param name The name of the identity
+ * @return An initialized XMPPDiscoIdentity
  */
 - initWithCategory: (OFString *)category
 	      type: (OFString *)type
 	      name: (nullable OFString *)name OF_DESIGNATED_INITIALIZER;
 
-/**
- * \brief Initializes an already allocated XMPPDiscoIdentity with the specified
+/*!
+ * @brief Initializes an already allocated XMPPDiscoIdentity with the specified
  *	  category and type.
  *
- * \param category The category of the identity
- * \param type The type of the identity
- * \return An initialized XMPPDiscoIdentity
+ * @param category The category of the identity
+ * @param type The type of the identity
+ * @return An initialized XMPPDiscoIdentity
  */
 - initWithCategory: (OFString *)category
 	      type: (OFString *)type;

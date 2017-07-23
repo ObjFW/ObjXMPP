@@ -28,59 +28,66 @@ OF_ASSUME_NONNULL_BEGIN
 @class XMPPConnection;
 @class XMPPAuthenticator;
 
-/**
- * \brief A base class for XMPP related exceptions
+/*!
+ * @brief A base class for XMPP related exceptions
  */
 @interface XMPPException: OFException
 {
 	XMPPConnection *_connection;
 }
 
-/// \brief The connection the exception relates to
+/*!
+ * The connection the exception relates to.
+ */
 @property OF_NULLABLE_PROPERTY (readonly, nonatomic) XMPPConnection *connection;
 
-/**
- * \brief Creates a new XMPPException.
+/*!
+ * @brief Creates a new XMPPException.
  *
- * \param connection The connection that received the data responsible
+ * @param connection The connection that received the data responsible
  *	  for this exception
- * \return A new XMPPException
+ * @return A new XMPPException
  */
 + (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection;
 
 - init OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPException.
+/*!
+ * @brief Initializes an already allocated XMPPException.
  *
- * \param connection The connection that received the data responsible
+ * @param connection The connection that received the data responsible
  *	  for this exception
- * \return An initialized XMPPException
+ * @return An initialized XMPPException
  */
 - initWithConnection: (nullable XMPPConnection *)connection
     OF_DESIGNATED_INITIALIZER;
 @end
 
-/**
- * \brief An exception indicating a stream error was received
+/*!
+ * @brief An exception indicating a stream error was received
  */
 @interface XMPPStreamErrorException: XMPPException
 {
 	OFString *_condition, *_reason;
 }
 
-/// \brief The defined error condition specified by the stream error
+/*!
+ * @brief The defined error condition specified by the stream error.
+ */
 @property (readonly, nonatomic) OFString *condition;
-/// \brief The descriptive free-form text specified by the stream error
+
+/*!
+ * @brief The descriptive free-form text specified by the stream error.
+ */
 @property (readonly, nonatomic) OFString *reason;
 
-/**
- * \brief Creates a new XMPPStreamErrorException.
+/*!
+ * @brief Creates a new XMPPStreamErrorException.
  *
- * \param connection The connection that received the stream error
- * \param condition The defined error condition specified by the stream error
- * \param reason The descriptive free-form text specified by the stream error
- * \return A new XMPPStreamErrorException
+ * @param connection The connection that received the stream error
+ * @param condition The defined error condition specified by the stream error
+ * @param reason The descriptive free-form text specified by the stream error
+ * @return A new XMPPStreamErrorException
  */
 + (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
 			      condition: (OFString *)condition
@@ -88,21 +95,21 @@ OF_ASSUME_NONNULL_BEGIN
 
 - initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPStreamErrorException.
+/*!
+ * @brief Initializes an already allocated XMPPStreamErrorException.
  *
- * \param connection The connection that received the stream error
- * \param condition The defined error condition specified by the stream error
- * \param reason The descriptive free-form text specified by the stream error
- * \return An initialized XMPPStreamErrorException
+ * @param connection The connection that received the stream error
+ * @param condition The defined error condition specified by the stream error
+ * @param reason The descriptive free-form text specified by the stream error
+ * @return An initialized XMPPStreamErrorException
  */
 - initWithConnection: (nullable XMPPConnection *)connection
 	   condition: (OFString *)condition
 	      reason: (OFString *)reason OF_DESIGNATED_INITIALIZER;
 @end
 
-/**
- * \brief An exception indicating a stringprep profile
+/*!
+ * @brief An exception indicating a stringprep profile
  *	  did not apply to a string
  */
 @interface XMPPStringPrepFailedException: XMPPException
@@ -110,18 +117,23 @@ OF_ASSUME_NONNULL_BEGIN
 	OFString *_profile, *_string;
 }
 
-/// \brief The name of the stringprep profile that did not apply
+/*!
+ * @brief The name of the stringprep profile that did not apply.
+ */
 @property (readonly, nonatomic) OFString *profile;
-/// \brief The string that failed the stringprep profile
+
+/*!
+ * @brief The string that failed the stringprep profile.
+ */
 @property (readonly, nonatomic) OFString *string;
 
-/**
- * \brief Creates a new XMPPStringPrepFailedException.
+/*!
+ * @brief Creates a new XMPPStringPrepFailedException.
  *
- * \param connection The connection the string relates to
- * \param profile The name of the stringprep profile that did not apply
- * \param string The string that failed the stringprep profile
- * \return A new XMPPStringPrepFailedException
+ * @param connection The connection the string relates to
+ * @param profile The name of the stringprep profile that did not apply
+ * @param string The string that failed the stringprep profile
+ * @return A new XMPPStringPrepFailedException
  */
 + (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
 				profile: (OFString *)profile
@@ -129,39 +141,44 @@ OF_ASSUME_NONNULL_BEGIN
 
 - initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPStringPrepFailedException.
+/*!
+ * @brief Initializes an already allocated XMPPStringPrepFailedException.
  *
- * \param connection The connection the string relates to
- * \param profile The name of the stringprep profile that did not apply
- * \param string The string that failed the stringprep profile
- * \return An initialized XMPPStringPrepFailedException
+ * @param connection The connection the string relates to
+ * @param profile The name of the stringprep profile that did not apply
+ * @param string The string that failed the stringprep profile
+ * @return An initialized XMPPStringPrepFailedException
  */
 - initWithConnection: (nullable XMPPConnection *)connection
 	     profile: (OFString *)profile
 	      string: (OFString *)string OF_DESIGNATED_INITIALIZER;
 @end
 
-/**
- * \brief An exception indicating IDNA translation of a string failed
+/*!
+ * @brief An exception indicating IDNA translation of a string failed
  */
 @interface XMPPIDNATranslationFailedException: XMPPException
 {
 	OFString *_operation, *_string;
 }
 
-/// \brief The IDNA translation operation which failed
+/*!
+ * @brief The IDNA translation operation which failed.
+ */
 @property (readonly, nonatomic) OFString *operation;
-/// \brief The string that could not be translated
+
+/*!
+ * @brief The string that could not be translated.
+ */
 @property (readonly, nonatomic) OFString *string;
 
-/**
- * \brief Creates a new XMPPIDNATranslationFailedException.
+/*!
+ * @brief Creates a new XMPPIDNATranslationFailedException.
  *
- * \param connection The connection the string relates to
- * \param operation The name of the stringprep profile that did not apply
- * \param string The string that could not be translated
- * \return A new XMPPIDNATranslationFailedException
+ * @param connection The connection the string relates to
+ * @param operation The name of the stringprep profile that did not apply
+ * @param string The string that could not be translated
+ * @return A new XMPPIDNATranslationFailedException
  */
 + (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
 			      operation: (OFString *)operation
@@ -169,48 +186,50 @@ OF_ASSUME_NONNULL_BEGIN
 
 - initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPIDNATranslationFailedException.
+/*!
+ * @brief Initializes an already allocated XMPPIDNATranslationFailedException.
  *
- * \param connection The connection the string relates to
- * \param operation The name of the stringprep profile that did not apply
- * \param string The string that could not be translated
- * \return An initialized XMPPIDNATranslationFailedException
+ * @param connection The connection the string relates to
+ * @param operation The name of the stringprep profile that did not apply
+ * @param string The string that could not be translated
+ * @return An initialized XMPPIDNATranslationFailedException
  */
 - initWithConnection: (nullable XMPPConnection *)connection
 	   operation: (OFString *)operation
 	      string: (OFString *)string;
 @end
 
-/**
- * \brief An exception indicating authentication failed
+/*!
+ * @brief An exception indicating authentication failed
  */
 @interface XMPPAuthFailedException: XMPPException
 {
 	OFString *_reason;
 }
 
-/// \brief The reason the authentication failed
+/*!
+ * The reason the authentication failed.
+ */
 @property (readonly, nonatomic) OFString *reason;
 
-/**
- * \brief Creates a new XMPPAuthFailedException.
+/*!
+ * @brief Creates a new XMPPAuthFailedException.
  *
- * \param connection The connection that could not be authenticated
- * \param reason The reason the authentication failed
- * \return A new XMPPAuthFailedException
+ * @param connection The connection that could not be authenticated
+ * @param reason The reason the authentication failed
+ * @return A new XMPPAuthFailedException
  */
 + (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
 				 reason: (OFString *)reason;
 
 - initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPAuthFailedException.
+/*!
+ * @brief Initializes an already allocated XMPPAuthFailedException.
  *
- * \param connection The connection that could not be authenticated
- * \param reason The reason the authentication failed
- * \return An initialized XMPPAuthFailedException
+ * @param connection The connection that could not be authenticated
+ * @param reason The reason the authentication failed
+ * @return An initialized XMPPAuthFailedException
  */
 - initWithConnection: (nullable XMPPConnection *)connection
 	      reason: (OFString *)reason OF_DESIGNATED_INITIALIZER;

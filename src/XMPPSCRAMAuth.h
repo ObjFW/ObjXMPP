@@ -26,8 +26,8 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A class to authenticate using SCRAM
+/*!
+ * @brief A class to authenticate using SCRAM
  */
 @interface XMPPSCRAMAuth: XMPPAuthenticator
 {
@@ -41,15 +41,15 @@ OF_ASSUME_NONNULL_BEGIN
 	bool _authenticated;
 }
 
-/**
- * \brief Creates a new autoreleased XMPPSCRAMAuth with an authcid and password.
+/*!
+ * @brief Creates a new autoreleased XMPPSCRAMAuth with an authcid and password.
  *
- * \param authcid The authcid to authenticate with
- * \param password The password to authenticate with
- * \param connection The connection over which authentication is done
- * \param hash The class to use for calulating hashes
- * \param plusAvailable Whether the PLUS variant was offered
- * \return A new autoreleased XMPPSCRAMAuth
+ * @param authcid The authcid to authenticate with
+ * @param password The password to authenticate with
+ * @param connection The connection over which authentication is done
+ * @param hash The class to use for calulating hashes
+ * @param plusAvailable Whether the PLUS variant was offered
+ * @return A new autoreleased XMPPSCRAMAuth
  */
 + (instancetype)SCRAMAuthWithAuthcid: (nullable OFString *)authcid
 			    password: (nullable OFString *)password
@@ -57,17 +57,17 @@ OF_ASSUME_NONNULL_BEGIN
 				hash: (Class)hash
 		       plusAvailable: (bool)plusAvailable;
 
-/**
- * \brief Creates a new autoreleased XMPPSCRAMAuth with an authzid, authcid and
+/*!
+ * @brief Creates a new autoreleased XMPPSCRAMAuth with an authzid, authcid and
  *	  password.
  *
- * \param authzid The authzid to get authorization for
- * \param authcid The authcid to authenticate with
- * \param password The password to authenticate with
- * \param connection The connection over which authentication is done
- * \param hash The class to use for calulating hashes
- * \param plusAvailable Whether the PLUS variant was offered
- * \return A new autoreleased XMPPSCRAMAuth
+ * @param authzid The authzid to get authorization for
+ * @param authcid The authcid to authenticate with
+ * @param password The password to authenticate with
+ * @param connection The connection over which authentication is done
+ * @param hash The class to use for calulating hashes
+ * @param plusAvailable Whether the PLUS variant was offered
+ * @return A new autoreleased XMPPSCRAMAuth
  */
 + (instancetype)SCRAMAuthWithAuthzid: (nullable OFString *)authzid
 			     authcid: (nullable OFString *)authcid
@@ -82,16 +82,16 @@ OF_ASSUME_NONNULL_BEGIN
 	  authcid: (nullable OFString *)authcid
 	 password: (nullable OFString *)password OF_UNAVAILABLE;
 
-/**
- * \brief Initializes an already allocated XMPPSCRAMAuth with an authcid and
+/*!
+ * @brief Initializes an already allocated XMPPSCRAMAuth with an authcid and
  *	  password.
  *
- * \param authcid The authcid to authenticate with
- * \param password The password to authenticate with
- * \param connection The connection over which authentication is done
- * \param hash The class to use for calulating hashes
- * \param plusAvailable Whether the PLUS variant was offered
- * \return A initialized XMPPSCRAMAuth
+ * @param authcid The authcid to authenticate with
+ * @param password The password to authenticate with
+ * @param connection The connection over which authentication is done
+ * @param hash The class to use for calulating hashes
+ * @param plusAvailable Whether the PLUS variant was offered
+ * @return A initialized XMPPSCRAMAuth
  */
 - initWithAuthcid: (nullable OFString *)authcid
 	 password: (nullable OFString *)password
@@ -99,17 +99,17 @@ OF_ASSUME_NONNULL_BEGIN
 	     hash: (Class)hash
     plusAvailable: (bool)plusAvailable;
 
-/**
- * \brief Initializes an already allocated XMPPSCRAMAuth with a authzid,
+/*!
+ * @brief Initializes an already allocated XMPPSCRAMAuth with a authzid,
  *	  authcid and password.
  *
- * \param authzid The authzid to get authorization for
- * \param authcid The authcid to authenticate with
- * \param password The password to authenticate with
- * \param connection The connection over which authentication is done
- * \param hash The class to use for calulating hashes
- * \param plusAvailable Whether the PLUS variant was offered
- * \return A initialized XMPPSCRAMAuth
+ * @param authzid The authzid to get authorization for
+ * @param authcid The authcid to authenticate with
+ * @param password The password to authenticate with
+ * @param connection The connection over which authentication is done
+ * @param hash The class to use for calulating hashes
+ * @param plusAvailable Whether the PLUS variant was offered
+ * @return A initialized XMPPSCRAMAuth
  */
 - initWithAuthzid: (nullable OFString *)authzid
 	  authcid: (nullable OFString *)authcid

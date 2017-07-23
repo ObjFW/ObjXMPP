@@ -31,8 +31,8 @@ OF_ASSUME_NONNULL_BEGIN
 @class XMPPMessage;
 @class XMPPPresence;
 
-/**
- * \brief A class describing a contact tracked by a XMPPContactManager
+/*!
+ * @brief A class describing a contact tracked by a XMPPContactManager
  */
 @interface XMPPContact: OFObject
 {
@@ -41,16 +41,21 @@ OF_ASSUME_NONNULL_BEGIN
 	XMPPJID *_lockedOnJID;
 }
 
-/// \brief The XMPPRosterItem corresponding to this contact
+/*!
+ * The XMPPRosterItem corresponding to this contact.
+ */
 @property (readonly, nonatomic) XMPPRosterItem *rosterItem;
-/// \brief The XMPPPresences of this contact with the resources as keys
+
+/*!
+ * The XMPPPresences of this contact with the resources as keys.
+ */
 @property (readonly, nonatomic) OFDictionary *presences;
 
-/**
- * \brief Sends a message to the contact honoring resource locking
+/*!
+ * @brief Sends a message to the contact honoring resource locking
  *
- * \param message The message to send
- * \param connection The connection to use for sending the message
+ * @param message The message to send
+ * @param connection The connection to use for sending the message
  */
 - (void)sendMessage: (XMPPMessage *)message
 	 connection: (XMPPConnection *)connection;

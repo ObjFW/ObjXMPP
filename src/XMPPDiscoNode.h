@@ -28,8 +28,8 @@ OF_ASSUME_NONNULL_BEGIN
 @class XMPPDiscoIdentity;
 @class XMPPJID;
 
-/**
- * \brief A class describing a Service Discovery Node
+/*!
+ * @brief A class describing a Service Discovery Node
  */
 @interface XMPPDiscoNode: OFObject
 {
@@ -41,85 +41,102 @@ OF_ASSUME_NONNULL_BEGIN
 	OFMutableDictionary *_childNodes;
 }
 
-/// \brief The JID this node lives on
+/*!
+ * @brief The JID this node lives on.
+ */
 @property (readonly, nonatomic) XMPPJID *JID;
-/// \brief The node's opaque name of the node
+
+/*!
+ * @brief The node's opaque name of the node.
+ */
 @property (readonly, nonatomic) OFString *node;
-/// \brief The node's human friendly name (may be unspecified)
+
+/*!
+ * @brief The node's human friendly name (may be unspecified).
+ */
 @property OF_NULLABLE_PROPERTY (readonly, nonatomic) OFString *name;
-/// \brief The node's list of identities
+
+/*!
+ * @brief The node's list of identities.
+ */
 @property (readonly, nonatomic) OFSortedList *identities;
-/// \brief The node's list of features
+
+/*!
+ * @brief The node's list of features.
+ */
 @property (readonly, nonatomic) OFSortedList *features;
-/// \brief The node's children
+
+/*!
+ * @brief The node's children.
+ */
 @property (readonly, nonatomic) OFDictionary *childNodes;
 
-/**
- * \brief Creates a new autoreleased XMPPDiscoNode with the specified
+/*!
+ * @brief Creates a new autoreleased XMPPDiscoNode with the specified
  *	  JID and node
  *
- * \param JID The JID this node lives on
- * \param node The node's opaque name
- * \return A new autoreleased XMPPDiscoNode
+ * @param JID The JID this node lives on
+ * @param node The node's opaque name
+ * @return A new autoreleased XMPPDiscoNode
  */
 + (instancetype)discoNodeWithJID: (XMPPJID *)JID
 			    node: (nullable OFString *)node;
 
-/**
- * \brief Creates a new autoreleased XMPPDiscoNode with the specified
+/*!
+ * @brief Creates a new autoreleased XMPPDiscoNode with the specified
  *	  JID, node and name
  *
- * \param JID The JID this node lives on
- * \param node The node's opaque name
- * \param name The node's human friendly name
- * \return A new autoreleased XMPPDiscoNode
+ * @param JID The JID this node lives on
+ * @param node The node's opaque name
+ * @param name The node's human friendly name
+ * @return A new autoreleased XMPPDiscoNode
  */
 + (instancetype)discoNodeWithJID: (XMPPJID *)JID
 			    node: (nullable OFString *)node
 			    name: (nullable OFString *)name;
 
-/**
- * \brief Initializes an already allocated XMPPDiscoNode with the specified
+/*!
+ * @brief Initializes an already allocated XMPPDiscoNode with the specified
  *	  JID and node
  *
- * \param JID The JID this node lives on
- * \param node The node's opaque name
- * \return An initialized XMPPDiscoNode
+ * @param JID The JID this node lives on
+ * @param node The node's opaque name
+ * @return An initialized XMPPDiscoNode
  */
 - initWithJID: (XMPPJID *)JID
 	 node: (nullable OFString *)node;
 
-/**
- * \brief Initializes an already allocated XMPPDiscoNode with the specified
+/*!
+ * @brief Initializes an already allocated XMPPDiscoNode with the specified
  *	  JID, node and name
  *
- * \param JID The JID this node lives on
- * \param node The node's opaque name
- * \param name The node's human friendly name
- * \return An initialized XMPPDiscoNode
+ * @param JID The JID this node lives on
+ * @param node The node's opaque name
+ * @param name The node's human friendly name
+ * @return An initialized XMPPDiscoNode
  */
 - initWithJID: (XMPPJID *)JID
 	 node: (nullable OFString *)node
 	 name: (nullable OFString *)name OF_DESIGNATED_INITIALIZER;
 
- /**
-  * \brief Adds an XMPPDiscoIdentity to the node
+ /*!
+  * @brief Adds an XMPPDiscoIdentity to the node
   *
-  * \param identity The XMPPDiscoIdentity to add
+  * @param identity The XMPPDiscoIdentity to add
   */
 - (void)addIdentity: (XMPPDiscoIdentity *)identity;
 
- /**
-  * \brief Adds a feature to the node
+ /*!
+  * @brief Adds a feature to the node
   *
-  * \param feature The feature to add
+  * @param feature The feature to add
   */
 - (void)addFeature: (OFString *)feature;
 
- /**
-  * \brief Adds a XMPPDiscoNode as child of the node
+ /*!
+  * @brief Adds a XMPPDiscoNode as child of the node
   *
-  * \param node The XMPPDiscoNode to add as child
+  * @param node The XMPPDiscoNode to add as child
   */
 - (void)addChildNode: (XMPPDiscoNode *)node;
 @end

@@ -25,22 +25,22 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-/**
- * \brief A class to authenticate using SASL EXTERNAL
+/*!
+ * @brief A class to authenticate using SASL EXTERNAL
  */
 @interface XMPPEXTERNALAuth: XMPPAuthenticator
-/**
- * \brief Creates a new autoreleased XMPPEXTERNALAuth.
+/*!
+ * @brief Creates a new autoreleased XMPPEXTERNALAuth.
  *
- * \return A new autoreleased XMPPEXTERNALAuth
+ * @return A new autoreleased XMPPEXTERNALAuth
  */
 + (instancetype)EXTERNALAuth;
 
-/**
- * \brief Creates a new autoreleased XMPPEXTERNALAuth with an authzid.
+/*!
+ * @brief Creates a new autoreleased XMPPEXTERNALAuth with an authzid.
  *
- * \param authzid The authzid to get authorization for
- * \return A new autoreleased XMPPEXTERNALAuth
+ * @param authzid The authzid to get authorization for
+ * @return A new autoreleased XMPPEXTERNALAuth
  */
 + (instancetype)EXTERNALAuthWithAuthzid: (nullable OFString *)authzid;
 @end
