@@ -130,7 +130,7 @@ OF_ASSUME_NONNULL_END
 
 - (id)main
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 
 	[_connection connect];
 
@@ -138,7 +138,7 @@ OF_ASSUME_NONNULL_END
 		     onThread: _sourceThread
 		waitUntilDone: false];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return nil;
 }
@@ -318,7 +318,7 @@ OF_ASSUME_NONNULL_END
 
 - (void)connect
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	XMPPSRVEntry *candidate = nil;
 	XMPPSRVLookup *SRVLookup = nil;
 	OFEnumerator *enumerator;
@@ -361,7 +361,7 @@ OF_ASSUME_NONNULL_END
 
 	[self XMPP_startStream];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 - (void)handleConnection
@@ -377,13 +377,13 @@ OF_ASSUME_NONNULL_END
 
 - (void)asyncConnectAndHandle
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 
 	[[[[XMPPConnection_ConnectThread alloc]
 	    initWithSourceThread: [OFThread currentThread]
 		      connection: self] autorelease] start];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 -  (bool)XMPP_parseBuffer: (const void *)buffer
@@ -522,11 +522,9 @@ OF_ASSUME_NONNULL_END
   callbackTarget: (id)target
 	selector: (SEL)selector
 {
-	OFAutoreleasePool *pool;
+	void *pool = objc_autoreleasePoolPush();
 	XMPPCallback *callback;
 	OFString *ID, *key;
-
-	pool = [[OFAutoreleasePool alloc] init];
 
 	if ((ID = [IQ ID]) == nil) {
 		ID = [self generateStanzaID];
@@ -543,7 +541,8 @@ OF_ASSUME_NONNULL_END
 					   selector: selector];
 	[_callbacks setObject: callback
 		       forKey: key];
-	[pool release];
+
+	objc_autoreleasePoolPop(pool);
 
 	[self sendStanza: IQ];
 }
@@ -552,11 +551,9 @@ OF_ASSUME_NONNULL_END
 -  (void)sendIQ: (XMPPIQ *)IQ
   callbackBlock: (xmpp_callback_block_t)block
 {
-	OFAutoreleasePool *pool;
+	void *pool = objc_autoreleasePoolPush();
 	XMPPCallback *callback;
 	OFString *ID, *key;
-
-	pool = [[OFAutoreleasePool alloc] init];
 
 	if ((ID = [IQ ID]) == nil) {
 		ID = [self generateStanzaID];
@@ -572,7 +569,8 @@ OF_ASSUME_NONNULL_END
 	callback = [XMPPCallback callbackWithBlock: block];
 	[_callbacks setObject: callback
 		       forKey: key];
-	[pool release];
+
+	objc_autoreleasePoolPop(pool);
 
 	[self sendStanza: IQ];
 }

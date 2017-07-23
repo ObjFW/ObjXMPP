@@ -182,7 +182,7 @@ OF_ASSUME_NONNULL_END
 
 - (void)XMPP_lookup
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	unsigned char *answer = NULL;
 	size_t pageSize = [OFSystemInfo pageSize];
 	OFString *request;
@@ -235,12 +235,12 @@ OF_ASSUME_NONNULL_END
 #endif
 	}
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 - (void)XMPP_addEntry: (XMPPSRVEntry *)entry
 {
-	OFAutoreleasePool *pool;
+	void *pool = objc_autoreleasePoolPush();
 	OFList *subList;
 	of_list_object_t *iter;
 
@@ -266,8 +266,6 @@ OF_ASSUME_NONNULL_END
 			break;
 	}
 
-	pool = [[OFAutoreleasePool alloc] init];
-
 	subList = [OFList list];
 	[subList appendObject: entry];
 
@@ -277,7 +275,7 @@ OF_ASSUME_NONNULL_END
 	else
 		[_list appendObject: subList];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 - (OFEnumerator *)objectEnumerator

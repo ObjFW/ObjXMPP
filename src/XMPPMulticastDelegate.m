@@ -74,7 +74,7 @@
 - (bool)broadcastSelector: (SEL)selector
 	       withObject: (id)object
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	OFMutableData *currentDelegates = [[_delegates copy] autorelease];
 	id *items = [currentDelegates items];
 	size_t i, count = [currentDelegates count];
@@ -92,7 +92,7 @@
 		handled |= imp(responder, selector, object);
 	}
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return handled;
 }
@@ -101,7 +101,7 @@
 	       withObject: (id)object1
 	       withObject: (id)object2
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	OFMutableData *currentDelegates = [[_delegates copy] autorelease];
 	id *items = [currentDelegates items];
 	size_t i, count = [currentDelegates count];
@@ -119,7 +119,7 @@
 		handled |= imp(responder, selector, object1, object2);
 	}
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return handled;
 }

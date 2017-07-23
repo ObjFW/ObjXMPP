@@ -124,22 +124,22 @@
 - (void)setStringValue: (OFString *)string
 	       forPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 
 	[self XMPP_setObject: string
 		     forPath: path];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 - (OFString *)stringValueForPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	OFString *string;
 
 	string = [self XMPP_objectForPath: path];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return string;
 }
@@ -147,22 +147,22 @@
 - (void)setBooleanValue: (bool)boolean
 		forPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 
 	[self XMPP_setObject: [OFNumber numberWithBool: boolean]
 		     forPath: path];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 - (bool)booleanValueForPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	bool boolean;
 
 	boolean = [[self XMPP_objectForPath: path] boolValue];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return boolean;
 }
@@ -170,22 +170,22 @@
 - (void)setIntegerValue: (intmax_t)integer
 		forPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 
 	[self XMPP_setObject: [OFNumber numberWithIntMax: integer]
 		     forPath: path];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 - (intmax_t)integerValueForPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	intmax_t integer;
 
 	integer = [[self XMPP_objectForPath: path] intMaxValue];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return integer;
 }
@@ -193,22 +193,22 @@
 - (void)setArray: (OFArray *)array
 	 forPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 
 	[self XMPP_setObject: array
 		     forPath: path];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 - (OFArray *)arrayForPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	OFArray *array;
 
 	array = [self XMPP_objectForPath: path];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return array;
 }
@@ -216,22 +216,22 @@
 - (void)setDictionary: (OFDictionary *)dictionary
 	      forPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 
 	[self XMPP_setObject: dictionary
 		     forPath: path];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 }
 
 - (OFDictionary *)dictionaryForPath: (OFString *)path
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	OFDictionary *dictionary;
 
 	dictionary = [self XMPP_objectForPath: path];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return dictionary;
 }

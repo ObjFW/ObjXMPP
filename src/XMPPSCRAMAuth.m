@@ -433,7 +433,7 @@ OF_ASSUME_NONNULL_END
 - (const uint8_t *)XMPP_HMACWithKey: (OFData *)key
 			       data: (OFData *)data
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	OFMutableData *k = [OFMutableData data];
 	size_t i, kSize, blockSize = [_hashType blockSize];
 	uint8_t *kI = NULL, *kO = NULL;
@@ -480,7 +480,8 @@ OF_ASSUME_NONNULL_END
 	}
 
 	[hashO retain];
-	[pool release];
+
+	objc_autoreleasePoolPop(pool);
 
 	return [[hashO autorelease] digest];
 }
@@ -489,7 +490,7 @@ OF_ASSUME_NONNULL_END
 		       salt: (OFData *)salt
 	     iterationCount: (intmax_t)i
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	size_t digestSize = [_hashType digestSize];
 	uint8_t *result = NULL;
 	const uint8_t *u, *uOld;
@@ -516,7 +517,9 @@ OF_ASSUME_NONNULL_END
 			[tmp addItems: uOld
 				count: digestSize];
 
-			[pool releaseObjects]; // releases uOld and previous tmp
+			/* releases uOld and previous tmp */
+			objc_autoreleasePoolPop(pool);
+			pool = objc_autoreleasePoolPush();
 			[tmp autorelease];
 
 			u = [self XMPP_HMACWithKey: str
@@ -535,7 +538,8 @@ OF_ASSUME_NONNULL_END
 	}
 
 	[ret retain];
-	[pool release];
+
+	objc_autoreleasePoolPop(pool);
 
 	return [ret autorelease];
 }

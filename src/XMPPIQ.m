@@ -70,7 +70,7 @@
 {
 	XMPPIQ *ret = [XMPPIQ IQWithType: @"error"
 				      ID: [self ID]];
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	OFXMLElement *error = [OFXMLElement elementWithName: @"error"
 						  namespace: XMPP_NS_CLIENT];
 
@@ -86,7 +86,7 @@
 	[ret setTo: [self from]];
 	[ret setFrom: nil];
 
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return ret;
 }

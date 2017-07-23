@@ -353,18 +353,18 @@ OF_ASSUME_NONNULL_END
 	}
 
 	for (OFXMLElement *element in [rosterElement children]) {
-		OFAutoreleasePool *pool;
+		void *pool = objc_autoreleasePoolPush();
 		XMPPRosterItem *rosterItem;
 
 		if (![[element name] isEqual: @"item"] ||
 		    ![[element namespace] isEqual: XMPP_NS_ROSTER])
 			continue;
 
-		pool = [[OFAutoreleasePool alloc] init];
 		rosterItem = [self XMPP_rosterItemWithXMLElement: element];
 
 		[self XMPP_updateRosterItem: rosterItem];
-		[pool release];
+
+		objc_autoreleasePoolPop(pool);
 	}
 
 	if ([connection supportsRosterVersioning] && rosterElement != nil) {
