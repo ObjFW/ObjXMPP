@@ -219,12 +219,12 @@ OF_ASSUME_NONNULL_BEGIN
 /*!
  * The port to connect to.
  */
-@property uint16_t port;
+@property (nonatomic) uint16_t port;
 
 /*!
  * An object for data storage, conforming to the XMPPStorage protocol.
  */
-@property OF_NULLABLE_PROPERTY (assign) id <XMPPStorage> dataStorage;
+@property OF_NULLABLE_PROPERTY (nonatomic, assign) id <XMPPStorage> dataStorage;
 
 /*!
  * The socket used for the connection.
@@ -234,22 +234,22 @@ OF_ASSUME_NONNULL_BEGIN
 /*!
  * Whether encryption is required.
  */
-@property bool encryptionRequired;
+@property (nonatomic) bool encryptionRequired;
 
 /*!
  * Whether the connection is encrypted.
  */
-@property (readonly) bool encrypted;
+@property (readonly, nonatomic) bool encrypted;
 
 /*!
  * Whether roster versioning is supported.
  */
-@property (readonly) bool supportsRosterVersioning;
+@property (readonly, nonatomic) bool supportsRosterVersioning;
 
 /*!
  * Whether stream management is supported.
  */
-@property (readonly) bool supportsStreamManagement;
+@property (readonly, nonatomic) bool supportsStreamManagement;
 
 /*!
  * Creates a new autoreleased XMPPConnection.

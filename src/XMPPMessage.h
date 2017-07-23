@@ -29,8 +29,10 @@ OF_ASSUME_NONNULL_BEGIN
  * @brief A class describing a message stanza.
  */
 @interface XMPPMessage: XMPPStanza
-/*! The text content of the body of the message. */
-@property (copy) OFString *body;
+/*!
+ * The text content of the body of the message.
+ */
+@property (nonatomic, copy) OFString *body;
 
 /*!
  * @brief Creates a new autoreleased XMPPMessage.

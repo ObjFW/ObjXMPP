@@ -72,7 +72,7 @@ OF_ASSUME_NONNULL_BEGIN
 /*!
  * @brief The connection to which the roster belongs
  */
-@property (readonly, assign) XMPPConnection *connection;
+@property (readonly, nonatomic) XMPPConnection *connection;
 
 /*!
  * @brief An object for data storage, conforming to the XMPPStorage protocol.

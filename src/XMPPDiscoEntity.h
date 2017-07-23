@@ -48,12 +48,12 @@ OF_ASSUME_NONNULL_BEGIN
  * This usually contains at least all immediate child nodes, but may contain
  * any number of nodes nested more deeply.
  */
-@property (readonly) OFDictionary *discoNodes;
+@property (readonly, nonatomic) OFDictionary *discoNodes;
 
 /*!
  * The node advertised for the entity's capabilites.
  */
-@property (readonly) OFString *capsNode;
+@property (readonly, nonatomic) OFString *capsNode;
 
 + (instancetype)discoNodeWithJID: (XMPPJID *)JID
 			    node: (nullable OFString *)node OF_UNAVAILABLE;

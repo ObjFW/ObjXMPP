@@ -38,10 +38,10 @@ OF_ASSUME_NONNULL_BEGIN
 	OFString *_target;
 }
 
-@property (readonly) uint16_t priority;
-@property (readonly) uint16_t weight;
-@property uint32_t accumulatedWeight;
-@property (readonly) uint16_t port;
+@property (readonly, nonatomic) uint16_t priority;
+@property (readonly, nonatomic) uint16_t weight;
+@property (nonatomic) uint32_t accumulatedWeight;
+@property (readonly, nonatomic) uint16_t port;
 @property (readonly, nonatomic) OFString *target;
 
 + (instancetype)entryWithPriority: (uint16_t)priority
