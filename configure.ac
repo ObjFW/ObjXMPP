@@ -23,7 +23,8 @@ CPP="$OBJCPP"
 CPPFLAGS="$CPPFLAGS $OBJCPPFLAGS $($OBJFW_CONFIG --cppflags)"
 OBJCFLAGS="$OBJCFLAGS -Wall $($OBJFW_CONFIG --objcflags)"
 LDFLAGS="$LDFLAGS $($OBJFW_CONFIG --ldflags)"
-LIBS="$LIBS $($OBJFW_CONFIG --libs)"
+AC_SUBST(OBJFW_LIBS, "$LIBS $($OBJFW_CONFIG --libs)")
+AC_SUBST(OBJFW_FRAMEWORK_LIBS, "$LIBS $($OBJFW_CONFIG --framework-libs)")
 
 AX_CHECK_COMPILER_FLAGS(-Watomic-properties,
 	[OBJCFLAGS="$OBJCFLAGS -Watomic-properties"])
@@ -35,6 +36,10 @@ AC_ARG_ENABLE(shared,
 AS_IF([test x"$enable_shared" != x"no"], [
 	BUILDSYS_SHARED_LIB
 	AC_SUBST(OBJXMPP_SHARED_LIB, "${LIB_PREFIX}objxmpp${LIB_SUFFIX}")
+
+	BUILDSYS_FRAMEWORK([
+		AC_SUBST(OBJXMPP_FRAMEWORK, "ObjXMPP.framework")
+	])
 ])
 AC_ARG_ENABLE(static, AS_HELP_STRING([--enable-static], [build static library]))
 AS_IF([test x"$enable_static" = x"yes" -o x"$enable_shared" = x"no"], [
@@ -87,7 +92,8 @@ AC_TRY_LINK([
 ])
 
 AC_CHECK_LIB(objopenssl, main, [
-	LIBS="$LIBS -lobjopenssl -lcrypto"
+	AC_SUBST(OBJOPENSSL_LIBS, "-lobjopenssl -lcrypto")
+	AC_SUBST(OBJOPENSSL_FRAMEWORK_LIBS, "-framework ObjOpenSSL -lcrypto")
 ], [
 	AC_MSG_ERROR(You need ObjOpenSSL installed!)
 ])
