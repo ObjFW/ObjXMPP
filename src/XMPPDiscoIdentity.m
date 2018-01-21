@@ -129,7 +129,7 @@
 	if (object == self)
 		return OF_ORDERED_SAME;
 
-	if (![object isKindOfClass: [XMPPDiscoIdentity class]])
+	if (![(id)object isKindOfClass: [XMPPDiscoIdentity class]])
 		@throw [OFInvalidArgumentException exception];
 
 	identity = (XMPPDiscoIdentity *)object;

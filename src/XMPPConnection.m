@@ -372,7 +372,8 @@ OF_ASSUME_NONNULL_END
 			      length: BUFFER_LENGTH
 			      target: self
 			    selector: @selector(stream:didReadIntoBuffer:length:
-					  exception:)];
+					  exception:)
+			     context: nil];
 }
 
 - (void)asyncConnectAndHandle
@@ -460,7 +461,8 @@ OF_ASSUME_NONNULL_END
 				      target: self
 				    selector: @selector(stream:
 						  didReadIntoBuffer:length:
-						  exception:)];
+						  exception:)
+				     context: nil];
 
 		return false;
 	}

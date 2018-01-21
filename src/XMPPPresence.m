@@ -218,7 +218,7 @@ show_to_int(OFString *show)
 	if (object == self)
 		return OF_ORDERED_SAME;
 
-	if (![object isKindOfClass: [XMPPPresence class]])
+	if (![(id)object isKindOfClass: [XMPPPresence class]])
 		@throw [OFInvalidArgumentException exception];
 
 	otherPresence = (XMPPPresence *)object;
