@@ -1,6 +1,7 @@
+*.dll
+*.dylib
 *.o
 *.so
-*.dylib
 *~
 .deps
 aclocal.m4
@@ -14,9 +15,6 @@ configure
 DerivedData
 docs
 extra.mk
-ObjXMPP.xcodeproj/*.mode1v3
-ObjXMPP.xcodeproj/*.pbxuser
-ObjXMPP.xcodeproj/project.xcworkspace
-ObjXMPP.xcodeproj/xcuserdata
+src/ObjXMPP.framework
 tests/tests
 tests/storage.binarypack
