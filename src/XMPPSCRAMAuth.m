@@ -42,7 +42,7 @@ OF_ASSUME_NONNULL_BEGIN
 @interface XMPPSCRAMAuth ()
 - (OFString *)XMPP_genNonce;
 - (const uint8_t *)XMPP_HMACWithKey: (OFData *)key
-			data: (OFData *)data;
+			       data: (OFData *)data;
 - (OFData *)XMPP_hiWithData: (OFData *)str
 		       salt: (OFData *)salt
 	     iterationCount: (intmax_t)i;
@@ -266,9 +266,8 @@ OF_ASSUME_NONNULL_END
 		@throw [OFInvalidServerReplyException exception];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
-	tmpArray = [OFMutableData data];
-	[tmpArray addItems: [_GS2Header UTF8String]
-		     count: [_GS2Header UTF8StringLength]];
+	tmpArray = [OFMutableData dataWithItems: [_GS2Header UTF8String]
+					  count: [_GS2Header UTF8StringLength]];
 	if (_plusAvailable && [_connection encrypted]) {
 		OFData *channelBinding = [((SSLSocket *)[_connection socket])
 		    channelBindingDataWithType: @"tls-unique"];
@@ -318,7 +317,7 @@ OF_ASSUME_NONNULL_END
 	 * ClientKey := HMAC(SaltedPassword, "Client Key")
 	 */
 	clientKey = [self XMPP_HMACWithKey: saltedPassword
-				      data: [OFData dataWithItems: @"Client key"
+				      data: [OFData dataWithItems: "Client Key"
 							    count: 10]];
 
 	/*
@@ -327,24 +326,23 @@ OF_ASSUME_NONNULL_END
 	 */
 	[hash updateWithBuffer: (void *)clientKey
 			length: [_hashType digestSize]];
-	tmpArray = [OFMutableData dataWithItems: [hash digest]
-					  count: [_hashType digestSize]];
 
 	/*
 	 * IETF RFC 5802:
 	 * ClientSignature := HMAC(StoredKey, AuthMessage)
 	 */
-	clientSignature = [self XMPP_HMACWithKey: tmpArray
-					    data: authMessage];
+	clientSignature = [self
+	    XMPP_HMACWithKey: [OFData dataWithItems: [hash digest]
+					      count: [_hashType digestSize]]
+			data: authMessage];
 
 	/*
 	 * IETF RFC 5802:
 	 * ServerKey := HMAC(SaltedPassword, "Server Key")
 	 */
-	tmpArray = [OFMutableData dataWithItems: "Server Key"
-					  count: 10];
 	serverKey = [self XMPP_HMACWithKey: saltedPassword
-				      data: tmpArray];
+				      data: [OFData dataWithItems: "Server Key"
+							    count: 10]];
 
 	/*
 	 * IETF RFC 5802:
@@ -354,7 +352,7 @@ OF_ASSUME_NONNULL_END
 					  count: [_hashType digestSize]];
 
 	[_serverSignature release];
-	_serverSignature = [[OFMutableData alloc]
+	_serverSignature = [[OFData alloc]
 	    initWithItems: [self XMPP_HMACWithKey: tmpArray
 					     data: authMessage]
 		    count: [_hashType digestSize]];
@@ -363,7 +361,7 @@ OF_ASSUME_NONNULL_END
 	 * IETF RFC 5802:
 	 * ClientProof := ClientKey XOR ClientSignature
 	 */
-	tmpArray = [OFMutableData data];
+	tmpArray = [OFMutableData dataWithCapacity: [_hashType digestSize]];
 	for (i = 0; i < [_hashType digestSize]; i++) {
 		uint8_t c = clientKey[i] ^ clientSignature[i];
 		[tmpArray addItem: &c];
@@ -495,14 +493,15 @@ OF_ASSUME_NONNULL_END
 	uint8_t *result = NULL;
 	const uint8_t *u, *uOld;
 	intmax_t j, k;
-	OFMutableData *salty, *tmp, *ret;
+	OFMutableData *salty, *tmp;
+	OFData *ret;
 
 	result = [self allocMemoryWithSize: digestSize];
 
 	@try {
 		memset(result, 0, digestSize);
 
-		salty = [[salt copy] autorelease];
+		salty = [[salt mutableCopy] autorelease];
 		[salty addItems: "\0\0\0\1"
 			  count: 4];
 
@@ -531,8 +530,8 @@ OF_ASSUME_NONNULL_END
 			uOld = u;
 		}
 
-		ret = [OFMutableData dataWithItems: result
-					     count: digestSize];
+		ret = [OFData dataWithItems: result
+				      count: digestSize];
 	} @finally {
 		[self freeMemory: result];
 	}
