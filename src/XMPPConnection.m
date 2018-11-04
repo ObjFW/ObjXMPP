@@ -348,8 +348,7 @@ OF_ASSUME_NONNULL_END
 					    connectToHost: [candidate target]
 						     port: [candidate port]];
 					break;
-				} @catch (OFAddressTranslationFailedException
-				    *e) {
+				} @catch (OFResolveHostFailedException *e) {
 				} @catch (OFConnectionFailedException *e) {
 				}
 			} while ((candidate = [enumerator nextObject]) != nil);

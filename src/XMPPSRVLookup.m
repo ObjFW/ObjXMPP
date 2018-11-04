@@ -38,7 +38,7 @@
 
 #import "XMPPSRVLookup.h"
 
-#import <ObjFW/OFLocalization.h>
+#import <ObjFW/OFLocale.h>
 
 OF_ASSUME_NONNULL_BEGIN
 
@@ -118,7 +118,7 @@ OF_ASSUME_NONNULL_END
 
 		_target = [[OFString alloc]
 		    initWithCString: buffer
-			   encoding: [OFLocalization encoding]];
+			   encoding: [OFLocale encoding]];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -195,12 +195,15 @@ OF_ASSUME_NONNULL_END
 		ns_msg handle;
 
 		if (res_ninit(&_resState))
-			@throw [OFAddressTranslationFailedException
-			    exceptionWithHost: _domain];
+			@throw [OFResolveHostFailedException
+			    exceptionWithHost: _domain
+				  recordClass: OF_DNS_RESOURCE_RECORD_CLASS_IN
+				   recordType: OF_DNS_RESOURCE_RECORD_TYPE_SRV
+					error: OF_DNS_RESOLVER_ERROR_UNKNOWN];
 
 		answer = [self allocMemoryWithSize: pageSize];
-		answerLen = res_nsearch(&_resState, [request
-		    cStringWithEncoding: [OFLocalization encoding]],
+		answerLen = res_nsearch(&_resState,
+		    [request cStringWithEncoding: [OFLocale encoding]],
 		    ns_c_in, ns_t_srv, answer, (int)pageSize);
 
 		if ((answerLen == -1) && ((h_errno == HOST_NOT_FOUND) ||
@@ -208,12 +211,18 @@ OF_ASSUME_NONNULL_END
 			return;
 
 		if (answerLen < 1 || answerLen > pageSize)
-			@throw [OFAddressTranslationFailedException
-			    exceptionWithHost: _domain];
+			@throw [OFResolveHostFailedException
+			    exceptionWithHost: _domain
+				  recordClass: OF_DNS_RESOURCE_RECORD_CLASS_IN
+				   recordType: OF_DNS_RESOURCE_RECORD_TYPE_SRV
+					error: OF_DNS_RESOLVER_ERROR_UNKNOWN];
 
 		if (ns_initparse(answer, answerLen, &handle))
-			@throw [OFAddressTranslationFailedException
-			    exceptionWithHost: _domain];
+			@throw [OFResolveHostFailedException
+			    exceptionWithHost: _domain
+				  recordClass: OF_DNS_RESOURCE_RECORD_CLASS_IN
+				   recordType: OF_DNS_RESOURCE_RECORD_TYPE_SRV
+					error: OF_DNS_RESOLVER_ERROR_UNKNOWN];
 
 		resourceRecordCount = ns_msg_count(handle, ns_s_an);
 		for (i = 0; i < resourceRecordCount; i++) {
