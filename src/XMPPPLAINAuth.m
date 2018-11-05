@@ -20,9 +20,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
+#include "config.h"
 
 #import "XMPPPLAINAuth.h"
 #import "XMPPExceptions.h"

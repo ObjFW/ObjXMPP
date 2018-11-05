@@ -2,6 +2,7 @@
 *.dylib
 *.o
 *.so
+*.so.*
 *~
 .deps
 aclocal.m4
