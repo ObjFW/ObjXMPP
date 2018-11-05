@@ -100,8 +100,8 @@
 
 @implementation XMPPConnection
 @synthesize username = _username, resource = _resource, server = _server;
-@synthesize domain = _domain, password = _password, language = _language;
-@synthesize privateKeyFile = _privateKeyFile;
+@synthesize domain = _domain, password = _password, JID = _JID, port = _port;
+@synthesize language = _language, privateKeyFile = _privateKeyFile;
 @synthesize certificateFile = _certificateFile, socket = _socket;
 @synthesize encryptionRequired = _encryptionRequired, encrypted = _encrypted;
 @synthesize supportsRosterVersioning = _supportsRosterVersioning;

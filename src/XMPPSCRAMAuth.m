@@ -79,6 +79,19 @@
 
 - (instancetype)initWithAuthcid: (OFString *)authcid
 		       password: (OFString *)password
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- (instancetype)initWithAuthzid: (OFString *)authzid
+			authcid: (OFString *)authcid
+		       password: (OFString *)password
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- (instancetype)initWithAuthcid: (OFString *)authcid
+		       password: (OFString *)password
 		     connection: (XMPPConnection *)connection
 			   hash: (Class)hash
 		  plusAvailable: (bool)plusAvailable

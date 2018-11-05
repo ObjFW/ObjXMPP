@@ -23,8 +23,10 @@
 
 #import "XMPPContact.h"
 #import "XMPPContact+Private.h"
-#import "XMPPMessage.h"
 #import "XMPPConnection.h"
+#import "XMPPJID.h"
+#import "XMPPMessage.h"
+#import "XMPPRosterItem.h"
 
 @implementation XMPPContact
 @synthesize rosterItem = _rosterItem;

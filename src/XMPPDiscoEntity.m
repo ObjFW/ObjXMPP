@@ -22,14 +22,28 @@
  */
 
 #import "XMPPDiscoEntity.h"
+#import "XMPPDiscoIdentity.h"
 #import "XMPPDiscoNode.h"
 #import "XMPPDiscoNode+Private.h"
-#import "XMPPDiscoIdentity.h"
 #import "XMPPIQ.h"
+#import "XMPPJID.h"
 #import "namespaces.h"
 
 @implementation XMPPDiscoEntity
 @synthesize discoNodes = _discoNodes, capsNode = _capsNode;
+
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID
+			    node: (OFString *)node
+{
+	OF_UNRECOGNIZED_SELECTOR
+}
+
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID
+			    node: (OFString *)node
+			    name: (OFString *)name
+{
+	OF_UNRECOGNIZED_SELECTOR
+}
 
 + (instancetype)discoEntityWithConnection: (XMPPConnection *)connection
 {
@@ -43,10 +57,10 @@
 					capsNode: capsNode] autorelease];
 }
 
-- (instancetype)initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithJID: (XMPPJID *)JID
+		       node: (nullable OFString *)node
 {
-	return [self initWithConnection: connection
-			       capsNode: nil];
+	OF_INVALID_INIT_METHOD
 }
 
 - (instancetype)initWithJID: (XMPPJID *)JID
@@ -54,6 +68,12 @@
 		       name: (nullable OFString *)name
 {
 	OF_INVALID_INIT_METHOD
+}
+
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+{
+	return [self initWithConnection: connection
+			       capsNode: nil];
 }
 
 - (instancetype)initWithConnection: (XMPPConnection *)connection

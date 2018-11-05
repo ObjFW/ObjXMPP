@@ -120,7 +120,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param exception The exception the connection threw
  */
 -  (void)connection: (XMPPConnection *)connection
-  didThrowException: (OFException *)exception;
+  didThrowException: (id)exception;
 
 /*!
  * @brief This callback is called when the connection is about to upgrade to
@@ -144,7 +144,7 @@ OF_ASSUME_NONNULL_BEGIN
 @interface XMPPConnection: OFObject <OFXMLParserDelegate,
     OFXMLElementBuilderDelegate>
 {
-	id _socket;
+	OF_KINDOF(OFTCPSocket *) _socket;
 	OFXMLParser *_parser, *_oldParser;
 	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
 	OFString *_username, *_password, *_server, *_resource;
@@ -226,7 +226,7 @@ OF_ASSUME_NONNULL_BEGIN
 /*!
  * The socket used for the connection.
  */
-@property (readonly, nonatomic) OFTCPSocket *socket;
+@property (readonly, nonatomic) OF_KINDOF(OFTCPSocket *) socket;
 
 /*!
  * Whether encryption is required.

@@ -67,6 +67,18 @@
 }
 
 - (instancetype)initWithName: (OFString *)name
+		 stringValue: (OFString *)stringValue
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- (instancetype)initWithName: (OFString *)name
+		   namespace: (OFString *)namespace
+{
+	OF_INVALID_INIT_METHOD
+}
+
+- (instancetype)initWithName: (OFString *)name
 		   namespace: (nullable OFString *)namespace
 		 stringValue: (nullable OFString *)stringValue
 {

@@ -25,6 +25,7 @@
 #import "XMPPContact.h"
 #import "XMPPContact+Private.h"
 #import "XMPPJID.h"
+#import "XMPPMessage.h"
 #import "XMPPMulticastDelegate.h"
 #import "XMPPPresence.h"
 #import "XMPPRosterItem.h"

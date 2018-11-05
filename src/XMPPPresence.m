@@ -50,6 +50,7 @@ show_to_int(OFString *show)
 
 @implementation XMPPPresence
 @dynamic type;
+@synthesize status = _status, show = _show, priority = _priority;
 
 + (instancetype)presence
 {
@@ -126,7 +127,6 @@ show_to_int(OFString *show)
 
 	return self;
 }
-
 
 - (void)dealloc
 {
