@@ -126,7 +126,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn setPassword: [arguments objectAtIndex: 2]];
 	[conn setResource: @"ObjXMPP"];
 
-	[conn asyncConnectAndHandle];
+	[conn asyncConnect];
 }
 
 -  (void)connection: (XMPPConnection *)conn

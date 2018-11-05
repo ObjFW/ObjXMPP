@@ -26,7 +26,6 @@ SRCS = XMPPAuthenticator.m	\
        XMPPRoster.m		\
        XMPPRosterItem.m		\
        XMPPSCRAMAuth.m		\
-       XMPPSRVLookup.m		\
        XMPPStanza.m		\
        XMPPStreamManagement.m	\
        XMPPXMLElementBuilder.m

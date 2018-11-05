@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, 2012, 2013, 2016
+ * Copyright (c) 2010, 2011, 2012, 2013, 2016, 2017, 2018
  *   Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
@@ -115,9 +115,6 @@ OF_ASSUME_NONNULL_BEGIN
 
 /*!
  * @brief This callback is called when the connection threw an exception.
- *
- * This is only called for connections on which
- * @ref XMPPConnection::handleConnection has been called.
  *
  * @param connection The connection which threw an exception
  * @param exception The exception the connection threw
@@ -273,11 +270,6 @@ OF_ASSUME_NONNULL_BEGIN
 - (void)removeDelegate: (id <XMPPConnectionDelegate>)delegate;
 
 /*!
- * @brief Connects to the XMPP service.
- */
-- (void)connect;
-
-/*!
  * @brief Closes the stream to the XMPP service
  */
 - (void)close;
@@ -295,15 +287,9 @@ OF_ASSUME_NONNULL_BEGIN
     (OFString *__autoreleasing _Nonnull *_Nullable)reason;
 
 /*!
- * @brief Adds the connection to the run loop.
+ * @brief Asynchronously connects to the server.
  */
-- (void)handleConnection;
-
-/*!
- * @brief Asynchronously connects to the server and adds the connection to the
- *	  run loop.
- */
-- (void)asyncConnectAndHandle;
+- (void)asyncConnect;
 
 /*!
  * @brief Parses the specified buffer.

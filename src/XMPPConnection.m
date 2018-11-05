@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, 2012, 2013, 2015, 2016
+ * Copyright (c) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018
  *   Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
@@ -41,7 +41,6 @@
 
 #import "XMPPConnection.h"
 #import "XMPPCallback.h"
-#import "XMPPSRVLookup.h"
 #import "XMPPEXTERNALAuth.h"
 #import "XMPPSCRAMAuth.h"
 #import "XMPPPLAINAuth.h"
@@ -84,65 +83,7 @@ OF_ASSUME_NONNULL_BEGIN
 - (XMPPMulticastDelegate *)XMPP_delegates;
 @end
 
-@interface XMPPConnection_ConnectThread: OFThread
-{
-	OFThread *_sourceThread;
-	XMPPConnection *_connection;
-}
-
-- initWithSourceThread: (OFThread *)sourceThread
-	    connection: (XMPPConnection *)connection;
-@end
-
 OF_ASSUME_NONNULL_END
-
-@implementation XMPPConnection_ConnectThread
-- initWithSourceThread: (OFThread *)sourceThread
-	    connection: (XMPPConnection *)connection
-{
-	self = [super init];
-
-	@try {
-		_sourceThread = [sourceThread retain];
-		_connection = [connection retain];
-	} @catch (id e) {
-		[self release];
-		@throw e;
-	}
-
-	return self;
-}
-
-- (void)dealloc
-{
-	[_sourceThread release];
-	[_connection release];
-
-	[super dealloc];
-}
-
-- (void)didConnect
-{
-	[self join];
-
-	[_connection handleConnection];
-}
-
-- (id)main
-{
-	void *pool = objc_autoreleasePoolPush();
-
-	[_connection connect];
-
-	[self performSelector: @selector(didConnect)
-		     onThread: _sourceThread
-		waitUntilDone: false];
-
-	objc_autoreleasePoolPop(pool);
-
-	return nil;
-}
-@end
 
 @implementation XMPPConnection
 @synthesize username = _username, resource = _resource, server = _server;
@@ -316,72 +257,118 @@ OF_ASSUME_NONNULL_END
 	[old release];
 }
 
-- (void)connect
+- (void)XMPP_socketDidConnect: (OFTCPSocket *)socket
+		      context: (OFArray *)nextSRVRecords
+		    exception: (id)exception
+{
+	char *buffer;
+
+	if (exception != nil) {
+		if (nextSRVRecords != nil) {
+			[self XMPP_tryNextSRVRecord: nextSRVRecords];
+			return;
+		}
+
+		[_delegates
+		    broadcastSelector: @selector(connection:didThrowException:)
+			   withObject: self
+			   withObject: exception];
+		return;
+	}
+
+	[self XMPP_startStream];
+
+	buffer = [self allocMemoryWithSize: BUFFER_LENGTH];
+	[_socket asyncReadIntoBuffer: buffer
+			      length: BUFFER_LENGTH
+			      target: self
+			    selector: @selector(XMPP_stream:didReadIntoBuffer:
+					  length:exception:)
+			     context: nil];
+}
+
+- (void)XMPP_tryNextSRVRecord: (OFArray *)SRVRecords
+{
+	OFSRVDNSResourceRecord *record = [SRVRecords objectAtIndex: 0];
+
+	SRVRecords = [SRVRecords objectsInRange:
+	    of_range(1, [SRVRecords count] - 1)];
+	if ([SRVRecords count] == 0)
+		SRVRecords = nil;
+
+	[_socket asyncConnectToHost: [record target]
+			       port: [record port]
+			     target: self
+			   selector: @selector(XMPP_socketDidConnect:
+					 context:exception:)
+			    context: SRVRecords];
+}
+
+-  (void)XMPP_resolver: (OFDNSResolver *)resolver
+  didResolveDomainName: (OFString *)domainName
+	 answerRecords: (OFDictionary *)answerRecords
+      authorityRecords: (OFDictionary *)authorityRecords
+     additionalRecords: (OFDictionary *)additionalRecords
+	       context: (OFString *)domainToASCII
+	     exception: (id)exception
+{
+	OFMutableArray *records = [OFMutableArray array];
+
+	if (exception != nil) {
+		[_delegates
+		    broadcastSelector: @selector(connection:didThrowException:)
+			   withObject: self
+			   withObject: exception];
+		return;
+	}
+
+	for (OF_KINDOF(OFDNSResourceRecord *) record in
+	    [answerRecords objectForKey: domainName])
+		if ([record isKindOfClass: [OFSRVDNSResourceRecord class]])
+		       [records addObject: record];
+
+	/* TODO: Sort records */
+	[records makeImmutable];
+
+	if ([records count] == 0) {
+		/* Fall back to A / AAA record. */
+		[_socket asyncConnectToHost: domainToASCII
+				       port: _port
+				     target: self
+				   selector: @selector(XMPP_socketDidConnect:
+						 context:exception:)
+				    context: nil];
+		return;
+	}
+
+	[self XMPP_tryNextSRVRecord: records];
+}
+
+- (void)asyncConnect
 {
 	void *pool = objc_autoreleasePoolPush();
-	XMPPSRVEntry *candidate = nil;
-	XMPPSRVLookup *SRVLookup = nil;
-	OFEnumerator *enumerator;
 
 	if (_socket != nil)
 		@throw [OFAlreadyConnectedException exception];
 
 	_socket = [[OFTCPSocket alloc] init];
 
-	if (_server)
-		[_socket connectToHost: _server
-				  port: _port];
-	else {
-		@try {
-			SRVLookup = [XMPPSRVLookup
-			    lookupWithDomain: _domainToASCII];
-		} @catch (id e) {
-		}
-
-		enumerator = [SRVLookup objectEnumerator];
-
-		/* Iterate over SRV records, if any */
-		if ((candidate = [enumerator nextObject]) != nil) {
-			do {
-				@try {
-					[_socket
-					    connectToHost: [candidate target]
-						     port: [candidate port]];
-					break;
-				} @catch (OFResolveHostFailedException *e) {
-				} @catch (OFConnectionFailedException *e) {
-				}
-			} while ((candidate = [enumerator nextObject]) != nil);
-		} else
-			/* No SRV records -> fall back to A / AAAA record */
-			[_socket connectToHost: _domainToASCII
-					  port: _port];
-	}
-
-	[self XMPP_startStream];
-
-	objc_autoreleasePoolPop(pool);
-}
-
-- (void)handleConnection
-{
-	char *buffer = [self allocMemoryWithSize: BUFFER_LENGTH];
-
-	[_socket asyncReadIntoBuffer: buffer
-			      length: BUFFER_LENGTH
+	if (_server != nil)
+		[_socket asyncConnectToHost: _server
+				       port: _port
+				     target: self
+				   selector: @selector(XMPP_socketDidConnect:
+						 context:exception:)
+				    context: nil];
+	else
+		[[OFThread DNSResolver]
+		    asyncResolveHost: _domainToASCII
 			      target: self
-			    selector: @selector(stream:didReadIntoBuffer:length:
-					  exception:)
-			     context: nil];
-}
-
-- (void)asyncConnectAndHandle
-{
-	void *pool = objc_autoreleasePoolPush();
-
-	[[[[XMPPConnection_ConnectThread alloc]
-	    initWithSourceThread: [OFThread currentThread]
-		      connection: self] autorelease] start];
+			    selector: @selector(XMPP_resolver:
+					  didResolveDomainName:answerRecords:
+					  authorityRecords:additionalRecords:
+					  context:exception:)
+			     context: _domainToASCII];
 
 	objc_autoreleasePoolPop(pool);
 }
@@ -421,7 +408,7 @@ OF_ASSUME_NONNULL_END
 	_oldElementBuilder = nil;
 }
 
--      (bool)stream: (OFStream *)stream
+- (bool)XMPP_stream: (OFStream *)stream
   didReadIntoBuffer: (char *)buffer
 	     length: (size_t)length
 	  exception: (OFException *)exception
@@ -458,7 +445,7 @@ OF_ASSUME_NONNULL_END
 		[_socket asyncReadIntoBuffer: buffer
 				      length: BUFFER_LENGTH
 				      target: self
-				    selector: @selector(stream:
+				    selector: @selector(XMPP_stream:
 						  didReadIntoBuffer:length:
 						  exception:)
 				     context: nil];
@@ -927,8 +914,7 @@ OF_ASSUME_NONNULL_END
 	}
 
 	if ([[element name] isEqual: @"failure"]) {
-		of_log(@"Auth failed!");
-		// FIXME: Do more parsing/handling
+		/* FIXME: Do more parsing/handling */
 		@throw [XMPPAuthFailedException
 		    exceptionWithConnection: self
 				     reason: [element XMLString]];
