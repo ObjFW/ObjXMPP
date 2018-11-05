@@ -30,7 +30,7 @@
 @synthesize rosterItem = _rosterItem;
 @synthesize presences = _presences;
 
-- init
+- (instancetype)init
 {
 	self = [super init];
 
@@ -62,14 +62,14 @@
 	[connection sendStanza: message];
 }
 
-- (void)XMPP_setRosterItem: (XMPPRosterItem *)rosterItem
+- (void)xmpp_setRosterItem: (XMPPRosterItem *)rosterItem
 {
 	XMPPRosterItem *old = _rosterItem;
 	_rosterItem = [rosterItem retain];
 	[old release];
 }
 
-- (void)XMPP_setPresence: (XMPPPresence *)presence
+- (void)xmpp_setPresence: (XMPPPresence *)presence
 		resource: (OFString *)resource
 {
 	if (resource != nil)
@@ -79,10 +79,10 @@
 		[_presences setObject: presence
 			       forKey: @""];
 
-	[self XMPP_setLockedOnJID: nil];
+	[self xmpp_setLockedOnJID: nil];
 }
 
-- (void)XMPP_removePresenceForResource: (OFString *)resource
+- (void)xmpp_removePresenceForResource: (OFString *)resource
 {
 	if (resource != nil) {
 		[_presences removeObjectForKey: resource];
@@ -91,10 +91,10 @@
 		_presences = [[OFMutableDictionary alloc] init];
 	}
 
-	[self XMPP_setLockedOnJID: nil];
+	[self xmpp_setLockedOnJID: nil];
 }
 
-- (void)XMPP_setLockedOnJID: (XMPPJID *)JID;
+- (void)xmpp_setLockedOnJID: (XMPPJID *)JID;
 {
 	XMPPJID *old = _lockedOnJID;
 	_lockedOnJID = [JID retain];

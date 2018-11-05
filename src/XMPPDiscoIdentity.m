@@ -42,9 +42,9 @@
 					  type: type] autorelease];
 }
 
-- initWithCategory: (OFString *)category
-	      type: (OFString *)type
-	      name: (OFString *)name
+- (instancetype)initWithCategory: (OFString *)category
+			    type: (OFString *)type
+			    name: (OFString *)name
 {
 	self = [super init];
 
@@ -63,15 +63,15 @@
 	return self;
 }
 
-- initWithCategory: (OFString *)category
-	      type: (OFString *)type
+- (instancetype)initWithCategory: (OFString *)category
+			    type: (OFString *)type
 {
 	return [self initWithCategory: category
 				 type: type
 				 name: nil];
 }
 
-- init
+- (instancetype)init
 {
 	OF_INVALID_INIT_METHOD
 }

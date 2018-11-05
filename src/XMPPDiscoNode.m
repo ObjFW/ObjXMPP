@@ -51,17 +51,17 @@
 				     name: name] autorelease];
 }
 
-- initWithJID: (XMPPJID *)JID
-	 node: (OFString *)node
+- (instancetype)initWithJID: (XMPPJID *)JID
+		       node: (OFString *)node
 {
 	return [self initWithJID: JID
 			    node: node
 			    name: nil];
 }
 
-- initWithJID: (XMPPJID *)JID
-	 node: (OFString *)node
-	 name: (OFString *)name
+- (instancetype)initWithJID: (XMPPJID *)JID
+		       node: (OFString *)node
+		       name: (OFString *)name
 {
 	self = [super init];
 
@@ -120,13 +120,11 @@
 			forKey: [node node]];
 }
 
-- (bool)XMPP_handleItemsIQ: (XMPPIQ *)IQ
+- (bool)xmpp_handleItemsIQ: (XMPPIQ *)IQ
 		connection: (XMPPConnection *)connection
 {
 	XMPPIQ *resultIQ;
 	OFXMLElement *response;
-	XMPPDiscoNode *child;
-	OFEnumerator *enumerator;
 	OFXMLElement *query = [IQ elementForName: @"query"
 				       namespace: XMPP_NS_DISCO_ITEMS];
 	OFString *node = [[query attributeForName: @"node"] stringValue];
@@ -139,8 +137,7 @@
 				       namespace: XMPP_NS_DISCO_ITEMS];
 	[resultIQ addChild: response];
 
-	enumerator = [_childNodes objectEnumerator];
-	while ((child = [enumerator nextObject])) {
+	for (XMPPDiscoNode *child in _childNodes) {
 		OFXMLElement *item =
 		    [OFXMLElement elementWithName: @"item"
 					namespace: XMPP_NS_DISCO_ITEMS];
@@ -162,22 +159,18 @@
 	return true;
 }
 
-- (bool)XMPP_handleInfoIQ: (XMPPIQ *)IQ
+- (bool)xmpp_handleInfoIQ: (XMPPIQ *)IQ
 	       connection: (XMPPConnection *)connection
 {
 	XMPPIQ *resultIQ;
 	OFXMLElement *response;
-	OFEnumerator *enumerator;
-	OFString *feature;
-	XMPPDiscoIdentity *identity;
 
 	resultIQ = [IQ resultIQ];
 	response = [OFXMLElement elementWithName: @"query"
 				       namespace: XMPP_NS_DISCO_INFO];
 	[resultIQ addChild: response];
 
-	enumerator = [_identities objectEnumerator];
-	while ((identity = [enumerator nextObject])) {
+	for (XMPPDiscoIdentity *identity in _identities) {
 		OFXMLElement *identityElement =
 		    [OFXMLElement elementWithName: @"identity"
 					namespace: XMPP_NS_DISCO_INFO];
@@ -193,8 +186,7 @@
 		[response addChild: identityElement];
 	}
 
-	enumerator = [_features objectEnumerator];
-	while ((feature = [enumerator nextObject])) {
+	for (OFString *feature in _features) {
 		OFXMLElement *featureElement =
 		    [OFXMLElement elementWithName: @"feature"
 					namespace: XMPP_NS_DISCO_INFO];

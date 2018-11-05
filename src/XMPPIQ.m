@@ -36,8 +36,8 @@
 					ID: ID] autorelease];
 }
 
-- initWithType: (OFString *)type
-	    ID: (OFString *)ID
+- (instancetype)initWithType: (OFString *)type
+			  ID: (OFString *)ID
 {
 	self = [super initWithName: @"iq"
 			      type: type

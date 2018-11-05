@@ -38,12 +38,12 @@
 #import "XMPPFileStorage.h"
 
 @implementation XMPPFileStorage
-- init
+- (instancetype)init
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithFile: (OFString *)file
+- (instancetype)initWithFile: (OFString *)file
 {
 	self = [super init];
 
@@ -80,16 +80,14 @@
 	[[_data messagePackRepresentation] writeToFile: _file];
 }
 
-- (void)XMPP_setObject: (id)object
+- (void)xmpp_setObject: (id)object
 	       forPath: (OFString *)path
 {
 	OFArray *pathComponents = [path componentsSeparatedByString: @"."];
 	OFMutableDictionary *iter = _data;
-	OFEnumerator *enumerator = [pathComponents objectEnumerator];
-	OFString *component;
 	size_t i = 0, components = [pathComponents count];
 
-	while ((component = [enumerator nextObject]) != nil) {
+	for (OFString *component in pathComponents) {
 		if (i++ == components - 1)
 			continue;
 
@@ -111,7 +109,7 @@
 		[iter removeObjectForKey: [pathComponents lastObject]];
 }
 
-- (id)XMPP_objectForPath: (OFString *)path
+- (id)xmpp_objectForPath: (OFString *)path
 {
 	id object = _data;
 
@@ -126,7 +124,7 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self XMPP_setObject: string
+	[self xmpp_setObject: string
 		     forPath: path];
 
 	objc_autoreleasePoolPop(pool);
@@ -137,7 +135,7 @@
 	void *pool = objc_autoreleasePoolPush();
 	OFString *string;
 
-	string = [self XMPP_objectForPath: path];
+	string = [self xmpp_objectForPath: path];
 
 	objc_autoreleasePoolPop(pool);
 
@@ -149,7 +147,7 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self XMPP_setObject: [OFNumber numberWithBool: boolean]
+	[self xmpp_setObject: [OFNumber numberWithBool: boolean]
 		     forPath: path];
 
 	objc_autoreleasePoolPop(pool);
@@ -160,7 +158,7 @@
 	void *pool = objc_autoreleasePoolPush();
 	bool boolean;
 
-	boolean = [[self XMPP_objectForPath: path] boolValue];
+	boolean = [[self xmpp_objectForPath: path] boolValue];
 
 	objc_autoreleasePoolPop(pool);
 
@@ -172,7 +170,7 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self XMPP_setObject: [OFNumber numberWithIntMax: integer]
+	[self xmpp_setObject: [OFNumber numberWithIntMax: integer]
 		     forPath: path];
 
 	objc_autoreleasePoolPop(pool);
@@ -183,7 +181,7 @@
 	void *pool = objc_autoreleasePoolPush();
 	intmax_t integer;
 
-	integer = [[self XMPP_objectForPath: path] intMaxValue];
+	integer = [[self xmpp_objectForPath: path] intMaxValue];
 
 	objc_autoreleasePoolPop(pool);
 
@@ -195,7 +193,7 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self XMPP_setObject: array
+	[self xmpp_setObject: array
 		     forPath: path];
 
 	objc_autoreleasePoolPop(pool);
@@ -206,7 +204,7 @@
 	void *pool = objc_autoreleasePoolPush();
 	OFArray *array;
 
-	array = [self XMPP_objectForPath: path];
+	array = [self xmpp_objectForPath: path];
 
 	objc_autoreleasePoolPop(pool);
 
@@ -218,7 +216,7 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self XMPP_setObject: dictionary
+	[self xmpp_setObject: dictionary
 		     forPath: path];
 
 	objc_autoreleasePoolPop(pool);
@@ -229,7 +227,7 @@
 	void *pool = objc_autoreleasePoolPush();
 	OFDictionary *dictionary;
 
-	dictionary = [self XMPP_objectForPath: path];
+	dictionary = [self xmpp_objectForPath: path];
 
 	objc_autoreleasePoolPop(pool);
 

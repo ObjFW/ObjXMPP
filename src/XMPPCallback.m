@@ -34,7 +34,7 @@
 	    initWithBlock: block] autorelease];
 }
 
-- initWithBlock: (xmpp_callback_block_t)block
+- (instancetype)initWithBlock: (xmpp_callback_block_t)block
 {
 	self = [super init];
 
@@ -56,8 +56,8 @@
 				    selector: selector] autorelease];
 }
 
-- initWithTarget: (id)target
-	selector: (SEL)selector
+- (instancetype)initWithTarget: (id)target
+		      selector: (SEL)selector
 {
 	self = [super init];
 

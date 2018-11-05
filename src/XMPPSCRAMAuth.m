@@ -37,20 +37,16 @@
 #define HMAC_IPAD 0x36
 #define HMAC_OPAD 0x5c
 
-OF_ASSUME_NONNULL_BEGIN
-
 @interface XMPPSCRAMAuth ()
-- (OFString *)XMPP_genNonce;
-- (const uint8_t *)XMPP_HMACWithKey: (OFData *)key
+- (OFString *)xmpp_genNonce;
+- (const uint8_t *)xmpp_HMACWithKey: (OFData *)key
 			       data: (OFData *)data;
-- (OFData *)XMPP_hiWithData: (OFData *)str
+- (OFData *)xmpp_hiWithData: (OFData *)str
 		       salt: (OFData *)salt
 	     iterationCount: (intmax_t)i;
-- (OFData *)XMPP_parseServerFirstMessage: (OFData *)data;
-- (OFData *)XMPP_parseServerFinalMessage: (OFData *)data;
+- (OFData *)xmpp_parseServerFirstMessage: (OFData *)data;
+- (OFData *)xmpp_parseServerFinalMessage: (OFData *)data;
 @end
-
-OF_ASSUME_NONNULL_END
 
 @implementation XMPPSCRAMAuth
 + (instancetype)SCRAMAuthWithAuthcid: (OFString *)authcid
@@ -81,11 +77,11 @@ OF_ASSUME_NONNULL_END
 				plusAvailable: plusAvailable] autorelease];
 }
 
-- initWithAuthcid: (OFString *)authcid
-	 password: (OFString *)password
-       connection: (XMPPConnection *)connection
-	     hash: (Class)hash
-    plusAvailable: (bool)plusAvailable
+- (instancetype)initWithAuthcid: (OFString *)authcid
+		       password: (OFString *)password
+		     connection: (XMPPConnection *)connection
+			   hash: (Class)hash
+		  plusAvailable: (bool)plusAvailable
 {
 	return [self initWithAuthzid: nil
 			     authcid: authcid
@@ -95,12 +91,12 @@ OF_ASSUME_NONNULL_END
 		       plusAvailable: plusAvailable];
 }
 
-- initWithAuthzid: (OFString *)authzid
-	  authcid: (OFString *)authcid
-	 password: (OFString *)password
-       connection: (XMPPConnection *)connection
-	     hash: (Class)hash
-    plusAvailable: (bool)plusAvailable
+- (instancetype)initWithAuthzid: (OFString *)authzid
+			authcid: (OFString *)authcid
+		       password: (OFString *)password
+		     connection: (XMPPConnection *)connection
+			   hash: (Class)hash
+		  plusAvailable: (bool)plusAvailable
 {
 	self = [super initWithAuthzid: authzid
 			      authcid: authcid
@@ -179,7 +175,7 @@ OF_ASSUME_NONNULL_END
 	else
 		_GS2Header = (_plusAvailable ? @"p=tls-unique,," : @"y,,");
 
-	_cNonce = [[self XMPP_genNonce] retain];
+	_cNonce = [[self xmpp_genNonce] retain];
 
 	[_clientFirstMessageBare release];
 	_clientFirstMessageBare = nil;
@@ -203,9 +199,9 @@ OF_ASSUME_NONNULL_END
 	OFData *ret;
 
 	if (!_serverSignature)
-		ret = [self XMPP_parseServerFirstMessage: data];
+		ret = [self xmpp_parseServerFirstMessage: data];
 	else
-		ret = [self XMPP_parseServerFinalMessage: data];
+		ret = [self xmpp_parseServerFinalMessage: data];
 
 	[ret retain];
 	[pool release];
@@ -213,7 +209,7 @@ OF_ASSUME_NONNULL_END
 	return [ret autorelease];
 }
 
-- (OFData *)XMPP_parseServerFirstMessage: (OFData *)data
+- (OFData *)xmpp_parseServerFirstMessage: (OFData *)data
 {
 	size_t i;
 	const uint8_t *clientKey, *serverKey, *clientSignature;
@@ -222,8 +218,6 @@ OF_ASSUME_NONNULL_END
 	OFMutableData *ret, *authMessage, *tmpArray;
 	OFData *salt = nil, *saltedPassword;
 	OFString *tmpString, *sNonce = nil;
-	OFEnumerator *enumerator;
-	OFString *comp;
 	enum {
 		GOT_SNONCE    = 0x01,
 		GOT_SALT      = 0x02,
@@ -234,17 +228,16 @@ OF_ASSUME_NONNULL_END
 	ret = [OFMutableData data];
 	authMessage = [OFMutableData data];
 
-	OFString *chal = [OFString stringWithUTF8String: [data items]
-						 length: [data count] *
-							 [data itemSize]];
+	OFString *challenge = [OFString stringWithUTF8String: [data items]
+						      length: [data count] *
+							      [data itemSize]];
 
-	enumerator =
-	    [[chal componentsSeparatedByString: @","] objectEnumerator];
-	while ((comp = [enumerator nextObject]) != nil) {
-		OFString *entry = [comp substringWithRange:
-		    of_range(2, [comp length] - 2)];
+	for (OFString *component in
+	    [challenge componentsSeparatedByString: @","]) {
+		OFString *entry = [component substringWithRange:
+		    of_range(2, [component length] - 2)];
 
-		if ([comp hasPrefix: @"r="]) {
+		if ([component hasPrefix: @"r="]) {
 			if (![entry hasPrefix: _cNonce])
 				@throw [XMPPAuthFailedException
 				    exceptionWithConnection: nil
@@ -253,10 +246,10 @@ OF_ASSUME_NONNULL_END
 
 			sNonce = entry;
 			got |= GOT_SNONCE;
-		} else if ([comp hasPrefix: @"s="]) {
+		} else if ([component hasPrefix: @"s="]) {
 			salt = [OFData dataWithBase64EncodedString: entry];
 			got |= GOT_SALT;
-		} else if ([comp hasPrefix: @"i="]) {
+		} else if ([component hasPrefix: @"i="]) {
 			iterCount = [entry decimalValue];
 			got |= GOT_ITERCOUNT;
 		}
@@ -293,7 +286,7 @@ OF_ASSUME_NONNULL_END
 	 */
 	tmpArray = [OFMutableData dataWithItems: [_password UTF8String]
 					  count: [_password UTF8StringLength]];
-	saltedPassword = [self XMPP_hiWithData: tmpArray
+	saltedPassword = [self xmpp_hiWithData: tmpArray
 					  salt: salt
 				iterationCount: iterCount];
 
@@ -316,7 +309,7 @@ OF_ASSUME_NONNULL_END
 	 * IETF RFC 5802:
 	 * ClientKey := HMAC(SaltedPassword, "Client Key")
 	 */
-	clientKey = [self XMPP_HMACWithKey: saltedPassword
+	clientKey = [self xmpp_HMACWithKey: saltedPassword
 				      data: [OFData dataWithItems: "Client Key"
 							    count: 10]];
 
@@ -332,7 +325,7 @@ OF_ASSUME_NONNULL_END
 	 * ClientSignature := HMAC(StoredKey, AuthMessage)
 	 */
 	clientSignature = [self
-	    XMPP_HMACWithKey: [OFData dataWithItems: [hash digest]
+	    xmpp_HMACWithKey: [OFData dataWithItems: [hash digest]
 					      count: [_hashType digestSize]]
 			data: authMessage];
 
@@ -340,7 +333,7 @@ OF_ASSUME_NONNULL_END
 	 * IETF RFC 5802:
 	 * ServerKey := HMAC(SaltedPassword, "Server Key")
 	 */
-	serverKey = [self XMPP_HMACWithKey: saltedPassword
+	serverKey = [self xmpp_HMACWithKey: saltedPassword
 				      data: [OFData dataWithItems: "Server Key"
 							    count: 10]];
 
@@ -353,7 +346,7 @@ OF_ASSUME_NONNULL_END
 
 	[_serverSignature release];
 	_serverSignature = [[OFData alloc]
-	    initWithItems: [self XMPP_HMACWithKey: tmpArray
+	    initWithItems: [self xmpp_HMACWithKey: tmpArray
 					     data: authMessage]
 		    count: [_hashType digestSize]];
 
@@ -378,7 +371,7 @@ OF_ASSUME_NONNULL_END
 	return ret;
 }
 
-- (OFData *)XMPP_parseServerFinalMessage: (OFData *)data
+- (OFData *)xmpp_parseServerFinalMessage: (OFData *)data
 {
 	OFString *mess, *value;
 
@@ -407,7 +400,7 @@ OF_ASSUME_NONNULL_END
 	return nil;
 }
 
-- (OFString *)XMPP_genNonce
+- (OFString *)xmpp_genNonce
 {
 	uint8_t buf[64];
 	size_t i;
@@ -428,7 +421,7 @@ OF_ASSUME_NONNULL_END
 				    length: 64];
 }
 
-- (const uint8_t *)XMPP_HMACWithKey: (OFData *)key
+- (const uint8_t *)xmpp_HMACWithKey: (OFData *)key
 			       data: (OFData *)data
 {
 	void *pool = objc_autoreleasePoolPush();
@@ -484,7 +477,7 @@ OF_ASSUME_NONNULL_END
 	return [[hashO autorelease] digest];
 }
 
-- (OFData *)XMPP_hiWithData: (OFData *)str
+- (OFData *)xmpp_hiWithData: (OFData *)str
 		       salt: (OFData *)salt
 	     iterationCount: (intmax_t)i
 {
@@ -505,7 +498,7 @@ OF_ASSUME_NONNULL_END
 		[salty addItems: "\0\0\0\1"
 			  count: 4];
 
-		uOld = [self XMPP_HMACWithKey: str
+		uOld = [self xmpp_HMACWithKey: str
 					 data: salty];
 
 		for (j = 0; j < digestSize; j++)
@@ -521,7 +514,7 @@ OF_ASSUME_NONNULL_END
 			pool = objc_autoreleasePoolPush();
 			[tmp autorelease];
 
-			u = [self XMPP_HMACWithKey: str
+			u = [self xmpp_HMACWithKey: str
 					      data: tmp];
 
 			for (k = 0; k < digestSize; k++)

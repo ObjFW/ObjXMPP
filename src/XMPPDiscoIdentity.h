@@ -72,7 +72,7 @@ OF_ASSUME_NONNULL_BEGIN
 + (instancetype)identityWithCategory: (OFString *)category
 				type: (OFString *)type;
 
-- init OF_UNAVAILABLE;
+- (instancetype)init OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPDiscoIdentity with the specified
@@ -83,9 +83,10 @@ OF_ASSUME_NONNULL_BEGIN
  * @param name The name of the identity
  * @return An initialized XMPPDiscoIdentity
  */
-- initWithCategory: (OFString *)category
-	      type: (OFString *)type
-	      name: (nullable OFString *)name OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCategory: (OFString *)category
+			    type: (OFString *)type
+			    name: (nullable OFString *)name
+    OF_DESIGNATED_INITIALIZER;
 
 /*!
  * @brief Initializes an already allocated XMPPDiscoIdentity with the specified
@@ -95,8 +96,8 @@ OF_ASSUME_NONNULL_BEGIN
  * @param type The type of the identity
  * @return An initialized XMPPDiscoIdentity
  */
-- initWithCategory: (OFString *)category
-	      type: (OFString *)type;
+- (instancetype)initWithCategory: (OFString *)category
+			    type: (OFString *)type;
 @end
 
 OF_ASSUME_NONNULL_END

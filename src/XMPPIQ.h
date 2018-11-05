@@ -47,8 +47,8 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return An initialized XMPPIQ
  */
-- initWithType: (OFString *)type
-	    ID: (OFString *)ID;
+- (instancetype)initWithType: (OFString *)type
+			  ID: (OFString *)ID;
 
 /*!
  * @brief Generates a result IQ for the receiving object.

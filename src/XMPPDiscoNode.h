@@ -103,8 +103,8 @@ OF_ASSUME_NONNULL_BEGIN
  * @param node The node's opaque name
  * @return An initialized XMPPDiscoNode
  */
-- initWithJID: (XMPPJID *)JID
-	 node: (nullable OFString *)node;
+- (instancetype)initWithJID: (XMPPJID *)JID
+		       node: (nullable OFString *)node;
 
 /*!
  * @brief Initializes an already allocated XMPPDiscoNode with the specified
@@ -115,29 +115,30 @@ OF_ASSUME_NONNULL_BEGIN
  * @param name The node's human friendly name
  * @return An initialized XMPPDiscoNode
  */
-- initWithJID: (XMPPJID *)JID
-	 node: (nullable OFString *)node
-	 name: (nullable OFString *)name OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithJID: (XMPPJID *)JID
+		       node: (nullable OFString *)node
+		       name: (nullable OFString *)name
+    OF_DESIGNATED_INITIALIZER;
 
- /*!
-  * @brief Adds an XMPPDiscoIdentity to the node
-  *
-  * @param identity The XMPPDiscoIdentity to add
-  */
+/*!
+ * @brief Adds an XMPPDiscoIdentity to the node
+ *
+ * @param identity The XMPPDiscoIdentity to add
+ */
 - (void)addIdentity: (XMPPDiscoIdentity *)identity;
 
- /*!
-  * @brief Adds a feature to the node
-  *
-  * @param feature The feature to add
-  */
+/*!
+ * @brief Adds a feature to the node
+ *
+ * @param feature The feature to add
+ */
 - (void)addFeature: (OFString *)feature;
 
- /*!
-  * @brief Adds a XMPPDiscoNode as child of the node
-  *
-  * @param node The XMPPDiscoNode to add as child
-  */
+/*!
+ * @brief Adds a XMPPDiscoNode as child of the node
+ *
+ * @param node The XMPPDiscoNode to add as child
+ */
 - (void)addChildNode: (XMPPDiscoNode *)node;
 @end
 

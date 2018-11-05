@@ -34,8 +34,8 @@ OF_ASSUME_NONNULL_BEGIN
 	OFMutableDictionary *_data;
 }
 
-- init OF_UNAVAILABLE;
-- initWithFile: (OFString *)file;
+- (instancetype)init OF_UNAVAILABLE;
+- (instancetype)initWithFile: (OFString *)file;
 @end
 
 OF_ASSUME_NONNULL_END

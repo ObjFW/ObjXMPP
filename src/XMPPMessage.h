@@ -73,7 +73,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return A initialized XMPPMessage
  */
-- initWithID: (nullable OFString *)ID;
+- (instancetype)initWithID: (nullable OFString *)ID;
 
 /*!
  * @brief Initializes an already allocated XMPPMessage with the specified type.
@@ -81,7 +81,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param type The value for the stanza's type attribute
  * @return A initialized XMPPMessage
  */
-- initWithType: (nullable OFString *)type;
+- (instancetype)initWithType: (nullable OFString *)type;
 
 /*!
  * @brief Initializes an already allocated XMPPMessage with the specified type
@@ -91,8 +91,8 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return A initialized XMPPMessage
  */
-- initWithType: (nullable OFString *)type
-	    ID: (nullable OFString *)ID OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithType: (nullable OFString *)type
+			  ID: (nullable OFString *)ID OF_DESIGNATED_INITIALIZER;
 @end
 
 OF_ASSUME_NONNULL_END

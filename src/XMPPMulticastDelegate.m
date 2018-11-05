@@ -30,7 +30,7 @@
 #import "XMPPMulticastDelegate.h"
 
 @implementation XMPPMulticastDelegate
-- init
+- (instancetype)init
 {
 	self = [super init];
 

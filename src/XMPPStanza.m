@@ -66,49 +66,49 @@
 	return [[[self alloc] initWithElement: element] autorelease];
 }
 
-- initWithName: (OFString *)name
-     namespace: (nullable OFString *)namespace
-   stringValue: (nullable OFString *)stringValue
+- (instancetype)initWithName: (OFString *)name
+		   namespace: (nullable OFString *)namespace
+		 stringValue: (nullable OFString *)stringValue
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithXMLString: (OFString *)string
+- (instancetype)initWithXMLString: (OFString *)string
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithFile: (OFString *)path
+- (instancetype)initWithFile: (OFString *)path
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithName: (OFString *)name
+- (instancetype)initWithName: (OFString *)name
 {
 	return [self initWithName: name
 			     type: nil
 			       ID: nil];
 }
 
-- initWithName: (OFString *)name
-	  type: (OFString *)type
+- (instancetype)initWithName: (OFString *)name
+			type: (OFString *)type
 {
 	return [self initWithName: name
 			     type: type
 			       ID: nil];
 }
 
-- initWithName: (OFString *)name
-	    ID: (OFString *)ID
+- (instancetype)initWithName: (OFString *)name
+			  ID: (OFString *)ID
 {
 	return [self initWithName: name
 			     type: nil
 			       ID: ID];
 }
 
-- initWithName: (OFString *)name
-	  type: (OFString *)type
-	    ID: (OFString *)ID
+- (instancetype)initWithName: (OFString *)name
+			type: (OFString *)type
+			  ID: (OFString *)ID
 {
 	self = [super initWithName: name
 			 namespace: XMPP_NS_CLIENT
@@ -136,7 +136,7 @@
 	return self;
 }
 
-- initWithElement: (OFXMLElement *)element
+- (instancetype)initWithElement: (OFXMLElement *)element
 {
 	self = [super initWithElement: element];
 

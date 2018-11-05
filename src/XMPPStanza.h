@@ -111,15 +111,15 @@ OF_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)stanzaWithElement: (OFXMLElement *)element;
 
-- initWithName: (OFString *)name
-   stringValue: (nullable OFString *)stringValue OF_UNAVAILABLE;
-- initWithName: (OFString *)name
-     namespace: (nullable OFString *)namespace OF_UNAVAILABLE;
-- initWithName: (OFString *)name
-     namespace: (nullable OFString *)namespace
-   stringValue: (nullable OFString *)stringValue OF_UNAVAILABLE;
-- initWithXMLString: (OFString *)string OF_UNAVAILABLE;
-- initWithFile: (OFString *)path OF_UNAVAILABLE;
+- (instancetype)initWithName: (OFString *)name
+		 stringValue: (nullable OFString *)stringValue OF_UNAVAILABLE;
+- (instancetype)initWithName: (OFString *)name
+		   namespace: (nullable OFString *)namespace OF_UNAVAILABLE;
+- (instancetype)initWithName: (OFString *)name
+		   namespace: (nullable OFString *)namespace
+		 stringValue: (nullable OFString *)stringValue OF_UNAVAILABLE;
+- (instancetype)initWithXMLString: (OFString *)string OF_UNAVAILABLE;
+- (instancetype)initWithFile: (OFString *)path OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPStanza with the specified name.
@@ -127,7 +127,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param name The stanza's name (one of iq, message or presence)
  * @return A initialized XMPPStanza
  */
-- initWithName: (OFString *)name;
+- (instancetype)initWithName: (OFString *)name;
 
 /*!
  * @brief Initializes an already allocated XMPPStanza with the specified name
@@ -137,8 +137,8 @@ OF_ASSUME_NONNULL_BEGIN
  * @param type The value for the stanza's type attribute
  * @return A initialized XMPPStanza
  */
-- initWithName: (OFString *)name
-	  type: (nullable OFString *)type;
+- (instancetype)initWithName: (OFString *)name
+			type: (nullable OFString *)type;
 
 /*!
  * @brief Initializes an already allocated XMPPStanza with the specified name
@@ -148,8 +148,8 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return A initialized XMPPStanza
  */
-- initWithName: (OFString *)name
-	    ID: (nullable OFString *)ID;
+- (instancetype)initWithName: (OFString *)name
+			  ID: (nullable OFString *)ID;
 
 /*!
  * @brief Initializes an already allocated XMPPStanza with the specified name,
@@ -160,9 +160,9 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return A initialized XMPPStanza
  */
-- initWithName: (OFString *)name
-	  type: (nullable OFString *)type
-	    ID: (nullable OFString *)ID;
+- (instancetype)initWithName: (OFString *)name
+			type: (nullable OFString *)type
+			  ID: (nullable OFString *)ID;
 
 /*!
  * @brief Initializes an already allocated XMPPStanza based on a OFXMLElement.
@@ -170,7 +170,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param element The element to base the XMPPStanza on
  * @return A initialized XMPPStanza
  */
-- initWithElement: (OFXMLElement *)element;
+- (instancetype)initWithElement: (OFXMLElement *)element;
 @end
 
 OF_ASSUME_NONNULL_END

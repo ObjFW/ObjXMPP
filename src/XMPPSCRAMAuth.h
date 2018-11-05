@@ -76,11 +76,11 @@ OF_ASSUME_NONNULL_BEGIN
 				hash: (Class)hash
 		       plusAvailable: (bool)plusAvailable;
 
-- initWithAuthcid: (nullable OFString *)authcid
-	 password: (nullable OFString *)password OF_UNAVAILABLE;
-- initWithAuthzid: (nullable OFString *)authzid
-	  authcid: (nullable OFString *)authcid
-	 password: (nullable OFString *)password OF_UNAVAILABLE;
+- (instancetype)initWithAuthcid: (nullable OFString *)authcid
+		       password: (nullable OFString *)password OF_UNAVAILABLE;
+- (instancetype)initWithAuthzid: (nullable OFString *)authzid
+			authcid: (nullable OFString *)authcid
+		       password: (nullable OFString *)password OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPSCRAMAuth with an authcid and
@@ -93,11 +93,11 @@ OF_ASSUME_NONNULL_BEGIN
  * @param plusAvailable Whether the PLUS variant was offered
  * @return A initialized XMPPSCRAMAuth
  */
-- initWithAuthcid: (nullable OFString *)authcid
-	 password: (nullable OFString *)password
-       connection: (XMPPConnection *)connection
-	     hash: (Class)hash
-    plusAvailable: (bool)plusAvailable;
+- (instancetype)initWithAuthcid: (nullable OFString *)authcid
+		       password: (nullable OFString *)password
+		     connection: (XMPPConnection *)connection
+			   hash: (Class)hash
+		  plusAvailable: (bool)plusAvailable;
 
 /*!
  * @brief Initializes an already allocated XMPPSCRAMAuth with a authzid,
@@ -111,12 +111,12 @@ OF_ASSUME_NONNULL_BEGIN
  * @param plusAvailable Whether the PLUS variant was offered
  * @return A initialized XMPPSCRAMAuth
  */
-- initWithAuthzid: (nullable OFString *)authzid
-	  authcid: (nullable OFString *)authcid
-	 password: (nullable OFString *)password
-       connection: (XMPPConnection *)connection
-	     hash: (Class)hash
-    plusAvailable: (bool)plusAvailable OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithAuthzid: (nullable OFString *)authzid
+			authcid: (nullable OFString *)authcid
+		       password: (nullable OFString *)password
+		     connection: (XMPPConnection *)connection
+			   hash: (Class)hash
+		  plusAvailable: (bool)plusAvailable OF_DESIGNATED_INITIALIZER;
 @end
 
 OF_ASSUME_NONNULL_END

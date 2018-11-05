@@ -42,10 +42,10 @@
 OF_ASSUME_NONNULL_BEGIN
 
 @interface XMPPRoster ()
-- (void)XMPP_updateRosterItem: (XMPPRosterItem *)rosterItem;
-- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection *)connection
+- (void)xmpp_updateRosterItem: (XMPPRosterItem *)rosterItem;
+- (void)xmpp_handleInitialRosterForConnection: (XMPPConnection *)connection
 					   IQ: (XMPPIQ *)IQ;
-- (XMPPRosterItem *)XMPP_rosterItemWithXMLElement: (OFXMLElement *)element;
+- (XMPPRosterItem *)xmpp_rosterItemWithXMLElement: (OFXMLElement *)element;
 @end
 
 OF_ASSUME_NONNULL_END
@@ -54,12 +54,12 @@ OF_ASSUME_NONNULL_END
 @synthesize connection = _connection, dataStorage = _dataStorage;
 @synthesize rosterItems = _rosterItems;
 
-- init
+- (instancetype)init
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithConnection: (XMPPConnection *)connection
 {
 	self = [super init];
 
@@ -114,7 +114,7 @@ OF_ASSUME_NONNULL_END
 
 	[_connection sendIQ: iq
 	     callbackTarget: self
-		   selector: @selector(XMPP_handleInitialRosterForConnection:
+		   selector: @selector(xmpp_handleInitialRosterForConnection:
 				IQ:)];
 }
 
@@ -144,14 +144,14 @@ OF_ASSUME_NONNULL_END
 				      namespace: XMPP_NS_ROSTER];
 
 	if (element != nil) {
-		rosterItem = [self XMPP_rosterItemWithXMLElement: element];
+		rosterItem = [self xmpp_rosterItemWithXMLElement: element];
 
 		[_delegates broadcastSelector: @selector(
 						   roster:didReceiveRosterItem:)
 				   withObject: self
 				   withObject: rosterItem];
 
-		[self XMPP_updateRosterItem: rosterItem];
+		[self xmpp_updateRosterItem: rosterItem];
 	}
 
 	if ([_connection supportsRosterVersioning]) {
@@ -180,8 +180,6 @@ OF_ASSUME_NONNULL_END
 						  namespace: XMPP_NS_ROSTER];
 	OFXMLElement *item = [OFXMLElement elementWithName: @"item"
 						 namespace: XMPP_NS_ROSTER];
-	OFEnumerator *enumerator;
-	OFString *group;
 
 	[item addAttributeWithName: @"jid"
 		       stringValue: [[rosterItem JID] bareJID]];
@@ -189,8 +187,7 @@ OF_ASSUME_NONNULL_END
 		[item addAttributeWithName: @"name"
 			       stringValue: [rosterItem name]];
 
-	enumerator = [[rosterItem groups] objectEnumerator];
-	while ((group = [enumerator nextObject]) != nil)
+	for (OFString *group in [rosterItem groups])
 		[item addChild: [OFXMLElement elementWithName: @"group"
 						    namespace: XMPP_NS_ROSTER
 						  stringValue: group]];
@@ -240,7 +237,7 @@ OF_ASSUME_NONNULL_END
 	_dataStorage = dataStorage;
 }
 
-- (void)XMPP_updateRosterItem: (XMPPRosterItem *)rosterItem
+- (void)xmpp_updateRosterItem: (XMPPRosterItem *)rosterItem
 {
 	if ([_connection supportsRosterVersioning]) {
 		OFMutableDictionary *items = [[[_dataStorage dictionaryForPath:
@@ -280,11 +277,9 @@ OF_ASSUME_NONNULL_END
 		[_rosterItems removeObjectForKey: [[rosterItem JID] bareJID]];
 }
 
-- (XMPPRosterItem *)XMPP_rosterItemWithXMLElement: (OFXMLElement *)element
+- (XMPPRosterItem *)xmpp_rosterItemWithXMLElement: (OFXMLElement *)element
 {
 	OFString *subscription;
-	OFEnumerator *groupEnumerator;
-	OFXMLElement *groupElement;
 	OFMutableArray *groups = [OFMutableArray array];
 	XMPPRosterItem *rosterItem = [XMPPRosterItem rosterItem];
 	[rosterItem setJID: [XMPPJID JIDWithString:
@@ -304,10 +299,9 @@ OF_ASSUME_NONNULL_END
 
 	[rosterItem setSubscription: subscription];
 
-	groupEnumerator = [[element
-	    elementsForName: @"group"
-		  namespace: XMPP_NS_ROSTER] objectEnumerator];
-	while ((groupElement = [groupEnumerator nextObject]) != nil)
+	for (OFXMLElement *groupElement in
+	    [element elementsForName: @"group"
+			   namespace: XMPP_NS_ROSTER])
 		[groups addObject: [groupElement stringValue]];
 
 	if ([groups count] > 0)
@@ -316,7 +310,7 @@ OF_ASSUME_NONNULL_END
 	return rosterItem;
 }
 
-- (void)XMPP_handleInitialRosterForConnection: (XMPPConnection *)connection
+- (void)xmpp_handleInitialRosterForConnection: (XMPPConnection *)connection
 					   IQ: (XMPPIQ *)IQ
 {
 	OFXMLElement *rosterElement = [IQ elementForName: @"query"
@@ -324,12 +318,8 @@ OF_ASSUME_NONNULL_END
 
 	if ([connection supportsRosterVersioning]) {
 		if (rosterElement == nil) {
-			OFDictionary *items = [_dataStorage
-			    dictionaryForPath: @"roster.items"];
-			OFEnumerator *enumerator = [items objectEnumerator];
-			OFDictionary *item;
-
-			while ((item = [enumerator nextObject]) != nil) {
+			for (OFDictionary *item in
+			    [_dataStorage dictionaryForPath: @"roster.items"]) {
 				XMPPRosterItem *rosterItem;
 				XMPPJID *JID;
 
@@ -360,9 +350,9 @@ OF_ASSUME_NONNULL_END
 		    ![[element namespace] isEqual: XMPP_NS_ROSTER])
 			continue;
 
-		rosterItem = [self XMPP_rosterItemWithXMLElement: element];
+		rosterItem = [self xmpp_rosterItemWithXMLElement: element];
 
-		[self XMPP_updateRosterItem: rosterItem];
+		[self xmpp_updateRosterItem: rosterItem];
 
 		objc_autoreleasePoolPop(pool);
 	}

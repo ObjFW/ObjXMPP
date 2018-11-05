@@ -124,8 +124,9 @@ OF_ASSUME_NONNULL_BEGIN
  * @param roster The roster used by the contact manager
  * @return An initialized XMPPContactManager
  */
-- initWithConnection: (XMPPConnection *)connection
-	      roster: (XMPPRoster *)roster OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+			    roster: (XMPPRoster *)roster
+    OF_DESIGNATED_INITIALIZER;
 
 - (void)sendSubscribedToJID: (XMPPJID *)subscriber;
 - (void)sendUnsubscribedToJID: (XMPPJID *)subscriber;

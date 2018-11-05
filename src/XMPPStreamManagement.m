@@ -26,12 +26,12 @@
 #import "namespaces.h"
 
 @implementation XMPPStreamManagement
-- init
+- (instancetype)init
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithConnection: (XMPPConnection *)connection
 {
 	self = [super init];
 

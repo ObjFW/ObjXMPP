@@ -81,11 +81,11 @@ OF_ASSUME_NONNULL_BEGIN
 + (instancetype)discoEntityWithConnection: (XMPPConnection *)connection
 				 capsNode: (OFString *)capsNode;
 
-- initWithJID: (XMPPJID *)JID
-	 node: (nullable OFString *)node OF_UNAVAILABLE;
-- initWithJID: (XMPPJID *)JID
-	 node: (nullable OFString *)node
-	 name: (nullable OFString *)name OF_UNAVAILABLE;
+- (instancetype)initWithJID: (XMPPJID *)JID
+		       node: (nullable OFString *)node OF_UNAVAILABLE;
+- (instancetype)initWithJID: (XMPPJID *)JID
+		       node: (nullable OFString *)node
+		       name: (nullable OFString *)name OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPDiscoEntity with the specified
@@ -95,7 +95,7 @@ OF_ASSUME_NONNULL_BEGIN
  *	  This must already be bound to a resource)
  * @return An initialized XMPPDiscoEntity
  */
-- initWithConnection: (XMPPConnection *)connection;
+- (instancetype)initWithConnection: (XMPPConnection *)connection;
 
 /*!
  * @brief Initializes an already allocated XMPPDiscoEntity with the specified
@@ -106,8 +106,9 @@ OF_ASSUME_NONNULL_BEGIN
  * @param capsNode The node advertised for the entity's capabilites
  * @return An initialized XMPPDiscoEntity
  */
-- initWithConnection: (XMPPConnection *)connection
-	    capsNode: (nullable OFString *)capsNode OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+			  capsNode: (nullable OFString *)capsNode
+    OF_DESIGNATED_INITIALIZER;
 
 /*!
  * @brief Adds a XMPPDiscoNode to provide responses for.

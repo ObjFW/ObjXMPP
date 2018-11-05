@@ -69,7 +69,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param string The string to parse into a JID object
  * @return A initialized XMPPJID
  */
-- initWithString: (OFString *)string;
+- (instancetype)initWithString: (OFString *)string;
 
 /*!
  * @brief Returns the bare JID.

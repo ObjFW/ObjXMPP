@@ -56,8 +56,8 @@ OF_ASSUME_NONNULL_BEGIN
  * @param password The password to authenticate with
  * @return A initialized XMPPAuthenticator
  */
-- initWithAuthcid: (nullable OFString *)authcid
-	 password: (nullable OFString *)password;
+- (instancetype)initWithAuthcid: (nullable OFString *)authcid
+		       password: (nullable OFString *)password;
 
 /*!
  * @brief Initializes an already allocated XMPPSCRAMAuthenticator with an
@@ -68,9 +68,10 @@ OF_ASSUME_NONNULL_BEGIN
  * @param password The password to authenticate with
  * @return A initialized XMPPAuthenticator
  */
-- initWithAuthzid: (nullable OFString *)authzid
-	  authcid: (nullable OFString *)authcid
-	 password: (nullable OFString *)password OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithAuthzid: (nullable OFString *)authzid
+			authcid: (nullable OFString *)authcid
+		       password: (nullable OFString *)password
+    OF_DESIGNATED_INITIALIZER;
 
 /*!
  * @brief Returns OFData containing the initial authentication message.

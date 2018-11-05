@@ -45,7 +45,7 @@
 	return [[[self alloc] initWithString: string] autorelease];
 }
 
-- initWithString: (OFString *)string
+- (instancetype)initWithString: (OFString *)string
 {
 	size_t nodesep, resourcesep;
 

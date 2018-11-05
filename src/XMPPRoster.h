@@ -88,7 +88,7 @@ OF_ASSUME_NONNULL_BEGIN
 @property (readonly, nonatomic)
     OFDictionary OF_GENERIC(OFString *, XMPPRosterItem *) *rosterItems;
 
-- init OF_UNAVAILABLE;
+- (instancetype)init OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPRoster.
@@ -97,7 +97,8 @@ OF_ASSUME_NONNULL_BEGIN
  *		     received over
  * @return An initialized XMPPRoster
  */
-- initWithConnection: (XMPPConnection *)connection OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+    OF_DESIGNATED_INITIALIZER;
 
 /*!
  * @brief Requests the roster from the server.

@@ -43,21 +43,21 @@
 					capsNode: capsNode] autorelease];
 }
 
-- initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithConnection: (XMPPConnection *)connection
 {
 	return [self initWithConnection: connection
 			       capsNode: nil];
 }
 
-- initWithJID: (XMPPJID *)JID
-	 node: (nullable OFString *)node
-	 name: (nullable OFString *)name
+- (instancetype)initWithJID: (XMPPJID *)JID
+		       node: (nullable OFString *)node
+		       name: (nullable OFString *)name
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection *)connection
-	    capsNode: (OFString *)capsNode
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+			  capsNode: (OFString *)capsNode
 {
 	self = [super initWithJID: [connection JID]
 			     node: nil
@@ -93,20 +93,15 @@
 
 - (OFString *)capsHash
 {
-	OFEnumerator *enumerator;
-	XMPPDiscoIdentity *identity;
-	OFString *feature;
 	OFMutableString *caps = [OFMutableString string];
 	OFSHA1Hash *hash = [OFSHA1Hash cryptoHash];
 	OFData *digest;
 
-	enumerator = [_identities objectEnumerator];
-	while ((identity = [enumerator nextObject]) != nil)
+	for (XMPPDiscoIdentity *identity in _identities)
 		[caps appendFormat: @"%@/%@//%@<", [identity category],
 		    [identity type], [identity name]];
 
-	enumerator = [_features objectEnumerator];
-	while ((feature = [enumerator nextObject]) != nil)
+	for (OFString *feature in _features)
 		[caps appendFormat: @"%@<", feature];
 
 	[hash updateWithBuffer: [caps UTF8String]
@@ -137,12 +132,12 @@
 		OFString *node =
 		    [[query attributeForName: @"node"] stringValue];
 		if (node == nil)
-			return [self XMPP_handleItemsIQ: IQ
+			return [self xmpp_handleItemsIQ: IQ
 					     connection: connection];
 
 		XMPPDiscoNode *responder = [_discoNodes objectForKey: node];
 		if (responder != nil)
-			return [responder XMPP_handleItemsIQ: IQ
+			return [responder xmpp_handleItemsIQ: IQ
 						  connection: connection];
 
 		return false;
@@ -156,18 +151,18 @@
 		    [[query attributeForName: @"node"] stringValue];
 
 		if (node == nil)
-			return [self XMPP_handleInfoIQ: IQ
+			return [self xmpp_handleInfoIQ: IQ
 					    connection: connection];
 
 		OFString *capsNode = [_capsNode stringByAppendingFormat: @"#%@",
 					 [self capsHash]];
 		if ([capsNode isEqual: node])
-			return [self XMPP_handleInfoIQ: IQ
+			return [self xmpp_handleInfoIQ: IQ
 					    connection: connection];
 
 		XMPPDiscoNode *responder = [_discoNodes objectForKey: node];
 		if (responder != nil)
-			return [responder XMPP_handleInfoIQ: IQ
+			return [responder xmpp_handleInfoIQ: IQ
 						 connection: connection];
 
 		return false;

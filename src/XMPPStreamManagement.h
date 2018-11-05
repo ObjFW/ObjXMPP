@@ -31,8 +31,8 @@ OF_ASSUME_NONNULL_BEGIN
 	uint32_t _receivedCount;
 }
 
-- init OF_UNAVAILABLE;
-- initWithConnection: (XMPPConnection *)connection;
+- (instancetype)init OF_UNAVAILABLE;
+- (instancetype)initWithConnection: (XMPPConnection *)connection;
 @end
 
 OF_ASSUME_NONNULL_END

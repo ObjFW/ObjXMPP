@@ -32,8 +32,8 @@
 @implementation XMPPContactManager
 @synthesize contacts = _contacts;
 
-- initWithConnection: (XMPPConnection *)connection
-	      roster: (XMPPRoster *)roster
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+			    roster: (XMPPRoster *)roster
 {
 	self = [super init];
 
@@ -90,27 +90,22 @@
 
 - (void)rosterWasReceived: (XMPPRoster *)roster
 {
-	OFEnumerator *contactEnumerator;
-	XMPPContact *contact;
 	OFDictionary *rosterItems;
-	OFEnumerator *rosterItemEnumerator;
-	OFString *bareJID;
 
-	contactEnumerator = [_contacts objectEnumerator];
-	while ((contact = [contactEnumerator nextObject]) != nil) {
+	for (XMPPContact *contact in _contacts)
 		[_delegates broadcastSelector: @selector(contactManager:
 						   didRemoveContact:)
 				   withObject: self
 				   withObject: contact];
-	}
 	[_contacts release];
+	_contacts = nil;
 
 	_contacts = [[OFMutableDictionary alloc] init];
+
 	rosterItems = [roster rosterItems];
-	rosterItemEnumerator = [rosterItems keyEnumerator];
-	while ((bareJID = [rosterItemEnumerator nextObject]) != nil) {
-		contact = [[[XMPPContact alloc] init] autorelease];
-		[contact XMPP_setRosterItem:
+	for (OFString *bareJID in rosterItems) {
+		XMPPContact *contact = [[[XMPPContact alloc] init] autorelease];
+		[contact xmpp_setRosterItem:
 		    [rosterItems objectForKey: bareJID]];
 		[_contacts setObject: contact
 			      forKey: bareJID];
@@ -141,7 +136,7 @@
 
 	if (contact == nil) {
 		contact = [[[XMPPContact alloc] init] autorelease];
-		[contact XMPP_setRosterItem: rosterItem];
+		[contact xmpp_setRosterItem: rosterItem];
 		[_contacts setObject: contact
 			     forKey: bareJID];
 		[_delegates broadcastSelector: @selector(contactManager:
@@ -153,7 +148,7 @@
 						   willUpdateWithRosterItem:)
 				   withObject: contact
 				   withObject: rosterItem];
-		[contact XMPP_setRosterItem: rosterItem];
+		[contact xmpp_setRosterItem: rosterItem];
 	}
 }
 
@@ -180,7 +175,7 @@
 
 	/* Available presence */
 	if ([type isEqual: @"available"]) {
-		[contact XMPP_setPresence: presence
+		[contact xmpp_setPresence: presence
 				 resource: [JID resource]];
 		[_delegates broadcastSelector: @selector(contact:
 						   didSendPresence:)
@@ -191,7 +186,7 @@
 
 	/* Unavailable presence */
 	if ([type isEqual: @"unavailable"]) {
-		[contact XMPP_removePresenceForResource: [JID resource]];
+		[contact xmpp_removePresenceForResource: [JID resource]];
 		[_delegates broadcastSelector: @selector(contact:
 						   didSendPresence:)
 				   withObject: contact
@@ -209,7 +204,7 @@
 	if (contact == nil)
 		return;
 
-	[contact XMPP_setLockedOnJID: JID];
+	[contact xmpp_setLockedOnJID: JID];
 
 	[_delegates broadcastSelector: @selector(contact:didSendMessage:)
 			   withObject: contact

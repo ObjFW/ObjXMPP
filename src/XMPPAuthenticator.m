@@ -30,17 +30,17 @@
 @implementation XMPPAuthenticator
 @synthesize authzid = _authzid, authcid = _authcid, password = _password;
 
-- initWithAuthcid: (OFString *)authcid
-	 password: (OFString *)password
+- (instancetype)initWithAuthcid: (OFString *)authcid
+		       password: (OFString *)password
 {
 	return [self initWithAuthzid: nil
 			     authcid: authcid
 			    password: password];
 }
 
-- initWithAuthzid: (OFString *)authzid
-	  authcid: (OFString *)authcid
-	 password: (OFString *)password
+- (instancetype)initWithAuthzid: (OFString *)authzid
+			authcid: (OFString *)authcid
+		       password: (OFString *)password
 {
 	self = [super init];
 

@@ -38,12 +38,12 @@
 	return [[[self alloc] initWithConnection: connection] autorelease];
 }
 
-- init
+- (instancetype)init
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithConnection: (XMPPConnection *)connection
 {
 	self = [super init];
 
@@ -77,14 +77,14 @@
 					  reason: reason] autorelease];
 }
 
-- initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithConnection: (XMPPConnection *)connection
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection *)connection
-	   condition: (OFString *)condition
-	      reason: (OFString *)reason
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+			 condition: (OFString *)condition
+			    reason: (OFString *)reason
 {
 	self = [super initWithConnection: connection];
 
@@ -126,14 +126,14 @@
 					  string: string] autorelease];
 }
 
-- initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithConnection: (XMPPConnection *)connection
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection *)connection
-	     profile: (OFString *)profile
-	      string: (OFString *)string
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+			   profile: (OFString *)profile
+			    string: (OFString *)string
 {
 	self = [super initWithConnection: connection];
 
@@ -176,14 +176,14 @@
 					  string: string] autorelease];
 }
 
-- initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithConnection: (XMPPConnection *)connection
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection *)connection
-	   operation: (OFString *)operation
-	      string: (OFString *)string
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+			 operation: (OFString *)operation
+			    string: (OFString *)string
 {
 	self = [super initWithConnection: connection];
 
@@ -223,13 +223,13 @@
 					  reason: reason] autorelease];
 }
 
-- initWithConnection: (XMPPConnection *)connection
+- (instancetype)initWithConnection: (XMPPConnection *)connection
 {
 	OF_INVALID_INIT_METHOD
 }
 
-- initWithConnection: (XMPPConnection *)connection
-	      reason: (OFString *)reason
+- (instancetype)initWithConnection: (XMPPConnection *)connection
+			    reason: (OFString *)reason
 {
 	self = [super initWithConnection: connection];
 

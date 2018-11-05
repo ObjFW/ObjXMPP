@@ -50,7 +50,7 @@ OF_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection;
 
-- init OF_UNAVAILABLE;
+- (instancetype)init OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPException.
@@ -59,7 +59,7 @@ OF_ASSUME_NONNULL_BEGIN
  *	  for this exception
  * @return An initialized XMPPException
  */
-- initWithConnection: (nullable XMPPConnection *)connection
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
     OF_DESIGNATED_INITIALIZER;
 @end
 
@@ -93,7 +93,8 @@ OF_ASSUME_NONNULL_BEGIN
 			      condition: (OFString *)condition
 				 reason: (OFString *)reason;
 
-- initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
+    OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPStreamErrorException.
@@ -103,9 +104,10 @@ OF_ASSUME_NONNULL_BEGIN
  * @param reason The descriptive free-form text specified by the stream error
  * @return An initialized XMPPStreamErrorException
  */
-- initWithConnection: (nullable XMPPConnection *)connection
-	   condition: (OFString *)condition
-	      reason: (OFString *)reason OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
+			 condition: (OFString *)condition
+			    reason: (OFString *)reason
+    OF_DESIGNATED_INITIALIZER;
 @end
 
 /*!
@@ -139,7 +141,8 @@ OF_ASSUME_NONNULL_BEGIN
 				profile: (OFString *)profile
 				 string: (OFString *)string;
 
-- initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
+    OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPStringPrepFailedException.
@@ -149,9 +152,10 @@ OF_ASSUME_NONNULL_BEGIN
  * @param string The string that failed the stringprep profile
  * @return An initialized XMPPStringPrepFailedException
  */
-- initWithConnection: (nullable XMPPConnection *)connection
-	     profile: (OFString *)profile
-	      string: (OFString *)string OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
+			   profile: (OFString *)profile
+			    string: (OFString *)string
+    OF_DESIGNATED_INITIALIZER;
 @end
 
 /*!
@@ -184,7 +188,8 @@ OF_ASSUME_NONNULL_BEGIN
 			      operation: (OFString *)operation
 				 string: (OFString *)string;
 
-- initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
+    OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPIDNATranslationFailedException.
@@ -194,9 +199,9 @@ OF_ASSUME_NONNULL_BEGIN
  * @param string The string that could not be translated
  * @return An initialized XMPPIDNATranslationFailedException
  */
-- initWithConnection: (nullable XMPPConnection *)connection
-	   operation: (OFString *)operation
-	      string: (OFString *)string;
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
+			 operation: (OFString *)operation
+			    string: (OFString *)string;
 @end
 
 /*!
@@ -222,7 +227,8 @@ OF_ASSUME_NONNULL_BEGIN
 + (instancetype)exceptionWithConnection: (nullable XMPPConnection *)connection
 				 reason: (OFString *)reason;
 
-- initWithConnection: (nullable XMPPConnection *)connection OF_UNAVAILABLE;
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
+    OF_UNAVAILABLE;
 
 /*!
  * @brief Initializes an already allocated XMPPAuthFailedException.
@@ -231,8 +237,9 @@ OF_ASSUME_NONNULL_BEGIN
  * @param reason The reason the authentication failed
  * @return An initialized XMPPAuthFailedException
  */
-- initWithConnection: (nullable XMPPConnection *)connection
-	      reason: (OFString *)reason OF_DESIGNATED_INITIALIZER;
+- (instancetype)initWithConnection: (nullable XMPPConnection *)connection
+			    reason: (OFString *)reason
+    OF_DESIGNATED_INITIALIZER;
 @end
 
 OF_ASSUME_NONNULL_END

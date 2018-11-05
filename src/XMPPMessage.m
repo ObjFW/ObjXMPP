@@ -51,26 +51,26 @@
 					ID: ID] autorelease];
 }
 
-- init
+- (instancetype)init
 {
 	return [self initWithType: nil
 			       ID: nil];
 }
 
-- initWithID: (OFString *)ID
+- (instancetype)initWithID: (OFString *)ID
 {
 	return [self initWithType: nil
 			       ID: ID];
 }
 
-- initWithType: (OFString *)type
+- (instancetype)initWithType: (OFString *)type
 {
 	return [self initWithType: type
 			       ID: nil];
 }
 
-- initWithType: (OFString *)type
-	    ID: (OFString *)ID
+- (instancetype)initWithType: (OFString *)type
+			  ID: (OFString *)ID
 {
 	return [super initWithName: @"message"
 			      type: type
