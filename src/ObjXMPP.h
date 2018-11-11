@@ -41,3 +41,5 @@
 #import "XMPPDiscoEntity.h"
 #import "XMPPDiscoNode.h"
 #import "XMPPDiscoIdentity.h"
+
+#import "namespaces.h"
