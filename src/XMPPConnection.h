@@ -147,109 +147,113 @@ OF_ASSUME_NONNULL_BEGIN
 	OF_KINDOF(OFTCPSocket *) _socket;
 	OFXMLParser *_parser, *_oldParser;
 	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
-	OFString *_username, *_password, *_server, *_resource;
-	OFString *_privateKeyFile, *_certificateFile;
-	const char *_privateKeyPassphrase;
-	OFString *_domain, *_domainToASCII;
-	XMPPJID *_JID;
+	OFString *_Nullable _username, *_Nullable _password, *_Nullable _server;
+	OFString *_Nullable _resource;
+	bool _usesAnonymousAuthentication;
+	OFString *_Nullable _privateKeyFile, *_Nullable _certificateFile;
+	const char *_Nullable _privateKeyPassphrase;
+	OFString *_Nullable _domain, *_Nullable _domainToASCII;
+	XMPPJID *_Nullable _JID;
 	uint16_t _port;
-	id <XMPPStorage> _dataStorage;
-	OFString *_language;
+	id <XMPPStorage> _Nullable _dataStorage;
+	OFString *_Nullable _language;
 	XMPPMulticastDelegate *_delegates;
 	OFMutableDictionary OF_GENERIC(OFString *, XMPPCallback *) *_callbacks;
 	XMPPAuthenticator *_authModule;
-	bool _streamOpen;
-	bool _needsSession;
-	bool _encryptionRequired, _encrypted;
-	bool _supportsRosterVersioning;
-	bool _supportsStreamManagement;
+	bool _streamOpen, _needsSession, _encryptionRequired, _encrypted;
+	bool _supportsRosterVersioning, _supportsStreamManagement;
 	unsigned int _lastID;
 }
 
 /*!
- * The username to use for authentication.
+ * @brief The username to use for authentication.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *username;
 
 /*!
- * The password to use for authentication.
+ * @brief The password to use for authentication.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *password;
 
 /*!
- * The server to use for the connection.
+ * @brief The server to use for the connection.
  *
  * This is useful if the address of the server is different from the domain.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *server;
 
 /*!
- * The domain to connect to.
+ * @brief The domain to connect to.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *domain;
 
 /*!
- * The resource to request for the connection.
+ * @brief The resource to request for the connection.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *resource;
 
 /*!
- * The language to request for the connection.
+ * @brief Whether the connection uses SASL ANONYMOUS authentication.
+ */
+@property (nonatomic) bool usesAnonymousAuthentication;
+
+/*!
+ * @brief The language to request for the connection.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *language;
 
 /*!
- * A private key file to use for authentication.
+ * @brief A private key file to use for authentication.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *privateKeyFile;
 
 /*!
- * A certificate file to use for authentication.
+ * @brief A certificate file to use for authentication.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *certificateFile;
 
 /*!
- * The JID the server assigned to the connection after binding.
+ * @brief The JID the server assigned to the connection after binding.
  */
-@property (readonly, nonatomic) XMPPJID *JID;
+@property OF_NULLABLE_PROPERTY (readonly, nonatomic) XMPPJID *JID;
 
 /*!
- * The port to connect to.
+ * @brief The port to connect to.
  */
 @property (nonatomic) uint16_t port;
 
 /*!
- * An object for data storage, conforming to the XMPPStorage protocol.
+ * @brief An object for data storage, conforming to the XMPPStorage protocol.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, assign) id <XMPPStorage> dataStorage;
 
 /*!
- * The socket used for the connection.
+ * @brief The socket used for the connection.
  */
 @property (readonly, nonatomic) OF_KINDOF(OFTCPSocket *) socket;
 
 /*!
- * Whether encryption is required.
+ * @brief Whether encryption is required.
  */
 @property (nonatomic) bool encryptionRequired;
 
 /*!
- * Whether the connection is encrypted.
+ * @brief Whether the connection is encrypted.
  */
 @property (readonly, nonatomic) bool encrypted;
 
 /*!
- * Whether roster versioning is supported.
+ * @brief Whether roster versioning is supported.
  */
 @property (readonly, nonatomic) bool supportsRosterVersioning;
 
 /*!
- * Whether stream management is supported.
+ * @brief Whether stream management is supported.
  */
 @property (readonly, nonatomic) bool supportsStreamManagement;
 
 /*!
- * Creates a new autoreleased XMPPConnection.
+ * @brief Creates a new autoreleased XMPPConnection.
  *
  * @return A new autoreleased XMPPConnection
  */

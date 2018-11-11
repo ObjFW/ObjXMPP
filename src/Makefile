@@ -6,7 +6,8 @@ FRAMEWORK = ${OBJXMPP_FRAMEWORK}
 LIB_MAJOR = 0
 LIB_MINOR = 0
 
-SRCS = XMPPAuthenticator.m	\
+SRCS = XMPPANONYMOUSAuth.m	\
+       XMPPAuthenticator.m	\
        XMPPCallback.m		\
        XMPPConnection.m		\
        XMPPContact.m		\

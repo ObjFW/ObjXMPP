@@ -38,18 +38,20 @@
 #import <ObjFW/OFInvalidArgumentException.h>
 
 #import "XMPPConnection.h"
+#import "XMPPANONYMOUSAuth.h"
 #import "XMPPCallback.h"
 #import "XMPPEXTERNALAuth.h"
-#import "XMPPSCRAMAuth.h"
-#import "XMPPPLAINAuth.h"
-#import "XMPPStanza.h"
-#import "XMPPJID.h"
-#import "XMPPIQ.h"
-#import "XMPPMessage.h"
-#import "XMPPPresence.h"
-#import "XMPPMulticastDelegate.h"
 #import "XMPPExceptions.h"
+#import "XMPPIQ.h"
+#import "XMPPJID.h"
+#import "XMPPMessage.h"
+#import "XMPPMulticastDelegate.h"
+#import "XMPPPLAINAuth.h"
+#import "XMPPPresence.h"
+#import "XMPPSCRAMAuth.h"
+#import "XMPPStanza.h"
 #import "XMPPXMLElementBuilder.h"
+
 #import "namespaces.h"
 
 #import <ObjFW/macros.h>
@@ -99,6 +101,7 @@
 @implementation XMPPConnection
 @synthesize username = _username, resource = _resource, server = _server;
 @synthesize domain = _domain, password = _password, JID = _JID, port = _port;
+@synthesize usesAnonymousAuthentication = _usesAnonymousAuthentication;
 @synthesize language = _language, privateKeyFile = _privateKeyFile;
 @synthesize certificateFile = _certificateFile, socket = _socket;
 @synthesize encryptionRequired = _encryptionRequired, encrypted = _encrypted;
@@ -1014,6 +1017,18 @@
 		for (OFXMLElement *mech in [mechs children])
 			[mechanisms addObject: [mech stringValue]];
 
+		if (_usesAnonymousAuthentication) {
+			if (![mechanisms containsObject: @"ANONYMOUS"])
+				@throw [XMPPAuthFailedException
+				    exceptionWithConnection: self
+						     reason: @"No supported "
+							     @"auth mechanism"];
+
+			_authModule = [[XMPPANONYMOUSAuth alloc] init];
+			[self xmpp_sendAuth: @"ANONYMOUS"];
+			return;
+		}
+
 		if (_privateKeyFile != nil && _certificateFile != nil &&
 		    [mechanisms containsObject: @"EXTERNAL"]) {
 			_authModule = [[XMPPEXTERNALAuth alloc] init];
@@ -1051,7 +1066,10 @@
 			return;
 		}
 
-		assert(0);
+		@throw [XMPPAuthFailedException
+		    exceptionWithConnection: self
+				     reason: @"No supported auth mechanism"];
+
 	}
 
 	if (session != nil && [session elementForName: @"optional"
@@ -1075,7 +1093,7 @@
 				      namespace: XMPP_NS_SASL];
 	[authTag addAttributeWithName: @"mechanism"
 			  stringValue: authName];
-	if (initialMessage) {
+	if (initialMessage != nil) {
 		if ([initialMessage count] == 0)
 			[authTag setStringValue: @"="];
 		else
