@@ -35,11 +35,6 @@ OF_ASSUME_NONNULL_BEGIN
 }
 
 /*!
- * The value of the stanza's type attribute.
- */
-@property OF_NULL_RESETTABLE_PROPERTY (nonatomic, copy) OFString *type;
-
-/*!
  * The text content of the status element.
  */
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *status;

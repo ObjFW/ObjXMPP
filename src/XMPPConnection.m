@@ -706,7 +706,6 @@
 	if (_streamOpen)
 		[_socket writeString: @"</stream:stream>"];
 
-
 	[_oldParser release];
 	_oldParser = nil;
 	[_oldElementBuilder release];

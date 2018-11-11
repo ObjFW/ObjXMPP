@@ -47,7 +47,6 @@ show_to_int(OFString *show)
 }
 
 @implementation XMPPPresence
-@dynamic type;
 @synthesize status = _status, show = _show, priority = _priority;
 
 + (instancetype)presence
@@ -133,14 +132,6 @@ show_to_int(OFString *show)
 	[_priority release];
 
 	[super dealloc];
-}
-
-- (void)setType: (OFString *)type
-{
-	if (type == nil)
-		type = @"available";
-
-	[super setType: type];
 }
 
 - (void)setShow: (OFString *)show
