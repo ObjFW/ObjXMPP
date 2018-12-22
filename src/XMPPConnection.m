@@ -56,26 +56,11 @@
 
 #import <ObjFW/macros.h>
 
-#define BUFFER_LENGTH 512
-
-@interface XMPPConnection ()
-- (void)xmpp_socketDidConnect: (OFTCPSocket *)socket
-		      context: (OFArray *)nextSRVRecords
-		    exception: (id)exception;
-- (void)xmpp_tryNextSRVRecord: (OFArray *)SRVRecords;
--  (void)xmpp_resolver: (OFDNSResolver *)resolver
-  didResolveDomainName: (OFString *)domainName
-	 answerRecords: (OFDictionary *)answerRecords
-      authorityRecords: (OFDictionary *)authorityRecords
-     additionalRecords: (OFDictionary *)additionalRecords
-	       context: (OFString *)domainToASCII
-	     exception: (id)exception;
+@interface XMPPConnection () <OFDNSResolverDelegate, OFTCPSocketDelegate,
+    OFXMLParserDelegate, OFXMLElementBuilderDelegate>
+- (void)xmpp_tryNextSRVRecord;
 -  (bool)xmpp_parseBuffer: (const void *)buffer
 		   length: (size_t)length;
-- (bool)xmpp_stream: (OFStream *)stream
-  didReadIntoBuffer: (char *)buffer
-	     length: (size_t)length
-	  exception: (OFException *)exception;
 - (void)xmpp_startStream;
 - (void)xmpp_handleStanza: (OFXMLElement *)element;
 - (void)xmpp_handleStream: (OFXMLElement *)element;
@@ -142,6 +127,7 @@
 	[_domain release];
 	[_resource release];
 	[_JID release];
+	[_nextSRVRecords release];
 	[_delegates release];
 	[_callbacks release];
 	[_authModule release];
@@ -271,59 +257,49 @@
 	[old release];
 }
 
-- (void)xmpp_socketDidConnect: (OFTCPSocket *)socket
-		      context: (OFArray *)nextSRVRecords
-		    exception: (id)exception
+-     (void)socket: (OF_KINDOF(OFTCPSocket *))sock
+  didConnectToHost: (OFString *)host
+	      port: (uint16_t)port
+	 exception: (id)exception
 {
-	char *buffer;
-
 	if (exception != nil) {
-		if (nextSRVRecords != nil) {
-			[self xmpp_tryNextSRVRecord: nextSRVRecords];
+		if ([_nextSRVRecords count] > 0) {
+			[self xmpp_tryNextSRVRecord];
 			return;
 		}
 
-		[_delegates
-		    broadcastSelector: @selector(connection:didThrowException:)
-			   withObject: self
-			   withObject: exception];
+		[_delegates broadcastSelector: @selector(connection:
+						   didThrowException:)
+				   withObject: self
+				   withObject: exception];
 		return;
 	}
 
 	[self xmpp_startStream];
 
-	buffer = [self allocMemoryWithSize: BUFFER_LENGTH];
-	[_socket asyncReadIntoBuffer: buffer
-			      length: BUFFER_LENGTH
-			      target: self
-			    selector: @selector(xmpp_stream:didReadIntoBuffer:
-					  length:exception:)
-			     context: nil];
+	[_socket asyncReadIntoBuffer: _buffer
+			      length: XMPP_CONNECTION_BUFFER_LENGTH];
 }
 
-- (void)xmpp_tryNextSRVRecord: (OFArray *)SRVRecords
+- (void)xmpp_tryNextSRVRecord
 {
-	OFSRVDNSResourceRecord *record = [SRVRecords objectAtIndex: 0];
+	OFSRVDNSResourceRecord *record =
+	    [[[_nextSRVRecords objectAtIndex: 0] copy] autorelease];
 
-	SRVRecords = [SRVRecords objectsInRange:
-	    of_range(1, [SRVRecords count] - 1)];
-	if ([SRVRecords count] == 0)
-		SRVRecords = nil;
+	if ([_nextSRVRecords count] == 0) {
+		[_nextSRVRecords release];
+		_nextSRVRecords = nil;
+	}
 
 	[_socket asyncConnectToHost: [record target]
-			       port: [record port]
-			     target: self
-			   selector: @selector(xmpp_socketDidConnect:
-					 context:exception:)
-			    context: SRVRecords];
+			       port: [record port]];
 }
 
--  (void)xmpp_resolver: (OFDNSResolver *)resolver
+-	(void)resolver: (OFDNSResolver *)resolver
   didResolveDomainName: (OFString *)domainName
 	 answerRecords: (OFDictionary *)answerRecords
       authorityRecords: (OFDictionary *)authorityRecords
      additionalRecords: (OFDictionary *)additionalRecords
-	       context: (OFString *)domainToASCII
 	     exception: (id)exception
 {
 	OFMutableArray *records = [OFMutableArray array];
@@ -345,17 +321,16 @@
 	[records makeImmutable];
 
 	if ([records count] == 0) {
-		/* Fall back to A / AAA record. */
-		[_socket asyncConnectToHost: domainToASCII
-				       port: _port
-				     target: self
-				   selector: @selector(xmpp_socketDidConnect:
-						 context:exception:)
-				    context: nil];
+		/* Fall back to A / AAAA record. */
+		[_socket asyncConnectToHost: _domainToASCII
+				       port: _port];
 		return;
 	}
 
-	[self xmpp_tryNextSRVRecord: records];
+	[_nextSRVRecords release];
+	_nextSRVRecords = nil;
+	_nextSRVRecords = [records mutableCopy];
+	[self xmpp_tryNextSRVRecord];
 }
 
 - (void)asyncConnect
@@ -366,23 +341,14 @@
 		@throw [OFAlreadyConnectedException exception];
 
 	_socket = [[OFTCPSocket alloc] init];
+	[_socket setDelegate: self];
 
 	if (_server != nil)
 		[_socket asyncConnectToHost: _server
-				       port: _port
-				     target: self
-				   selector: @selector(xmpp_socketDidConnect:
-						 context:exception:)
-				    context: nil];
+				       port: _port];
 	else
-		[[OFThread DNSResolver]
-		    asyncResolveHost: _domainToASCII
-			      target: self
-			    selector: @selector(xmpp_resolver:
-					  didResolveDomainName:answerRecords:
-					  authorityRecords:additionalRecords:
-					  context:exception:)
-			     context: _domainToASCII];
+		[[OFThread DNSResolver] asyncResolveHost: _domainToASCII
+						delegate: self];
 
 	objc_autoreleasePoolPop(pool);
 }
@@ -391,8 +357,10 @@
 		   length: (size_t)length
 {
 	if ([_socket isAtEndOfStream]) {
-		[_delegates broadcastSelector: @selector(connectionWasClosed:)
-				   withObject: self];
+		[_delegates broadcastSelector: @selector(connectionWasClosed:
+						   error:)
+				   withObject: self
+				   withObject: nil];
 		return false;
 	}
 
@@ -422,10 +390,10 @@
 	_oldElementBuilder = nil;
 }
 
-- (bool)xmpp_stream: (OFStream *)stream
-  didReadIntoBuffer: (char *)buffer
+-      (bool)stream: (OF_KINDOF(OFStream *))stream
+  didReadIntoBuffer: (void *)buffer
 	     length: (size_t)length
-	  exception: (OFException *)exception
+	  exception: (id)exception
 {
 	if (exception != nil) {
 		[_delegates broadcastSelector: @selector(connection:
@@ -456,14 +424,8 @@
 		_oldParser = nil;
 		_oldElementBuilder = nil;
 
-		[_socket asyncReadIntoBuffer: buffer
-				      length: BUFFER_LENGTH
-				      target: self
-				    selector: @selector(xmpp_stream:
-						  didReadIntoBuffer:length:
-						  exception:)
-				     context: nil];
-
+		[_socket asyncReadIntoBuffer: _buffer
+				      length: XMPP_CONNECTION_BUFFER_LENGTH];
 		return false;
 	}
 
@@ -586,7 +548,7 @@
 -    (void)parser: (OFXMLParser *)parser
   didStartElement: (OFString *)name
 	   prefix: (OFString *)prefix
-	namespace: (OFString *)NS
+	namespace: (OFString *)namespace
        attributes: (OFArray *)attributes
 {
 	if (![name isEqual: @"stream"]) {
@@ -602,7 +564,7 @@
 		return;
 	}
 
-	if (![NS isEqual: XMPP_NS_STREAM]) {
+	if (![namespace isEqual: XMPP_NS_STREAM]) {
 		[self xmpp_sendStreamError: @"invalid-namespace"
 				      text: nil];
 		return;
@@ -755,84 +717,15 @@
 	if ([[element name] isEqual: @"error"]) {
 		OFString *condition, *reason;
 		[self close];
-		[_socket close]; // Remote has already closed his stream
 
-		if ([element elementForName: @"bad-format"
-				  namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"bad-format";
-		else if ([element elementForName: @"bad-namespace-prefix"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"bad-namespace-prefix";
-		else if ([element elementForName: @"conflict"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"conflict";
-		else if ([element elementForName: @"connection-timeout"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"connection-timeout";
-		else if ([element elementForName: @"host-gone"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"host-gone";
-		else if ([element elementForName: @"host-unknown"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"host-unknown";
-		else if ([element elementForName: @"improper-addressing"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"improper-addressing";
-		else if ([element elementForName: @"internal-server-error"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"internal-server-error";
-		else if ([element elementForName: @"invalid-from"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"invalid-from";
-		else if ([element elementForName: @"invalid-namespace"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"invalid-namespace";
-		else if ([element elementForName: @"invalid-xml"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"invalid-xml";
-		else if ([element elementForName: @"not-authorized"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"not-authorized";
-		else if ([element elementForName: @"not-well-formed"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"not-well-formed";
-		else if ([element elementForName: @"policy-violation"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"policy-violation";
-		else if ([element elementForName: @"remote-connection-failed"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"remote-connection-failed";
-		else if ([element elementForName: @"reset"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"reset";
-		else if ([element elementForName: @"resource-constraint"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"resource-constraint";
-		else if ([element elementForName: @"restricted-xml"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"restricted-xml";
-		else if ([element elementForName: @"see-other-host"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"see-other-host";
-		else if ([element elementForName: @"system-shutdown"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"system-shutdown";
-		else if ([element elementForName: @"undefined-condition"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"undefined-condition";
-		else if ([element elementForName: @"unsupported-encoding"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"unsupported-encoding";
-		else if ([element elementForName: @"unsupported-feature"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"unsupported-feature";
-		else if ([element elementForName: @"unsupported-stanza-type"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"unsupported-stanza-type";
-		else if ([element elementForName: @"unsupported-version"
-				       namespace: XMPP_NS_XMPP_STREAM])
-			condition = @"unsupported-version";
-		else
+		[_delegates broadcastSelector: @selector(connectionWasClosed:)
+				   withObject: self
+				   withObject: element];
+
+		condition = [[[element elementsForNamespace:
+		    XMPP_NS_XMPP_STREAM] firstObject] name];
+
+		if (condition == nil)
 			condition = @"undefined";
 
 		reason = [[element
@@ -870,6 +763,7 @@
 		[newSock startTLSWithExpectedHost: nil];
 		[_socket release];
 		_socket = newSock;
+		[_socket setDelegate: self];
 
 		_encrypted = true;
 

@@ -29,6 +29,8 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
+#define XMPP_CONNECTION_BUFFER_LENGTH 512
+
 @class XMPPConnection;
 @class XMPPJID;
 @class XMPPIQ;
@@ -110,8 +112,10 @@ OF_ASSUME_NONNULL_BEGIN
  * @brief This callback is called when the connection was closed.
  *
  * @param connection The connection that was closed
+ * @param error The error XML element the stream encountered or nil
  */
-- (void)connectionWasClosed: (XMPPConnection *)connection;
+- (void)connectionWasClosed: (XMPPConnection *)connection
+		      error: (nullable OFXMLElement *)error;
 
 /*!
  * @brief This callback is called when the connection threw an exception.
@@ -141,10 +145,10 @@ OF_ASSUME_NONNULL_BEGIN
 /*!
  * @brief A class which abstracts a connection to an XMPP service.
  */
-@interface XMPPConnection: OFObject <OFXMLParserDelegate,
-    OFXMLElementBuilderDelegate>
+@interface XMPPConnection: OFObject
 {
 	OF_KINDOF(OFTCPSocket *) _socket;
+	char _buffer[XMPP_CONNECTION_BUFFER_LENGTH];
 	OFXMLParser *_parser, *_oldParser;
 	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
 	OFString *_Nullable _username, *_Nullable _password, *_Nullable _server;
@@ -157,6 +161,7 @@ OF_ASSUME_NONNULL_BEGIN
 	uint16_t _port;
 	id <XMPPStorage> _Nullable _dataStorage;
 	OFString *_Nullable _language;
+	OFMutableArray *_nextSRVRecords;
 	XMPPMulticastDelegate *_delegates;
 	OFMutableDictionary OF_GENERIC(OFString *, XMPPCallback *) *_callbacks;
 	XMPPAuthenticator *_authModule;

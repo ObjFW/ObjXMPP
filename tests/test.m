@@ -269,7 +269,8 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 }
 
 - (void)connectionWasClosed: (XMPPConnection *)conn
+		      error: (OFXMLElement *)error
 {
-	of_log(@"Connection was closed!");
+	of_log(@"Connection was closed: %@", error);
 }
 @end
