@@ -19,6 +19,15 @@ AC_PROG_OBJCPP
 AC_PROG_LN_S
 AC_PROG_INSTALL
 
+AC_MSG_CHECKING(for ObjOpenSSL)
+AS_IF([$OBJFW_CONFIG --package ObjOpenSSL 2>/dev/null], [
+	AC_MSG_RESULT(yes)
+], [
+	AC_MSG_RESULT(no)
+	AC_MSG_ERROR(You need ObjOpenSSL installed!)
+])
+
+OBJFW_CONFIG="$OBJFW_CONFIG --package ObjOpenSSL"
 CPP="$OBJCPP"
 CPPFLAGS="$CPPFLAGS $OBJCPPFLAGS $($OBJFW_CONFIG --cppflags)"
 OBJCFLAGS="$OBJCFLAGS -Wall $($OBJFW_CONFIG --objcflags)"
