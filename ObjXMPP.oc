@@ -1,0 +1,3 @@
+package_description 1
+package_depends_on ObjOpenSSL
+LIBS="-lobjxmpp $LIBS"

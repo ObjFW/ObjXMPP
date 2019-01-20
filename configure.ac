@@ -27,13 +27,14 @@ AS_IF([$OBJFW_CONFIG --package ObjOpenSSL 2>/dev/null], [
 	AC_MSG_ERROR(You need ObjOpenSSL installed!)
 ])
 
-OBJFW_CONFIG="$OBJFW_CONFIG --package ObjOpenSSL"
+packages="--package ObjOpenSSL"
 CPP="$OBJCPP"
-CPPFLAGS="$CPPFLAGS $OBJCPPFLAGS $($OBJFW_CONFIG --cppflags)"
-OBJCFLAGS="$OBJCFLAGS -Wall $($OBJFW_CONFIG --objcflags)"
-LDFLAGS="$LDFLAGS $($OBJFW_CONFIG --ldflags)"
-AC_SUBST(OBJFW_LIBS, "$LIBS $($OBJFW_CONFIG --libs)")
-AC_SUBST(OBJFW_FRAMEWORK_LIBS, "$LIBS $($OBJFW_CONFIG --framework-libs)")
+CPPFLAGS="$CPPFLAGS $OBJCPPFLAGS $($OBJFW_CONFIG $packages --cppflags)"
+OBJCFLAGS="$OBJCFLAGS -Wall $($OBJFW_CONFIG $packages --objcflags)"
+LDFLAGS="$LDFLAGS $($OBJFW_CONFIG $packages --ldflags)"
+AC_SUBST(OBJFW_LIBS, "$LIBS $($OBJFW_CONFIG $packages --libs)")
+AC_SUBST(OBJFW_FRAMEWORK_LIBS,
+	"$LIBS $($OBJFW_CONFIG $packages --framework-libs)")
 
 AX_CHECK_COMPILER_FLAGS(-Watomic-properties,
 	[OBJCFLAGS="$OBJCFLAGS -Watomic-properties"])
