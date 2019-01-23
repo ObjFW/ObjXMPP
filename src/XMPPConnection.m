@@ -341,7 +341,7 @@
 		@throw [OFAlreadyConnectedException exception];
 
 	_socket = [[OFTCPSocket alloc] init];
-	[_socket setDelegate: self];
+	[(OFTCPSocket *)_socket setDelegate: self];
 
 	if (_server != nil)
 		[_socket asyncConnectToHost: _server
@@ -763,7 +763,7 @@
 		[newSock startTLSWithExpectedHost: nil];
 		[_socket release];
 		_socket = newSock;
-		[_socket setDelegate: self];
+		[(OFTCPSocket *)_socket setDelegate: self];
 
 		_encrypted = true;
 
