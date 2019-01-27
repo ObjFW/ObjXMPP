@@ -346,9 +346,15 @@
 	if (_server != nil)
 		[_socket asyncConnectToHost: _server
 				       port: _port];
-	else
-		[[OFThread DNSResolver] asyncResolveHost: _domainToASCII
-						delegate: self];
+	else {
+		OFString *SRVDomain = [_domainToASCII
+		    stringByPrependingString: @"_xmpp-client._tcp."];
+		[[OFThread DNSResolver]
+		    asyncResolveHost: SRVDomain
+			 recordClass: OF_DNS_RESOURCE_RECORD_CLASS_IN
+			  recordType: OF_DNS_RESOURCE_RECORD_TYPE_SRV
+			    delegate: self];
+	}
 
 	objc_autoreleasePoolPop(pool);
 }
