@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
  *
  * https://heap.zone/objxmpp/
  *
@@ -108,7 +108,7 @@
 - (void)addDiscoNode: (XMPPDiscoNode *)node
 {
 	[_discoNodes setObject: node
-			forKey: [node node]];
+			forKey: node.node];
 }
 
 - (OFString *)capsHash
@@ -118,19 +118,19 @@
 	OFData *digest;
 
 	for (XMPPDiscoIdentity *identity in _identities)
-		[caps appendFormat: @"%@/%@//%@<", [identity category],
-		    [identity type], [identity name]];
+		[caps appendFormat: @"%@/%@//%@<",
+		    identity.category, identity.type, identity.name];
 
 	for (OFString *feature in _features)
 		[caps appendFormat: @"%@<", feature];
 
-	[hash updateWithBuffer: [caps UTF8String]
-			length: [caps UTF8StringLength]];
+	[hash updateWithBuffer: caps.UTF8String
+			length: caps.UTF8StringLength];
 
-	digest = [OFData dataWithItems: [hash digest]
-				 count: [[hash class] digestSize]];
+	digest = [OFData dataWithItems: hash.digest
+				 count: hash.digestSize];
 
-	return [digest stringByBase64Encoding];
+	return digest.stringByBase64Encoding;
 }
 
 - (void)connection: (XMPPConnection *)connection
@@ -142,15 +142,14 @@
 - (bool)connection: (XMPPConnection *)connection
       didReceiveIQ: (XMPPIQ *)IQ
 {
-	if (![[IQ to] isEqual: _JID])
+	if (![IQ.to isEqual: _JID])
 		return false;
 
 	OFXMLElement *query = [IQ elementForName: @"query"
 				       namespace: XMPP_NS_DISCO_ITEMS];
 
 	if (query != nil) {
-		OFString *node =
-		    [[query attributeForName: @"node"] stringValue];
+		OFString *node = [query attributeForName: @"node"].stringValue;
 		if (node == nil)
 			return [self xmpp_handleItemsIQ: IQ
 					     connection: connection];
@@ -167,15 +166,14 @@
 			 namespace: XMPP_NS_DISCO_INFO];
 
 	if (query != nil) {
-		OFString *node =
-		    [[query attributeForName: @"node"] stringValue];
+		OFString *node = [query attributeForName: @"node"].stringValue;
 
 		if (node == nil)
 			return [self xmpp_handleInfoIQ: IQ
 					    connection: connection];
 
-		OFString *capsNode = [_capsNode stringByAppendingFormat: @"#%@",
-					 [self capsHash]];
+		OFString *capsNode =
+		    [_capsNode stringByAppendingFormat: @"#%@", self.capsHash];
 		if ([capsNode isEqual: node])
 			return [self xmpp_handleInfoIQ: IQ
 					    connection: connection];

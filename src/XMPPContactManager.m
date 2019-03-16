@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
  *
  * https://heap.zone/objxmpp/
  *
@@ -67,7 +67,7 @@
 - (void)sendSubscribedToJID: (XMPPJID *)subscriber
 {
 	XMPPPresence *presence = [XMPPPresence presenceWithType: @"subscribed"];
-	[presence setTo: subscriber];
+	presence.to = subscriber;
 	[_connection sendStanza: presence];
 }
 
@@ -75,7 +75,7 @@
 {
 	XMPPPresence *presence =
 	    [XMPPPresence presenceWithType: @"unsubscribed"];
-	[presence setTo: subscriber];
+	presence.to = subscriber;
 	[_connection sendStanza: presence];
 }
 
@@ -103,11 +103,10 @@
 
 	_contacts = [[OFMutableDictionary alloc] init];
 
-	rosterItems = [roster rosterItems];
+	rosterItems = roster.rosterItems;
 	for (OFString *bareJID in rosterItems) {
 		XMPPContact *contact = [[[XMPPContact alloc] init] autorelease];
-		[contact xmpp_setRosterItem:
-		    [rosterItems objectForKey: bareJID]];
+		contact.rosterItem = [rosterItems objectForKey: bareJID];
 		[_contacts setObject: contact
 			      forKey: bareJID];
 		[_delegates broadcastSelector: @selector(contactManager:
@@ -121,11 +120,11 @@
   didReceiveRosterItem: (XMPPRosterItem *)rosterItem
 {
 	XMPPContact *contact;
-	OFString *bareJID = [[rosterItem JID] bareJID];
+	OFString *bareJID = rosterItem.JID.bareJID;
 
 	contact = [_contacts objectForKey: bareJID];
 
-	if ([[rosterItem subscription] isEqual: @"remove"]) {
+	if ([rosterItem.subscription isEqual: @"remove"]) {
 		if (contact != nil)
 			[_delegates broadcastSelector: @selector(contactManager:
 							   didRemoveContact:)
@@ -137,7 +136,7 @@
 
 	if (contact == nil) {
 		contact = [[[XMPPContact alloc] init] autorelease];
-		[contact xmpp_setRosterItem: rosterItem];
+		contact.rosterItem = rosterItem;
 		[_contacts setObject: contact
 			     forKey: bareJID];
 		[_delegates broadcastSelector: @selector(contactManager:
@@ -149,7 +148,7 @@
 						   willUpdateWithRosterItem:)
 				   withObject: contact
 				   withObject: rosterItem];
-		[contact xmpp_setRosterItem: rosterItem];
+		contact.rosterItem = rosterItem;
 	}
 }
 
@@ -157,8 +156,8 @@
   didReceivePresence: (XMPPPresence *)presence
 {
 	XMPPContact *contact;
-	XMPPJID *JID = [presence from];
-	OFString *type = [presence type];
+	XMPPJID *JID = presence.from;
+	OFString *type = presence.type;
 
 	/* Subscription request */
 	if ([type isEqual: @"subscribe"]) {
@@ -170,14 +169,14 @@
 		return;
 	}
 
-	contact = [_contacts objectForKey: [JID bareJID]];
+	contact = [_contacts objectForKey: JID.bareJID];
 	if (contact == nil)
 		return;
 
 	/* Available presence */
 	if ([type isEqual: @"available"]) {
 		[contact xmpp_setPresence: presence
-				 resource: [JID resource]];
+				 resource: JID.resource];
 		[_delegates broadcastSelector: @selector(contact:
 						   didSendPresence:)
 				   withObject: contact
@@ -187,7 +186,7 @@
 
 	/* Unavailable presence */
 	if ([type isEqual: @"unavailable"]) {
-		[contact xmpp_removePresenceForResource: [JID resource]];
+		[contact xmpp_removePresenceForResource: JID.resource];
 		[_delegates broadcastSelector: @selector(contact:
 						   didSendPresence:)
 				   withObject: contact
@@ -199,13 +198,13 @@
 -  (void)connection: (XMPPConnection *)connection
   didReceiveMessage: (XMPPMessage *)message
 {
-	XMPPJID *JID = [message from];
-	XMPPContact *contact = [_contacts objectForKey: [JID bareJID]];
+	XMPPJID *JID = message.from;
+	XMPPContact *contact = [_contacts objectForKey: JID.bareJID];
 
 	if (contact == nil)
 		return;
 
-	[contact xmpp_setLockedOnJID: JID];
+	contact.xmpp_lockedOnJID = JID;
 
 	[_delegates broadcastSelector: @selector(contact:didSendMessage:)
 			   withObject: contact

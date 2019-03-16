@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
  *
  * https://heap.zone/objxmpp/
  *
@@ -57,9 +57,9 @@
 	 connection: (XMPPConnection *)connection
 {
 	if (_lockedOnJID == nil)
-		[message setTo: [_rosterItem JID]];
+		message.to = _rosterItem.JID;
 	else
-		[message setTo: _lockedOnJID];
+		message.to = _lockedOnJID;
 
 	[connection sendStanza: message];
 }
@@ -81,7 +81,7 @@
 		[_presences setObject: presence
 			       forKey: @""];
 
-	[self xmpp_setLockedOnJID: nil];
+	self.xmpp_lockedOnJID = nil;
 }
 
 - (void)xmpp_removePresenceForResource: (OFString *)resource
@@ -93,7 +93,7 @@
 		_presences = [[OFMutableDictionary alloc] init];
 	}
 
-	[self xmpp_setLockedOnJID: nil];
+	self.xmpp_lockedOnJID = nil;
 }
 
 - (void)xmpp_setLockedOnJID: (XMPPJID *)JID;

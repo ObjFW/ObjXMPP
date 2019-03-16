@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
  *
  * https://heap.zone/objxmpp/
  *
@@ -117,7 +117,7 @@
 - (void)addChildNode: (XMPPDiscoNode *)node
 {
 	[_childNodes setObject: node
-			forKey: [node node]];
+			forKey: node.node];
 }
 
 - (bool)xmpp_handleItemsIQ: (XMPPIQ *)IQ
@@ -143,13 +143,13 @@
 					namespace: XMPP_NS_DISCO_ITEMS];
 
 		[item addAttributeWithName: @"jid"
-			       stringValue: [[child JID] fullJID]];
-		if ([child node] != nil)
+			       stringValue: child.JID.fullJID];
+		if (child.node != nil)
 			[item addAttributeWithName: @"node"
-				       stringValue: [child node]];
-		if ([child name] != nil)
+				       stringValue: child.node];
+		if (child.name != nil)
 			[item addAttributeWithName: @"name"
-				       stringValue: [child name]];
+				       stringValue: child.name];
 
 		[response addChild: item];
 	}
@@ -176,12 +176,12 @@
 					namespace: XMPP_NS_DISCO_INFO];
 
 		[identityElement addAttributeWithName: @"category"
-					  stringValue: [identity category]];
+					  stringValue: identity.category];
 		[identityElement addAttributeWithName: @"type"
-					  stringValue: [identity type]];
-		if ([identity name] != nil)
+					  stringValue: identity.type];
+		if (identity.name != nil)
 			[identityElement addAttributeWithName: @"name"
-						  stringValue: [identity name]];
+						  stringValue: identity.name];
 
 		[response addChild: identityElement];
 	}

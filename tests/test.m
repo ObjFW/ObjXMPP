@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2010, 2011, 2019, Jonathan Schleifer <js@webkeks.org>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -53,38 +53,39 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	OFArray *arguments = [OFApplication arguments];
 
 	XMPPPresence *pres = [XMPPPresence presence];
-	[pres setShow: @"xa"];
-	[pres setStatus: @"Bored"];
-	[pres setPriority: [OFNumber numberWithInt8: 20]];
-	[pres setTo: [XMPPJID JIDWithString: @"alice@example.com"]];
-	[pres setFrom: [XMPPJID JIDWithString: @"bob@example.org"]];
-	assert([[pres XMLString] isEqual: @"<presence to='alice@example.com' "
+	pres.show = @"xa";
+	pres.status = @"Bored";
+	pres.priority = [OFNumber numberWithInt8: 20];
+	pres.to = [XMPPJID JIDWithString: @"alice@example.com"];
+	pres.from = [XMPPJID JIDWithString: @"bob@example.org"];
+	assert([pres.XMLString isEqual: @"<presence to='alice@example.com' "
 	    @"from='bob@example.org'><show>xa</show>"
 	    @"<status>Bored</status><priority>20</priority>"
 	    @"</presence>"]);
 
 	XMPPPresence *pres2 = [XMPPPresence presence];
-	[pres2 setShow: @"away"];
-	[pres2 setStatus: @"Bored"];
-	[pres2 setPriority: [OFNumber numberWithInt8: 23]];
-	[pres2 setTo: [XMPPJID JIDWithString: @"alice@example.com"]];
-	[pres2 setFrom: [XMPPJID JIDWithString: @"bob@example.org"]];
+	pres2.show = @"away";
+	pres2.status = @"Bored";
+	pres2.priority = [OFNumber numberWithInt8: 23];
+	pres2.to = [XMPPJID JIDWithString: @"alice@example.com"];
+	pres2.from = [XMPPJID JIDWithString: @"bob@example.org"];
 
 	assert([pres compare: pres2] == OF_ORDERED_ASCENDING);
 
 	XMPPMessage *msg = [XMPPMessage messageWithType: @"chat"];
-	[msg setBody: @"Hello everyone"];
-	[msg setTo: [XMPPJID JIDWithString: @"jdev@conference.jabber.org"]];
-	[msg setFrom: [XMPPJID JIDWithString: @"alice@example.com"]];
-	assert([[msg XMLString] isEqual: @"<message type='chat' "
+	msg.body = @"Hello everyone";
+	msg.to = [XMPPJID JIDWithString: @"jdev@conference.jabber.org"];
+	msg.from = [XMPPJID JIDWithString: @"alice@example.com"];
+	assert([msg.XMLString isEqual: @"<message type='chat' "
 	    @"to='jdev@conference.jabber.org' "
 	    @"from='alice@example.com'><body>Hello everyone</body>"
 	    @"</message>"]);
 
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"set" ID: @"128"];
-	[iq setTo: [XMPPJID JIDWithString: @"juliet@capulet.lit"]];
-	[iq setFrom: [XMPPJID JIDWithString: @"romeo@montague.lit"]];
-	assert([[iq XMLString] isEqual: @"<iq type='set' id='128' "
+	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
+				     ID: @"128"];
+	IQ.to = [XMPPJID JIDWithString: @"juliet@capulet.lit"];
+	IQ.from = [XMPPJID JIDWithString: @"romeo@montague.lit"];
+	assert([IQ.XMLString isEqual: @"<iq type='set' id='128' "
 	    @"to='juliet@capulet.lit' "
 	    @"from='romeo@montague.lit'/>"]);
 
@@ -98,10 +99,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[elem addAttributeWithName: @"id"
 		       stringValue: @"42"];
 	XMPPStanza *stanza = [XMPPStanza stanzaWithElement: elem];
-	assert([[elem XMLString] isEqual: [stanza XMLString]]);
+	assert([elem.XMLString isEqual: [stanza XMLString]]);
 	assert(([[OFString stringWithFormat: @"%@, %@, %@, %@",
-	    [[stanza from] fullJID], [[stanza to] fullJID], [stanza type],
-	    [stanza ID]] isEqual: @"bob@localhost, alice@localhost, get, 42"]));
+	    stanza.from.fullJID, stanza.to.fullJID, stanza.type, stanza.ID]
+	    isEqual: @"bob@localhost, alice@localhost, get, 42"]));
 
 
 	conn = [[XMPPConnection alloc] init];
@@ -109,22 +110,22 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 
 	XMPPFileStorage *storage =
 	    [[XMPPFileStorage alloc] initWithFile: @"storage.binarypack"];
-	[conn setDataStorage: storage];
+	conn.dataStorage = storage;
 
 	roster = [[XMPPRoster alloc] initWithConnection: conn];
 	[roster addDelegate: self];
 
 	[[XMPPStreamManagement alloc] initWithConnection: conn];
 
-	if ([arguments count] != 3) {
+	if (arguments.count != 3) {
 		of_log(@"Invalid count of command line arguments!");
 		[OFApplication terminateWithStatus: 1];
 	}
 
-	[conn setDomain: [arguments objectAtIndex: 0]];
-	[conn setUsername: [arguments objectAtIndex: 1]];
-	[conn setPassword: [arguments objectAtIndex: 2]];
-	[conn setResource: @"ObjXMPP"];
+	conn.domain = [arguments objectAtIndex: 0];
+	conn.username = [arguments objectAtIndex: 1];
+	conn.password = [arguments objectAtIndex: 2];
+	conn.resource = @"ObjXMPP";
 
 	[conn asyncConnect];
 }
@@ -147,11 +148,11 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 }
 
 - (void)connection: (XMPPConnection *)conn_
-     wasBoundToJID: (XMPPJID *)jid
+     wasBoundToJID: (XMPPJID *)JID
 {
-	of_log(@"Bound to JID: %@", [jid fullJID]);
+	of_log(@"Bound to JID: %@", JID.fullJID);
 	of_log(@"Supports SM: %@",
-	    [conn_ supportsStreamManagement] ? @"true" : @"false");
+	    conn_.supportsStreamManagement ? @"true" : @"false");
 
 	XMPPDiscoEntity *discoEntity =
 	    [[XMPPDiscoEntity alloc] initWithConnection: conn];
@@ -162,29 +163,29 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 					       name: @"ObjXMPP"]];
 
 	XMPPDiscoNode *nodeMusic =
-	    [XMPPDiscoNode discoNodeWithJID: jid
+	    [XMPPDiscoNode discoNodeWithJID: JID
 				       node: @"music"
 				       name: @"My music"];
 	[discoEntity addChildNode: nodeMusic];
 
 	XMPPDiscoNode *nodeRHCP =
-	    [XMPPDiscoNode discoNodeWithJID: jid
+	    [XMPPDiscoNode discoNodeWithJID: JID
 				       node: @"fa3b6"
 				       name: @"Red Hot Chili Peppers"];
 	[nodeMusic addChildNode: nodeRHCP];
 
 	XMPPDiscoNode *nodeStop =
-	    [XMPPDiscoNode discoNodeWithJID: jid
+	    [XMPPDiscoNode discoNodeWithJID: JID
 				       node: @"qwe87"
 				       name: @"Can't Stop"];
 	[nodeRHCP addChildNode: nodeStop];
 
-	XMPPDiscoNode *nodeClueso = [XMPPDiscoNode discoNodeWithJID: jid
+	XMPPDiscoNode *nodeClueso = [XMPPDiscoNode discoNodeWithJID: JID
 							       node: @"ea386"
 							       name: @"Clueso"];
 	[nodeMusic addChildNode: nodeClueso];
 
-	XMPPDiscoNode *nodeChicago = [XMPPDiscoNode discoNodeWithJID: jid
+	XMPPDiscoNode *nodeChicago = [XMPPDiscoNode discoNodeWithJID: JID
 							      node: @"qwr87"
 							      name: @"Chicago"];
 	[nodeClueso addChildNode: nodeChicago];
@@ -202,20 +203,20 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 {
 	XMPPPresence *pres;
 
-	of_log(@"Got roster: %@", [roster_ rosterItems]);
+	of_log(@"Got roster: %@", roster_.rosterItems);
 
 	pres = [XMPPPresence presence];
-	[pres setPriority: [OFNumber numberWithInt8: 10]];
-	[pres setStatus: @"ObjXMPP test is working!"];
+	pres.priority = [OFNumber numberWithInt8: 10];
+	pres.status = @"ObjXMPP test is working!";
 
 	[conn sendStanza: pres];
 
 #ifdef OF_HAVE_BLOCKS
-	XMPPIQ *iq = [XMPPIQ IQWithType: @"get"
+	XMPPIQ *IQ = [XMPPIQ IQWithType: @"get"
 				     ID: [conn generateStanzaID]];
-	[iq addChild: [OFXMLElement elementWithName: @"ping"
+	[IQ addChild: [OFXMLElement elementWithName: @"ping"
 					  namespace: @"urn:xmpp:ping"]];
-	[conn	   sendIQ: iq
+	[conn	   sendIQ: IQ
 	    callbackBlock: ^ (XMPPConnection *c, XMPPIQ *resp) {
 		of_log(@"Ping response: %@", resp);
 	}];

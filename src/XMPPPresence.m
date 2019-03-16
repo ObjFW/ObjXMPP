@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, 2012, 2013, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -30,7 +30,7 @@
 
 /* This provides us with sortable values for show values */
 static int
-show_to_int(OFString *show)
+showToInt(OFString *show)
 {
 	if ([show isEqual: @"chat"])
 		return 0;
@@ -106,17 +106,16 @@ show_to_int(OFString *show)
 
 		if ((subElement = [element elementForName: @"show"
 						namespace: XMPP_NS_CLIENT]))
-			[self setShow: [subElement stringValue]];
+			self.show = subElement.stringValue;
 
 		if ((subElement = [element elementForName: @"status"
 						namespace: XMPP_NS_CLIENT]))
-			[self setStatus: [subElement stringValue]];
+			self.status = subElement.stringValue;
 
 		if ((subElement = [element elementForName: @"priority"
 						namespace: XMPP_NS_CLIENT]))
-			[self setPriority:
-			    [OFNumber numberWithIntMax:
-				[[subElement stringValue] decimalValue]]];
+			self.priority = [OFNumber
+			    numberWithIntMax: subElement.decimalValue];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -174,7 +173,7 @@ show_to_int(OFString *show)
 
 - (void)setPriority: (OFNumber *)priority
 {
-	intmax_t prio = [priority intMaxValue];
+	intmax_t prio = priority.intMaxValue;
 	OFNumber *old;
 
 	if ((prio < -128) || (prio > 127))
@@ -187,7 +186,7 @@ show_to_int(OFString *show)
 		[self removeChild: oldPriority];
 
 	OFString *priority_s =
-	    [OFString stringWithFormat: @"%" @PRId8, [priority int8Value]];
+	    [OFString stringWithFormat: @"%" @PRId8, priority.int8Value];
 	[self addChild: [OFXMLElement elementWithName: @"priority"
 					    namespace: XMPP_NS_CLIENT
 					  stringValue: priority_s]];
@@ -211,7 +210,7 @@ show_to_int(OFString *show)
 		@throw [OFInvalidArgumentException exception];
 
 	otherPresence = (XMPPPresence *)object;
-	otherPriority = [otherPresence priority];
+	otherPriority = otherPresence.priority;
 	if (otherPriority == nil)
 		otherPriority = [OFNumber numberWithInt8: 0];
 
@@ -224,11 +223,11 @@ show_to_int(OFString *show)
 	if (priorityOrder != OF_ORDERED_SAME)
 		return priorityOrder;
 
-	otherShow = [otherPresence show];
+	otherShow = otherPresence.show;
 	if ([_show isEqual: otherShow])
 		return OF_ORDERED_SAME;
 
-	if (show_to_int(_show) < show_to_int(otherShow))
+	if (showToInt(_show) < showToInt(otherShow))
 		return OF_ORDERED_ASCENDING;
 
 	return OF_ORDERED_DESCENDING;

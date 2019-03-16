@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2019, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -129,15 +129,15 @@
 		    ![name isEqual: @"presence"])
 			@throw [OFInvalidArgumentException exception];
 
-		[self setDefaultNamespace: XMPP_NS_CLIENT];
+		self.defaultNamespace = XMPP_NS_CLIENT;
 		[self setPrefix: @"stream"
 		   forNamespace: XMPP_NS_STREAM];
 
 		if (type != nil)
-			[self setType: type];
+			self.type = type;
 
 		if (ID != nil)
-			[self setID: ID];
+			self.ID = ID;
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -154,18 +154,18 @@
 		OFXMLAttribute *attribute;
 
 		if ((attribute = [element attributeForName: @"from"]))
-			[self setFrom:
-			    [XMPPJID JIDWithString: [attribute stringValue]]];
+			self.from =
+			    [XMPPJID JIDWithString: attribute.stringValue];
 
 		if ((attribute = [element attributeForName: @"to"]))
-			[self setTo:
-			    [XMPPJID JIDWithString: [attribute stringValue]]];
+			self.to =
+			    [XMPPJID JIDWithString: attribute.stringValue];
 
 		if ((attribute = [element attributeForName: @"type"]))
-			[self setType: [attribute stringValue]];
+			self.type = attribute.stringValue;
 
 		if ((attribute = [element attributeForName: @"id"]))
-			[self setID: [attribute stringValue]];
+			self.ID = attribute.stringValue;
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -194,7 +194,7 @@
 
 	if (from != nil)
 		[self addAttributeWithName: @"from"
-			       stringValue: [from fullJID]];
+			       stringValue: from.fullJID];
 }
 
 - (void)setTo: (XMPPJID *)to
@@ -207,7 +207,7 @@
 
 	if (to != nil)
 		[self addAttributeWithName: @"to"
-			       stringValue: [to fullJID]];
+			       stringValue: to.fullJID];
 }
 
 - (void)setType: (OFString *)type

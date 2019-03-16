@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, 2019, Jonathan Schleifer <js@webkeks.org>
  *
  * https://heap.zone/objxmpp/
  *
@@ -50,8 +50,8 @@
 
 		_file = [file copy];
 		@try {
-			_data = [[[OFData dataWithContentsOfFile: file]
-			    messagePackValue] retain];
+			_data = [[OFData dataWithContentsOfFile: file]
+			    .messagePackValue copy];
 		} @catch (id e) {
 			_data = [[OFMutableDictionary alloc] init];
 		}
@@ -75,7 +75,7 @@
 
 - (void)save
 {
-	[[_data messagePackRepresentation] writeToFile: _file];
+	[_data.messagePackRepresentation writeToFile: _file];
 }
 
 - (void)xmpp_setObject: (id)object
@@ -83,7 +83,7 @@
 {
 	OFArray *pathComponents = [path componentsSeparatedByString: @"."];
 	OFMutableDictionary *iter = _data;
-	size_t i = 0, components = [pathComponents count];
+	size_t i = 0, components = pathComponents.count;
 
 	for (OFString *component in pathComponents) {
 		if (i++ == components - 1)
@@ -104,7 +104,7 @@
 		[iter setObject: object
 			 forKey: [pathComponents lastObject]];
 	else
-		[iter removeObjectForKey: [pathComponents lastObject]];
+		[iter removeObjectForKey: pathComponents.lastObject];
 }
 
 - (id)xmpp_objectForPath: (OFString *)path

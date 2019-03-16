@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2019, Jonathan Schleifer <js@webkeks.org>
  *
  * https://heap.zone/objxmpp/
  *
@@ -48,22 +49,22 @@
 
 	/* authzid */
 	if (_authzid != nil)
-		[message addItems: [_authzid UTF8String]
-			    count: [_authzid UTF8StringLength]];
+		[message addItems: _authzid.UTF8String
+			    count: _authzid.UTF8StringLength];
 
 	/* separator */
 	[message addItem: ""];
 
 	/* authcid */
-	[message addItems: [_authcid UTF8String]
-		    count: [_authcid UTF8StringLength]];
+	[message addItems: _authcid.UTF8String
+		    count: _authcid.UTF8StringLength];
 
 	/* separator */
 	[message addItem: ""];
 
 	/* passwd */
-	[message addItems: [_password UTF8String]
-		    count: [_password UTF8StringLength]];
+	[message addItems: _password.UTF8String
+		    count: _password.UTF8StringLength];
 
 	[message makeImmutable];
 

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2019, Jonathan Schleifer <js@heap.zone>
  *
  * https://heap.zone/objxmpp/
  *
@@ -44,8 +45,8 @@
 
 	/* authzid */
 	if (_authzid != nil)
-		[message addItems: [_authzid UTF8String]
-			    count: [_authzid UTF8StringLength]];
+		[message addItems: _authzid.UTF8String
+			    count: _authzid.UTF8StringLength];
 
 	[message makeImmutable];
 

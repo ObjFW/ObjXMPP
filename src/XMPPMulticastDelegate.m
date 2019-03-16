@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, 2019, Jonathan Schleifer <js@webkeks.org>
  *
  * https://heap.zone/objxmpp/
  *
@@ -57,8 +57,8 @@
 
 - (void)removeDelegate: (id)delegate
 {
-	id *items = [_delegates items];
-	size_t i, count = [_delegates count];
+	id const *items = _delegates.items;
+	size_t i, count = _delegates.count;
 
 	for (i = 0; i < count; i++) {
 		if (items[i] != delegate)
@@ -74,8 +74,8 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 	OFMutableData *currentDelegates = [[_delegates copy] autorelease];
-	id *items = [currentDelegates items];
-	size_t i, count = [currentDelegates count];
+	id const *items = currentDelegates.items;
+	size_t i, count = currentDelegates.count;
 	bool handled = false;
 
 	for (i = 0; i < count; i++) {
@@ -101,8 +101,8 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 	OFMutableData *currentDelegates = [[_delegates copy] autorelease];
-	id *items = [currentDelegates items];
-	size_t i, count = [currentDelegates count];
+	id const *items = currentDelegates.items;
+	size_t i, count = currentDelegates.count;
 	bool handled = false;
 
 	for (i = 0; i < count; i++) {

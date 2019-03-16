@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2019, Jonathan Schleifer <js@webkeks.org>
  *
  * https://heap.zone/objxmpp/
  *
@@ -141,7 +141,8 @@
 				     withString: @"=3D"];
 		[new replaceOccurrencesOfString: @","
 				     withString: @"=2C"];
-		_authzid = [new retain];
+		[new makeImmutable];
+		_authzid = [new copy];
 	} else
 		_authzid = nil;
 
@@ -158,7 +159,8 @@
 				     withString: @"=3D"];
 		[new replaceOccurrencesOfString: @","
 				     withString: @"=2C"];
-		_authcid = [new retain];
+		[new makeImmutable];
+		_authcid = [new copy];
 	} else
 		_authcid = nil;
 
@@ -193,11 +195,11 @@
 	_clientFirstMessageBare = [[OFString alloc]
 	    initWithFormat: @"n=%@,r=%@", _authcid, _cNonce];
 
-	[ret addItems: [_GS2Header UTF8String]
-		count: [_GS2Header UTF8StringLength]];
+	[ret addItems: _GS2Header.UTF8String
+		count: _GS2Header.UTF8StringLength];
 
-	[ret addItems: [_clientFirstMessageBare UTF8String]
-		count: [_clientFirstMessageBare UTF8StringLength]];
+	[ret addItems: _clientFirstMessageBare.UTF8String
+		count: _clientFirstMessageBare.UTF8StringLength];
 
 	[ret makeImmutable];
 
@@ -239,14 +241,14 @@
 	ret = [OFMutableData data];
 	authMessage = [OFMutableData data];
 
-	OFString *challenge = [OFString stringWithUTF8String: [data items]
-						      length: [data count] *
-							      [data itemSize]];
+	OFString *challenge = [OFString stringWithUTF8String: data.items
+						      length: data.count *
+							      data.itemSize];
 
 	for (OFString *component in
 	    [challenge componentsSeparatedByString: @","]) {
 		OFString *entry = [component substringWithRange:
-		    of_range(2, [component length] - 2)];
+		    of_range(2, component.length - 2)];
 
 		if ([component hasPrefix: @"r="]) {
 			if (![entry hasPrefix: _cNonce])
@@ -261,7 +263,7 @@
 			salt = [OFData dataWithBase64EncodedString: entry];
 			got |= GOT_SALT;
 		} else if ([component hasPrefix: @"i="]) {
-			iterCount = [entry decimalValue];
+			iterCount = entry.decimalValue;
 			got |= GOT_ITERCOUNT;
 		}
 	}
@@ -270,33 +272,33 @@
 		@throw [OFInvalidServerReplyException exception];
 
 	// Add c=<base64(GS2Header+channelBindingData)>
-	tmpArray = [OFMutableData dataWithItems: [_GS2Header UTF8String]
-					  count: [_GS2Header UTF8StringLength]];
-	if (_plusAvailable && [_connection encrypted]) {
+	tmpArray = [OFMutableData dataWithItems: _GS2Header.UTF8String
+					  count: _GS2Header.UTF8StringLength];
+	if (_plusAvailable && _connection.encrypted) {
 		OFData *channelBinding = [((SSLSocket *)[_connection socket])
 		    channelBindingDataWithType: @"tls-unique"];
-		[tmpArray addItems: [channelBinding items]
-			     count: [channelBinding count]];
+		[tmpArray addItems: channelBinding.items
+			     count: channelBinding.count];
 	}
-	tmpString = [tmpArray stringByBase64Encoding];
+	tmpString = tmpArray.stringByBase64Encoding;
 	[ret addItems: "c="
 		count: 2];
-	[ret addItems: [tmpString UTF8String]
-		count: [tmpString UTF8StringLength]];
+	[ret addItems: tmpString.UTF8String
+		count: tmpString.UTF8StringLength];
 
 	// Add r=<nonce>
 	[ret addItem: ","];
 	[ret addItems: "r="
 		count: 2];
-	[ret addItems: [sNonce UTF8String]
-		count: [sNonce UTF8StringLength]];
+	[ret addItems: sNonce.UTF8String
+		count: sNonce.UTF8StringLength];
 
 	/*
 	 * IETF RFC 5802:
 	 * SaltedPassword := Hi(Normalize(password), salt, i)
 	 */
-	tmpArray = [OFMutableData dataWithItems: [_password UTF8String]
-					  count: [_password UTF8StringLength]];
+	tmpArray = [OFMutableData dataWithItems: _password.UTF8String
+					  count: _password.UTF8StringLength];
 	saltedPassword = [self xmpp_hiWithData: tmpArray
 					  salt: salt
 				iterationCount: iterCount];
@@ -307,14 +309,14 @@
 	 *		  server-first-message + "," +
 	 *		  client-final-message-without-proof
 	 */
-	[authMessage addItems: [_clientFirstMessageBare UTF8String]
-			count: [_clientFirstMessageBare UTF8StringLength]];
+	[authMessage addItems: _clientFirstMessageBare.UTF8String
+			count: _clientFirstMessageBare.UTF8StringLength];
 	[authMessage addItem: ","];
-	[authMessage addItems: [data items]
-			count: [data count] * [data itemSize]];
+	[authMessage addItems: data.items
+			count: data.count * data.itemSize];
 	[authMessage addItem: ","];
-	[authMessage addItems: [ret items]
-			count: [ret count]];
+	[authMessage addItems: ret.items
+			count: ret.count];
 
 	/*
 	 * IETF RFC 5802:
@@ -336,8 +338,8 @@
 	 * ClientSignature := HMAC(StoredKey, AuthMessage)
 	 */
 	clientSignature = [self
-	    xmpp_HMACWithKey: [OFData dataWithItems: [hash digest]
-					      count: [_hashType digestSize]]
+	    xmpp_HMACWithKey: [OFData dataWithItems: hash.digest
+					      count: hash.digestSize]
 			data: authMessage];
 
 	/*
@@ -375,9 +377,9 @@
 	[ret addItem: ","];
 	[ret addItems: "p="
 		count: 2];
-	tmpString = [tmpArray stringByBase64Encoding];
-	[ret addItems: [tmpString UTF8String]
-		count: [tmpString UTF8StringLength]];
+	tmpString = tmpArray.stringByBase64Encoding;
+	[ret addItems: tmpString.UTF8String
+		count: tmpString.UTF8StringLength];
 
 	return ret;
 }
@@ -393,12 +395,12 @@
 	if (_authenticated)
 		return nil;
 
-	mess = [OFString stringWithUTF8String: [data items]
-				       length: [data count] * [data itemSize]];
-	value = [mess substringWithRange: of_range(2, [mess length] - 2)];
+	mess = [OFString stringWithUTF8String: data.items
+				       length: data.count * data.itemSize];
+	value = [mess substringWithRange: of_range(2, mess.length - 2)];
 
 	if ([mess hasPrefix: @"v="]) {
-		if (![value isEqual: [_serverSignature stringByBase64Encoding]])
+		if (![value isEqual: _serverSignature.stringByBase64Encoding])
 			@throw [XMPPAuthFailedException
 			    exceptionWithConnection: nil
 					     reason: @"Received wrong "
@@ -441,22 +443,22 @@
 	uint8_t *kI = NULL, *kO = NULL;
 	id <OFCryptoHash> hashI, hashO;
 
-	if ([key itemSize] * [key count] > blockSize) {
+	if (key.itemSize * key.count > blockSize) {
 		hashI = [[[_hashType alloc] init] autorelease];
-		[hashI updateWithBuffer: [key items]
-				length: [key itemSize] * [key count]];
-		[k addItems: [hashI digest]
-		      count: [_hashType digestSize]];
+		[hashI updateWithBuffer: key.items
+				 length: key.itemSize * key.count];
+		[k addItems: hashI.digest
+		      count: hashI.digestSize];
 	} else
-		[k addItems: [key items]
-		      count: [key itemSize] * [key count]];
+		[k addItems: key.items
+		      count: key.itemSize * key.count];
 
 	@try {
 		kI = [self allocMemoryWithSize: blockSize];
 		kO = [self allocMemoryWithSize: blockSize];
 
-		kSize = [k count];
-		memcpy(kI, [k items], kSize);
+		kSize = k.count;
+		memcpy(kI, k.items, kSize);
 		memset(kI + kSize, 0, blockSize - kSize);
 		memcpy(kO, kI, blockSize);
 
@@ -466,16 +468,16 @@
 		}
 
 		hashI = [[[_hashType alloc] init] autorelease];
-		[hashI updateWithBuffer: (char *)kI
+		[hashI updateWithBuffer: kI
 				 length: blockSize];
-		[hashI updateWithBuffer: [data items]
-				 length: [data itemSize] * [data count]];
+		[hashI updateWithBuffer: data.items
+				 length: data.itemSize * data.count];
 
 		hashO = [[[_hashType alloc] init] autorelease];
-		[hashO updateWithBuffer: (char *)kO
+		[hashO updateWithBuffer: kO
 				 length: blockSize];
-		[hashO updateWithBuffer: (char *)[hashI digest]
-				 length: [_hashType digestSize]];
+		[hashO updateWithBuffer: hashI.digest
+				 length: hashI.digestSize];
 	} @finally {
 		[self freeMemory: kI];
 		[self freeMemory: kO];

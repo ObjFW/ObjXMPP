@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2019, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -91,7 +91,7 @@
 
 - (OFString *)body
 {
-	return [[self elementForName: @"body"
-			   namespace: XMPP_NS_CLIENT] stringValue];
+	return [self elementForName: @"body"
+			  namespace: XMPP_NS_CLIENT].stringValue;
 }
 @end

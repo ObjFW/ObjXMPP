@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2019, Jonathan Schleifer <js@heap.zone>
  *
  * https://heap.zone/objxmpp/
  *
@@ -56,8 +57,8 @@
 - (void)connection: (XMPPConnection *)connection
  didReceiveElement: (OFXMLElement *)element
 {
-	OFString *elementName = [element name];
-	OFString *elementNS = [element namespace];
+	OFString *elementName = element.name;
+	OFString *elementNS = element.namespace;
 
 	if ([elementNS isEqual: XMPP_NS_SM]) {
 		if ([elementName isEqual: @"enabled"]) {
@@ -99,7 +100,7 @@
 - (void)connection: (XMPPConnection *)connection
      wasBoundToJID: (XMPPJID *)JID
 {
-	if ([connection supportsStreamManagement])
+	if (connection.supportsStreamManagement)
 		[connection sendStanza:
 		    [OFXMLElement elementWithName: @"enable"
 					namespace: XMPP_NS_SM]];

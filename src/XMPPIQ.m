@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2019, Jonathan Schleifer <js@webkeks.org>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -56,9 +56,9 @@
 - (XMPPIQ *)resultIQ
 {
 	XMPPIQ *ret = [XMPPIQ IQWithType: @"result"
-				      ID: [self ID]];
-	[ret setTo: [self from]];
-	[ret setFrom: nil];
+				      ID: self.ID];
+	ret.to = self.from;
+	ret.from = nil;
 	return ret;
 }
 
@@ -67,7 +67,7 @@
 		       text: (OFString *)text
 {
 	XMPPIQ *ret = [XMPPIQ IQWithType: @"error"
-				      ID: [self ID]];
+				      ID: self.ID];
 	void *pool = objc_autoreleasePoolPush();
 	OFXMLElement *error = [OFXMLElement elementWithName: @"error"
 						  namespace: XMPP_NS_CLIENT];
@@ -81,8 +81,8 @@
 						     namespace: XMPP_NS_STANZAS
 						   stringValue: text]];
 	[ret addChild: error];
-	[ret setTo: [self from]];
-	[ret setFrom: nil];
+	ret.to = self.from;
+	ret.from = nil;
 
 	objc_autoreleasePoolPop(pool);
 

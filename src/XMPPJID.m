@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2019, Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, 2012, 2013, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -45,35 +45,38 @@
 
 - (instancetype)initWithString: (OFString *)string
 {
-	size_t nodesep, resourcesep;
-
 	self = [super init];
 
-	if (string == nil) {
+	@try {
+		size_t nodesep, resourcesep;
+
+		if (string == nil)
+			@throw [OFInvalidArgumentException exception];
+
+		nodesep = [string rangeOfString: @"@"].location;
+		resourcesep = [string rangeOfString: @"/"].location;
+
+		if (nodesep == SIZE_MAX)
+			self.node = nil;
+		else
+			self.node =
+			    [string substringWithRange: of_range(0, nodesep)];
+
+		if (resourcesep == SIZE_MAX) {
+			self.resource = nil;
+			resourcesep = string.length;
+		} else {
+			of_range_t range = of_range(resourcesep + 1,
+			    string.length - resourcesep - 1);
+			self.resource = [string substringWithRange: range];
+		}
+
+		self.domain = [string substringWithRange:
+		    of_range(nodesep + 1, resourcesep - nodesep - 1)];
+	} @catch (id e) {
 		[self release];
-		return nil;
+		@throw e;
 	}
-
-	nodesep = [string rangeOfString: @"@"].location;
-	resourcesep = [string rangeOfString: @"/"].location;
-
-	if (nodesep == SIZE_MAX)
-		[self setNode: nil];
-	else
-		[self setNode:
-		    [string substringWithRange: of_range(0, nodesep)]];
-
-	if (resourcesep == SIZE_MAX) {
-		[self setResource: nil];
-		resourcesep = [string length];
-	} else {
-		of_range_t range = of_range(resourcesep + 1,
-		    [string length] - resourcesep - 1);
-		[self setResource: [string substringWithRange: range]];
-	}
-
-	[self setDomain: [string substringWithRange:
-	    of_range(nodesep + 1, resourcesep - nodesep - 1)]];
 
 	return self;
 }
@@ -115,7 +118,7 @@
 		return;
 	}
 
-	if (((rc = stringprep_profile([node UTF8String], &nodepart,
+	if (((rc = stringprep_profile(node.UTF8String, &nodepart,
 	    "Nodeprep", 0)) != STRINGPREP_OK) || (nodepart[0] == '\0') ||
 	    (strlen(nodepart) > 1023))
 		@throw [XMPPStringPrepFailedException
@@ -138,7 +141,7 @@
 	char *srv;
 	Stringprep_rc rc;
 
-	if (((rc = stringprep_profile([domain UTF8String], &srv,
+	if (((rc = stringprep_profile(domain.UTF8String, &srv,
 	    "Nameprep", 0)) != STRINGPREP_OK) || (srv[0] == '\0') ||
 	    (strlen(srv) > 1023))
 		@throw [XMPPStringPrepFailedException
@@ -167,7 +170,7 @@
 		return;
 	}
 
-	if (((rc = stringprep_profile([resource UTF8String], &res,
+	if (((rc = stringprep_profile(resource.UTF8String, &res,
 	    "Resourceprep", 0)) != STRINGPREP_OK) || (res[0] == '\0') ||
 	    (strlen(res) > 1023))
 		@throw [XMPPStringPrepFailedException
@@ -196,14 +199,14 @@
 {
 	/* If we don't have a resource, the full JID is equal to the bare JID */
 	if (_resource == nil)
-		return [self bareJID];
+		return self.bareJID;
 
 	if (_node != nil)
 		return [OFString stringWithFormat: @"%@@%@/%@",
-		       _node, _domain, _resource];
+		    _node, _domain, _resource];
 	else
 		return [OFString stringWithFormat: @"%@/%@",
-		       _domain, _resource];
+		    _domain, _resource];
 }
 
 - (OFString *)description
@@ -238,9 +241,9 @@
 
 	OF_HASH_INIT(hash);
 
-	OF_HASH_ADD_HASH(hash, [_node hash]);
-	OF_HASH_ADD_HASH(hash, [_domain hash]);
-	OF_HASH_ADD_HASH(hash, [_resource hash]);
+	OF_HASH_ADD_HASH(hash, _node.hash);
+	OF_HASH_ADD_HASH(hash, _domain.hash);
+	OF_HASH_ADD_HASH(hash, _resource.hash);
 
 	OF_HASH_FINALIZE(hash);
 

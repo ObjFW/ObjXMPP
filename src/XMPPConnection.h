@@ -147,7 +147,7 @@ OF_ASSUME_NONNULL_BEGIN
  */
 @interface XMPPConnection: OFObject
 {
-	OF_KINDOF(OFTCPSocket *) _socket;
+	OFTCPSocket *_socket;
 	char _buffer[XMPP_CONNECTION_BUFFER_LENGTH];
 	OFXMLParser *_parser, *_oldParser;
 	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
@@ -235,7 +235,7 @@ OF_ASSUME_NONNULL_BEGIN
 /*!
  * @brief The socket used for the connection.
  */
-@property (readonly, nonatomic) OF_KINDOF(OFTCPSocket *) socket;
+@property (readonly, nonatomic) OFTCPSocket *socket;
 
 /*!
  * @brief Whether encryption is required.

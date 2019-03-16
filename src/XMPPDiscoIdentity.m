@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
  *
  * https://heap.zone/objxmpp/
  *
@@ -52,9 +52,9 @@
 		if (category == nil || type == nil)
 			@throw [OFInvalidArgumentException exception];
 
-		_category = [category copy];
-		_name = [name copy];
-		_type = [type copy];
+		_category = category.copy;
+		_name = name.copy;
+		_type = type.copy;
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -111,9 +111,9 @@
 
 	OF_HASH_INIT(hash);
 
-	OF_HASH_ADD_HASH(hash, [_category hash]);
-	OF_HASH_ADD_HASH(hash, [_type hash]);
-	OF_HASH_ADD_HASH(hash, [_name hash]);
+	OF_HASH_ADD_HASH(hash, _category.hash);
+	OF_HASH_ADD_HASH(hash, _type.hash);
+	OF_HASH_ADD_HASH(hash, _name.hash);
 
 	OF_HASH_FINALIZE(hash);
 
