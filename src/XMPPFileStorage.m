@@ -29,7 +29,6 @@
 #import <ObjFW/OFDictionary.h>
 #import <ObjFW/OFNumber.h>
 #import <ObjFW/OFData.h>
-#import <ObjFW/OFAutoreleasePool.h>
 
 #import <ObjFW/OFNotImplementedException.h>
 
@@ -46,7 +45,7 @@
 	self = [super init];
 
 	@try {
-		OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+		void *pool = objc_autoreleasePoolPush();
 
 		_file = [file copy];
 		@try {
@@ -56,7 +55,7 @@
 			_data = [[OFMutableDictionary alloc] init];
 		}
 
-		[pool release];
+		objc_autoreleasePoolPop(pool);
 	} @catch (id e) {
 		[self release];
 		@throw e;

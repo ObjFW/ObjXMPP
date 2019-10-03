@@ -208,7 +208,7 @@
 
 - (OFData *)continueWithData: (OFData *)data
 {
-	OFAutoreleasePool *pool = [[OFAutoreleasePool alloc] init];
+	void *pool = objc_autoreleasePoolPush();
 	OFData *ret;
 
 	if (!_serverSignature)
@@ -217,7 +217,7 @@
 		ret = [self xmpp_parseServerFinalMessage: data];
 
 	[ret retain];
-	[pool release];
+	objc_autoreleasePoolPop(pool);
 
 	return [ret autorelease];
 }

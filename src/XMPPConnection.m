@@ -297,9 +297,7 @@
 
 -	(void)resolver: (OFDNSResolver *)resolver
   didResolveDomainName: (OFString *)domainName
-	 answerRecords: (OFDictionary *)answerRecords
-      authorityRecords: (OFDictionary *)authorityRecords
-     additionalRecords: (OFDictionary *)additionalRecords
+	      response: (OFDNSResponse *)response
 	     exception: (id)exception
 {
 	OFMutableArray *records = [OFMutableArray array];
@@ -313,7 +311,7 @@
 	}
 
 	for (OFDNSResourceRecord *record in
-	    [answerRecords objectForKey: domainName])
+	    [response.answerRecords objectForKey: domainName])
 		if ([record isKindOfClass: [OFSRVDNSResourceRecord class]])
 		       [records addObject: record];
 
@@ -349,11 +347,12 @@
 	else {
 		OFString *SRVDomain = [_domainToASCII
 		    stringByPrependingString: @"_xmpp-client._tcp."];
-		[[OFThread DNSResolver]
-		    asyncResolveHost: SRVDomain
+		OFDNSRequest *request = [OFDNSRequest
+		    requestWithHost: SRVDomain
 			 recordClass: OF_DNS_RESOURCE_RECORD_CLASS_IN
-			  recordType: OF_DNS_RESOURCE_RECORD_TYPE_SRV
-			    delegate: self];
+			  recordType: OF_DNS_RESOURCE_RECORD_TYPE_SRV];
+		[[OFThread DNSResolver] asyncPerformRequest: request
+						   delegate: self];
 	}
 
 	objc_autoreleasePoolPop(pool);
