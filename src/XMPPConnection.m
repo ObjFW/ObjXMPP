@@ -56,7 +56,7 @@
 
 #import <ObjFW/macros.h>
 
-@interface XMPPConnection () <OFDNSResolverDelegate, OFTCPSocketDelegate,
+@interface XMPPConnection () <OFDNSResolverQueryDelegate, OFTCPSocketDelegate,
     OFXMLParserDelegate, OFXMLElementBuilderDelegate>
 - (void)xmpp_tryNextSRVRecord;
 -  (bool)xmpp_parseBuffer: (const void *)buffer
@@ -295,10 +295,10 @@
 			       port: record.port];
 }
 
--	(void)resolver: (OFDNSResolver *)resolver
-  didResolveDomainName: (OFString *)domainName
-	      response: (OFDNSResponse *)response
-	     exception: (id)exception
+-  (void)resolver: (OFDNSResolver *)resolver
+  didPerformQuery: (OFString *)domainName
+	 response: (OFDNSResponse *)response
+	exception: (id)exception
 {
 	OFMutableArray *records = [OFMutableArray array];
 
@@ -347,12 +347,12 @@
 	else {
 		OFString *SRVDomain = [_domainToASCII
 		    stringByPrependingString: @"_xmpp-client._tcp."];
-		OFDNSRequest *request = [OFDNSRequest
-		    requestWithHost: SRVDomain
-			 recordClass: OF_DNS_RESOURCE_RECORD_CLASS_IN
-			  recordType: OF_DNS_RESOURCE_RECORD_TYPE_SRV];
-		[[OFThread DNSResolver] asyncPerformRequest: request
-						   delegate: self];
+		OFDNSQuery *query = [OFDNSQuery
+		    queryWithDomainName: SRVDomain
+			       DNSClass: OF_DNS_CLASS_IN
+			     recordType: OF_DNS_RECORD_TYPE_SRV];
+		[[OFThread DNSResolver] asyncPerformQuery: query
+						 delegate: self];
 	}
 
 	objc_autoreleasePoolPop(pool);
