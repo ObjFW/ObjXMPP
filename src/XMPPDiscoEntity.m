@@ -114,7 +114,8 @@
 - (OFString *)capsHash
 {
 	OFMutableString *caps = [OFMutableString string];
-	OFSHA1Hash *hash = [OFSHA1Hash cryptoHash];
+	OFSHA1Hash *hash = [OFSHA1Hash
+	    cryptoHashWithAllowsSwappableMemory: true];
 	OFData *digest;
 
 	for (XMPPDiscoIdentity *identity in _identities)
