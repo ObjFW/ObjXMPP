@@ -302,13 +302,8 @@
 {
 	OFMutableArray *records = [OFMutableArray array];
 
-	if (exception != nil) {
-		[_delegates
-		    broadcastSelector: @selector(connection:didThrowException:)
-			   withObject: self
-			   withObject: exception];
-		return;
-	}
+	if (exception != nil)
+		response = nil;
 
 	for (OFDNSResourceRecord *record in
 	    [response.answerRecords objectForKey: domainName])
