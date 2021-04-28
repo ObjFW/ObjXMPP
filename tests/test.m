@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, 2019, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2010, 2011, 2019, 2021, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -55,7 +55,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	XMPPPresence *pres = [XMPPPresence presence];
 	pres.show = @"xa";
 	pres.status = @"Bored";
-	pres.priority = [OFNumber numberWithInt8: 20];
+	pres.priority = [OFNumber numberWithChar: 20];
 	pres.to = [XMPPJID JIDWithString: @"alice@example.com"];
 	pres.from = [XMPPJID JIDWithString: @"bob@example.org"];
 	assert([pres.XMLString isEqual: @"<presence to='alice@example.com' "
@@ -66,11 +66,11 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	XMPPPresence *pres2 = [XMPPPresence presence];
 	pres2.show = @"away";
 	pres2.status = @"Bored";
-	pres2.priority = [OFNumber numberWithInt8: 23];
+	pres2.priority = [OFNumber numberWithChar: 23];
 	pres2.to = [XMPPJID JIDWithString: @"alice@example.com"];
 	pres2.from = [XMPPJID JIDWithString: @"bob@example.org"];
 
-	assert([pres compare: pres2] == OF_ORDERED_ASCENDING);
+	assert([pres compare: pres2] == OFOrderedAscending);
 
 	XMPPMessage *msg = [XMPPMessage messageWithType: @"chat"];
 	msg.body = @"Hello everyone";
@@ -118,7 +118,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[[XMPPStreamManagement alloc] initWithConnection: conn];
 
 	if (arguments.count != 3) {
-		of_log(@"Invalid count of command line arguments!");
+		OFLog(@"Invalid count of command line arguments!");
 		[OFApplication terminateWithStatus: 1];
 	}
 
@@ -133,25 +133,25 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 -  (void)connection: (XMPPConnection *)conn
   didReceiveElement: (OFXMLElement *)element
 {
-	of_log(@"In:  %@", element);
+	OFLog(@"In:  %@", element);
 }
 
 - (void)connection: (XMPPConnection *)conn
     didSendElement: (OFXMLElement *)element
 {
-	of_log(@"Out: %@", element);
+	OFLog(@"Out: %@", element);
 }
 
 - (void)connectionWasAuthenticated: (XMPPConnection *)conn
 {
-	of_log(@"Auth successful");
+	OFLog(@"Auth successful");
 }
 
 - (void)connection: (XMPPConnection *)conn_
      wasBoundToJID: (XMPPJID *)JID
 {
-	of_log(@"Bound to JID: %@", JID.fullJID);
-	of_log(@"Supports SM: %@",
+	OFLog(@"Bound to JID: %@", JID.fullJID);
+	OFLog(@"Supports SM: %@",
 	    conn_.supportsStreamManagement ? @"true" : @"false");
 
 	XMPPDiscoEntity *discoEntity =
@@ -203,10 +203,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 {
 	XMPPPresence *pres;
 
-	of_log(@"Got roster: %@", roster_.rosterItems);
+	OFLog(@"Got roster: %@", roster_.rosterItems);
 
 	pres = [XMPPPresence presence];
-	pres.priority = [OFNumber numberWithInt8: 10];
+	pres.priority = [OFNumber numberWithChar: 10];
 	pres.status = @"ObjXMPP test is working!";
 
 	[conn sendStanza: pres];
@@ -218,7 +218,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 					  namespace: @"urn:xmpp:ping"]];
 	[conn	   sendIQ: IQ
 	    callbackBlock: ^ (XMPPConnection *c, XMPPIQ *resp) {
-		of_log(@"Ping response: %@", resp);
+		OFLog(@"Ping response: %@", resp);
 	}];
 #endif
 }
@@ -228,11 +228,11 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	OFString *reason;
 
 	if (![conn_ checkCertificateAndGetReason: &reason]) {
-		[of_stdout writeString: @"Couldn't verify certificate: "];
-		[of_stdout writeFormat: @"%@\n", reason];
-		[of_stdout writeString: @"Do you want to continue [y/N]? "];
+		[OFStdOut writeString: @"Couldn't verify certificate: "];
+		[OFStdOut writeFormat: @"%@\n", reason];
+		[OFStdOut writeString: @"Do you want to continue [y/N]? "];
 
-		if (![[of_stdin readLine] hasPrefix: @"y"])
+		if (![[OFStdIn readLine] hasPrefix: @"y"])
 			[OFApplication terminateWithStatus: 1];
 	}
 }
@@ -240,13 +240,13 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 -         (void)roster: (XMPPRoster *)roster_
   didReceiveRosterItem: (XMPPRosterItem *)rosterItem
 {
-	of_log(@"Got roster push: %@", rosterItem);
+	OFLog(@"Got roster push: %@", rosterItem);
 }
 
 - (bool)connection: (XMPPConnection *)conn
       didReceiveIQ: (XMPPIQ *)iq
 {
-	of_log(@"IQ: %@", iq);
+	OFLog(@"IQ: %@", iq);
 
 	return NO;
 }
@@ -254,13 +254,13 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 -  (void)connection: (XMPPConnection *)conn
   didReceiveMessage: (XMPPMessage *)msg
 {
-	of_log(@"Message: %@", msg);
+	OFLog(@"Message: %@", msg);
 }
 
 -   (void)connection: (XMPPConnection *)conn
   didReceivePresence: (XMPPPresence *)pres
 {
-	of_log(@"Presence: %@", pres);
+	OFLog(@"Presence: %@", pres);
 }
 
 -  (void)connection: (XMPPConnection *)conn
@@ -272,6 +272,6 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 - (void)connectionWasClosed: (XMPPConnection *)conn
 		      error: (OFXMLElement *)error
 {
-	of_log(@"Connection was closed: %@", error);
+	OFLog(@"Connection was closed: %@", error);
 }
 @end

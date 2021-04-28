@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2016, 2019, 2021,
+ *   Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, 2012, 2013, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -43,7 +44,7 @@ showToInt(OFString *show)
 	if ([show isEqual: @"xa"])
 		return 4;
 
-	OF_ENSURE(0);
+	OFEnsure(0);
 }
 
 @implementation XMPPPresence
@@ -114,8 +115,8 @@ showToInt(OFString *show)
 
 		if ((subElement = [element elementForName: @"priority"
 						namespace: XMPP_NS_CLIENT]))
-			self.priority = [OFNumber
-			    numberWithIntMax: subElement.decimalValue];
+			self.priority = [OFNumber numberWithLongLong:
+			    [subElement longLongValueWithBase: 10]];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -173,7 +174,7 @@ showToInt(OFString *show)
 
 - (void)setPriority: (OFNumber *)priority
 {
-	intmax_t prio = priority.intMaxValue;
+	long long prio = priority.longLongValue;
 	OFNumber *old;
 
 	if ((prio < -128) || (prio > 127))
@@ -186,7 +187,7 @@ showToInt(OFString *show)
 		[self removeChild: oldPriority];
 
 	OFString *priority_s =
-	    [OFString stringWithFormat: @"%" @PRId8, priority.int8Value];
+	    [OFString stringWithFormat: @"%hhd", priority.charValue];
 	[self addChild: [OFXMLElement elementWithName: @"priority"
 					    namespace: XMPP_NS_CLIENT
 					  stringValue: priority_s]];
@@ -196,15 +197,15 @@ showToInt(OFString *show)
 	[old release];
 }
 
-- (of_comparison_result_t)compare: (id <OFComparing>)object
+- (OFComparisonResult)compare: (id <OFComparing>)object
 {
 	XMPPPresence *otherPresence;
 	OFNumber *otherPriority;
 	OFString *otherShow;
-	of_comparison_result_t priorityOrder;
+	OFComparisonResult priorityOrder;
 
 	if (object == self)
-		return OF_ORDERED_SAME;
+		return OFOrderedSame;
 
 	if (![(id)object isKindOfClass: [XMPPPresence class]])
 		@throw [OFInvalidArgumentException exception];
@@ -212,24 +213,24 @@ showToInt(OFString *show)
 	otherPresence = (XMPPPresence *)object;
 	otherPriority = otherPresence.priority;
 	if (otherPriority == nil)
-		otherPriority = [OFNumber numberWithInt8: 0];
+		otherPriority = [OFNumber numberWithChar: 0];
 
 	if (_priority != nil)
 		priorityOrder = [_priority compare: otherPriority];
 	else
 		priorityOrder =
-		    [[OFNumber numberWithInt8: 0] compare: otherPriority];
+		    [[OFNumber numberWithChar: 0] compare: otherPriority];
 
-	if (priorityOrder != OF_ORDERED_SAME)
+	if (priorityOrder != OFOrderedSame)
 		return priorityOrder;
 
 	otherShow = otherPresence.show;
 	if ([_show isEqual: otherShow])
-		return OF_ORDERED_SAME;
+		return OFOrderedSame;
 
 	if (showToInt(_show) < showToInt(otherShow))
-		return OF_ORDERED_ASCENDING;
+		return OFOrderedAscending;
 
-	return OF_ORDERED_DESCENDING;
+	return OFOrderedDescending;
 }
 @end

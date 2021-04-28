@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -105,29 +105,28 @@
 	return false;
 }
 
-- (uint32_t)hash
+- (unsigned long)hash
 {
-	uint32_t hash;
+	unsigned long hash;
 
-	OF_HASH_INIT(hash);
+	OFHashInit(&hash);
 
-	OF_HASH_ADD_HASH(hash, _category.hash);
-	OF_HASH_ADD_HASH(hash, _type.hash);
-	OF_HASH_ADD_HASH(hash, _name.hash);
+	OFHashAddHash(&hash, _category.hash);
+	OFHashAddHash(&hash, _type.hash);
+	OFHashAddHash(&hash, _name.hash);
 
-	OF_HASH_FINALIZE(hash);
+	OFHashFinalize(&hash);
 
 	return hash;
 }
 
-- (of_comparison_result_t)compare: (id <OFComparing>)object
+- (OFComparisonResult)compare: (id <OFComparing>)object
 {
 	XMPPDiscoIdentity *identity;
-	of_comparison_result_t categoryResult;
-	of_comparison_result_t typeResult;
+	OFComparisonResult categoryResult, typeResult;
 
 	if (object == self)
-		return OF_ORDERED_SAME;
+		return OFOrderedSame;
 
 	if (![(id)object isKindOfClass: [XMPPDiscoIdentity class]])
 		@throw [OFInvalidArgumentException exception];
@@ -135,11 +134,11 @@
 	identity = (XMPPDiscoIdentity *)object;
 
 	categoryResult = [_category compare: identity->_category];
-	if (categoryResult != OF_ORDERED_SAME)
+	if (categoryResult != OFOrderedSame)
 		return categoryResult;
 
 	typeResult = [_type compare: identity->_type];
-	if (typeResult != OF_ORDERED_SAME)
+	if (typeResult != OFOrderedSame)
 		return typeResult;
 
 	return [_name compare: identity->_name];

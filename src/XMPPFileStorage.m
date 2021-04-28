@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -50,7 +50,7 @@
 		_file = [file copy];
 		@try {
 			_data = [[OFData dataWithContentsOfFile: file]
-			    .messagePackValue copy];
+			    .objectByParsingMessagePack copy];
 		} @catch (id e) {
 			_data = [[OFMutableDictionary alloc] init];
 		}
@@ -162,23 +162,23 @@
 	return boolean;
 }
 
-- (void)setIntegerValue: (intmax_t)integer
+- (void)setIntegerValue: (long long)integer
 		forPath: (OFString *)path
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self xmpp_setObject: [OFNumber numberWithIntMax: integer]
+	[self xmpp_setObject: [OFNumber numberWithLongLong: integer]
 		     forPath: path];
 
 	objc_autoreleasePoolPop(pool);
 }
 
-- (intmax_t)integerValueForPath: (OFString *)path
+- (long long)integerValueForPath: (OFString *)path
 {
 	void *pool = objc_autoreleasePoolPush();
-	intmax_t integer;
+	long long integer;
 
-	integer = [[self xmpp_objectForPath: path] intMaxValue];
+	integer = [[self xmpp_objectForPath: path] longLongValue];
 
 	objc_autoreleasePoolPop(pool);
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019
- *   Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2021
+ *   Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -344,8 +344,8 @@
 		    stringByPrependingString: @"_xmpp-client._tcp."];
 		OFDNSQuery *query = [OFDNSQuery
 		    queryWithDomainName: SRVDomain
-			       DNSClass: OF_DNS_CLASS_IN
-			     recordType: OF_DNS_RECORD_TYPE_SRV];
+			       DNSClass: OFDNSClassIN
+			     recordType: OFDNSRecordTypeSRV];
 		[[OFThread DNSResolver] asyncPerformQuery: query
 						 delegate: self];
 	}
@@ -753,7 +753,7 @@
 				   withObject: self];
 
 		newSock = [[SSLSocket alloc] initWithSocket: _socket];
-		newSock.certificateVerificationEnabled = false;
+		newSock.verifiesCertificates = false;
 #if 0
 		/* FIXME: Not yet implemented by ObjOpenSSL */
 		[newSock setCertificateFile: _certificateFile];
@@ -1084,7 +1084,7 @@
 				     IQ: (XMPPIQ *)IQ
 {
 	if (![IQ.type isEqual: @"result"])
-		OF_ENSURE(0);
+		OFEnsure(0);
 
 	[_delegates broadcastSelector: @selector(connection:wasBoundToJID:)
 			   withObject: self

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2019, 2021, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, 2012, 2013, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -59,20 +59,20 @@
 		if (nodesep == SIZE_MAX)
 			self.node = nil;
 		else
-			self.node =
-			    [string substringWithRange: of_range(0, nodesep)];
+			self.node = [string substringWithRange:
+			    OFRangeMake(0, nodesep)];
 
 		if (resourcesep == SIZE_MAX) {
 			self.resource = nil;
 			resourcesep = string.length;
 		} else {
-			of_range_t range = of_range(resourcesep + 1,
+			OFRange range = OFRangeMake(resourcesep + 1,
 			    string.length - resourcesep - 1);
 			self.resource = [string substringWithRange: range];
 		}
 
 		self.domain = [string substringWithRange:
-		    of_range(nodesep + 1, resourcesep - nodesep - 1)];
+		    OFRangeMake(nodesep + 1, resourcesep - nodesep - 1)];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -235,17 +235,17 @@
 	return false;
 }
 
-- (uint32_t)hash
+- (unsigned long)hash
 {
-	uint32_t hash;
+	unsigned long hash;
 
-	OF_HASH_INIT(hash);
+	OFHashInit(&hash);
 
-	OF_HASH_ADD_HASH(hash, _node.hash);
-	OF_HASH_ADD_HASH(hash, _domain.hash);
-	OF_HASH_ADD_HASH(hash, _resource.hash);
+	OFHashAddHash(&hash, _node.hash);
+	OFHashAddHash(&hash, _domain.hash);
+	OFHashAddHash(&hash, _resource.hash);
 
-	OF_HASH_FINALIZE(hash);
+	OFHashFinalize(&hash);
 
 	return hash;
 }

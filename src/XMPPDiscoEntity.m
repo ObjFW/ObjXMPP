@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -114,8 +114,7 @@
 - (OFString *)capsHash
 {
 	OFMutableString *caps = [OFMutableString string];
-	OFSHA1Hash *hash = [OFSHA1Hash
-	    cryptoHashWithAllowsSwappableMemory: true];
+	OFSHA1Hash *hash = [OFSHA1Hash hashWithAllowsSwappableMemory: true];
 	OFData *digest;
 
 	for (XMPPDiscoIdentity *identity in _identities)

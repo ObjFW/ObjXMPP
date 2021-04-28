@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -161,7 +161,6 @@
 
 	/* Subscription request */
 	if ([type isEqual: @"subscribe"]) {
-		of_log(@"ObjXMPP: received subscription request");
 		[_delegates broadcastSelector: @selector(contactManager:
 						 didReceiveSubscriptionRequest:)
 				   withObject: self

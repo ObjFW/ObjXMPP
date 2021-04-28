@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2011, 2019, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -226,8 +226,8 @@
 {
 	size_t i;
 	const uint8_t *clientKey, *serverKey, *clientSignature;
-	intmax_t iterCount = 0;
-	id <OFCryptoHash> hash;
+	long long iterCount = 0;
+	id <OFCryptographicHash> hash;
 	OFMutableData *ret, *authMessage, *tmpArray;
 	OFData *salt = nil, *saltedPassword;
 	OFString *tmpString, *sNonce = nil;
@@ -248,7 +248,7 @@
 	for (OFString *component in
 	    [challenge componentsSeparatedByString: @","]) {
 		OFString *entry = [component substringWithRange:
-		    of_range(2, component.length - 2)];
+		    OFRangeMake(2, component.length - 2)];
 
 		if ([component hasPrefix: @"r="]) {
 			if (![entry hasPrefix: _cNonce])
@@ -263,7 +263,7 @@
 			salt = [OFData dataWithBase64EncodedString: entry];
 			got |= GOT_SALT;
 		} else if ([component hasPrefix: @"i="]) {
-			iterCount = entry.decimalValue;
+			iterCount = [entry longLongValueWithBase: 10];
 			got |= GOT_ITERCOUNT;
 		}
 	}
@@ -397,7 +397,7 @@
 
 	mess = [OFString stringWithUTF8String: data.items
 				       length: data.count * data.itemSize];
-	value = [mess substringWithRange: of_range(2, mess.length - 2)];
+	value = [mess substringWithRange: OFRangeMake(2, mess.length - 2)];
 
 	if ([mess hasPrefix: @"v="]) {
 		if (![value isEqual: _serverSignature.stringByBase64Encoding])
@@ -430,7 +430,7 @@
 	}
 
 	return [OFString stringWithCString: (char *)buf
-				  encoding: OF_STRING_ENCODING_ASCII
+				  encoding: OFStringEncodingASCII
 				    length: 64];
 }
 
@@ -441,7 +441,7 @@
 	OFMutableData *k = [OFMutableData data];
 	size_t i, kSize, blockSize = [_hashType blockSize];
 	uint8_t *kI = NULL, *kO = NULL;
-	id <OFCryptoHash> hashI, hashO;
+	id <OFCryptographicHash> hashI, hashO;
 
 	if (key.itemSize * key.count > blockSize) {
 		hashI = [[[_hashType alloc] init] autorelease];
@@ -454,8 +454,8 @@
 		      count: key.itemSize * key.count];
 
 	@try {
-		kI = [self allocMemoryWithSize: blockSize];
-		kO = [self allocMemoryWithSize: blockSize];
+		kI = OFAllocMemory(1, blockSize);
+		kO = OFAllocMemory(1, blockSize);
 
 		kSize = k.count;
 		memcpy(kI, k.items, kSize);
@@ -468,19 +468,16 @@
 		}
 
 		hashI = [[[_hashType alloc] init] autorelease];
-		[hashI updateWithBuffer: kI
-				 length: blockSize];
+		[hashI updateWithBuffer: kI length: blockSize];
 		[hashI updateWithBuffer: data.items
 				 length: data.itemSize * data.count];
 
 		hashO = [[[_hashType alloc] init] autorelease];
-		[hashO updateWithBuffer: kO
-				 length: blockSize];
-		[hashO updateWithBuffer: hashI.digest
-				 length: hashI.digestSize];
+		[hashO updateWithBuffer: kO length: blockSize];
+		[hashO updateWithBuffer: hashI.digest length: hashI.digestSize];
 	} @finally {
-		[self freeMemory: kI];
-		[self freeMemory: kO];
+		OFFreeMemory(kI);
+		OFFreeMemory(kO);
 	}
 
 	[hashO retain];
@@ -502,7 +499,7 @@
 	OFMutableData *salty, *tmp;
 	OFData *ret;
 
-	result = [self allocMemoryWithSize: digestSize];
+	result = OFAllocMemory(1, digestSize);
 
 	@try {
 		memset(result, 0, digestSize);
@@ -539,7 +536,7 @@
 		ret = [OFData dataWithItems: result
 				      count: digestSize];
 	} @finally {
-		[self freeMemory: result];
+		OFFreeMemory(result);
 	}
 
 	[ret retain];

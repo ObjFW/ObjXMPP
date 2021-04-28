@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -36,9 +36,9 @@ OF_ASSUME_NONNULL_BEGIN
 - (void)setBooleanValue: (bool)boolean
 		forPath: (OFString *)path;
 - (bool)booleanValueForPath: (OFString *)path;
-- (void)setIntegerValue: (intmax_t)integer
+- (void)setIntegerValue: (long long)integer
 		forPath: (OFString *)path;
-- (intmax_t)integerValueForPath: (OFString *)path;
+- (long long)integerValueForPath: (OFString *)path;
 - (void)setArray: (nullable OFArray *)array
 	 forPath: (OFString *)path;
 - (nullable OFArray *)arrayForPath: (OFString *)path;
