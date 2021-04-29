@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2021, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -36,8 +36,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return A new autoreleased XMPPIQ
  */
-+ (instancetype)IQWithType: (OFString *)type
-			ID: (OFString *)ID;
++ (instancetype)IQWithType: (OFString *)type ID: (OFString *)ID;
 
 /*!
  * @brief Initializes an already allocated XMPPIQ with the specified type and
@@ -47,8 +46,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return An initialized XMPPIQ
  */
-- (instancetype)initWithType: (OFString *)type
-			  ID: (OFString *)ID;
+- (instancetype)initWithType: (OFString *)type ID: (OFString *)ID;
 
 /*!
  * @brief Generates a result IQ for the receiving object.
@@ -76,8 +74,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param condition A defined conditions from RFC 6120
  * @return A new autoreleased XMPPIQ
  */
-- (XMPPIQ *)errorIQWithType: (OFString *)type
-		  condition: (OFString *)condition;
+- (XMPPIQ *)errorIQWithType: (OFString *)type condition: (OFString *)condition;
 @end
 
 OF_ASSUME_NONNULL_END

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -26,13 +27,13 @@
 
 @implementation XMPPCallback
 #ifdef OF_HAVE_BLOCKS
-+ (instancetype)callbackWithBlock: (xmpp_callback_block_t)block
++ (instancetype)callbackWithBlock: (XMPPCallbackBlock)block
 {
 	return [[(XMPPCallback *)[self alloc]
 	    initWithBlock: block] autorelease];
 }
 
-- (instancetype)initWithBlock: (xmpp_callback_block_t)block
+- (instancetype)initWithBlock: (XMPPCallbackBlock)block
 {
 	self = [super init];
 
@@ -47,15 +48,13 @@
 }
 #endif
 
-+ (instancetype)callbackWithTarget: (id)target
-			  selector: (SEL)selector
++ (instancetype)callbackWithTarget: (id)target selector: (SEL)selector
 {
 	return [[[self alloc] initWithTarget: target
 				    selector: selector] autorelease];
 }
 
-- (instancetype)initWithTarget: (id)target
-		      selector: (SEL)selector
+- (instancetype)initWithTarget: (id)target selector: (SEL)selector
 {
 	self = [super init];
 
@@ -75,8 +74,7 @@
 	[super dealloc];
 }
 
-- (void)runWithIQ: (XMPPIQ *)IQ
-       connection: (XMPPConnection *)connection
+- (void)runWithIQ: (XMPPIQ *)IQ connection: (XMPPConnection *)connection
 {
 #ifdef OF_HAVE_BLOCKS
 	if (_block != NULL)

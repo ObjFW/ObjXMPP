@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2019, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2011, 2019, 2021, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -27,19 +27,14 @@
 #import "XMPPIQ.h"
 
 @implementation XMPPIQ
-+ (instancetype)IQWithType: (OFString *)type
-			ID: (OFString *)ID
++ (instancetype)IQWithType: (OFString *)type ID: (OFString *)ID
 {
-	return [[[self alloc] initWithType: type
-					ID: ID] autorelease];
+	return [[[self alloc] initWithType: type ID: ID] autorelease];
 }
 
-- (instancetype)initWithType: (OFString *)type
-			  ID: (OFString *)ID
+- (instancetype)initWithType: (OFString *)type ID: (OFString *)ID
 {
-	self = [super initWithName: @"iq"
-			      type: type
-				ID: ID];
+	self = [super initWithName: @"iq" type: type ID: ID];
 
 	@try {
 		if (![type isEqual: @"get"] && ![type isEqual: @"set"] &&
@@ -70,15 +65,14 @@
 				      ID: self.ID];
 	void *pool = objc_autoreleasePoolPush();
 	OFXMLElement *error = [OFXMLElement elementWithName: @"error"
-						  namespace: XMPP_NS_CLIENT];
+						  namespace: XMPPClientNS];
 
-	[error addAttributeWithName: @"type"
-			stringValue: type];
+	[error addAttributeWithName: @"type" stringValue: type];
 	[error addChild: [OFXMLElement elementWithName: condition
-					     namespace: XMPP_NS_STANZAS]];
+					     namespace: XMPPStanzasNS]];
 	if (text)
 		[error addChild: [OFXMLElement elementWithName: @"text"
-						     namespace: XMPP_NS_STANZAS
+						     namespace: XMPPStanzasNS
 						   stringValue: text]];
 	[ret addChild: error];
 	ret.to = self.from;
@@ -89,11 +83,8 @@
 	return ret;
 }
 
-- (XMPPIQ *)errorIQWithType: (OFString *)type
-		  condition: (OFString *)condition
+- (XMPPIQ *)errorIQWithType: (OFString *)type condition: (OFString *)condition
 {
-	return [self errorIQWithType: type
-			   condition: condition
-				text: nil];
+	return [self errorIQWithType: type condition: condition text: nil];
 }
 @end

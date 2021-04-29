@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2019, 2021, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -42,56 +42,48 @@
 	return [[[self alloc] initWithType: type] autorelease];
 }
 
-+ (instancetype)messageWithType: (OFString *)type
-			     ID: (OFString *)ID
++ (instancetype)messageWithType: (OFString *)type ID: (OFString *)ID
 {
-	return [[[self alloc] initWithType: type
-					ID: ID] autorelease];
+	return [[[self alloc] initWithType: type ID: ID] autorelease];
 }
 
 - (instancetype)init
 {
-	return [self initWithType: nil
-			       ID: nil];
+	return [self initWithType: nil ID: nil];
 }
 
 - (instancetype)initWithID: (OFString *)ID
 {
-	return [self initWithType: nil
-			       ID: ID];
+	return [self initWithType: nil ID: ID];
 }
 
 - (instancetype)initWithType: (OFString *)type
 {
-	return [self initWithType: type
-			       ID: nil];
+	return [self initWithType: type ID: nil];
 }
 
-- (instancetype)initWithType: (OFString *)type
-			  ID: (OFString *)ID
+- (instancetype)initWithType: (OFString *)type ID: (OFString *)ID
 {
-	return [super initWithName: @"message"
-			      type: type
-				ID: ID];
+	return [super initWithName: @"message" type: type ID: ID];
 }
 
 - (void)setBody: (OFString *)body
 {
 	OFXMLElement *oldBody = [self elementForName: @"body"
-					   namespace: XMPP_NS_CLIENT];
+					   namespace: XMPPClientNS];
 
 	if (oldBody != nil)
 		[self removeChild: oldBody];
 
 	if (body != nil)
 		[self addChild: [OFXMLElement elementWithName: @"body"
-						    namespace: XMPP_NS_CLIENT
+						    namespace: XMPPClientNS
 						  stringValue: body]];
 }
 
 - (OFString *)body
 {
 	return [self elementForName: @"body"
-			  namespace: XMPP_NS_CLIENT].stringValue;
+			  namespace: XMPPClientNS].stringValue;
 }
 @end

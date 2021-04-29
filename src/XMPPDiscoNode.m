@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -35,11 +35,9 @@
 @synthesize JID = _JID, node = _node, name = _name, identities = _identities;
 @synthesize features = _features, childNodes = _childNodes;
 
-+ (instancetype)discoNodeWithJID: (XMPPJID *)JID
-			    node: (OFString *)node;
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID node: (OFString *)node;
 {
-	return [[[self alloc] initWithJID: JID
-				     node: node] autorelease];
+	return [[[self alloc] initWithJID: JID node: node] autorelease];
 }
 
 + (instancetype)discoNodeWithJID: (XMPPJID *)JID
@@ -51,12 +49,9 @@
 				     name: name] autorelease];
 }
 
-- (instancetype)initWithJID: (XMPPJID *)JID
-		       node: (OFString *)node
+- (instancetype)initWithJID: (XMPPJID *)JID node: (OFString *)node
 {
-	return [self initWithJID: JID
-			    node: node
-			    name: nil];
+	return [self initWithJID: JID node: node name: nil];
 }
 
 - (instancetype)initWithJID: (XMPPJID *)JID
@@ -77,8 +72,8 @@
 		_features = [[OFSortedList alloc] init];
 		_childNodes = [[OFMutableDictionary alloc] init];
 
-		[self addFeature: XMPP_NS_DISCO_ITEMS];
-		[self addFeature: XMPP_NS_DISCO_INFO];
+		[self addFeature: XMPPDiscoItemsNS];
+		[self addFeature: XMPPDiscoInfoNS];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -126,7 +121,7 @@
 	XMPPIQ *resultIQ;
 	OFXMLElement *response;
 	OFXMLElement *query = [IQ elementForName: @"query"
-				       namespace: XMPP_NS_DISCO_ITEMS];
+				       namespace: XMPPDiscoItemsNS];
 	OFString *node = [[query attributeForName: @"node"] stringValue];
 
 	if (!(node == _node) && ![node isEqual: _node])
@@ -134,13 +129,13 @@
 
 	resultIQ = [IQ resultIQ];
 	response = [OFXMLElement elementWithName: @"query"
-				       namespace: XMPP_NS_DISCO_ITEMS];
+				       namespace: XMPPDiscoItemsNS];
 	[resultIQ addChild: response];
 
 	for (XMPPDiscoNode *child in _childNodes) {
 		OFXMLElement *item =
 		    [OFXMLElement elementWithName: @"item"
-					namespace: XMPP_NS_DISCO_ITEMS];
+					namespace: XMPPDiscoItemsNS];
 
 		[item addAttributeWithName: @"jid"
 			       stringValue: child.JID.fullJID];
@@ -159,21 +154,20 @@
 	return true;
 }
 
-- (bool)xmpp_handleInfoIQ: (XMPPIQ *)IQ
-	       connection: (XMPPConnection *)connection
+- (bool)xmpp_handleInfoIQ: (XMPPIQ *)IQ connection: (XMPPConnection *)connection
 {
 	XMPPIQ *resultIQ;
 	OFXMLElement *response;
 
 	resultIQ = [IQ resultIQ];
 	response = [OFXMLElement elementWithName: @"query"
-				       namespace: XMPP_NS_DISCO_INFO];
+				       namespace: XMPPDiscoInfoNS];
 	[resultIQ addChild: response];
 
 	for (XMPPDiscoIdentity *identity in _identities) {
 		OFXMLElement *identityElement =
 		    [OFXMLElement elementWithName: @"identity"
-					namespace: XMPP_NS_DISCO_INFO];
+					namespace: XMPPDiscoInfoNS];
 
 		[identityElement addAttributeWithName: @"category"
 					  stringValue: identity.category];
@@ -189,7 +183,7 @@
 	for (OFString *feature in _features) {
 		OFXMLElement *featureElement =
 		    [OFXMLElement elementWithName: @"feature"
-					namespace: XMPP_NS_DISCO_INFO];
+					namespace: XMPPDiscoInfoNS];
 		[featureElement addAttributeWithName: @"var"
 					 stringValue: feature];
 		[response addChild: featureElement];

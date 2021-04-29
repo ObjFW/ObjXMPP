@@ -81,8 +81,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	    @"from='alice@example.com'><body>Hello everyone</body>"
 	    @"</message>"]);
 
-	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
-				     ID: @"128"];
+	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set" ID: @"128"];
 	IQ.to = [XMPPJID JIDWithString: @"juliet@capulet.lit"];
 	IQ.from = [XMPPJID JIDWithString: @"romeo@montague.lit"];
 	assert([IQ.XMLString isEqual: @"<iq type='set' id='128' "
@@ -90,14 +89,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	    @"from='romeo@montague.lit'/>"]);
 
 	OFXMLElement *elem = [OFXMLElement elementWithName: @"iq"];
-	[elem addAttributeWithName: @"from"
-		       stringValue: @"bob@localhost"];
-	[elem addAttributeWithName: @"to"
-		       stringValue: @"alice@localhost"];
-	[elem addAttributeWithName: @"type"
-		       stringValue: @"get"];
-	[elem addAttributeWithName: @"id"
-		       stringValue: @"42"];
+	[elem addAttributeWithName: @"from" stringValue: @"bob@localhost"];
+	[elem addAttributeWithName: @"to" stringValue: @"alice@localhost"];
+	[elem addAttributeWithName: @"type" stringValue: @"get"];
+	[elem addAttributeWithName: @"id" stringValue: @"42"];
 	XMPPStanza *stanza = [XMPPStanza stanzaWithElement: elem];
 	assert([elem.XMLString isEqual: [stanza XMLString]]);
 	assert(([[OFString stringWithFormat: @"%@, %@, %@, %@",
@@ -147,8 +142,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	OFLog(@"Auth successful");
 }
 
-- (void)connection: (XMPPConnection *)conn_
-     wasBoundToJID: (XMPPJID *)JID
+- (void)connection: (XMPPConnection *)conn_ wasBoundToJID: (XMPPJID *)JID
 {
 	OFLog(@"Bound to JID: %@", JID.fullJID);
 	OFLog(@"Supports SM: %@",
@@ -212,12 +206,10 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	[conn sendStanza: pres];
 
 #ifdef OF_HAVE_BLOCKS
-	XMPPIQ *IQ = [XMPPIQ IQWithType: @"get"
-				     ID: [conn generateStanzaID]];
+	XMPPIQ *IQ = [XMPPIQ IQWithType: @"get" ID: [conn generateStanzaID]];
 	[IQ addChild: [OFXMLElement elementWithName: @"ping"
 					  namespace: @"urn:xmpp:ping"]];
-	[conn	   sendIQ: IQ
-	    callbackBlock: ^ (XMPPConnection *c, XMPPIQ *resp) {
+	[conn sendIQ: IQ callbackBlock: ^ (XMPPConnection *c, XMPPIQ *resp) {
 		OFLog(@"Ping response: %@", resp);
 	}];
 #endif
@@ -243,16 +235,14 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	OFLog(@"Got roster push: %@", rosterItem);
 }
 
-- (bool)connection: (XMPPConnection *)conn
-      didReceiveIQ: (XMPPIQ *)iq
+- (bool)connection: (XMPPConnection *)conn didReceiveIQ: (XMPPIQ *)iq
 {
 	OFLog(@"IQ: %@", iq);
 
 	return NO;
 }
 
--  (void)connection: (XMPPConnection *)conn
-  didReceiveMessage: (XMPPMessage *)msg
+- (void)connection: (XMPPConnection *)conn didReceiveMessage: (XMPPMessage *)msg
 {
 	OFLog(@"Message: %@", msg);
 }
@@ -263,14 +253,12 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 	OFLog(@"Presence: %@", pres);
 }
 
--  (void)connection: (XMPPConnection *)conn
-  didThrowException: (id)e
+- (void)connection: (XMPPConnection *)conn didThrowException: (id)e
 {
 	@throw e;
 }
 
-- (void)connectionWasClosed: (XMPPConnection *)conn
-		      error: (OFXMLElement *)error
+- (void)connectionWasClosed: (XMPPConnection *)conn error: (OFXMLElement *)error
 {
 	OFLog(@"Connection was closed: %@", error);
 }

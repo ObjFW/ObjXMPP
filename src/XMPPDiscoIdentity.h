@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -96,8 +96,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param type The type of the identity
  * @return An initialized XMPPDiscoIdentity
  */
-- (instancetype)initWithCategory: (OFString *)category
-			    type: (OFString *)type;
+- (instancetype)initWithCategory: (OFString *)category type: (OFString *)type;
 @end
 
 OF_ASSUME_NONNULL_END

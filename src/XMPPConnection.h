@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, 2012, 2013, 2016, 2017, 2018
+ * Copyright (c) 2010, 2011, 2012, 2013, 2016, 2017, 2018, 2021
  *   Jonathan Schleifer <js@heap.zone>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
@@ -29,7 +29,7 @@
 
 OF_ASSUME_NONNULL_BEGIN
 
-#define XMPP_CONNECTION_BUFFER_LENGTH 512
+#define XMPPConnectionBufferLength 512
 
 @class XMPPConnection;
 @class XMPPJID;
@@ -77,17 +77,15 @@ OF_ASSUME_NONNULL_BEGIN
  * @param connection The connection that was bound to a JID
  * @param JID The JID the conecction was bound to
  */
-- (void)connection: (XMPPConnection *)connection
-     wasBoundToJID: (XMPPJID *)JID;
+- (void)connection: (XMPPConnection *)connection wasBoundToJID: (XMPPJID *)JID;
 
 /*!
  * @brief This callback is called when the connection received an IQ stanza.
  *
  * @param connection The connection that received the stanza
- * @param iq The IQ stanza that was received
+ * @param IQ The IQ stanza that was received
  */
-- (bool)connection: (XMPPConnection *)connection
-      didReceiveIQ: (XMPPIQ *)iq;
+- (bool)connection: (XMPPConnection *)connection didReceiveIQ: (XMPPIQ *)IQ;
 
 /*!
  * @brief This callback is called when the connection received a presence
@@ -148,7 +146,7 @@ OF_ASSUME_NONNULL_BEGIN
 @interface XMPPConnection: OFObject
 {
 	OFTCPSocket *_socket;
-	char _buffer[XMPP_CONNECTION_BUFFER_LENGTH];
+	char _buffer[XMPPConnectionBufferLength];
 	OFXMLParser *_parser, *_oldParser;
 	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
 	OFString *_Nullable _username, *_Nullable _password, *_Nullable _server;
@@ -309,8 +307,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param length The length of the buffer. If length is 0, it is assumed that
  *		 the connection was closed.
  */
-- (void)parseBuffer: (const void *)buffer
-	     length: (size_t)length;
+- (void)parseBuffer: (const void *)buffer length: (size_t)length;
 
 /*!
  * @brief Sends an OFXMLElement, usually an XMPPStanza.
@@ -338,8 +335,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param IQ The IQ to send
  * @param block The callback block
  */
--  (void)sendIQ: (XMPPIQ *)IQ
-  callbackBlock: (xmpp_callback_block_t)block;
+-  (void)sendIQ: (XMPPIQ *)IQ callbackBlock: (XMPPCallbackBlock)block;
 #endif
 
 /*!

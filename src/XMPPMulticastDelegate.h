@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -54,8 +54,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param selector The selector to broadcast
  * @param object The object to broadcast
  */
-- (bool)broadcastSelector: (SEL)selector
-	       withObject: (nullable id)object;
+- (bool)broadcastSelector: (SEL)selector withObject: (nullable id)object;
 
 /*!
  * @brief Broadcasts a selector with two objects to all registered delegates.

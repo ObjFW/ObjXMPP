@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2016, 2019, 2021,
+ *   Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -91,11 +92,10 @@ OF_ASSUME_NONNULL_END
 
 	_rosterRequested = true;
 
-	IQ = [XMPPIQ IQWithType: @"get"
-			     ID: [_connection generateStanzaID]];
+	IQ = [XMPPIQ IQWithType: @"get" ID: [_connection generateStanzaID]];
 
 	query = [OFXMLElement elementWithName: @"query"
-				    namespace: XMPP_NS_ROSTER];
+				    namespace: XMPPRosterNS];
 
 	if (_connection.supportsRosterVersioning) {
 		OFString *ver =
@@ -104,8 +104,7 @@ OF_ASSUME_NONNULL_END
 		if (ver == nil)
 			ver = @"";
 
-		[query addAttributeWithName: @"ver"
-				stringValue: ver];
+		[query addAttributeWithName: @"ver" stringValue: ver];
 	}
 
 	[IQ addChild: query];
@@ -116,16 +115,14 @@ OF_ASSUME_NONNULL_END
 				IQ:)];
 }
 
-- (bool)connection: (XMPPConnection *)connection
-      didReceiveIQ: (XMPPIQ *)IQ
+- (bool)connection: (XMPPConnection *)connection didReceiveIQ: (XMPPIQ *)IQ
 {
 	OFXMLElement *rosterElement;
 	OFXMLElement *element;
 	XMPPRosterItem *rosterItem;
 	OFString *origin;
 
-	rosterElement = [IQ elementForName: @"query"
-				 namespace: XMPP_NS_ROSTER];
+	rosterElement = [IQ elementForName: @"query" namespace: XMPPRosterNS];
 
 	if (rosterElement == nil)
 		return false;
@@ -139,7 +136,7 @@ OF_ASSUME_NONNULL_END
 		return false;
 
 	element = [rosterElement elementForName: @"item"
-				      namespace: XMPP_NS_ROSTER];
+				      namespace: XMPPRosterNS];
 
 	if (element != nil) {
 		rosterItem = [self xmpp_rosterItemWithXMLElement: element];
@@ -155,8 +152,7 @@ OF_ASSUME_NONNULL_END
 	if (_connection.supportsRosterVersioning) {
 		OFString *ver =
 		    [rosterElement attributeForName: @"ver"].stringValue;
-		[_dataStorage setStringValue: ver
-				     forPath: @"roster.ver"];
+		[_dataStorage setStringValue: ver forPath: @"roster.ver"];
 		[_dataStorage save];
 	}
 
@@ -175,19 +171,18 @@ OF_ASSUME_NONNULL_END
 	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
 				     ID: [_connection generateStanzaID]];
 	OFXMLElement *query = [OFXMLElement elementWithName: @"query"
-						  namespace: XMPP_NS_ROSTER];
+						  namespace: XMPPRosterNS];
 	OFXMLElement *item = [OFXMLElement elementWithName: @"item"
-						 namespace: XMPP_NS_ROSTER];
+						 namespace: XMPPRosterNS];
 
-	[item addAttributeWithName: @"jid"
-		       stringValue: rosterItem.JID.bareJID];
+	[item addAttributeWithName: @"jid" stringValue: rosterItem.JID.bareJID];
 	if (rosterItem.name != nil)
 		[item addAttributeWithName: @"name"
 			       stringValue: rosterItem.name];
 
 	for (OFString *group in rosterItem.groups)
 		[item addChild: [OFXMLElement elementWithName: @"group"
-						    namespace: XMPP_NS_ROSTER
+						    namespace: XMPPRosterNS
 						  stringValue: group]];
 
 	[query addChild: item];
@@ -201,14 +196,12 @@ OF_ASSUME_NONNULL_END
 	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
 				     ID: [_connection generateStanzaID]];
 	OFXMLElement *query = [OFXMLElement elementWithName: @"query"
-						  namespace: XMPP_NS_ROSTER];
+						  namespace: XMPPRosterNS];
 	OFXMLElement *item = [OFXMLElement elementWithName: @"item"
-						 namespace: XMPP_NS_ROSTER];
+						 namespace: XMPPRosterNS];
 
-	[item addAttributeWithName: @"jid"
-		       stringValue: rosterItem.JID.bareJID];
-	[item addAttributeWithName: @"subscription"
-		       stringValue: @"remove"];
+	[item addAttributeWithName: @"jid" stringValue: rosterItem.JID.bareJID];
+	[item addAttributeWithName: @"subscription" stringValue: @"remove"];
 
 	[query addChild: item];
 	[IQ addChild: query];
@@ -259,13 +252,11 @@ OF_ASSUME_NONNULL_END
 				[item setObject: rosterItem.groups
 					 forKey: @"groups"];
 
-			[items setObject: item
-				  forKey: rosterItem.JID.bareJID];
+			[items setObject: item forKey: rosterItem.JID.bareJID];
 		} else
 			[items removeObjectForKey: rosterItem.JID.bareJID];
 
-		[_dataStorage setDictionary: items
-				    forPath: @"roster.items"];
+		[_dataStorage setDictionary: items forPath: @"roster.items"];
 	}
 
 	if (![rosterItem.subscription isEqual: @"remove"])
@@ -296,8 +287,7 @@ OF_ASSUME_NONNULL_END
 	rosterItem.subscription = subscription;
 
 	for (OFXMLElement *groupElement in
-	    [element elementsForName: @"group"
-			   namespace: XMPP_NS_ROSTER])
+	    [element elementsForName: @"group" namespace: XMPPRosterNS])
 		[groups addObject: groupElement.stringValue];
 
 	if (groups.count > 0)
@@ -310,7 +300,7 @@ OF_ASSUME_NONNULL_END
 					   IQ: (XMPPIQ *)IQ
 {
 	OFXMLElement *rosterElement = [IQ elementForName: @"query"
-					       namespace: XMPP_NS_ROSTER];
+					       namespace: XMPPRosterNS];
 
 	if (connection.supportsRosterVersioning) {
 		if (rosterElement == nil) {
@@ -342,7 +332,7 @@ OF_ASSUME_NONNULL_END
 		XMPPRosterItem *rosterItem;
 
 		if (![element.name isEqual: @"item"] ||
-		    ![element.namespace isEqual: XMPP_NS_ROSTER])
+		    ![element.namespace isEqual: XMPPRosterNS])
 			continue;
 
 		rosterItem = [self xmpp_rosterItemWithXMLElement: element];
@@ -355,8 +345,7 @@ OF_ASSUME_NONNULL_END
 	if (connection.supportsRosterVersioning && rosterElement != nil) {
 		OFString *ver =
 		    [rosterElement attributeForName: @"ver"].stringValue;
-		[_dataStorage setStringValue: ver
-				     forPath: @"roster.ver"];
+		[_dataStorage setStringValue: ver forPath: @"roster.ver"];
 		[_dataStorage save];
 	}
 

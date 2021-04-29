@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -75,11 +75,9 @@
 		resource: (OFString *)resource
 {
 	if (resource != nil)
-		[_presences setObject: presence
-			       forKey: resource];
+		[_presences setObject: presence forKey: resource];
 	else
-		[_presences setObject: presence
-			       forKey: @""];
+		[_presences setObject: presence forKey: @""];
 
 	self.xmpp_lockedOnJID = nil;
 }

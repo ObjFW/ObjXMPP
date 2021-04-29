@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2016, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -31,9 +31,7 @@
 - (instancetype)initWithAuthcid: (OFString *)authcid
 		       password: (OFString *)password
 {
-	return [self initWithAuthzid: nil
-			     authcid: authcid
-			    password: password];
+	return [self initWithAuthzid: nil authcid: authcid password: password];
 }
 
 - (instancetype)initWithAuthzid: (OFString *)authzid

@@ -37,8 +37,7 @@
 
 @interface XMPPSCRAMAuth ()
 - (OFString *)xmpp_genNonce;
-- (const uint8_t *)xmpp_HMACWithKey: (OFData *)key
-			       data: (OFData *)data;
+- (const uint8_t *)xmpp_HMACWithKey: (OFData *)key data: (OFData *)data;
 - (OFData *)xmpp_hiWithData: (OFData *)str
 		       salt: (OFData *)salt
 	     iterationCount: (intmax_t)i;
@@ -137,10 +136,8 @@
 
 	if (authzid) {
 		OFMutableString *new = [[authzid mutableCopy] autorelease];
-		[new replaceOccurrencesOfString: @"="
-				     withString: @"=3D"];
-		[new replaceOccurrencesOfString: @","
-				     withString: @"=2C"];
+		[new replaceOccurrencesOfString: @"=" withString: @"=3D"];
+		[new replaceOccurrencesOfString: @"," withString: @"=2C"];
 		[new makeImmutable];
 		_authzid = [new copy];
 	} else
@@ -155,10 +152,8 @@
 
 	if (authcid) {
 		OFMutableString *new = [[authcid mutableCopy] autorelease];
-		[new replaceOccurrencesOfString: @"="
-				     withString: @"=3D"];
-		[new replaceOccurrencesOfString: @","
-				     withString: @"=2C"];
+		[new replaceOccurrencesOfString: @"=" withString: @"=3D"];
+		[new replaceOccurrencesOfString: @"," withString: @"=2C"];
 		[new makeImmutable];
 		_authcid = [new copy];
 	} else
@@ -281,17 +276,13 @@
 			     count: channelBinding.count];
 	}
 	tmpString = tmpArray.stringByBase64Encoding;
-	[ret addItems: "c="
-		count: 2];
-	[ret addItems: tmpString.UTF8String
-		count: tmpString.UTF8StringLength];
+	[ret addItems: "c=" count: 2];
+	[ret addItems: tmpString.UTF8String count: tmpString.UTF8StringLength];
 
 	// Add r=<nonce>
 	[ret addItem: ","];
-	[ret addItems: "r="
-		count: 2];
-	[ret addItems: sNonce.UTF8String
-		count: sNonce.UTF8StringLength];
+	[ret addItems: "r=" count: 2];
+	[ret addItems: sNonce.UTF8String count: sNonce.UTF8StringLength];
 
 	/*
 	 * IETF RFC 5802:
@@ -312,19 +303,17 @@
 	[authMessage addItems: _clientFirstMessageBare.UTF8String
 			count: _clientFirstMessageBare.UTF8StringLength];
 	[authMessage addItem: ","];
-	[authMessage addItems: data.items
-			count: data.count * data.itemSize];
+	[authMessage addItems: data.items count: data.count * data.itemSize];
 	[authMessage addItem: ","];
-	[authMessage addItems: ret.items
-			count: ret.count];
+	[authMessage addItems: ret.items count: ret.count];
 
 	/*
 	 * IETF RFC 5802:
 	 * ClientKey := HMAC(SaltedPassword, "Client Key")
 	 */
-	clientKey = [self xmpp_HMACWithKey: saltedPassword
-				      data: [OFData dataWithItems: "Client Key"
-							    count: 10]];
+	clientKey = [self
+	    xmpp_HMACWithKey: saltedPassword
+			data: [OFData dataWithItems: "Client Key" count: 10]];
 
 	/*
 	 * IETF RFC 5802:
@@ -346,9 +335,9 @@
 	 * IETF RFC 5802:
 	 * ServerKey := HMAC(SaltedPassword, "Server Key")
 	 */
-	serverKey = [self xmpp_HMACWithKey: saltedPassword
-				      data: [OFData dataWithItems: "Server Key"
-							    count: 10]];
+	serverKey = [self
+	    xmpp_HMACWithKey: saltedPassword
+			data: [OFData dataWithItems: "Server Key" count: 10]];
 
 	/*
 	 * IETF RFC 5802:
@@ -359,8 +348,7 @@
 
 	[_serverSignature release];
 	_serverSignature = [[OFData alloc]
-	    initWithItems: [self xmpp_HMACWithKey: tmpArray
-					     data: authMessage]
+	    initWithItems: [self xmpp_HMACWithKey: tmpArray data: authMessage]
 		    count: [_hashType digestSize]];
 
 	/*
@@ -375,11 +363,9 @@
 
 	// Add p=<base64(ClientProof)>
 	[ret addItem: ","];
-	[ret addItems: "p="
-		count: 2];
+	[ret addItems: "p=" count: 2];
 	tmpString = tmpArray.stringByBase64Encoding;
-	[ret addItems: tmpString.UTF8String
-		count: tmpString.UTF8StringLength];
+	[ret addItems: tmpString.UTF8String count: tmpString.UTF8StringLength];
 
 	return ret;
 }
@@ -447,11 +433,9 @@
 		hashI = [[[_hashType alloc] init] autorelease];
 		[hashI updateWithBuffer: key.items
 				 length: key.itemSize * key.count];
-		[k addItems: hashI.digest
-		      count: hashI.digestSize];
+		[k addItems: hashI.digest count: hashI.digestSize];
 	} else
-		[k addItems: key.items
-		      count: key.itemSize * key.count];
+		[k addItems: key.items count: key.itemSize * key.count];
 
 	@try {
 		kI = OFAllocMemory(1, blockSize);
@@ -508,24 +492,21 @@
 		[salty addItems: "\0\0\0\1"
 			  count: 4];
 
-		uOld = [self xmpp_HMACWithKey: str
-					 data: salty];
+		uOld = [self xmpp_HMACWithKey: str data: salty];
 
 		for (j = 0; j < digestSize; j++)
 			result[j] ^= uOld[j];
 
 		for (j = 0; j < i - 1; j++) {
 			tmp = [[OFMutableData alloc] init];
-			[tmp addItems: uOld
-				count: digestSize];
+			[tmp addItems: uOld count: digestSize];
 
 			/* releases uOld and previous tmp */
 			objc_autoreleasePoolPop(pool);
 			pool = objc_autoreleasePoolPush();
 			[tmp autorelease];
 
-			u = [self xmpp_HMACWithKey: str
-					      data: tmp];
+			u = [self xmpp_HMACWithKey: str data: tmp];
 
 			for (k = 0; k < digestSize; k++)
 				result[k] ^= u[k];
@@ -533,8 +514,7 @@
 			uOld = u;
 		}
 
-		ret = [OFData dataWithItems: result
-				      count: digestSize];
+		ret = [OFData dataWithItems: result count: digestSize];
 	} @finally {
 		OFFreeMemory(result);
 	}

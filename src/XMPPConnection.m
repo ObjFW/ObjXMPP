@@ -59,8 +59,7 @@
 @interface XMPPConnection () <OFDNSResolverQueryDelegate, OFTCPSocketDelegate,
     OFXMLParserDelegate, OFXMLElementBuilderDelegate>
 - (void)xmpp_tryNextSRVRecord;
--  (bool)xmpp_parseBuffer: (const void *)buffer
-		   length: (size_t)length;
+-  (bool)xmpp_parseBuffer: (const void *)buffer length: (size_t)length;
 - (void)xmpp_startStream;
 - (void)xmpp_handleStanza: (OFXMLElement *)element;
 - (void)xmpp_handleStream: (OFXMLElement *)element;
@@ -72,8 +71,7 @@
 - (void)xmpp_handleFeatures: (OFXMLElement *)element;
 - (void)xmpp_sendAuth: (OFString *)authName;
 - (void)xmpp_sendResourceBind;
-- (void)xmpp_sendStreamError: (OFString *)condition
-			text: (OFString *)text;
+- (void)xmpp_sendStreamError: (OFString *)condition text: (OFString *)text;
 - (void)xmpp_handleResourceBindForConnection: (XMPPConnection *)connection
 					  IQ: (XMPPIQ *)IQ;
 - (void)xmpp_sendSession;
@@ -278,7 +276,7 @@
 	[self xmpp_startStream];
 
 	[_socket asyncReadIntoBuffer: _buffer
-			      length: XMPP_CONNECTION_BUFFER_LENGTH];
+			      length: XMPPConnectionBufferLength];
 }
 
 - (void)xmpp_tryNextSRVRecord
@@ -291,8 +289,7 @@
 		_nextSRVRecords = nil;
 	}
 
-	[_socket asyncConnectToHost: record.target
-			       port: record.port];
+	[_socket asyncConnectToHost: record.target port: record.port];
 }
 
 -  (void)resolver: (OFDNSResolver *)resolver
@@ -315,8 +312,7 @@
 
 	if (records.count == 0) {
 		/* Fall back to A / AAAA record. */
-		[_socket asyncConnectToHost: _domainToASCII
-				       port: _port];
+		[_socket asyncConnectToHost: _domainToASCII port: _port];
 		return;
 	}
 
@@ -337,8 +333,7 @@
 	[_socket setDelegate: self];
 
 	if (_server != nil)
-		[_socket asyncConnectToHost: _server
-				       port: _port];
+		[_socket asyncConnectToHost: _server port: _port];
 	else {
 		OFString *SRVDomain = [_domainToASCII
 		    stringByPrependingString: @"_xmpp-client._tcp."];
@@ -365,11 +360,9 @@
 	}
 
 	@try {
-		[_parser parseBuffer: buffer
-			     length: length];
+		[_parser parseBuffer: buffer length: length];
 	} @catch (OFMalformedXMLException *e) {
-		[self xmpp_sendStreamError: @"bad-format"
-				      text: nil];
+		[self xmpp_sendStreamError: @"bad-format" text: nil];
 		[self close];
 		return false;
 	}
@@ -377,11 +370,9 @@
 	return true;
 }
 
-- (void)parseBuffer: (const void *)buffer
-	     length: (size_t)length
+- (void)parseBuffer: (const void *)buffer length: (size_t)length
 {
-	[self xmpp_parseBuffer: buffer
-			length: length];
+	[self xmpp_parseBuffer: buffer length: length];
 
 	[_oldParser release];
 	[_oldElementBuilder release];
@@ -405,8 +396,7 @@
 	}
 
 	@try {
-		if (![self xmpp_parseBuffer: buffer
-				     length: length])
+		if (![self xmpp_parseBuffer: buffer length: length])
 			return false;
 	} @catch (id e) {
 		[_delegates broadcastSelector: @selector(connection:
@@ -425,7 +415,7 @@
 		_oldElementBuilder = nil;
 
 		[_socket asyncReadIntoBuffer: _buffer
-				      length: XMPP_CONNECTION_BUFFER_LENGTH];
+				      length: XMPPConnectionBufferLength];
 		return false;
 	}
 
@@ -502,10 +492,8 @@
 		key = @"bind";
 	key = [key stringByAppendingString: ID];
 
-	callback = [XMPPCallback callbackWithTarget: target
-					   selector: selector];
-	[_callbacks setObject: callback
-		       forKey: key];
+	callback = [XMPPCallback callbackWithTarget: target selector: selector];
+	[_callbacks setObject: callback forKey: key];
 
 	objc_autoreleasePoolPop(pool);
 
@@ -513,8 +501,7 @@
 }
 
 #ifdef OF_HAVE_BLOCKS
--  (void)sendIQ: (XMPPIQ *)IQ
-  callbackBlock: (xmpp_callback_block_t)block
+-  (void)sendIQ: (XMPPIQ *)IQ callbackBlock: (XMPPCallbackBlock)block
 {
 	void *pool = objc_autoreleasePoolPush();
 	XMPPCallback *callback;
@@ -532,8 +519,7 @@
 	key = [key stringByAppendingString: ID];
 
 	callback = [XMPPCallback callbackWithBlock: block];
-	[_callbacks setObject: callback
-		       forKey: key];
+	[_callbacks setObject: callback forKey: key];
 
 	objc_autoreleasePoolPop(pool);
 
@@ -560,22 +546,19 @@
 	}
 
 	if (![prefix isEqual: @"stream"]) {
-		[self xmpp_sendStreamError: @"bad-namespace-prefix"
-				      text: nil];
+		[self xmpp_sendStreamError: @"bad-namespace-prefix" text: nil];
 		return;
 	}
 
-	if (![namespace isEqual: XMPP_NS_STREAM]) {
-		[self xmpp_sendStreamError: @"invalid-namespace"
-				      text: nil];
+	if (![namespace isEqual: XMPPStreamNS]) {
+		[self xmpp_sendStreamError: @"invalid-namespace" text: nil];
 		return;
 	}
 
 	for (OFXMLAttribute *attribute in attributes) {
 		if ([attribute.name isEqual: @"from"] &&
 		    ![attribute.stringValue isEqual: _domain]) {
-			[self xmpp_sendStreamError: @"invalid-from"
-					      text: nil];
+			[self xmpp_sendStreamError: @"invalid-from" text: nil];
 			return;
 		}
 		if ([attribute.name isEqual: @"version"] &&
@@ -596,24 +579,23 @@
 	if (element.name == nil)
 		return;
 
-	element.defaultNamespace = XMPP_NS_CLIENT;
-	[element setPrefix: @"stream"
-	      forNamespace: XMPP_NS_STREAM];
+	element.defaultNamespace = XMPPClientNS;
+	[element setPrefix: @"stream" forNamespace: XMPPStreamNS];
 
 	[_delegates broadcastSelector: @selector(connection:didReceiveElement:)
 			   withObject: self
 			   withObject: element];
 
-	if ([element.namespace isEqual: XMPP_NS_CLIENT])
+	if ([element.namespace isEqual: XMPPClientNS])
 		[self xmpp_handleStanza: element];
 
-	if ([element.namespace isEqual: XMPP_NS_STREAM])
+	if ([element.namespace isEqual: XMPPStreamNS])
 		[self xmpp_handleStream: element];
 
-	if ([element.namespace isEqual: XMPP_NS_STARTTLS])
+	if ([element.namespace isEqual: XMPPStartTLSNS])
 		[self xmpp_handleTLS: element];
 
-	if ([element.namespace isEqual: XMPP_NS_SASL])
+	if ([element.namespace isEqual: XMPPSASLNS])
 		[self xmpp_handleSASL: element];
 }
 
@@ -623,7 +605,7 @@
 	     namespace: (OFString *)ns
 {
 	if (![name isEqual: @"stream"] || ![prefix isEqual: @"stream"] ||
-	    ![ns isEqual: XMPP_NS_STREAM])
+	    ![ns isEqual: XMPPStreamNS])
 		@throw [OFMalformedXMLException exception];
 	else
 		[self close];
@@ -656,8 +638,8 @@
 
 	[_socket writeFormat: @"<?xml version='1.0'?>\n"
 			      @"<stream:stream to='%@' "
-			      @"xmlns='" XMPP_NS_CLIENT @"' "
-			      @"xmlns:stream='" XMPP_NS_STREAM @"' %@"
+			      @"xmlns='" XMPPClientNS @"' "
+			      @"xmlns:stream='" XMPPStreamNS @"' %@"
 			      @"version='1.0'>", _domain, langString];
 
 	_streamOpen = true;
@@ -702,8 +684,7 @@
 		return;
 	}
 
-	[self xmpp_sendStreamError: @"unsupported-stanza-type"
-			      text: nil];
+	[self xmpp_sendStreamError: @"unsupported-stanza-type" text: nil];
 }
 
 
@@ -722,15 +703,14 @@
 				   withObject: self
 				   withObject: element];
 
-		condition = [[element elementsForNamespace:
-		    XMPP_NS_XMPP_STREAM].firstObject name];
+		condition = [[element elementsForNamespace: XMPPXMPPStreamNS]
+		    .firstObject name];
 
 		if (condition == nil)
 			condition = @"undefined";
 
-		reason = [element
-		    elementForName: @"text"
-			 namespace: XMPP_NS_XMPP_STREAM].stringValue;
+		reason = [element elementForName: @"text"
+				       namespace: XMPPXMPPStreamNS].stringValue;
 
 		@throw [XMPPStreamErrorException
 		    exceptionWithConnection: self
@@ -793,7 +773,7 @@
 		OFData *response = [_authModule continueWithData: challenge];
 
 		responseTag = [OFXMLElement elementWithName: @"response"
-						  namespace: XMPP_NS_SASL];
+						  namespace: XMPPSASLNS];
 		if (response) {
 			if (response.count == 0)
 				responseTag.stringValue = @"=";
@@ -843,8 +823,7 @@
 	key = [key stringByAppendingString: IQ.ID];
 
 	if ((callback = [_callbacks objectForKey: key])) {
-		[callback runWithIQ: IQ
-			 connection: self];
+		[callback runWithIQ: IQ connection: self];
 		[_callbacks removeObjectForKey: key];
 		return;
 	}
@@ -878,19 +857,19 @@
 - (void)xmpp_handleFeatures: (OFXMLElement *)element
 {
 	OFXMLElement *startTLS = [element elementForName: @"starttls"
-					       namespace: XMPP_NS_STARTTLS];
+					       namespace: XMPPStartTLSNS];
 	OFXMLElement *bind = [element elementForName: @"bind"
-					   namespace: XMPP_NS_BIND];
+					   namespace: XMPPBindNS];
 	OFXMLElement *session = [element elementForName: @"session"
-					      namespace: XMPP_NS_SESSION];
+					      namespace: XMPPSessionNS];
 	OFXMLElement *mechs = [element elementForName: @"mechanisms"
-					    namespace: XMPP_NS_SASL];
+					    namespace: XMPPSASLNS];
 	OFMutableSet *mechanisms = [OFMutableSet set];
 
 	if (!_encrypted && startTLS != nil) {
 		[self sendStanza:
 		    [OFXMLElement elementWithName: @"starttls"
-					namespace: XMPP_NS_STARTTLS]];
+					namespace: XMPPStartTLSNS]];
 		return;
 	}
 
@@ -898,12 +877,10 @@
 		/* TODO: Find/create an exception to throw here */
 		@throw [OFException exception];
 
-	if ([element elementForName: @"ver"
-			  namespace: XMPP_NS_ROSTERVER] != nil)
+	if ([element elementForName: @"ver" namespace: XMPPRosterVerNS] != nil)
 		_supportsRosterVersioning = true;
 
-	if ([element elementForName: @"sm"
-			  namespace: XMPP_NS_SM] != nil)
+	if ([element elementForName: @"sm" namespace: XMPPSMNS] != nil)
 		_supportsStreamManagement = true;
 
 	if (mechs != nil) {
@@ -966,7 +943,7 @@
 	}
 
 	if (session != nil && [session elementForName: @"optional"
-					    namespace: XMPP_NS_SESSION] == nil)
+					    namespace: XMPPSessionNS] == nil)
 		_needsSession = true;
 
 	if (bind != nil) {
@@ -982,10 +959,8 @@
 	OFXMLElement *authTag;
 	OFData *initialMessage = [_authModule initialMessage];
 
-	authTag = [OFXMLElement elementWithName: @"auth"
-				      namespace: XMPP_NS_SASL];
-	[authTag addAttributeWithName: @"mechanism"
-			  stringValue: authName];
+	authTag = [OFXMLElement elementWithName: @"auth" namespace: XMPPSASLNS];
+	[authTag addAttributeWithName: @"mechanism" stringValue: authName];
 	if (initialMessage != nil) {
 		if (initialMessage.count == 0)
 			authTag.stringValue = @"=";
@@ -1002,15 +977,13 @@
 	XMPPIQ *IQ;
 	OFXMLElement *bind;
 
-	IQ = [XMPPIQ IQWithType: @"set"
-			     ID: [self generateStanzaID]];
+	IQ = [XMPPIQ IQWithType: @"set" ID: [self generateStanzaID]];
 
-	bind = [OFXMLElement elementWithName: @"bind"
-				   namespace: XMPP_NS_BIND];
+	bind = [OFXMLElement elementWithName: @"bind" namespace: XMPPBindNS];
 
 	if (_resource != nil)
 		[bind addChild: [OFXMLElement elementWithName: @"resource"
-						    namespace: XMPP_NS_BIND
+						    namespace: XMPPBindNS
 						  stringValue: _resource]];
 
 	[IQ addChild: bind];
@@ -1026,15 +999,14 @@
 {
 	OFXMLElement *error = [OFXMLElement
 	    elementWithName: @"error"
-		  namespace: XMPP_NS_STREAM];
-	[error setPrefix: @"stream"
-	    forNamespace: XMPP_NS_STREAM];
+		  namespace: XMPPStreamNS];
+	[error setPrefix: @"stream" forNamespace: XMPPStreamNS];
 	[error addChild: [OFXMLElement elementWithName: condition
-					     namespace: XMPP_NS_XMPP_STREAM]];
+					     namespace: XMPPXMPPStreamNS]];
 	if (text)
 		[error	   addChild: [OFXMLElement
 		    elementWithName: @"text"
-			  namespace: XMPP_NS_XMPP_STREAM
+			  namespace: XMPPXMPPStreamNS
 			stringValue: text]];
 	_parser.delegate = nil;
 	[self sendStanza: error];
@@ -1048,13 +1020,11 @@
 
 	assert([IQ.type isEqual: @"result"]);
 
-	bindElement = [IQ elementForName: @"bind"
-			       namespace: XMPP_NS_BIND];
+	bindElement = [IQ elementForName: @"bind" namespace: XMPPBindNS];
 
 	assert(bindElement != nil);
 
-	JIDElement = [bindElement elementForName: @"jid"
-				       namespace: XMPP_NS_BIND];
+	JIDElement = [bindElement elementForName: @"jid" namespace: XMPPBindNS];
 	_JID = [[XMPPJID alloc] initWithString: JIDElement.stringValue];
 
 	if (_needsSession) {
@@ -1069,11 +1039,10 @@
 
 - (void)xmpp_sendSession
 {
-	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set"
-				     ID: [self generateStanzaID]];
+	XMPPIQ *IQ = [XMPPIQ IQWithType: @"set" ID: [self generateStanzaID]];
 
 	[IQ addChild: [OFXMLElement elementWithName: @"session"
-					  namespace: XMPP_NS_SESSION]];
+					  namespace: XMPPSessionNS]];
 
 	[self	    sendIQ: IQ
 	    callbackTarget: self

@@ -107,8 +107,7 @@
 	for (OFString *bareJID in rosterItems) {
 		XMPPContact *contact = [[[XMPPContact alloc] init] autorelease];
 		contact.rosterItem = [rosterItems objectForKey: bareJID];
-		[_contacts setObject: contact
-			      forKey: bareJID];
+		[_contacts setObject: contact forKey: bareJID];
 		[_delegates broadcastSelector: @selector(contactManager:
 						   didAddContact:)
 				   withObject: self
@@ -137,8 +136,7 @@
 	if (contact == nil) {
 		contact = [[[XMPPContact alloc] init] autorelease];
 		contact.rosterItem = rosterItem;
-		[_contacts setObject: contact
-			     forKey: bareJID];
+		[_contacts setObject: contact forKey: bareJID];
 		[_delegates broadcastSelector: @selector(contactManager:
 						   didAddContact:)
 				   withObject: self
@@ -174,8 +172,7 @@
 
 	/* Available presence */
 	if ([type isEqual: @"available"]) {
-		[contact xmpp_setPresence: presence
-				 resource: JID.resource];
+		[contact xmpp_setPresence: presence resource: JID.resource];
 		[_delegates broadcastSelector: @selector(contact:
 						   didSendPresence:)
 				   withObject: contact

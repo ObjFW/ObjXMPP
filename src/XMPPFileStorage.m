@@ -92,16 +92,14 @@
 
 		if (iter2 == nil) {
 			iter2 = [OFMutableDictionary dictionary];
-			[iter setObject: iter2
-				 forKey: component];
+			[iter setObject: iter2 forKey: component];
 		}
 
 		iter = iter2;
 	}
 
 	if (object != nil)
-		[iter setObject: object
-			 forKey: [pathComponents lastObject]];
+		[iter setObject: object forKey: [pathComponents lastObject]];
 	else
 		[iter removeObjectForKey: pathComponents.lastObject];
 }
@@ -121,8 +119,7 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self xmpp_setObject: string
-		     forPath: path];
+	[self xmpp_setObject: string forPath: path];
 
 	objc_autoreleasePoolPop(pool);
 }
@@ -139,13 +136,11 @@
 	return string;
 }
 
-- (void)setBooleanValue: (bool)boolean
-		forPath: (OFString *)path
+- (void)setBooleanValue: (bool)boolean forPath: (OFString *)path
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self xmpp_setObject: [OFNumber numberWithBool: boolean]
-		     forPath: path];
+	[self xmpp_setObject: [OFNumber numberWithBool: boolean] forPath: path];
 
 	objc_autoreleasePoolPop(pool);
 }
@@ -162,8 +157,7 @@
 	return boolean;
 }
 
-- (void)setIntegerValue: (long long)integer
-		forPath: (OFString *)path
+- (void)setIntegerValue: (long long)integer forPath: (OFString *)path
 {
 	void *pool = objc_autoreleasePoolPush();
 
@@ -185,13 +179,11 @@
 	return integer;
 }
 
-- (void)setArray: (OFArray *)array
-	 forPath: (OFString *)path
+- (void)setArray: (OFArray *)array forPath: (OFString *)path
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self xmpp_setObject: array
-		     forPath: path];
+	[self xmpp_setObject: array forPath: path];
 
 	objc_autoreleasePoolPop(pool);
 }
@@ -208,13 +200,11 @@
 	return array;
 }
 
-- (void)setDictionary: (OFDictionary *)dictionary
-	      forPath: (OFString *)path
+- (void)setDictionary: (OFDictionary *)dictionary forPath: (OFString *)path
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	[self xmpp_setObject: dictionary
-		     forPath: path];
+	[self xmpp_setObject: dictionary forPath: path];
 
 	objc_autoreleasePoolPop(pool);
 }

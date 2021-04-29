@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2013, 2016, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -103,8 +103,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param node The node's opaque name
  * @return An initialized XMPPDiscoNode
  */
-- (instancetype)initWithJID: (XMPPJID *)JID
-		       node: (nullable OFString *)node;
+- (instancetype)initWithJID: (XMPPJID *)JID node: (nullable OFString *)node;
 
 /*!
  * @brief Initializes an already allocated XMPPDiscoNode with the specified

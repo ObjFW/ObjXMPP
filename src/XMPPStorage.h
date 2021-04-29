@@ -30,17 +30,13 @@ OF_ASSUME_NONNULL_BEGIN
 
 @protocol XMPPStorage <OFObject>
 - (void)save;
-- (void)setStringValue: (nullable OFString *)string
-	       forPath: (OFString *)path;
+- (void)setStringValue: (nullable OFString *)string forPath: (OFString *)path;
 - (nullable OFString *)stringValueForPath: (OFString *)path;
-- (void)setBooleanValue: (bool)boolean
-		forPath: (OFString *)path;
+- (void)setBooleanValue: (bool)boolean forPath: (OFString *)path;
 - (bool)booleanValueForPath: (OFString *)path;
-- (void)setIntegerValue: (long long)integer
-		forPath: (OFString *)path;
+- (void)setIntegerValue: (long long)integer forPath: (OFString *)path;
 - (long long)integerValueForPath: (OFString *)path;
-- (void)setArray: (nullable OFArray *)array
-	 forPath: (OFString *)path;
+- (void)setArray: (nullable OFArray *)array forPath: (OFString *)path;
 - (nullable OFArray *)arrayForPath: (OFString *)path;
 - (void)setDictionary: (nullable OFDictionary *)dictionary
 	      forPath: (OFString *)path;

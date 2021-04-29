@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2016, 2021, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -87,8 +87,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return A new autoreleased XMPPStanza
  */
-+ (instancetype)stanzaWithName: (OFString *)name
-			    ID: (nullable OFString *)ID;
++ (instancetype)stanzaWithName: (OFString *)name ID: (nullable OFString *)ID;
 
 /*!
  * @brief Creates a new autoreleased XMPPStanza with the specified name, type
@@ -137,8 +136,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param type The value for the stanza's type attribute
  * @return A initialized XMPPStanza
  */
-- (instancetype)initWithName: (OFString *)name
-			type: (nullable OFString *)type;
+- (instancetype)initWithName: (OFString *)name type: (nullable OFString *)type;
 
 /*!
  * @brief Initializes an already allocated XMPPStanza with the specified name
@@ -148,8 +146,7 @@ OF_ASSUME_NONNULL_BEGIN
  * @param ID The value for the stanza's id attribute
  * @return A initialized XMPPStanza
  */
-- (instancetype)initWithName: (OFString *)name
-			  ID: (nullable OFString *)ID;
+- (instancetype)initWithName: (OFString *)name ID: (nullable OFString *)ID;
 
 /*!
  * @brief Initializes an already allocated XMPPStanza with the specified name,

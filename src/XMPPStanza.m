@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2011, 2012, 2013, 2019, 2021, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://heap.zone/objxmpp/
@@ -36,18 +36,14 @@
 	return [[[self alloc] initWithName: name] autorelease];
 }
 
-+ (instancetype)stanzaWithName: (OFString *)name
-			  type: (OFString *)type
++ (instancetype)stanzaWithName: (OFString *)name type: (OFString *)type
 {
-	return [[[self alloc] initWithName: name
-				      type: type] autorelease];
+	return [[[self alloc] initWithName: name type: type] autorelease];
 }
 
-+ (instancetype)stanzaWithName: (OFString *)name
-			    ID: (OFString *)ID
++ (instancetype)stanzaWithName: (OFString *)name ID: (OFString *)ID
 {
-	return [[[self alloc] initWithName: name
-					ID: ID] autorelease];
+	return [[[self alloc] initWithName: name ID: ID] autorelease];
 }
 
 + (instancetype)stanzaWithName: (OFString *)name
@@ -70,8 +66,7 @@
 	OF_INVALID_INIT_METHOD
 }
 
-- (instancetype)initWithName: (OFString *)name
-		   namespace: (OFString *)namespace
+- (instancetype)initWithName: (OFString *)name namespace: (OFString *)namespace
 {
 	OF_INVALID_INIT_METHOD
 }
@@ -95,25 +90,18 @@
 
 - (instancetype)initWithName: (OFString *)name
 {
-	return [self initWithName: name
-			     type: nil
-			       ID: nil];
+	return [self initWithName: name type: nil ID: nil];
 }
 
-- (instancetype)initWithName: (OFString *)name
-			type: (OFString *)type
+- (instancetype)initWithName: (OFString *)name type: (OFString *)type
 {
-	return [self initWithName: name
-			     type: type
-			       ID: nil];
+	return [self initWithName: name type: type ID: nil];
 }
 
 - (instancetype)initWithName: (OFString *)name
 			  ID: (OFString *)ID
 {
-	return [self initWithName: name
-			     type: nil
-			       ID: ID];
+	return [self initWithName: name type: nil ID: ID];
 }
 
 - (instancetype)initWithName: (OFString *)name
@@ -121,7 +109,7 @@
 			  ID: (OFString *)ID
 {
 	self = [super initWithName: name
-			 namespace: XMPP_NS_CLIENT
+			 namespace: XMPPClientNS
 		       stringValue: nil];
 
 	@try {
@@ -129,9 +117,8 @@
 		    ![name isEqual: @"presence"])
 			@throw [OFInvalidArgumentException exception];
 
-		self.defaultNamespace = XMPP_NS_CLIENT;
-		[self setPrefix: @"stream"
-		   forNamespace: XMPP_NS_STREAM];
+		self.defaultNamespace = XMPPClientNS;
+		[self setPrefix: @"stream" forNamespace: XMPPStreamNS];
 
 		if (type != nil)
 			self.type = type;
@@ -193,8 +180,7 @@
 	[self removeAttributeForName: @"from"];
 
 	if (from != nil)
-		[self addAttributeWithName: @"from"
-			       stringValue: from.fullJID];
+		[self addAttributeWithName: @"from" stringValue: from.fullJID];
 }
 
 - (void)setTo: (XMPPJID *)to
@@ -206,8 +192,7 @@
 	[self removeAttributeForName: @"to"];
 
 	if (to != nil)
-		[self addAttributeWithName: @"to"
-			       stringValue: to.fullJID];
+		[self addAttributeWithName: @"to" stringValue: to.fullJID];
 }
 
 - (void)setType: (OFString *)type
@@ -219,8 +204,7 @@
 	[self removeAttributeForName: @"type"];
 
 	if (type != nil)
-		[self addAttributeWithName: @"type"
-			       stringValue: type];
+		[self addAttributeWithName: @"type" stringValue: type];
 }
 
 - (void)setID: (OFString *)ID
@@ -232,8 +216,7 @@
 	[self removeAttributeForName: @"id"];
 
 	if (ID != nil)
-		[self addAttributeWithName: @"id"
-			       stringValue: ID];
+		[self addAttributeWithName: @"id" stringValue: ID];
 }
 
 - (void)setLanguage: (OFString *)language

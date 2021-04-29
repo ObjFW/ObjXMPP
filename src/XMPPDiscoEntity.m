@@ -32,8 +32,7 @@
 @implementation XMPPDiscoEntity
 @synthesize discoNodes = _discoNodes, capsNode = _capsNode;
 
-+ (instancetype)discoNodeWithJID: (XMPPJID *)JID
-			    node: (OFString *)node
++ (instancetype)discoNodeWithJID: (XMPPJID *)JID node: (OFString *)node
 {
 	OF_UNRECOGNIZED_SELECTOR
 }
@@ -57,8 +56,7 @@
 					capsNode: capsNode] autorelease];
 }
 
-- (instancetype)initWithJID: (XMPPJID *)JID
-		       node: (nullable OFString *)node
+- (instancetype)initWithJID: (XMPPJID *)JID node: (nullable OFString *)node
 {
 	OF_INVALID_INIT_METHOD
 }
@@ -79,9 +77,7 @@
 - (instancetype)initWithConnection: (XMPPConnection *)connection
 			  capsNode: (OFString *)capsNode
 {
-	self = [super initWithJID: [connection JID]
-			     node: nil
-			     name: nil];
+	self = [super initWithJID: [connection JID] node: nil name: nil];
 
 	@try {
 		_discoNodes = [[OFMutableDictionary alloc] init];
@@ -107,8 +103,7 @@
 
 - (void)addDiscoNode: (XMPPDiscoNode *)node
 {
-	[_discoNodes setObject: node
-			forKey: node.node];
+	[_discoNodes setObject: node forKey: node.node];
 }
 
 - (OFString *)capsHash
@@ -124,11 +119,9 @@
 	for (OFString *feature in _features)
 		[caps appendFormat: @"%@<", feature];
 
-	[hash updateWithBuffer: caps.UTF8String
-			length: caps.UTF8StringLength];
+	[hash updateWithBuffer: caps.UTF8String length: caps.UTF8StringLength];
 
-	digest = [OFData dataWithItems: hash.digest
-				 count: hash.digestSize];
+	digest = [OFData dataWithItems: hash.digest count: hash.digestSize];
 
 	return digest.stringByBase64Encoding;
 }
@@ -146,7 +139,7 @@
 		return false;
 
 	OFXMLElement *query = [IQ elementForName: @"query"
-				       namespace: XMPP_NS_DISCO_ITEMS];
+				       namespace: XMPPDiscoItemsNS];
 
 	if (query != nil) {
 		OFString *node = [query attributeForName: @"node"].stringValue;
@@ -162,8 +155,7 @@
 		return false;
 	}
 
-	query = [IQ elementForName: @"query"
-			 namespace: XMPP_NS_DISCO_INFO];
+	query = [IQ elementForName: @"query" namespace: XMPPDiscoInfoNS];
 
 	if (query != nil) {
 		OFString *node = [query attributeForName: @"node"].stringValue;

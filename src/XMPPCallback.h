@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
+ * Copyright (c) 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -28,8 +29,7 @@ OF_ASSUME_NONNULL_BEGIN
 @class XMPPIQ;
 
 #ifdef OF_HAVE_BLOCKS
-typedef void (^xmpp_callback_block_t)(XMPPConnection *_Nonnull,
-    XMPPIQ *_Nonnull);
+typedef void (^XMPPCallbackBlock)(XMPPConnection *_Nonnull, XMPPIQ *_Nonnull);
 #endif
 
 @interface XMPPCallback: OFObject
@@ -37,22 +37,19 @@ typedef void (^xmpp_callback_block_t)(XMPPConnection *_Nonnull,
 	id _target;
 	SEL _selector;
 #ifdef OF_HAVE_BLOCKS
-	xmpp_callback_block_t _block;
+	XMPPCallbackBlock _block;
 #endif
 }
 
 #ifdef OF_HAVE_BLOCKS
-+ (instancetype)callbackWithBlock: (xmpp_callback_block_t)callback;
-- (instancetype)initWithBlock: (xmpp_callback_block_t)callback;
++ (instancetype)callbackWithBlock: (XMPPCallbackBlock)callback;
+- (instancetype)initWithBlock: (XMPPCallbackBlock)callback;
 #endif
 
-+ (instancetype)callbackWithTarget: (id)target
-			  selector: (SEL)selector;
-- (instancetype)initWithTarget: (id)target
-		      selector: (SEL)selector;
++ (instancetype)callbackWithTarget: (id)target selector: (SEL)selector;
+- (instancetype)initWithTarget: (id)target selector: (SEL)selector;
 
-- (void)runWithIQ: (XMPPIQ *)iq
-       connection: (XMPPConnection *)connection;
+- (void)runWithIQ: (XMPPIQ *)iq connection: (XMPPConnection *)connection;
 @end
 
 OF_ASSUME_NONNULL_END

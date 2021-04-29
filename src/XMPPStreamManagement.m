@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -60,7 +60,7 @@
 	OFString *elementName = element.name;
 	OFString *elementNS = element.namespace;
 
-	if ([elementNS isEqual: XMPP_NS_SM]) {
+	if ([elementNS isEqual: XMPPSMNS]) {
 		if ([elementName isEqual: @"enabled"]) {
 			_receivedCount = 0;
 			return;
@@ -74,7 +74,7 @@
 		if ([elementName isEqual: @"r"]) {
 			OFXMLElement *ack =
 			    [OFXMLElement elementWithName: @"a"
-						namespace: XMPP_NS_SM];
+						namespace: XMPPSMNS];
 			OFString *stringValue = [OFString
 			    stringWithFormat: @"%" PRIu32, _receivedCount];
 			[ack addAttributeWithName: @"h"
@@ -83,7 +83,7 @@
 		}
 	}
 
-	if ([elementNS isEqual: XMPP_NS_CLIENT] &&
+	if ([elementNS isEqual: XMPPClientNS] &&
 	    ([elementName isEqual: @"iq"] ||
 	     [elementName isEqual: @"presence"] ||
 	     [elementName isEqual: @"message"]))
@@ -97,12 +97,11 @@
 }
 */
 
-- (void)connection: (XMPPConnection *)connection
-     wasBoundToJID: (XMPPJID *)JID
+- (void)connection: (XMPPConnection *)connection wasBoundToJID: (XMPPJID *)JID
 {
 	if (connection.supportsStreamManagement)
 		[connection sendStanza:
 		    [OFXMLElement elementWithName: @"enable"
-					namespace: XMPP_NS_SM]];
+					namespace: XMPPSMNS]];
 }
 @end

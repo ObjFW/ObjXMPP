@@ -63,12 +63,9 @@
 	return self;
 }
 
-- (instancetype)initWithCategory: (OFString *)category
-			    type: (OFString *)type
+- (instancetype)initWithCategory: (OFString *)category type: (OFString *)type
 {
-	return [self initWithCategory: category
-				 type: type
-				 name: nil];
+	return [self initWithCategory: category type: type name: nil];
 }
 
 - (instancetype)init

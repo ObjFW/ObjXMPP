@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2019, Jonathan Schleifer <js@heap.zone>
+ * Copyright (c) 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -28,8 +28,7 @@
 @implementation XMPPEXTERNALAuth: XMPPAuthenticator
 + (instancetype)EXTERNALAuth
 {
-	return [[[self alloc] initWithAuthcid: nil
-				     password: nil] autorelease];
+	return [[[self alloc] initWithAuthcid: nil password: nil] autorelease];
 }
 
 + (instancetype)EXTERNALAuthWithAuthzid: (OFString *)authzid

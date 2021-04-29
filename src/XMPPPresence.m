@@ -65,37 +65,29 @@ showToInt(OFString *show)
 	return [[[self alloc] initWithType: type] autorelease];
 }
 
-+ (instancetype)presenceWithType: (OFString *)type
-			      ID: (OFString *)ID
++ (instancetype)presenceWithType: (OFString *)type ID: (OFString *)ID
 {
-	return [[[self alloc] initWithType: type
-					ID: ID] autorelease];
+	return [[[self alloc] initWithType: type ID: ID] autorelease];
 }
 
 - (instancetype)init
 {
-	return [self initWithType: nil
-			       ID: nil];
+	return [self initWithType: nil ID: nil];
 }
 
 - (instancetype)initWithID: (OFString *)ID
 {
-	return [self initWithType: nil
-			       ID: ID];
+	return [self initWithType: nil ID: ID];
 }
 
 - (instancetype)initWithType: (OFString *)type
 {
-	return [self initWithType: type
-			       ID: nil];
+	return [self initWithType: type ID: nil];
 }
 
-- (instancetype)initWithType: (OFString *)type
-			  ID: (OFString *)ID
+- (instancetype)initWithType: (OFString *)type ID: (OFString *)ID
 {
-	return [super initWithName: @"presence"
-			      type: type
-				ID: ID];
+	return [super initWithName: @"presence" type: type ID: ID];
 }
 
 - (instancetype)initWithElement: (OFXMLElement *)element
@@ -106,15 +98,15 @@ showToInt(OFString *show)
 		OFXMLElement *subElement;
 
 		if ((subElement = [element elementForName: @"show"
-						namespace: XMPP_NS_CLIENT]))
+						namespace: XMPPClientNS]))
 			self.show = subElement.stringValue;
 
 		if ((subElement = [element elementForName: @"status"
-						namespace: XMPP_NS_CLIENT]))
+						namespace: XMPPClientNS]))
 			self.status = subElement.stringValue;
 
 		if ((subElement = [element elementForName: @"priority"
-						namespace: XMPP_NS_CLIENT]))
+						namespace: XMPPClientNS]))
 			self.priority = [OFNumber numberWithLongLong:
 			    [subElement longLongValueWithBase: 10]];
 	} @catch (id e) {
@@ -137,7 +129,7 @@ showToInt(OFString *show)
 - (void)setShow: (OFString *)show
 {
 	OFXMLElement *oldShow = [self elementForName: @"show"
-					   namespace: XMPP_NS_CLIENT];
+					   namespace: XMPPClientNS];
 	OFString *old;
 
 	if (oldShow != nil)
@@ -145,7 +137,7 @@ showToInt(OFString *show)
 
 	if (show != nil)
 		[self addChild: [OFXMLElement elementWithName: @"show"
-						    namespace: XMPP_NS_CLIENT
+						    namespace: XMPPClientNS
 						  stringValue: show]];
 
 	old = _show;
@@ -156,7 +148,7 @@ showToInt(OFString *show)
 - (void)setStatus: (OFString *)status
 {
 	OFXMLElement *oldStatus = [self elementForName: @"status"
-					     namespace: XMPP_NS_CLIENT];
+					     namespace: XMPPClientNS];
 	OFString *old;
 
 	if (oldStatus != nil)
@@ -164,7 +156,7 @@ showToInt(OFString *show)
 
 	if (status != nil)
 		[self addChild: [OFXMLElement elementWithName: @"status"
-						    namespace: XMPP_NS_CLIENT
+						    namespace: XMPPClientNS
 						  stringValue: status]];
 
 	old = _status;
@@ -181,7 +173,7 @@ showToInt(OFString *show)
 		@throw [OFInvalidArgumentException exception];
 
 	OFXMLElement *oldPriority = [self elementForName: @"priority"
-					       namespace: XMPP_NS_CLIENT];
+					       namespace: XMPPClientNS];
 
 	if (oldPriority != nil)
 		[self removeChild: oldPriority];
@@ -189,7 +181,7 @@ showToInt(OFString *show)
 	OFString *priority_s =
 	    [OFString stringWithFormat: @"%hhd", priority.charValue];
 	[self addChild: [OFXMLElement elementWithName: @"priority"
-					    namespace: XMPP_NS_CLIENT
+					    namespace: XMPPClientNS
 					  stringValue: priority_s]];
 
 	old = _priority;

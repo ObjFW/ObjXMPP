@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, 2019, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -69,8 +69,7 @@
 	}
 }
 
-- (bool)broadcastSelector: (SEL)selector
-	       withObject: (id)object
+- (bool)broadcastSelector: (SEL)selector withObject: (id)object
 {
 	void *pool = objc_autoreleasePoolPush();
 	OFMutableData *currentDelegates = [[_delegates copy] autorelease];

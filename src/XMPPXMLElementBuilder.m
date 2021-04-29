@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, 2021, Jonathan Schleifer <js@nil.im>
  *
  * https://heap.zone/objxmpp/
  *
@@ -33,8 +33,7 @@
 	@throw [OFMalformedXMLException exception];
 }
 
-- (void)parser: (OFXMLParser *)parser
-  foundComment: (OFString *)comment
+- (void)parser: (OFXMLParser *)parser foundComment: (OFString *)comment
 {
 	@throw [OFMalformedXMLException exception];
 }
