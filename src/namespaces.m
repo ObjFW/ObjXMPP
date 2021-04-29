@@ -20,20 +20,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <ObjFW/ObjFW.h>
+#import "namespaces.h"
 
-extern OFString *const XMPPBindNS;
-extern OFString *const XMPPCapsNS;
-extern OFString *const XMPPClientNS;
-extern OFString *const XMPPDiscoInfoNS;
-extern OFString *const XMPPDiscoItemsNS;
-extern OFString *const XMPPMUCNS;
-extern OFString *const XMPPRosterNS;
-extern OFString *const XMPPRosterVerNS;
-extern OFString *const XMPPSASLNS;
-extern OFString *const XMPPSessionNS;
-extern OFString *const XMPPSMNS;
-extern OFString *const XMPPStanzasNS;
-extern OFString *const XMPPStartTLSNS;
-extern OFString *const XMPPStreamNS;
-extern OFString *const XMPPXMPPStreamNS;
+OFString *const XMPPBindNS = @"urn:ietf:params:xml:ns:xmpp-bind";
+OFString *const XMPPCapsNS = @"http://jabber.org/protocol/caps";
+OFString *const XMPPClientNS = @"jabber:client";
+OFString *const XMPPDiscoInfoNS = @"http://jabber.org/protocol/disco#info";
+OFString *const XMPPDiscoItemsNS = @"http://jabber.org/protocol/disco#items";
+OFString *const XMPPMUCNS = @"http://jabber.org/protocol/muc";
+OFString *const XMPPRosterNS = @"jabber:iq:roster";
+OFString *const XMPPRosterVerNS = @"urn:xmpp:features:rosterver";
+OFString *const XMPPSASLNS = @"urn:ietf:params:xml:ns:xmpp-sasl";
+OFString *const XMPPSessionNS = @"urn:ietf:params:xml:ns:xmpp-session";
+OFString *const XMPPSMNS = @"urn:xmpp:sm:3";
+OFString *const XMPPStanzasNS = @"urn:ietf:params:xml:ns:xmpp-stanzas";
+OFString *const XMPPStartTLSNS = @"urn:ietf:params:xml:ns:xmpp-tls";
+OFString *const XMPPStreamNS = @"http://etherx.jabber.org/streams";
+OFString *const XMPPXMPPStreamNS = @"urn:ietf:params:xml:ns:xmpp-streams";

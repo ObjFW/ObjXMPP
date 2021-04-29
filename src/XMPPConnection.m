@@ -638,9 +638,13 @@
 
 	[_socket writeFormat: @"<?xml version='1.0'?>\n"
 			      @"<stream:stream to='%@' "
-			      @"xmlns='" XMPPClientNS @"' "
-			      @"xmlns:stream='" XMPPStreamNS @"' %@"
-			      @"version='1.0'>", _domain, langString];
+			      @"xmlns='%@' "
+			      @"xmlns:stream='%@' %@"
+			      @"version='1.0'>",
+			      _domain, 
+			      XMPPClientNS,
+			      XMPPStreamNS,
+			      langString];
 
 	_streamOpen = true;
 }

@@ -29,10 +29,10 @@ SRCS = XMPPANONYMOUSAuth.m	\
        XMPPSCRAMAuth.m		\
        XMPPStanza.m		\
        XMPPStreamManagement.m	\
-       XMPPXMLElementBuilder.m
+       XMPPXMLElementBuilder.m	\
+       namespaces.m
 
 INCLUDES = ${SRCS:.m=.h}	\
-	   namespaces.h		\
 	   ObjXMPP.h		\
 	   XMPPStorage.h
 
