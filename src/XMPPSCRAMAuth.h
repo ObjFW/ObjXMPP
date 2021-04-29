@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
- * https://heap.zone/objxmpp/
+ * https://nil.im/objxmpp/
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
