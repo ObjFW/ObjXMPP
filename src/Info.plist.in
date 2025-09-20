@@ -3,20 +3,20 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<string>ObjXMPP</string>
+	<key>CFBundleName</key>
+	<string>ObjXMPP</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.webkeks.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>im.nil.objxmpp</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
-	<key>CFBundleSignature</key>
-	<string>XMPP</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>@BUNDLE_VERSION@</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@BUNDLE_SHORT_VERSION@</string>
+	<key>MinimumOSVersion</key>
+	<string>9.0</string>
 </dict>
 </plist>

@@ -17,6 +17,7 @@ configure
 DerivedData
 docs
 extra.mk
+src/Info.plist
 src/ObjXMPP.framework
 tests/tests
 tests/storage.binarypack
