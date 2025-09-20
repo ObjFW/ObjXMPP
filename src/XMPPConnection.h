@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, 2012, 2013, 2016, 2017, 2018, 2021
+ * Copyright (c) 2010, 2011, 2012, 2013, 2016, 2017, 2018, 2021, 2025
  *   Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
@@ -145,15 +145,14 @@ OF_ASSUME_NONNULL_BEGIN
  */
 @interface XMPPConnection: OFObject
 {
-	OFTCPSocket *_socket;
+	OF_KINDOF(OFStream *) _stream;
 	char _buffer[XMPPConnectionBufferLength];
 	OFXMLParser *_parser, *_oldParser;
 	OFXMLElementBuilder *_elementBuilder, *_oldElementBuilder;
 	OFString *_Nullable _username, *_Nullable _password, *_Nullable _server;
 	OFString *_Nullable _resource;
 	bool _usesAnonymousAuthentication;
-	OFString *_Nullable _privateKeyFile, *_Nullable _certificateFile;
-	const char *_Nullable _privateKeyPassphrase;
+	OFArray OF_GENERIC(OFX509Certificate *) *_Nullable _certificateChain;
 	OFString *_Nullable _domain, *_Nullable _domainToASCII;
 	XMPPJID *_Nullable _JID;
 	uint16_t _port;
@@ -206,14 +205,10 @@ OF_ASSUME_NONNULL_BEGIN
 @property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *language;
 
 /*!
- * @brief A private key file to use for authentication.
+ * @brief The certificate chain to use.
  */
-@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *privateKeyFile;
-
-/*!
- * @brief A certificate file to use for authentication.
- */
-@property OF_NULLABLE_PROPERTY (nonatomic, copy) OFString *certificateFile;
+@property OF_NULLABLE_PROPERTY (nonatomic, copy)
+    OFArray OF_GENERIC(OFX509Certificate *) *certificateChain;
 
 /*!
  * @brief The JID the server assigned to the connection after binding.
@@ -231,9 +226,9 @@ OF_ASSUME_NONNULL_BEGIN
 @property OF_NULLABLE_PROPERTY (nonatomic, assign) id <XMPPStorage> dataStorage;
 
 /*!
- * @brief The socket used for the connection.
+ * @brief The stream used for the connection.
  */
-@property (readonly, nonatomic) OFTCPSocket *socket;
+@property (readonly, nonatomic) OF_KINDOF(OFStream *) stream;
 
 /*!
  * @brief Whether encryption is required.
@@ -280,18 +275,6 @@ OF_ASSUME_NONNULL_BEGIN
  * @brief Closes the stream to the XMPP service
  */
 - (void)close;
-
-/*!
- * @brief Checks the certificate presented by the server and sets the specified
- *	  pointer to the reason why the certificate is not valid
- *
- * @param reason A pointer to an OFString which is set to a reason in case the
- *		 certificate is not valid (otherwise, it does not touch it).
- *		 Passing NULL means the reason is not stored anywhere.
- * @return Whether the certificate is valid
- */
-- (bool)checkCertificateAndGetReason:
-    (OFString *__autoreleasing _Nonnull *_Nullable)reason;
 
 /*!
  * @brief Asynchronously connects to the server.

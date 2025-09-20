@@ -60,20 +60,17 @@
 		if (nodesep == SIZE_MAX)
 			self.node = nil;
 		else
-			self.node = [string substringWithRange:
-			    OFRangeMake(0, nodesep)];
+			self.node = [string substringToIndex: nodesep];
 
 		if (resourcesep == SIZE_MAX) {
 			self.resource = nil;
 			resourcesep = string.length;
-		} else {
-			OFRange range = OFRangeMake(resourcesep + 1,
-			    string.length - resourcesep - 1);
-			self.resource = [string substringWithRange: range];
-		}
+		} else
+			self.resource =
+			    [string substringFromIndex: resourcesep + 1];
 
 		self.domain = [string substringWithRange:
-		    OFRangeMake(nodesep + 1, resourcesep - nodesep - 1)];
+		    OFMakeRange(nodesep + 1, resourcesep - nodesep - 1)];
 	} @catch (id e) {
 		[self release];
 		@throw e;

@@ -27,8 +27,6 @@
 #include <assert.h>
 #include <openssl/rand.h>
 
-#import <ObjOpenSSL/SSLSocket.h>
-
 #import "XMPPSCRAMAuth.h"
 #import "XMPPExceptions.h"
 
@@ -242,8 +240,7 @@
 
 	for (OFString *component in
 	    [challenge componentsSeparatedByString: @","]) {
-		OFString *entry = [component substringWithRange:
-		    OFRangeMake(2, component.length - 2)];
+		OFString *entry = [component substringFromIndex: 2];
 
 		if ([component hasPrefix: @"r="]) {
 			if (![entry hasPrefix: _cNonce])
@@ -264,17 +261,20 @@
 	}
 
 	if (got != (GOT_SNONCE | GOT_SALT | GOT_ITERCOUNT))
-		@throw [OFInvalidServerReplyException exception];
+		@throw [OFInvalidServerResponseException exception];
 
 	/* Add c=<base64(GS2Header+channelBindingData)> */
 	tmpArray = [OFMutableData dataWithItems: _GS2Header.UTF8String
 					  count: _GS2Header.UTF8StringLength];
+#if 0
+	/* Not available in ObjFWTLS yet. */
 	if (_plusAvailable && _connection.encrypted) {
 		OFData *channelBinding = [((SSLSocket *)[_connection socket])
 		    channelBindingDataWithType: @"tls-unique"];
 		[tmpArray addItems: channelBinding.items
 			     count: channelBinding.count];
 	}
+#endif
 	tmpString = tmpArray.stringByBase64Encoding;
 	[ret addItems: "c=" count: 2];
 	[ret addItems: tmpString.UTF8String count: tmpString.UTF8StringLength];
@@ -383,7 +383,7 @@
 
 	mess = [OFString stringWithUTF8String: data.items
 				       length: data.count * data.itemSize];
-	value = [mess substringWithRange: OFRangeMake(2, mess.length - 2)];
+	value = [mess substringFromIndex: 2];
 
 	if ([mess hasPrefix: @"v="]) {
 		if (![value isEqual: _serverSignature.stringByBase64Encoding])
@@ -404,7 +404,7 @@
 	uint8_t buf[64];
 	size_t i;
 
-	assert(RAND_pseudo_bytes(buf, 64) >= 0);
+	OFEnsure(RAND_pseudo_bytes(buf, 64) >= 0);
 
 	for (i = 0; i < 64; i++) {
 		// Restrict salt to printable range, but do not include '~'...

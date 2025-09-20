@@ -19,15 +19,15 @@ AC_PROG_OBJCPP
 AC_PROG_LN_S
 AC_PROG_INSTALL
 
-AC_MSG_CHECKING(for ObjOpenSSL)
-AS_IF([$OBJFW_CONFIG --package ObjOpenSSL 2>/dev/null], [
+AC_MSG_CHECKING(for ObjFWTLS)
+AS_IF([$OBJFW_CONFIG --package ObjFWTLS 2>/dev/null], [
 	AC_MSG_RESULT(yes)
 ], [
 	AC_MSG_RESULT(no)
-	AC_MSG_ERROR(You need ObjOpenSSL installed!)
+	AC_MSG_ERROR(You need ObjFWTLS installed!)
 ])
 
-packages="--package ObjOpenSSL"
+packages="--package ObjFWTLS"
 CPP="$OBJCPP"
 CPPFLAGS="$CPPFLAGS $OBJCPPFLAGS $($OBJFW_CONFIG $packages --cppflags)"
 OBJCFLAGS="$OBJCFLAGS -Wall $($OBJFW_CONFIG $packages --objcflags)"
@@ -56,13 +56,6 @@ AS_IF([test x"$enable_static" = x"yes" -o x"$enable_shared" = x"no"], [
 	AC_PATH_TOOL(AR, ar)
 	AC_PROG_RANLIB
 	AC_SUBST(OBJXMPP_STATIC_LIB, "libobjxmpp.a")
-])
-
-AC_CHECK_LIB(objopenssl, main, [
-	AC_SUBST(OBJOPENSSL_LIBS, "-lobjopenssl -lcrypto")
-	AC_SUBST(OBJOPENSSL_FRAMEWORK_LIBS, "-framework ObjOpenSSL -lcrypto")
-], [
-	AC_MSG_ERROR(You need ObjOpenSSL installed!)
 ])
 
 PKG_CHECK_MODULES(libidn, [libidn >= 0.25], [

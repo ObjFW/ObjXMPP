@@ -31,10 +31,6 @@
 #include <stringprep.h>
 #include <idna.h>
 
-#import <ObjOpenSSL/SSLSocket.h>
-#import <ObjOpenSSL/SSLInvalidCertificateException.h>
-#import <ObjOpenSSL/X509Certificate.h>
-
 #import <ObjFW/OFInvalidArgumentException.h>
 
 #import "XMPPConnection.h"
@@ -85,9 +81,9 @@
 @synthesize username = _username, resource = _resource, server = _server;
 @synthesize domain = _domain, password = _password, JID = _JID, port = _port;
 @synthesize usesAnonymousAuthentication = _usesAnonymousAuthentication;
-@synthesize language = _language, privateKeyFile = _privateKeyFile;
-@synthesize certificateFile = _certificateFile, socket = _socket;
-@synthesize encryptionRequired = _encryptionRequired, encrypted = _encrypted;
+@synthesize language = _language, certificateChain = _certificateChain;
+@synthesize stream = _stream, encryptionRequired = _encryptionRequired;
+@synthesize encrypted = _encrypted;
 @synthesize supportsRosterVersioning = _supportsRosterVersioning;
 @synthesize supportsStreamManagement = _supportsStreamManagement;
 
@@ -114,13 +110,12 @@
 
 - (void)dealloc
 {
-	[_socket release];
+	[_stream release];
 	[_parser release];
 	[_elementBuilder release];
 	[_username release];
 	[_password release];
-	[_privateKeyFile release];
-	[_certificateFile release];
+	[_certificateChain release];
 	[_server release];
 	[_domain release];
 	[_resource release];
@@ -283,7 +278,7 @@
 
 	[self xmpp_startStream];
 
-	[_socket asyncReadIntoBuffer: _buffer
+	[_stream asyncReadIntoBuffer: _buffer
 			      length: XMPPConnectionBufferLength];
 }
 
@@ -297,7 +292,7 @@
 		_nextSRVRecords = nil;
 	}
 
-	[_socket asyncConnectToHost: record.target port: record.port];
+	[_stream asyncConnectToHost: record.target port: record.port];
 }
 
 -  (void)resolver: (OFDNSResolver *)resolver
@@ -320,7 +315,7 @@
 
 	if (records.count == 0) {
 		/* Fall back to A / AAAA record. */
-		[_socket asyncConnectToHost: _domainToASCII port: _port];
+		[_stream asyncConnectToHost: _domainToASCII port: _port];
 		return;
 	}
 
@@ -334,17 +329,17 @@
 {
 	void *pool = objc_autoreleasePoolPush();
 
-	if (_socket != nil)
-		@throw [OFAlreadyConnectedException exception];
+	if (_stream != nil)
+		@throw [OFAlreadyOpenException exceptionWithObject: self];
 
-	_socket = [[OFTCPSocket alloc] init];
-	[_socket setDelegate: self];
+	_stream = [[OFTCPSocket alloc] init];
+	[_stream setDelegate: self];
 
 	if (_server != nil)
-		[_socket asyncConnectToHost: _server port: _port];
+		[_stream asyncConnectToHost: _server port: _port];
 	else {
-		OFString *SRVDomain = [_domainToASCII
-		    stringByPrependingString: @"_xmpp-client._tcp."];
+		OFString *SRVDomain = [@"_xmpp-client._tcp."
+		    stringByAppendingString: _domainToASCII];
 		OFDNSQuery *query = [OFDNSQuery
 		    queryWithDomainName: SRVDomain
 			       DNSClass: OFDNSClassIN
@@ -356,10 +351,9 @@
 	objc_autoreleasePoolPop(pool);
 }
 
--  (bool)xmpp_parseBuffer: (const void *)buffer
-		   length: (size_t)length
+- (bool)xmpp_parseBuffer: (const void *)buffer length: (size_t)length
 {
-	if (_socket.atEndOfStream) {
+	if ([_stream isAtEndOfStream]) {
 		[_delegates broadcastSelector: @selector(
 						   connectionWasClosed:error:)
 				   withObject: self
@@ -422,49 +416,12 @@
 		_oldParser = nil;
 		_oldElementBuilder = nil;
 
-		[_socket asyncReadIntoBuffer: _buffer
+		[_stream asyncReadIntoBuffer: _buffer
 				      length: XMPPConnectionBufferLength];
 		return false;
 	}
 
 	return true;
-}
-
-- (bool)checkCertificateAndGetReason: (OFString **)reason
-{
-	X509Certificate *cert;
-	OFDictionary *SANs;
-	bool serviceSpecific = false;
-	SSLSocket *socket = (SSLSocket *)_socket;
-
-	@try {
-		[socket verifyPeerCertificate];
-	} @catch (SSLInvalidCertificateException *e) {
-		if (reason != NULL)
-			*reason = e.reason;
-
-		return false;
-	}
-
-	cert = socket.peerCertificate;
-	SANs = cert.subjectAlternativeName;
-
-	if ([[SANs objectForKey: @"otherName"]
-	    objectForKey: OID_SRVName] != nil ||
-	    [SANs objectForKey: @"dNSName"] != nil ||
-	    [SANs objectForKey: @"uniformResourceIdentifier"] != nil)
-		serviceSpecific = true;
-
-	if ([cert hasSRVNameMatchingDomain: _domainToASCII
-				   service: @"xmpp-client"] ||
-	    [cert hasDNSNameMatchingDomain: _domainToASCII])
-		return true;
-
-	if (!serviceSpecific &&
-	    [cert hasCommonNameMatchingDomain: _domainToASCII])
-		return true;
-
-	return false;
 }
 
 - (void)sendStanza: (OFXMLElement *)element
@@ -473,7 +430,7 @@
 			   withObject: self
 			   withObject: element];
 
-	[_socket writeString: element.XMLString];
+	[_stream writeString: element.XMLString];
 }
 
 -   (void)sendIQ: (XMPPIQ *)IQ
@@ -544,7 +501,7 @@
 	if (![name isEqual: @"stream"]) {
 		/* No dedicated stream error for this, may not even be XMPP. */
 		[self close];
-		[_socket close];
+		[_stream close];
 		return;
 	}
 
@@ -582,7 +539,6 @@
 	if (element.name == nil)
 		return;
 
-	element.defaultNamespace = XMPPClientNS;
 	[element setPrefix: @"stream" forNamespace: XMPPStreamNS];
 
 	[_delegates broadcastSelector: @selector(connection:didReceiveElement:)
@@ -639,7 +595,7 @@
 		langString = [OFString stringWithFormat: @"xml:lang='%@' ",
 							 _language];
 
-	[_socket writeFormat: @"<?xml version='1.0'?>\n"
+	[_stream writeFormat: @"<?xml version='1.0'?>\n"
 			      @"<stream:stream to='%@' "
 			      @"xmlns='%@' "
 			      @"xmlns:stream='%@' %@"
@@ -655,7 +611,7 @@
 - (void)close
 {
 	if (_streamOpen)
-		[_socket writeString: @"</stream:stream>"];
+		[_stream writeString: @"</stream:stream>"];
 
 	[_oldParser release];
 	_oldParser = nil;
@@ -663,8 +619,8 @@
 	_oldElementBuilder = nil;
 	[_authModule release];
 	_authModule = nil;
-	[_socket release];
-	_socket = nil;
+	[_stream release];
+	_stream = nil;
 	[_JID release];
 	_JID = nil;
 	_streamOpen = _needsSession = _encrypted = false;
@@ -732,25 +688,21 @@
 - (void)xmpp_handleTLS: (OFXMLElement *)element
 {
 	if ([element.name isEqual: @"proceed"]) {
-		/* FIXME: Catch errors here */
-		SSLSocket *newSock;
+		OFTLSStream *newStream;
 
 		[_delegates broadcastSelector: @selector(
 						   connectionWillUpgradeToTLS:)
 				   withObject: self];
 
-		newSock = [[SSLSocket alloc] initWithSocket: _socket];
-		newSock.verifiesCertificates = false;
-#if 0
-		/* FIXME: Not yet implemented by ObjOpenSSL */
-		[newSock setCertificateFile: _certificateFile];
-		[newSock setPrivateKeyFile: _privateKeyFile];
-		[newSock setPrivateKeyPassphrase: _privateKeyPassphrase];
-#endif
-		[newSock startTLSWithExpectedHost: nil];
-		[_socket release];
-		_socket = newSock;
-		[_socket setDelegate: self];
+		newStream = [OFTLSStream streamWithStream: _stream];
+		newStream.certificateChain = _certificateChain;
+
+		/* TODO: async */
+		[newStream performClientHandshakeWithHost: _server];
+
+		[_stream release];
+		_stream = [newStream retain];
+		[_stream setDelegate: self];
 
 		_encrypted = true;
 
@@ -907,13 +859,15 @@
 			return;
 		}
 
-		if (_privateKeyFile != nil && _certificateFile != nil &&
+		if (_certificateChain != nil &&
 		    [mechanisms containsObject: @"EXTERNAL"]) {
 			_authModule = [[XMPPEXTERNALAuth alloc] init];
 			[self xmpp_sendAuth: @"EXTERNAL"];
 			return;
 		}
 
+#if 0
+		/* Not available in ObjFWTLS yet. */
 		if ([mechanisms containsObject: @"SCRAM-SHA-1-PLUS"]) {
 			_authModule = [[XMPPSCRAMAuth alloc]
 			    initWithAuthcid: _username
@@ -924,6 +878,7 @@
 			[self xmpp_sendAuth: @"SCRAM-SHA-1-PLUS"];
 			return;
 		}
+#endif
 
 		if ([mechanisms containsObject: @"SCRAM-SHA-1"]) {
 			_authModule = [[XMPPSCRAMAuth alloc]

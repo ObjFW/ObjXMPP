@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2016, Jonathan Schleifer <js@nil.im>
+ * Copyright (c) 2011, 2012, 2013, 2016, 2025, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://nil.im/objxmpp/
@@ -66,6 +66,13 @@ OF_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)messageWithType: (nullable OFString *)type
 			     ID: (nullable OFString *)ID;
+
+/*!
+ * @brief Initializes an already allocated XMPPMessage.
+ *
+ * @return A initialized XMPPMessage
+ */
+- (instancetype)init;
 
 /*!
  * @brief Initializes an already allocated XMPPMessage with the specified ID.

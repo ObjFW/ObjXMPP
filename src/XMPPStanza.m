@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2019, 2021, Jonathan Schleifer <js@nil.im>
+ * Copyright (c) 2011, 2012, 2013, 2019, 2021, 2025,
+ *   Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://nil.im/objxmpp/
@@ -117,7 +118,6 @@
 		    ![name isEqual: @"presence"])
 			@throw [OFInvalidArgumentException exception];
 
-		self.defaultNamespace = XMPPClientNS;
 		[self setPrefix: @"stream" forNamespace: XMPPStreamNS];
 
 		if (type != nil)
