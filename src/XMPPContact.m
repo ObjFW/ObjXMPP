@@ -84,9 +84,9 @@
 
 - (void)xmpp_removePresenceForResource: (OFString *)resource
 {
-	if (resource != nil) {
+	if (resource != nil)
 		[_presences removeObjectForKey: resource];
-	} else {
+	else {
 		[_presences release];
 		_presences = [[OFMutableDictionary alloc] init];
 	}

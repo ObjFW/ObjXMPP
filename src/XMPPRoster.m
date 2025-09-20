@@ -130,7 +130,7 @@ OF_ASSUME_NONNULL_END
 	if (![IQ.type isEqual: @"set"])
 		return false;
 
-	// Ensure the roster push has been sent by the server
+	/* Ensure the roster push has been sent by the server */
 	origin = IQ.from.fullJID;
 	if (origin != nil && ![origin isEqual: connection.JID.bareJID])
 		return false;

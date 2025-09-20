@@ -266,7 +266,7 @@
 	if (got != (GOT_SNONCE | GOT_SALT | GOT_ITERCOUNT))
 		@throw [OFInvalidServerReplyException exception];
 
-	// Add c=<base64(GS2Header+channelBindingData)>
+	/* Add c=<base64(GS2Header+channelBindingData)> */
 	tmpArray = [OFMutableData dataWithItems: _GS2Header.UTF8String
 					  count: _GS2Header.UTF8StringLength];
 	if (_plusAvailable && _connection.encrypted) {
@@ -279,7 +279,7 @@
 	[ret addItems: "c=" count: 2];
 	[ret addItems: tmpString.UTF8String count: tmpString.UTF8StringLength];
 
-	// Add r=<nonce>
+	/* Add r=<nonce> */
 	[ret addItem: ","];
 	[ret addItems: "r=" count: 2];
 	[ret addItems: sNonce.UTF8String count: sNonce.UTF8StringLength];

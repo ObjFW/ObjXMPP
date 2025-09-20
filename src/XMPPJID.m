@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2012, 2013, 2019, 2021, Jonathan Schleifer <js@nil.im>
+ * Copyright (c) 2011, 2012, 2013, 2019, 2021, 2025,
+ *   Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, 2012, 2013, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://nil.im/objxmpp/
@@ -127,8 +128,9 @@
 				     string: node];
 
 	@try {
-		_node = [[OFString alloc] initWithUTF8String: nodepart];
-	} @finally {
+		_node = [[OFString alloc] initWithUTF8StringNoCopy: nodepart
+						      freeWhenDone: true];
+	} @catch (id e) {
 		free(nodepart);
 	}
 
@@ -150,8 +152,9 @@
 				     string: domain];
 
 	@try {
-		_domain = [[OFString alloc] initWithUTF8String: srv];
-	} @finally {
+		_domain = [[OFString alloc] initWithUTF8StringNoCopy: srv
+							freeWhenDone: true];
+	} @catch (id e) {
 		free(srv);
 	}
 
@@ -179,8 +182,9 @@
 				     string: resource];
 
 	@try {
-		_resource = [[OFString alloc] initWithUTF8String: res];
-	} @finally {
+		_resource = [[OFString alloc] initWithUTF8StringNoCopy: res
+							  freeWhenDone: true];
+	} @catch (id e) {
 		free(res);
 	}
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, Florian Zeitz <florob@babelmonkeys.de>
- * Copyright (c) 2019, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2019, Jonathan Schleifer <js@nil.im>
  *
  * https://nil.im/objxmpp/
  *

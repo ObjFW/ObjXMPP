@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2012, Jonathan Schleifer <js@nil.im>
  *
  * https://nil.im/objxmpp/
  *

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2021
- *   Jonathan Schleifer <js@nil.im>
+ * Copyright (c) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2021,
+ *   2025, Jonathan Schleifer <js@nil.im>
  * Copyright (c) 2011, 2012, Florian Zeitz <florob@babelmonkeys.de>
  *
  * https://nil.im/objxmpp/
@@ -149,8 +149,10 @@
 					     string: username];
 
 		@try {
-			_username = [[OFString alloc] initWithUTF8String: node];
-		} @finally {
+			_username = [[OFString alloc]
+			    initWithUTF8StringNoCopy: node
+					freeWhenDone: true];
+		} @catch (id e) {
 			free(node);
 		}
 	} else
@@ -175,8 +177,10 @@
 					     string: resource];
 
 		@try {
-			_resource = [[OFString alloc] initWithUTF8String: res];
-		} @finally {
+			_resource = [[OFString alloc]
+			    initWithUTF8StringNoCopy: res
+					freeWhenDone: true];
+		} @catch (id e) {
 			free(res);
 		}
 	} else
@@ -214,8 +218,10 @@
 					     string: domain];
 
 		@try {
-			_domain = [[OFString alloc] initWithUTF8String: srv];
-		} @finally {
+			_domain = [[OFString alloc]
+			    initWithUTF8StringNoCopy: srv
+					freeWhenDone: true];
+		} @catch (id e) {
 			free(srv);
 		}
 
@@ -245,8 +251,10 @@
 					     string: password];
 
 		@try {
-			_password = [[OFString alloc] initWithUTF8String: pass];
-		} @finally {
+			_password = [[OFString alloc]
+			    initWithUTF8StringNoCopy: pass
+					freeWhenDone: true];
+		} @catch (id e) {
 			free(pass);
 		}
 	} else
@@ -352,8 +360,8 @@
 		   length: (size_t)length
 {
 	if (_socket.atEndOfStream) {
-		[_delegates broadcastSelector: @selector(connectionWasClosed:
-						   error:)
+		[_delegates broadcastSelector: @selector(
+						   connectionWasClosed:error:)
 				   withObject: self
 				   withObject: nil];
 		return false;
@@ -420,11 +428,6 @@
 	}
 
 	return true;
-}
-
-- (bool)streamOpen
-{
-	return _streamOpen;
 }
 
 - (bool)checkCertificateAndGetReason: (OFString **)reason
@@ -539,7 +542,7 @@
        attributes: (OFArray *)attributes
 {
 	if (![name isEqual: @"stream"]) {
-		// No dedicated stream error for this, may not even be XMPP
+		/* No dedicated stream error for this, may not even be XMPP. */
 		[self close];
 		[_socket close];
 		return;
@@ -822,7 +825,8 @@
 
 	if ((key = IQ.from.fullJID) == nil)
 		key = _JID.bareJID;
-	if (key == nil) // Only happens for resource bind
+	if (key == nil)
+		/* Only happens for resource bind */
 		key = @"bind";
 	key = [key stringByAppendingString: IQ.ID];
 
@@ -1078,8 +1082,9 @@
 				     string: domain];
 
 	@try {
-		ret = [[OFString alloc] initWithUTF8String: cDomain];
-	} @finally {
+		ret = [[OFString alloc] initWithUTF8StringNoCopy: cDomain
+						    freeWhenDone: true];
+	} @catch (id e) {
 		free(cDomain);
 	}
 

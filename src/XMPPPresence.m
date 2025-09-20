@@ -35,8 +35,8 @@ showToInt(OFString *show)
 {
 	if ([show isEqual: @"chat"])
 		return 0;
-	if (show == nil)
-		return 1;	/* available */
+	if (show == nil) /* available */
+		return 1;
 	if ([show isEqual: @"away"])
 		return 2;
 	if ([show isEqual: @"dnd"])

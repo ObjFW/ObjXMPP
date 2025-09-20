@@ -1,4 +1,4 @@
-AC_INIT(ObjXMPP, 0.1, js@webkeks.org)
+AC_INIT(ObjXMPP, 0.1, js@nil.im)
 
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_AUX_DIR(build-aux)
