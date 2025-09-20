@@ -48,7 +48,7 @@
 OF_APPLICATION_DELEGATE(AppDelegate)
 
 @implementation AppDelegate
-- (void)applicationDidFinishLaunching
+- (void)applicationDidFinishLaunching: (OFNotification *)notification
 {
 	OFArray *arguments = [OFApplication arguments];
 
@@ -217,16 +217,7 @@ OF_APPLICATION_DELEGATE(AppDelegate)
 
 - (void)connectionDidUpgradeToTLS: (XMPPConnection *)conn_
 {
-	OFString *reason;
-
-	if (![conn_ checkCertificateAndGetReason: &reason]) {
-		[OFStdOut writeString: @"Couldn't verify certificate: "];
-		[OFStdOut writeFormat: @"%@\n", reason];
-		[OFStdOut writeString: @"Do you want to continue [y/N]? "];
-
-		if (![[OFStdIn readLine] hasPrefix: @"y"])
-			[OFApplication terminateWithStatus: 1];
-	}
+	OFLog(@"Upgraded to TLS");
 }
 
 -         (void)roster: (XMPPRoster *)roster_
