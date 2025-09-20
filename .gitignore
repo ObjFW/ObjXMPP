@@ -1,3 +1,4 @@
+*.dep
 *.dll
 *.dylib
 *.o
