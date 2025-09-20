@@ -81,18 +81,19 @@ AS_IF([test x"$GOBJC" = x"yes"], [
 	old_OBJCFLAGS="$OBJCFLAGS"
 	OBJCFLAGS="$OBJCFLAGS -Wcast-align"
 	AC_MSG_CHECKING(whether -Wcast-align is buggy)
-	AC_TRY_COMPILE([
-		#import <ObjFW/OFObject.h>
+	AC_COMPILE_IFELSE([
+		AC_LANG_PROGRAM([
+			#import <ObjFW/OFObject.h>
 
-		@interface Foo: OFObject
-		@end
+			@interface Foo: OFObject
+			@end
 
-		@implementation Foo
-		- (void)foo
-		{
-		}
-		@end
-	], [
+			@implementation Foo
+			- (void)foo
+			{
+			}
+			@end
+		], [])
 	], [
 		AC_MSG_RESULT(no)
 	], [
